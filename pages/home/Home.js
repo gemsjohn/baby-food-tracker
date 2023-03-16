@@ -11,18 +11,51 @@ import {
     Image,
     RefreshControl,
     Animated,
-    Button,
-    StyleSheet
+    Button
 } from 'react-native';
+import {
+    faSolid,
+    faFlagCheckered,
+    faSliders,
+    faX,
+    faArrowRight,
+    faArrowLeft
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { Styling, windowHeight, windowWidth, HeightRatio, WidthRatio } from '../../Styling';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import moment from 'moment'
 
 export const HomeScreen = () => {
+    const formatString = 'DD/MM/YYYY';
+    const [currentDate, setCurrentDate] = useState(moment().format(formatString));
+    const [currentDataReadable, setCurrentDateReadable] = useState('')
 
+    const handlePreviousDay = () => {
+        setCurrentDate(moment(currentDate, formatString).subtract(1, 'days').format(formatString));
 
-    const today = moment().format('MMMM Do YYYY');
+    }
+
+    const handleNextDay = () => {
+        setCurrentDate(moment(currentDate, formatString).add(1, 'days').format(formatString));
+    }
+
+    const convertDateFormat = (dateString) => {
+        const inputFormat = 'DD/MM/YYYY';
+        const outputFormat = 'MMMM Do YYYY';
+        const dateObject = moment(dateString, inputFormat);
+        const convertedDate = dateObject.format(outputFormat);
+        return convertedDate;
+    }
+
+    useEffect(() => {
+        setCurrentDateReadable(convertDateFormat(currentDate));
+    }, [currentDate])
+
+    // API REQ
+    
+
 
 
 
@@ -44,40 +77,122 @@ export const HomeScreen = () => {
     }
     return (
         <View
-            style={{ ...Styling.container, backgroundColor: '#9861ea', display: 'flex', alignItems: 'center', justifyContent: 'center', width: windowWidth }}
+            style={{ ...Styling.container, backgroundColor: 'white', display: 'flex', alignItems: 'center', width: windowWidth }}
             onLayout={onLayoutRootView}
         >
-            <Text style={{
-                color: 'black',
-                fontSize: HeightRatio(50),
-                fontFamily: 'SofiaSansSemiCondensed-Regular',
+            <View
+                style={{
+                    backgroundColor: 'rgba(152, 97, 234, 1.00)',
+                    width: windowWidth,
+                    // padding: HeightRatio(30),
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: HeightRatio(140)
+                }}
+            >
+                <TouchableOpacity
+                    onPress={() => handlePreviousDay()}
+                    style={{
+                        height: '100%',
+                        width: HeightRatio(90),
+                        // backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        borderRadius: HeightRatio(20),
+                        margin: HeightRatio(40),
+                        marginRight: HeightRatio(10),
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <FontAwesomeIcon
+                        icon={faSolid, faArrowLeft}
+                        style={{
+                            color: 'white',
+                        }}
+                        size={25}
+                    />
+                </TouchableOpacity>
+                <View
+                    style={{
+                        flexDirection: 'column',
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontSize: HeightRatio(30),
+                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                            // marginTop: HeightRatio(30),
+                            marginLeft: HeightRatio(10),
+                            marginRight: HeightRatio(10)
 
-            }}>
-                {today}
-            </Text>
-            <View style={styles.container}>
-            <View style={[styles.row, { justifyContent: 'center' }]}>
-                <View style={styles.cell}>
-                <Text>Sample text</Text>
+                        }}
+                        allowFontScaling={false}
+                    >
+                        {currentDataReadable}
+                    </Text>
+                    {currentDate != moment().format(formatString) &&
+                        <TouchableOpacity
+                            onPress={() => setCurrentDate(moment().format(formatString))}
+                            style={{
+                                backgroundColor: 'rgba(235, 35, 81, 0.50)',
+                                width: HeightRatio(100),
+                                borderRadius: HeightRatio(10),
+                                position: 'absolute',
+                                alignSelf: 'center',
+                                top: HeightRatio(40),
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                padding: HeightRatio(10)
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontSize: HeightRatio(20),
+                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+
+
+                                }}
+                                allowFontScaling={false}
+                            >
+                                Reset
+                            </Text>
+                        </TouchableOpacity>
+                    }
                 </View>
+
+
+                <TouchableOpacity
+                    onPress={() => handleNextDay()}
+                    style={{
+                        height: '100%',
+                        width: HeightRatio(90),
+                        // backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        borderRadius: HeightRatio(20),
+                        margin: HeightRatio(40),
+                        marginLeft: HeightRatio(10),
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <FontAwesomeIcon
+                        icon={faSolid, faArrowRight}
+                        style={{
+                            color: 'white',
+                        }}
+                        size={25}
+                    />
+                </TouchableOpacity>
             </View>
-            <View style={styles.row}>
-                <View style={[styles.cell, { flex: 1 }]}>
-                <Text>Sample text</Text>
-                </View>
-                <View style={[styles.cell, { flex: 1 }]}>
-                <Text>Sample text</Text>
-                </View>
-            </View>
-            <View style={styles.row}>
-                <View style={[styles.cell, { flex: 1 }]}>
-                <Text>Sample text</Text>
-                </View>
-                <View style={[styles.cell, { flex: 1 }]}>
-                <Text>Sample text</Text>
-                </View>
-            </View>
-            </View>
+
+
             <Text style={{
                 color: 'white',
                 fontSize: HeightRatio(50),
@@ -94,8 +209,8 @@ export const HomeScreen = () => {
             }}>
                 Nutrients
             </Text>
-            
-            <View
+
+            {/* <View
                 style={{
                     backgroundColor: 'transparent',
                     width: windowWidth / 1.2,
@@ -160,7 +275,7 @@ export const HomeScreen = () => {
                 }}>
                     Today: entry 2
                 </Text>
-            </View>
+            </View> */}
             {/* Add Button */}
             <TouchableOpacity
                 onPress={() => console.log("ADD FODD")}
@@ -191,19 +306,3 @@ export const HomeScreen = () => {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    row: {
-      flexDirection: 'row',
-    },
-    cell: {
-      borderWidth: 1,
-      borderColor: '#000',
-      padding: 10,
-    },
-  });
