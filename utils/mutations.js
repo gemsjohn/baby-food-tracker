@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const LOGIN_USER = gql`
- mutation Login($username: String!, $password: String!) {
+ mutation Mutation($username: String!, $password: String!) {
   login(username: $username, password: $password) {
     token
     user {
@@ -9,222 +9,208 @@ export const LOGIN_USER = gql`
       role
       username
       email
-      resetToken
-      resetTokenExpiry
-      story {
+      tracker {
         _id
-        userid
-        chat {
+        date
+        entry {
           _id
-          npc
-          user
+          date
+          schedule
+          item
+          amount
+          nutrients
         }
       }
+      resetToken
+      resetTokenExpiry
       currentVersion
-      candidate
-      storySummary
+      tokens
     }
   }
 }
 `;
 
 export const UPDATE_USER_PASSWORD = gql`
-  mutation UpdateUserPassword($password: String) {
+  mutation Mutation($password: String) {
   updateUserPassword(password: $password) {
     _id
     role
     username
     email
-    story {
+    tracker {
       _id
-      userid
-      chat {
+      date
+      entry {
         _id
-        npc
-        user
+        date
+        schedule
+        item
+        amount
+        nutrients
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
-    candidate
-    storySummary
+    tokens
   }
 }
 `;
 
 export const UPDATE_USER = gql`
-  mutation UpdateUser($username: String, $email: String) {
+  mutation Mutation($username: String, $email: String) {
   updateUser(username: $username, email: $email) {
     _id
     role
     username
     email
-    story {
+    tracker {
       _id
-      userid
-      chat {
+      date
+      entry {
         _id
-        npc
-        user
+        date
+        schedule
+        item
+        amount
+        nutrients
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
-    candidate
-    storySummary
+    tokens
   }
 }
 `;
 
 export const REQUEST_RESET = gql`
-  mutation RequestReset($email: String) {
+  mutation Mutation($email: String) {
   requestReset(email: $email) {
     _id
     role
     username
     email
-    story {
+    tracker {
       _id
-      userid
-      chat {
+      date
+      entry {
         _id
-        npc
-        user
+        date
+        schedule
+        item
+        amount
+        nutrients
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
-    candidate
-    storySummary
+    tokens
   }
 }
 `;
 
 export const RESET_PASSWORD = gql`
-  mutation ResetPassword($email: String, $password: String, $confirmPassword: String, $resetToken: String) {
+  mutation Mutation($email: String, $password: String, $confirmPassword: String, $resetToken: String) {
   resetPassword(email: $email, password: $password, confirmPassword: $confirmPassword, resetToken: $resetToken) {
     _id
     role
     username
     email
-    story {
+    tracker {
       _id
-      userid
-      chat {
+      date
+      entry {
         _id
-        npc
-        user
+        date
+        schedule
+        item
+        amount
+        nutrients
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
-    candidate
-    storySummary
+    tokens
   }
 }
 `;
 
 export const ADD_USER = gql`
-  mutation Mutation($username: String!, $email: String!, $password: String!, $role: [String!], $story: String) {
-  addUser(username: $username, email: $email, password: $password, role: $role, story: $story) {
+  mutation Mutation($username: String!, $email: String!, $password: String!, $role: [String!], $tracker: String, $tokens: String) {
+  addUser(username: $username, email: $email, password: $password, role: $role, tracker: $tracker, tokens: $tokens) {
     token
     user {
       _id
       role
       username
       email
-      story {
+      tracker {
         _id
-        userid
-        chat {
+        date
+        entry {
           _id
-          npc
-          user
+          date
+          schedule
+          item
+          amount
+          nutrients
         }
       }
       resetToken
       resetTokenExpiry
       currentVersion
-      candidate
-      storySummary
       tokens
     }
   }
 }
 `;
 
-export const UPDATE_STORY_CONTENT = gql`
-  mutation Mutation($candidate: String) {
-  updateStoryContent(candidate: $candidate) {
+
+export const DELETE_USER = gql`
+  mutation Mutation($deleteUserId: ID!) {
+  deleteUser(id: $deleteUserId)
+}
+`;
+
+export const ADD_ENTRY = gql`
+mutation Mutation($date: String, $schedule: String, $item: String, $amount: String, $nutrients: String) {
+  addEntry(date: $date, schedule: $schedule, item: $item, amount: $amount, nutrients: $nutrients) {
+    _id
+    date
+    schedule
+    item
+    amount
+    nutrients
+  }
+}
+`;
+
+export const UPDATE_TOKEN_COUNT = gql`
+  mutation Mutation($userid: String, $remove: String, $add: String, $amount: String) {
+  updateTokenCount(userid: $userid, remove: $remove, add: $add, amount: $amount) {
     _id
     role
     username
     email
-    story {
+    tracker {
       _id
-      userid
-      chat {
+      date
+      entry {
         _id
-        npc
-        user
+        date
+        schedule
+        item
+        amount
+        nutrients
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
-    candidate
-    storySummary
+    tokens
   }
 }
-`;
-
-export const DELETE_USER = gql`
-  mutation DeleteUser($deleteUserId: ID!) {
-  deleteUser(id: $deleteUserId)
-}
-`;
-
-export const ADD_CHAT = gql`
-mutation Mutation($npc: String, $user: String, $chapter: String) {
-  addChat(npc: $npc, user: $user, chapter: $chapter) {
-    _id
-    npc
-    user
-  }
-}
-`;
-export const DELETE_STORY = gql`
-  mutation DeleteStory($deleteStoryId: ID!, $echo: String) {
-  deleteStory(id: $deleteStoryId, echo: $echo)
-}
-`;
-
-export const UPDATE_TOKEN_COUNT = gql`
-  mutation UpdateTokenCount($userid: String, $remove: String, $add: String, $amount: String) {
-    updateTokenCount(userid: $userid, remove: $remove, add: $add, amount: $amount) {
-      _id
-      role
-      username
-      email
-      story {
-        _id
-        userid
-        chat {
-          _id
-          npc
-          user
-        }
-      }
-      resetToken
-      resetTokenExpiry
-      currentVersion
-      candidate
-      storySummary
-      tokens
-    }
-  }
 `;

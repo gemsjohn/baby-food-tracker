@@ -39,6 +39,10 @@ import { MainStateContext } from '../../App';
 import { convertDateFormat } from './auxilliary/ConvertDateFormat';
 import { SelectedFoodDetails } from './auxilliary/SelectedFoodDetails';
 import { DisplayDailyEntry } from './auxilliary/DisplayDailyEntry';
+import { useMutation, useQuery } from '@apollo/client';
+import { ADD_ENTRY } from '../../utils/mutations';
+import { GET_USER_BY_ID } from '../../utils/queries';
+
 
 
 export const HomeScreen = ({ navigation }) => {
@@ -49,11 +53,16 @@ export const HomeScreen = ({ navigation }) => {
     const authState = useRef(false);
     const userID = useRef(null);
 
+    const [addEntry] = useMutation(ADD_ENTRY);
+    const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
+        variables: { id: mainState.current.userID }
+    });
+
     // # - DATE
     const formatString = 'DD/MM/YYYY';
     const [currentDate, setCurrentDate] = useState(moment().format(formatString));
-    const [currentDataReadable, setCurrentDateReadable] = useState('')
-    
+    const [currentDateReadable, setCurrentDateReadable] = useState('')
+
 
     // # - ADD FOOD
     const [searchQuery, setSearchQuery] = useState('');
@@ -90,7 +99,7 @@ export const HomeScreen = ({ navigation }) => {
         setNutritionFacts([])
 
         setLoading(true)
-        
+
         setTimeout(() => {
             authState.current = mainState.current.authState
             userID.current = mainState.current.userID;
@@ -186,6 +195,23 @@ export const HomeScreen = ({ navigation }) => {
                     setNutritionFacts({ food: input.description, nutrition: response.data.result, schedule: mainState.current.selectedFood_Schedule })
                     Table(response.data.result)
 
+                    const nutrients_JSON = JSON.stringify(response.data.result);
+                    console.log(nutrients_JSON)
+                    const updateUserEntry = async () => {
+
+                        await addEntry({
+                            variables: {
+                                date: `${currentDateReadable}`,
+                                schedule: `${mainState.current.selectedFood_Schedule}`,
+                                item: `${input.description}`,
+                                amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
+                                nutrients: `${nutrients_JSON}`
+                            }
+                        });
+                    }
+                    updateUserEntry();
+
+
                     // console.log(response.data.result)
                     // setDisplayLoading(false)
                 }
@@ -194,6 +220,61 @@ export const HomeScreen = ({ navigation }) => {
                 console.log(error);
             });
     };
+
+    const RecentFood = () => {
+        refetch();
+        const data = userByID?.user.tracker;
+        const data_array = data.slice(-10);
+        const jsonString = JSON.stringify(data_array[0].entry[0].item);
+
+        function removeBackslashes(str) {
+            let pattern = /(?<!\\)\\(?!\\)/g;
+            let replacement = '';
+            let updatedStr = str.replace(pattern, replacement);
+            
+            return updatedStr;
+        }
+
+        const removeQuotes = (str) => {
+            return str.replace(/^"(.*)"$/, '$1');
+        }
+
+
+
+        let sample = removeBackslashes(`${jsonString}`);
+        
+        console.log(removeQuotes(sample))
+
+        return (
+            <>
+                <View
+                    style={{
+                        backgroundColor: 'blue',
+                        height: HeightRatio(20),
+                        width: '80%',
+                    }}
+                >
+                    <Text
+                        style={{ color: 'white', fontSize: HeightRatio(20) }}
+                    >{removeQuotes(sample)}</Text>
+                </View>
+                {/* {data_array.map((data) => (
+                <View 
+                    style={{
+                        backgroundColor: 'red',
+                        height: 10,
+                        width: 100
+                    }}
+                    key={data.entry._id}
+            >
+                <Text>{data.entry.item}</Text>
+            </View>
+            ))} */}
+
+
+            </>
+        )
+    }
 
     const Table = (data) => {
 
@@ -406,7 +487,7 @@ export const HomeScreen = ({ navigation }) => {
                             }}
                             allowFontScaling={false}
                         >
-                            {currentDataReadable}
+                            {currentDateReadable}
                         </Text>
                         {currentDate != moment().format(formatString) &&
                             <TouchableOpacity
@@ -479,16 +560,16 @@ export const HomeScreen = ({ navigation }) => {
                         >
                             {nutritionFacts !== [] &&
                                 <>
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: HeightRatio(30),
-                                                borderBottomWidth: 1,
-                                                borderBottomColor: 'white'
-                                            }}
-                                        >
-                                            {selectedItem.description}
-                                        </Text>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: HeightRatio(30),
+                                            borderBottomWidth: 1,
+                                            borderBottomColor: 'white'
+                                        }}
+                                    >
+                                        {selectedItem.description}
+                                    </Text>
                                     <Text
                                         style={{
                                             color: 'white',
@@ -555,7 +636,7 @@ export const HomeScreen = ({ navigation }) => {
                 <View
                     style={{
                         flex: 1,
-                        backgroundColor: "#47426a",
+                        backgroundColor: "#2f2c4f",
                         margin: 20,
                         zIndex: 999,
                         borderRadius: 10,
@@ -608,6 +689,7 @@ export const HomeScreen = ({ navigation }) => {
                             </Text>
                         </View>
                     </TouchableOpacity>
+                    <RecentFood />
                     {foodData != [] &&
                         <View style={{ flex: 1 }}>
                             {displayLoading ?
@@ -628,59 +710,88 @@ export const HomeScreen = ({ navigation }) => {
                             alignSelf: 'center'
                         }}
                     >
-                        <TouchableOpacity onPress={() => setModalVisible(false)}>
-                            <View style={{
-                                backgroundColor: 'rgba(255, 0, 75, 0.50)',
-                                display: 'flex',
-                                justifyContent: 'flex-start',
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                alignSelf: 'center',
-                                width: (windowWidth - WidthRatio(100)) / 2,
-                                margin: HeightRatio(10)
-                            }}>
-                                <Text
-                                    style={{
-                                        color: 'white',
-                                        fontSize: HeightRatio(25),
+                        {selectedItem ?
+                            <>
+                                <TouchableOpacity onPress={() => setModalVisible(false)}>
+                                    <View style={{
+                                        backgroundColor: 'rgba(255, 0, 75, 0.50)',
+                                        display: 'flex',
+                                        justifyContent: 'flex-start',
+                                        padding: HeightRatio(10),
+                                        borderRadius: HeightRatio(10),
                                         alignSelf: 'center',
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                        width: (windowWidth - WidthRatio(100)) / 2,
+                                        margin: HeightRatio(10)
+                                    }}>
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: HeightRatio(25),
+                                                alignSelf: 'center',
+                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Close
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        getNutritionValue(selectedItem);
+                                        setModalVisible(false);
                                     }}
-                                    allowFontScaling={false}
                                 >
-                                    Close
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {
-                                getNutritionValue(selectedItem);
-                                setModalVisible(false);
-                            }}
-                        >
-                            <View style={{
-                                backgroundColor: 'rgba(30, 228, 168, 0.5)',
-                                display: 'flex',
-                                justifyContent: 'flex-start',
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                alignSelf: 'center',
-                                width: (windowWidth - WidthRatio(100)) / 2,
-                                margin: HeightRatio(10)
-                            }}>
-                                <Text
-                                    style={{
-                                        color: 'white',
-                                        fontSize: HeightRatio(25),
+                                    <View style={{
+                                        backgroundColor: 'rgba(30, 228, 168, 0.5)',
+                                        display: 'flex',
+                                        justifyContent: 'flex-start',
+                                        padding: HeightRatio(10),
+                                        borderRadius: HeightRatio(10),
                                         alignSelf: 'center',
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    Save
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
+                                        width: (windowWidth - WidthRatio(100)) / 2,
+                                        margin: HeightRatio(10)
+                                    }}>
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: HeightRatio(25),
+                                                alignSelf: 'center',
+                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Save
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </>
+                            :
+                            <TouchableOpacity onPress={() => setModalVisible(false)}>
+                                <View style={{
+                                    backgroundColor: 'rgba(255, 0, 75, 0.50)',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    padding: HeightRatio(10),
+                                    borderRadius: HeightRatio(10),
+                                    alignSelf: 'center',
+                                    width: (windowWidth - WidthRatio(100)),
+                                    margin: HeightRatio(10)
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: HeightRatio(25),
+                                            alignSelf: 'center',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Close
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        }
 
                     </View>
 

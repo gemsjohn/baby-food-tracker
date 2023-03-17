@@ -9,20 +9,22 @@ export const GET_ME = gql`
     role
     username
     email
-    story {
+    tracker {
       _id
-      userid
-      chat {
+      date
+      entry {
         _id
-        npc
-        user
+        date
+        schedule
+        item
+        amount
+        nutrients
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
-    candidate
-    storySummary
+    tokens
   }
 }
 `;
@@ -34,20 +36,22 @@ export const GET_USER_BY_ID = gql`
     role
     username
     email
-    story {
+    tracker {
       _id
-      userid
-      chat {
+      date
+      entry {
         _id
-        npc
-        user
+        date
+        schedule
+        item
+        amount
+        nutrients
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
-    candidate
-    storySummary
+    tokens
   }
 }
 `;
@@ -59,35 +63,50 @@ export const GET_USERS = gql`
     role
     username
     email
-    story {
+    tracker {
       _id
-      userid
-      chat {
+      date
+      entry {
         _id
-        npc
-        user
+        date
+        schedule
+        item
+        amount
+        nutrients
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
-    candidate
-    storySummary
+    tokens
   }
 }
 `;
 
-export const STORIES = gql`
+export const TRACKERS = gql`
   query Query($echo: String) {
-  stories(echo: $echo) {
+  trackers(echo: $echo) {
     _id
-    userid
-    chat {
+    date
+    entry {
       _id
-      npc
-      user
+      date
+      schedule
+      item
+      amount
+      nutrients
     }
   }
 }
+`;
+
+export const FOOD = gql`
+  query Query {
+    foods {
+      _id
+      item
+      nutrients
+    }
+  }
 `;
 
