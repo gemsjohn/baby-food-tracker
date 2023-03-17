@@ -27,23 +27,33 @@ import {
     faPlus
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { StatusBar } from 'expo-status-bar';
 import { Styling, windowHeight, windowWidth, HeightRatio, WidthRatio } from '../../Styling';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import moment from 'moment'
 import axios from 'axios'
+import * as SecureStore from 'expo-secure-store';
 import { Navbar } from '../../components/Navbar';
 import { MainStateContext } from '../../App';
 import { convertDateFormat } from './auxilliary/ConvertDateFormat';
+import { SelectedFoodDetails } from './auxilliary/SelectedFoodDetails';
+import { DisplayDailyEntry } from './auxilliary/DisplayDailyEntry';
 
 
 export const HomeScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
+    const [loading, setLoading] = useState(false);
+    const [displayUsername, setDisplayUsername] = useState(false);
+    const [displaySignUpModal, setDisplaySignUpModal] = useState(false);
+    const authState = useRef(false);
+    const userID = useRef(null);
 
     // # - DATE
     const formatString = 'DD/MM/YYYY';
     const [currentDate, setCurrentDate] = useState(moment().format(formatString));
     const [currentDataReadable, setCurrentDateReadable] = useState('')
+    
 
     // # - ADD FOOD
     const [searchQuery, setSearchQuery] = useState('');
@@ -56,6 +66,7 @@ export const HomeScreen = ({ navigation }) => {
     // # - NUTRITION
     const [nutritionFacts, setNutritionFacts] = useState([])
     const [nutritionTable, setNutritionTable] = useState(null)
+    const [displayNutritionValueLoading, setDisplayNutritionValueLoading] = useState(false);
 
     const handlePreviousDay = () => {
         setCurrentDate(moment(currentDate, formatString).subtract(1, 'days').format(formatString));
@@ -65,15 +76,39 @@ export const HomeScreen = ({ navigation }) => {
         setCurrentDate(moment(currentDate, formatString).add(1, 'days').format(formatString));
     }
 
+    async function getValueFor(key) {
+        let result = await SecureStore.getItemAsync(key);
+        if (result && authState.current) {
+            setDisplayUsername(true)
+        } else if (!result && !authState.current) {
+            setDisplaySignUpModal(true)
+            // setDisplayUsername(false)
+        }
+    }
+
     useEffect(() => {
         setNutritionFacts([])
+
+        setLoading(true)
+        
+        setTimeout(() => {
+            authState.current = mainState.current.authState
+            userID.current = mainState.current.userID;
+
+
+            getValueFor('cosmicKey')
+            setTimeout(() => {
+                setLoading(false)
+            }, 500)
+        }, 500)
+
     }, [])
 
     useEffect(() => {
         setCurrentDateReadable(convertDateFormat(currentDate));
     }, [currentDate])
 
-    const handleSearch = async() => {
+    const handleSearch = async () => {
         console.log(`Searching for: ${searchQuery}`);
         setDisplayLoading(true)
         const data = {
@@ -112,10 +147,13 @@ export const HomeScreen = ({ navigation }) => {
             });
     };
 
-    const getNutritionValue = async(input) => {
+    const getNutritionValue = async (input) => {
+        setDisplayNutritionValueLoading(true)
         setNutritionFacts([])
         const data = {
-            search: input
+            search: input,
+            quantity: mainState.current.selectedFood_Quantity,
+            measurement: mainState.current.selectedFood_Measurement
         };
         const prompt = encodeURIComponent(JSON.stringify(data));
 
@@ -140,9 +178,15 @@ export const HomeScreen = ({ navigation }) => {
                     // )
                     console.log("ERROR")
                 } else {
-                    setNutritionFacts({food: input.description, nutrition: response.data.result})
+                    console.log("# - getNutritionvalue:")
+                    console.log(mainState.current.selectedFood_Quantity)
+                    console.log(mainState.current.selectedFood_Measurement)
+                    console.log(mainState.current.selectedFood_Schedule)
+                    console.log("# --------------------------------------")
+                    setNutritionFacts({ food: input.description, nutrition: response.data.result, schedule: mainState.current.selectedFood_Schedule })
                     Table(response.data.result)
-                    console.log(response.data.result)
+
+                    // console.log(response.data.result)
                     // setDisplayLoading(false)
                 }
             })
@@ -154,16 +198,45 @@ export const HomeScreen = ({ navigation }) => {
     const Table = (data) => {
 
         setNutritionTable(
-          <View style={styles.table}>
-            {Object.keys(data).map((key) => (
-              <View style={styles.row} key={key}>
-                <Text style={styles.cell}>{key.replace('_', ' ')}</Text>
-                <Text style={styles.cell}>{data[key].amount} {data[key].unit}</Text>
-              </View>
-            ))}
-          </View>
+            <View style={styles.table}>
+                {Object.keys(data).map((key) => (
+                    <View
+                        style={{
+                            ...styles.row,
+                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                            margin: HeightRatio(2),
+                            padding: HeightRatio(2),
+                            borderRadius: HeightRatio(4)
+                        }}
+                        key={key}
+                    >
+                        <Text
+                            style={{
+                                ...styles.cell,
+                                fontSize: HeightRatio(20),
+                                fontFamily: "SofiaSansSemiCondensed-Regular"
+                            }}
+                            allowFontScaling={false}
+                        >
+                            {key.replace('_', ' ')}
+                        </Text>
+                        <Text
+                            style={{
+                                ...styles.cell,
+                                fontSize: HeightRatio(20),
+                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                            }}
+                            allowFontScaling={false}
+                        >
+                            {data[key].amount} {data[key].unit}
+                        </Text>
+                    </View>
+                ))}
+            </View>
         )
-      };
+        setDisplayNutritionValueLoading(false)
+
+    };
 
 
     const renderItem = ({ item }) => {
@@ -212,6 +285,7 @@ export const HomeScreen = ({ navigation }) => {
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         position: 'absolute',
+                                        top: 0,
                                         right: HeightRatio(0),
                                         borderTopRightRadius: HeightRatio(10),
                                         borderBottomRightRadius: HeightRatio(10)
@@ -226,11 +300,7 @@ export const HomeScreen = ({ navigation }) => {
                                         size={20}
                                     />
                                 </TouchableOpacity>
-                                <View>
-                                    <Text>
-                                        Quantity
-                                    </Text>
-                                </View>
+                                <SelectedFoodDetails />
                             </>
                             :
                             <TouchableOpacity
@@ -283,12 +353,12 @@ export const HomeScreen = ({ navigation }) => {
     return (
         <>
             <View
-                style={{ ...Styling.container, backgroundColor: 'white', display: 'flex', alignItems: 'center', width: windowWidth }}
+                style={{ ...Styling.container, backgroundColor: 'rgba(71, 66, 106, 1.00)', display: 'flex', alignItems: 'center', width: windowWidth }}
                 onLayout={onLayoutRootView}
             >
                 <View
                     style={{
-                        backgroundColor: 'white',
+                        backgroundColor: 'rgba(71, 66, 106, 1.00)',
                         width: windowWidth,
                         display: 'flex',
                         flexDirection: 'row',
@@ -313,7 +383,7 @@ export const HomeScreen = ({ navigation }) => {
                         <FontAwesomeIcon
                             icon={faSolid, faArrowLeft}
                             style={{
-                                color: 'black',
+                                color: 'white',
                             }}
                             size={25}
                         />
@@ -327,7 +397,7 @@ export const HomeScreen = ({ navigation }) => {
                     >
                         <Text
                             style={{
-                                color: 'black',
+                                color: 'white',
                                 fontSize: HeightRatio(30),
                                 fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 marginLeft: HeightRatio(10),
@@ -356,7 +426,7 @@ export const HomeScreen = ({ navigation }) => {
                             >
                                 <Text
                                     style={{
-                                        color: 'black',
+                                        color: 'white',
                                         fontSize: HeightRatio(20),
                                         fontFamily: 'SofiaSansSemiCondensed-Regular',
 
@@ -387,40 +457,65 @@ export const HomeScreen = ({ navigation }) => {
                         <FontAwesomeIcon
                             icon={faSolid, faArrowRight}
                             style={{
-                                color: 'black',
+                                color: 'white',
                             }}
                             size={25}
                         />
                     </TouchableOpacity>
                 </View>
 
-                <View
-                    style={{
-                        alignSelf: 'center'
-                    }}
-                >
-                    {nutritionFacts !== [] &&
+                {displayNutritionValueLoading ?
                     <>
-                    <Text
-                        style={{
-                            color: 'black',
-                            fontSize: HeightRatio(20)
-                        }}
-                    >
-                        {nutritionFacts.food}
-                    </Text>
-                    
-                    {nutritionTable}
+
+                        <View
+                            style={{
+                                alignSelf: 'center',
+                                backgroundColor: "#47426a",
+                                margin: 20,
+                                borderRadius: 10,
+                                padding: HeightRatio(10),
+                                width: '80%'
+                            }}
+                        >
+                            {nutritionFacts !== [] &&
+                                <>
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: HeightRatio(30),
+                                                borderBottomWidth: 1,
+                                                borderBottomColor: 'white'
+                                            }}
+                                        >
+                                            {selectedItem.description}
+                                        </Text>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: HeightRatio(20)
+                                        }}
+                                    >
+                                        Nutrition Details
+                                    </Text>
+                                    <ActivityIndicator />
+                                </>
+                            }
+
+                        </View>
+                    </>
+                    :
+                    <>
+                        {nutritionFacts != [] && nutritionTable != null &&
+                            <DisplayDailyEntry facts={nutritionFacts} table={nutritionTable} />
+                        }
                     </>
                 }
-
-                </View>
 
 
                 {/* Add Button */}
                 <TouchableOpacity
                     onPress={() => {
-                        setModalVisible(true); 
+                        setModalVisible(true);
                         setSearchQuery('');
                         setSelectedItem(null);
                         setDisplayDetails(false);
@@ -533,30 +628,6 @@ export const HomeScreen = ({ navigation }) => {
                             alignSelf: 'center'
                         }}
                     >
-                        <TouchableOpacity onPress={() => {getNutritionValue(selectedItem); setModalVisible(false);}}>
-                            <View style={{
-                                backgroundColor: 'rgba(30, 228, 168, 0.5)',
-                                display: 'flex',
-                                justifyContent: 'flex-start',
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                alignSelf: 'center',
-                                width: (windowWidth - WidthRatio(100)) / 2,
-                                margin: HeightRatio(10)
-                            }}>
-                                <Text
-                                    style={{
-                                        color: 'white',
-                                        fontSize: HeightRatio(25),
-                                        alignSelf: 'center',
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    Save
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
                         <TouchableOpacity onPress={() => setModalVisible(false)}>
                             <View style={{
                                 backgroundColor: 'rgba(255, 0, 75, 0.50)',
@@ -581,32 +652,167 @@ export const HomeScreen = ({ navigation }) => {
                                 </Text>
                             </View>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                getNutritionValue(selectedItem);
+                                setModalVisible(false);
+                            }}
+                        >
+                            <View style={{
+                                backgroundColor: 'rgba(30, 228, 168, 0.5)',
+                                display: 'flex',
+                                justifyContent: 'flex-start',
+                                padding: HeightRatio(10),
+                                borderRadius: HeightRatio(10),
+                                alignSelf: 'center',
+                                width: (windowWidth - WidthRatio(100)) / 2,
+                                margin: HeightRatio(10)
+                            }}>
+                                <Text
+                                    style={{
+                                        color: 'white',
+                                        fontSize: HeightRatio(25),
+                                        alignSelf: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Save
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+
                     </View>
 
                 </View>
 
             </Modal>
 
+            {/* SIGN UP MODAL */}
+            <Modal
+                animationType="none"
+                transparent={true}
+                visible={displaySignUpModal}
+                onRequestClose={() => {
+                    setDisplaySignUpModal(!displaySignUpModal);
+
+                }}
+            >
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "#47426a", }}>
+                    <View style={{ borderTopRightRadius: HeightRatio(10) }}>
+
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+
+                            {/* <Image
+                                source={require('../../assets/blink.gif')}
+                                style={{
+                                    height: HeightRatio(150),
+                                    width: HeightRatio(150),
+                                    alignSelf: 'center',
+                                    marginTop: HeightRatio(10)
+                                }}
+                            /> */}
+                            <Text
+                                style={{
+                                    color: '#ffff00',
+                                    textAlign: 'center',
+                                    fontSize: HeightRatio(30),
+                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    marginTop: HeightRatio(10)
+                                }}
+                                allowFontScaling={false}
+                            >
+                                Baby Food Tracker
+                            </Text>
+                            <View style={{ height: 10 }}></View>
+
+
+                            <TouchableOpacity
+                                onPress={() => navigation.dispatch(resetActionAuth)}
+                                style={{ ...Styling.modalWordButton, marginTop: 10 }}
+                            >
+                                <View style={{
+                                    backgroundColor: 'rgba(30, 228, 168, 0.5)',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    padding: HeightRatio(20),
+                                    borderRadius: HeightRatio(10),
+                                    alignSelf: 'center',
+                                    width: windowWidth - WidthRatio(50)
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: HeightRatio(30),
+                                            alignSelf: 'center',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Sign Up or Login
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setDisplaySignUpModal(!displaySignUpModal);
+                                    setMainState({
+                                        displaySignUpModal: false
+                                    })
+                                }}
+                                style={{
+                                    borderWidth: 3,
+                                    borderColor: '#ff0076',
+                                    borderRadius: 100,
+                                    height: HeightRatio(60),
+                                    width: HeightRatio(60),
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faSolid, faX}
+                                    style={{
+                                        color: '#ff0076',
+                                    }}
+                                />
+                            </TouchableOpacity>
+
+
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
             <Navbar nav={navigation} auth={mainState.current.authState} position={'absolute'} from={'home'} />
+
+            <StatusBar
+                barStyle="default"
+                hidden={false}
+                backgroundColor="transparent"
+                translucent={true}
+                networkActivityIndicatorVisible={true}
+            />
         </>
     )
 }
 
 const styles = StyleSheet.create({
     table: {
-      borderWidth: 1,
-      borderColor: '#ccc',
-      padding: 10,
-      marginBottom: 10,
+        //   borderWidth: 1,
+        //   borderColor: '#ccc',
+        padding: 10,
+        marginBottom: 10,
     },
     row: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: 5,
-      width: windowWidth - HeightRatio(100)
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 5,
+        width: windowWidth - HeightRatio(100)
     },
     cell: {
-      flex: 1,
-      textAlign: 'center',
+        flex: 1,
+        textAlign: 'left',
+
     },
-  });
+});

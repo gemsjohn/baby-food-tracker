@@ -3,7 +3,7 @@ import { View, Text, Button, Dimensions, Image, TouchableOpacity, PixelRatio, To
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
 import { useQuery } from '@apollo/client';
-// import { GET_USER_BY_ID, GET_ME } from '../utils/queries';
+import { GET_USER_BY_ID, GET_ME } from '../utils/queries';
 import { MainStateContext } from '../App';
 import moment from 'moment';
 import { Styling, windowHeight, windowWidth, HeightRatio, WidthRatio } from '../Styling';
@@ -70,9 +70,9 @@ export const Navbar = (props) => {
         }
     }
 
-    // const { data: userByID, refetch, error } = useQuery(GET_USER_BY_ID, {
-    //     variables: { id: mainState.current.userID }
-    // });
+    const { data: userByID, refetch, error } = useQuery(GET_USER_BY_ID, {
+        variables: { id: mainState.current.userID }
+    });
 
     const resetActionHome = CommonActions.reset({
         index: 1,
@@ -92,7 +92,7 @@ export const Navbar = (props) => {
     });
 
     useEffect(() => {
-        // refetch()
+        refetch()
         if (props.from == 'home') {
             // console.log("Home")
             setFromHome(true)
@@ -119,9 +119,9 @@ export const Navbar = (props) => {
         pingServer()
     }, [])
 
-    // if (localKeyMoment != mainState.current.initialKeyMoment && mainState.current.bearerToken != null) {
-    //     checkToken();
-    // }
+    if (localKeyMoment != mainState.current.initialKeyMoment && mainState.current.bearerToken != null) {
+        checkToken();
+    }
 
     return (
         <>
@@ -176,7 +176,7 @@ export const Navbar = (props) => {
                                 isGameInProgress: false
                             })
                         }}
-                        style={{ backgroundColor: fromHome ? 'rgba(22, 27, 33, 1.00)' : 'rgba(22, 27, 33, 0.25)', borderTopLeftRadius: HeightRatio(30) }}
+                        style={{ backgroundColor: fromHome ? 'rgba(30, 228, 168, 1.0)' : 'rgba(22, 27, 33, 1.00)', borderTopLeftRadius: HeightRatio(30) }}
                     >
                         <View
                             style={{
@@ -186,14 +186,14 @@ export const Navbar = (props) => {
                                 padding: HeightRatio(10),
                                 borderRadius: HeightRatio(10),
                                 alignSelf: 'center',
-                                width: windowWidth / 4
+                                width: windowWidth / 2
                             }}
                             accessible={true}
                             accessibilityLabel="Home"
                         >
                             <Text
                                 style={{
-                                    color: 'white',
+                                    color: fromHome ? 'black' : 'white',
                                     fontSize: HeightRatio(20),
                                     alignSelf: 'center',
                                     fontFamily: 'SofiaSansSemiCondensed-Regular'
@@ -216,7 +216,7 @@ export const Navbar = (props) => {
                                     isGameInProgress: false
                                 })
                             }}
-                            style={{ backgroundColor: fromProfile ? 'rgba(22, 27, 33, 1.00)' : 'rgba(22, 27, 33, 0.25)', borderTopRightRadius: HeightRatio(30) }}
+                            style={{ backgroundColor: fromProfile ? 'rgba(30, 228, 168, 1.0)' : 'rgba(22, 27, 33, 1.00)', borderTopRightRadius: HeightRatio(30) }}
                         >
                             <View
                                 style={{
@@ -226,14 +226,14 @@ export const Navbar = (props) => {
                                     padding: HeightRatio(10),
                                     borderRadius: HeightRatio(10),
                                     alignSelf: 'center',
-                                    width: windowWidth / 4
+                                    width: windowWidth / 2
                                 }}
                                 accessible={true}
                                 accessibilityLabel="Home"
                             >
                                 <Text
                                     style={{
-                                        color: 'white',
+                                        color: fromProfile ? 'black' : 'white',
                                         fontSize: HeightRatio(20),
                                         alignSelf: 'center',
                                         fontFamily: 'SofiaSansSemiCondensed-Regular'
@@ -247,7 +247,7 @@ export const Navbar = (props) => {
                         :
                         <TouchableOpacity
                             onPress={() => { props.nav.dispatch(resetActionAuth); }}
-                            style={{ backgroundColor: fromProfile ? 'rgba(22, 27, 33, 1.00)' : 'rgba(22, 27, 33, 0.25)', borderTopRightRadius: HeightRatio(30) }}
+                            style={{ backgroundColor: fromProfile ? 'rgba(30, 228, 168, 1.0)' : 'rgba(22, 27, 33, 1.00)', borderTopRightRadius: HeightRatio(30) }}
                         >
                             <View
                                 style={{
@@ -257,14 +257,14 @@ export const Navbar = (props) => {
                                     padding: HeightRatio(10),
                                     borderRadius: HeightRatio(10),
                                     alignSelf: 'center',
-                                    width: windowWidth / 4
+                                    width: windowWidth / 2
                                 }}
                                 accessible={true}
                                 accessibilityLabel="Home"
                             >
                                 <Text
                                     style={{
-                                        color: 'white',
+                                        color: fromProfile ? 'black' : 'white',
                                         fontSize: HeightRatio(20),
                                         alignSelf: 'center',
                                         fontFamily: 'SofiaSansSemiCondensed-Regular'

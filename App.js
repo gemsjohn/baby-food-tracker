@@ -6,9 +6,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { HomeScreen } from './pages/home/Home';
-// import { KeyScreen } from './pages/home/Key';
-// import { ProfileScreen } from './pages/profile/Profile';
-// import { Auth } from './pages/auth/auth';
+import { KeyScreen } from './pages/home/Key';
+import { ProfileScreen } from './pages/profile/Profile';
+import { Auth } from './pages/auth/auth';
 import * as SecureStore from 'expo-secure-store';
 
 export const MainStateContext = createContext();
@@ -80,20 +80,20 @@ export default function App() {
           >
             <Stack.Navigator
               // initialRouteName={initRoute}
-              initialRouteName={"Home"}
+              initialRouteName={"Key"}
               screenOptions={{
                 headerShown: false,
                 
               }}
             >
-              {/* <Stack.Screen
+              <Stack.Screen
                 name="Auth"
                 component={Auth}
                 options={{
                   headerShown: false,
                   orientation: 'portrait_up',
                 }}
-              /> */}
+              />
               <Stack.Screen
                 name="Home"
                 component={HomeScreen}
@@ -103,7 +103,7 @@ export default function App() {
                   
                 }}
               />
-              {/* <Stack.Screen
+              <Stack.Screen
                 name="Key"
                 component={KeyScreen}
                 options={{
@@ -112,7 +112,7 @@ export default function App() {
                   
                 }}
               />
-              <Stack.Screen
+              {/* <Stack.Screen
                 name="Chat"
                 component={ChatScreen}
                 options={{
@@ -120,7 +120,7 @@ export default function App() {
                   orientation: 'portrait_up',
                   
                 }}
-              />
+              /> */}
               <Stack.Screen
                 name="Profile"
                 component={ProfileScreen}
@@ -128,7 +128,7 @@ export default function App() {
                   headerShown: false,
                   orientation: 'portrait_up',
                 }}
-              /> */}
+              />
 
             </Stack.Navigator>
           </NavigationContainer>
