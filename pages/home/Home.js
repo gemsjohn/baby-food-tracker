@@ -32,12 +32,20 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import moment from 'moment'
 import axios from 'axios'
-import { FoodData } from './FoodData';
+import { Navbar } from '../../components/Navbar';
+import { MainStateContext } from '../../App';
+import { convertDateFormat } from './auxilliary/ConvertDateFormat';
 
-export const HomeScreen = () => {
+
+export const HomeScreen = ({ navigation }) => {
+    const { mainState, setMainState } = useContext(MainStateContext);
+
+    // # - DATE
     const formatString = 'DD/MM/YYYY';
     const [currentDate, setCurrentDate] = useState(moment().format(formatString));
     const [currentDataReadable, setCurrentDateReadable] = useState('')
+
+    // # - ADD FOOD
     const [searchQuery, setSearchQuery] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [foodData, setFoodData] = useState([]);
@@ -45,46 +53,40 @@ export const HomeScreen = () => {
     const [displayDetails, setDisplayDetails] = useState(false);
     const [displayLoading, setDisplayLoading] = useState(false);
 
-
+    // # - NUTRITION
+    const [nutritionFacts, setNutritionFacts] = useState([])
+    const [nutritionTable, setNutritionTable] = useState(null)
 
     const handlePreviousDay = () => {
         setCurrentDate(moment(currentDate, formatString).subtract(1, 'days').format(formatString));
-
     }
 
     const handleNextDay = () => {
         setCurrentDate(moment(currentDate, formatString).add(1, 'days').format(formatString));
     }
 
-    const convertDateFormat = (dateString) => {
-        const inputFormat = 'DD/MM/YYYY';
-        const outputFormat = 'MMMM Do YYYY';
-        const dateObject = moment(dateString, inputFormat);
-        const convertedDate = dateObject.format(outputFormat);
-        return convertedDate;
-    }
-
+    useEffect(() => {
+        setNutritionFacts([])
+    }, [])
 
     useEffect(() => {
         setCurrentDateReadable(convertDateFormat(currentDate));
     }, [currentDate])
 
     const handleSearch = async() => {
-        // Your search functionality here
         console.log(`Searching for: ${searchQuery}`);
         setDisplayLoading(true)
         const data = {
             search: searchQuery
         };
+
         const prompt = encodeURIComponent(JSON.stringify(data));
-        console.log(prompt)
 
         const config = {
             method: "POST",
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                // Authorization: mainState.current.bearerToken
             },
             url: `http://192.168.1.198:3001/query-usda/${prompt}`
         }
@@ -101,7 +103,6 @@ export const HomeScreen = () => {
                     // )
                     console.log("ERROR")
                 } else {
-                    console.log(response.data.result)
                     setFoodData(response.data.result);
                     setDisplayLoading(false)
                 }
@@ -109,11 +110,60 @@ export const HomeScreen = () => {
             .catch((error) => {
                 console.log(error);
             });
-
-        // setDisplayLoading(true);
-        
-
     };
+
+    const getNutritionValue = async(input) => {
+        setNutritionFacts([])
+        const data = {
+            search: input
+        };
+        const prompt = encodeURIComponent(JSON.stringify(data));
+
+        const config = {
+            method: "POST",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            url: `http://192.168.1.198:3001/api/npc/${prompt}`
+        }
+
+        axios(config)
+            .then((response) => {
+                if (response.data.result[0] === "ERROR") {
+                    // setErrorResponse(
+                    //     <View>
+                    //         <Text style={{ color: 'red', alignSelf: 'center' }}>
+                    //             Error: This service is temporarily down.
+                    //         </Text>
+                    //     </View>
+                    // )
+                    console.log("ERROR")
+                } else {
+                    setNutritionFacts({food: input.description, nutrition: response.data.result})
+                    Table(response.data.result)
+                    console.log(response.data.result)
+                    // setDisplayLoading(false)
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    const Table = (data) => {
+
+        setNutritionTable(
+          <View style={styles.table}>
+            {Object.keys(data).map((key) => (
+              <View style={styles.row} key={key}>
+                <Text style={styles.cell}>{key.replace('_', ' ')}</Text>
+                <Text style={styles.cell}>{data[key].amount} {data[key].unit}</Text>
+              </View>
+            ))}
+          </View>
+        )
+      };
 
 
     const renderItem = ({ item }) => {
@@ -124,10 +174,8 @@ export const HomeScreen = () => {
                         style={{
                             backgroundColor: "rgba(255, 255, 255, 0.5)",
                             width: '90%',
-                            // height: HeightRatio(90),
                             padding: HeightRatio(15),
                             margin: HeightRatio(4),
-                            // borderWidth: 1,
                             borderRadius: HeightRatio(10),
                             display: "flex",
                             alignItems: "center",
@@ -242,7 +290,6 @@ export const HomeScreen = () => {
                     style={{
                         backgroundColor: 'white',
                         width: windowWidth,
-                        // padding: HeightRatio(30),
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'center',
@@ -255,7 +302,6 @@ export const HomeScreen = () => {
                         style={{
                             height: '100%',
                             width: HeightRatio(90),
-                            // backgroundColor: 'rgba(255, 255, 255, 0.1)',
                             borderRadius: HeightRatio(20),
                             margin: HeightRatio(40),
                             marginRight: HeightRatio(10),
@@ -284,7 +330,6 @@ export const HomeScreen = () => {
                                 color: 'black',
                                 fontSize: HeightRatio(30),
                                 fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                // marginTop: HeightRatio(30),
                                 marginLeft: HeightRatio(10),
                                 marginRight: HeightRatio(10)
 
@@ -331,7 +376,6 @@ export const HomeScreen = () => {
                         style={{
                             height: '100%',
                             width: HeightRatio(90),
-                            // backgroundColor: 'rgba(255, 255, 255, 0.1)',
                             borderRadius: HeightRatio(20),
                             margin: HeightRatio(40),
                             marginLeft: HeightRatio(10),
@@ -350,10 +394,38 @@ export const HomeScreen = () => {
                     </TouchableOpacity>
                 </View>
 
+                <View
+                    style={{
+                        alignSelf: 'center'
+                    }}
+                >
+                    {nutritionFacts !== [] &&
+                    <>
+                    <Text
+                        style={{
+                            color: 'black',
+                            fontSize: HeightRatio(20)
+                        }}
+                    >
+                        {nutritionFacts.food}
+                    </Text>
+                    
+                    {nutritionTable}
+                    </>
+                }
+
+                </View>
+
 
                 {/* Add Button */}
                 <TouchableOpacity
-                    onPress={() => setModalVisible(true)}
+                    onPress={() => {
+                        setModalVisible(true); 
+                        setSearchQuery('');
+                        setSelectedItem(null);
+                        setDisplayDetails(false);
+                        setFoodData([]);
+                    }}
                     style={{
                         backgroundColor: 'rgba(30, 228, 168, 1.0)',
                         display: 'flex',
@@ -392,7 +464,6 @@ export const HomeScreen = () => {
                         margin: 20,
                         zIndex: 999,
                         borderRadius: 10,
-                        // padding: 20,
                     }}
                 >
                     <TextInput
@@ -416,7 +487,6 @@ export const HomeScreen = () => {
                     <TouchableOpacity
                         onPress={() => {
                             handleSearch()
-                            // setDisplayLoading(true);
                         }}
 
                     >
@@ -434,7 +504,6 @@ export const HomeScreen = () => {
                                 style={{
                                     color: 'white',
                                     fontSize: HeightRatio(25),
-                                    // fontWeight: 'bold',
                                     alignSelf: 'center',
                                     fontFamily: 'SofiaSansSemiCondensed-Regular'
                                 }}
@@ -464,7 +533,7 @@ export const HomeScreen = () => {
                             alignSelf: 'center'
                         }}
                     >
-                        <TouchableOpacity onPress={() => console.log("SAVE")}>
+                        <TouchableOpacity onPress={() => {getNutritionValue(selectedItem); setModalVisible(false);}}>
                             <View style={{
                                 backgroundColor: 'rgba(30, 228, 168, 0.5)',
                                 display: 'flex',
@@ -517,6 +586,27 @@ export const HomeScreen = () => {
                 </View>
 
             </Modal>
+
+            <Navbar nav={navigation} auth={mainState.current.authState} position={'absolute'} from={'home'} />
         </>
     )
 }
+
+const styles = StyleSheet.create({
+    table: {
+      borderWidth: 1,
+      borderColor: '#ccc',
+      padding: 10,
+      marginBottom: 10,
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 5,
+      width: windowWidth - HeightRatio(100)
+    },
+    cell: {
+      flex: 1,
+      textAlign: 'center',
+    },
+  });
