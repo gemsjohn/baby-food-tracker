@@ -42,6 +42,7 @@ import { DisplayDailyEntry } from './auxilliary/DisplayDailyEntry';
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_ENTRY } from '../../utils/mutations';
 import { GET_USER_BY_ID } from '../../utils/queries';
+import { DailySchedule } from './auxilliary/DailySchedule';
 
 
 
@@ -247,17 +248,95 @@ export const HomeScreen = ({ navigation }) => {
 
         return (
             <>
-                <View
-                    style={{
-                        backgroundColor: 'blue',
-                        height: HeightRatio(20),
-                        width: '80%',
-                    }}
-                >
-                    <Text
-                        style={{ color: 'white', fontSize: HeightRatio(20) }}
-                    >{removeQuotes(sample)}</Text>
-                </View>
+                {/* {item.description != '' && */}
+                    <View
+                        style={{
+                            backgroundColor: "rgba(255, 255, 255, 0.5)",
+                            width: '90%',
+                            padding: HeightRatio(15),
+                            margin: HeightRatio(4),
+                            borderRadius: HeightRatio(10),
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            alignSelf: 'center',
+                        }}
+                        // key={}
+                    >
+                        <Text
+                            style={{
+                                color: "black",
+                                fontSize: HeightRatio(25),
+                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                textAlign: 'center',
+                                width: '80%',
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                            }}
+                            allowFontScaling={false}
+                        >
+                            {removeQuotes(sample)}
+                        </Text>
+
+                        {displayDetails ?
+                            <>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setSelectedItem(null);
+                                        setDisplayDetails(false)
+                                    }}
+                                    style={{
+                                        height: HeightRatio(46),
+                                        width: HeightRatio(40),
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        position: 'absolute',
+                                        top: 0,
+                                        right: HeightRatio(0),
+                                        borderTopRightRadius: HeightRatio(10),
+                                        borderBottomRightRadius: HeightRatio(10)
+
+                                    }}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faSolid, faX}
+                                        style={{
+                                            color: 'red',
+                                        }}
+                                        size={20}
+                                    />
+                                </TouchableOpacity>
+                                <SelectedFoodDetails />
+                            </>
+                            :
+                            <TouchableOpacity
+                                onPress={() => {
+                                    // setSelectedItem(removeQuotes(sample));
+                                    // setDisplayDetails(true)
+                                }}
+                                style={{
+                                    height: HeightRatio(46),
+                                    width: HeightRatio(40),
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    position: 'absolute',
+                                    right: HeightRatio(0),
+                                    borderTopRightRadius: HeightRatio(10),
+                                    borderBottomRightRadius: HeightRatio(10)
+
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faSolid, faPlus}
+                                    style={{
+                                        color: 'green',
+                                    }}
+                                    size={20}
+                                />
+                            </TouchableOpacity>
+                        }
+                    </View>
+                {/* } */}
                 {/* {data_array.map((data) => (
                 <View 
                     style={{
@@ -592,6 +671,8 @@ export const HomeScreen = ({ navigation }) => {
                     </>
                 }
 
+                <DailySchedule date={currentDateReadable} />
+
 
                 {/* Add Button */}
                 <TouchableOpacity
@@ -689,7 +770,9 @@ export const HomeScreen = ({ navigation }) => {
                             </Text>
                         </View>
                     </TouchableOpacity>
-                    <RecentFood />
+
+                    {/* <RecentFood /> */}
+                    
                     {foodData != [] &&
                         <View style={{ flex: 1 }}>
                             {displayLoading ?

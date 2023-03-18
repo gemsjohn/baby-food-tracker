@@ -112,7 +112,7 @@ export const KeyScreen = ({ navigation }) => {
         <>
             {pageLoadComplete ?
                 <View
-                    style={{ ...Styling.container, backgroundColor: '#161b21', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    style={{ ...Styling.container, backgroundColor: 'rgba(71, 66, 106, 1.00)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     onLayout={onLayoutRootView}
                 >
                     <StatusBar
@@ -135,13 +135,13 @@ export const KeyScreen = ({ navigation }) => {
                         style={{
                             color: '#ffff00',
                             textAlign: 'center',
-                            fontSize: HeightRatio(20),
+                            fontSize: HeightRatio(30),
                             fontFamily: 'GochiHand_400Regular',
                             marginTop: HeightRatio(10)
                         }}
                         allowFontScaling={false}
                     >
-                        - NPC AI -
+                        Baby Food Tracker
                     </Text>
                     <View style={{ margin: HeightRatio(20), alignSelf: 'center' }}>
                         <View style={{ flexDirection: 'row' }}>
@@ -226,70 +226,70 @@ export const KeyScreen = ({ navigation }) => {
                     </View>
                     <View style={{ marginTop: 10, marginBottom: 10 }}>
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <TouchableOpacity style={{ backgroundColor: 'rgba(9, 224, 73, 0.70)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('1')}>
+                            <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 1.0)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('1')}>
                                 <Text
-                                    style={{ color: 'white', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center' }}
+                                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center' }}
                                     allowFontScaling={false}
                                 >1</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ backgroundColor: 'rgba(9, 224, 73, 0.70)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('2')}>
+                            <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 1.0)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('2')}>
                                 <Text
-                                    style={{ color: 'white', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                                     allowFontScaling={false}
                                 >2</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ backgroundColor: 'rgba(9, 224, 73, 0.70)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('3')}>
+                            <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 1.0)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('3')}>
                                 <Text
-                                    style={{ color: 'white', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                                     allowFontScaling={false}
                                 >3</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <TouchableOpacity style={{ backgroundColor: 'rgba(9, 224, 73, 0.70)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('4')}>
+                            <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 1.0)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('4')}>
                                 <Text
-                                    style={{ color: 'white', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                                     allowFontScaling={false}
                                 >4</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ backgroundColor: 'rgba(9, 224, 73, 0.70)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('5')}>
+                            <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 1.0)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('5')}>
                                 <Text
-                                    style={{ color: 'white', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                                     allowFontScaling={false}
                                 >5</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ backgroundColor: 'rgba(9, 224, 73, 0.70)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('6')}>
+                            <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 1.0)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('6')}>
                                 <Text
-                                    style={{ color: 'white', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                                     allowFontScaling={false}
                                 >6</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <TouchableOpacity style={{ backgroundColor: 'rgba(9, 224, 73, 0.70)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('7')}>
+                            <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 1.0)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('7')}>
                                 <Text
-                                    style={{ color: 'white', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                                     allowFontScaling={false}
                                 >7</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ backgroundColor: 'rgba(9, 224, 73, 0.70)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('8')}>
+                            <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 1.0)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('8')}>
                                 <Text
-                                    style={{ color: 'white', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                                     allowFontScaling={false}
                                 >8</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ backgroundColor: 'rgba(9, 224, 73, 0.70)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('9')}>
+                            <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 1.0)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('9')}>
                                 <Text
-                                    style={{ color: 'white', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                                     allowFontScaling={false}
                                 >9</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
 
-                            <TouchableOpacity style={{ backgroundColor: 'rgba(9, 224, 73, 0.70)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('0')}>
+                            <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 1.0)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('0')}>
                                 <Text
-                                    style={{ color: 'white', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                                     allowFontScaling={false}
                                 >0</Text>
                             </TouchableOpacity>
