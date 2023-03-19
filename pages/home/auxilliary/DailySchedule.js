@@ -48,9 +48,13 @@ export const DailySchedule = (props) => {
     const [midmorning, setMidmorning] = useState([]);
     const [midmorningData, setMidmorningData] = useState([]);
     const [lunch, setLunch] = useState([]);
+    const [lunchData, setLunchData] = useState([]);
     const [midafternoon, setMidafternoon] = useState([]);
+    const [midafternoonData, setMidafternoonData] = useState([]);
     const [dinner, setDinner] = useState([]);
+    const [dinnerData, setDinnerData] = useState([]);
     const [beforeBed, setBeforeBed] = useState([]);
+    const [beforeBedData, setBeforeBedData] = useState([]);
 
 
 
@@ -84,6 +88,21 @@ export const DailySchedule = (props) => {
     useEffect(() => {
         console.log('# --------------------------------------')
         console.log('# - Date: ' + props.date)
+        console.log("# - Clear Everything")
+        setFirstThing([])
+        setBreakfast([])
+        setMidmorning([])
+        setLunch([])
+        setMidafternoon([])
+        setDinner([])
+        setBeforeBed([])
+        setFirstThingData([])
+        setBreakfastData([])
+        setMidmorningData([])
+        setLunchData([])
+        setMidafternoonData([])
+        setDinnerData([])
+        setBeforeBedData([])
         getTrackerEntryByDate(props.date)
 
     }, [props.date])
@@ -153,7 +172,13 @@ export const DailySchedule = (props) => {
     }, [matchingDate])
 
     const displayScheduleData = (input) => {
+        setFirstThingData([])
         setBreakfastData([])
+        setMidmorningData([])
+        setLunchData([])
+        setMidafternoonData([])
+        setDinnerData([])
+        setBeforeBedData([])
         console.log("# - displayScheduleData: " + input)
 
         for (let i = 0; i < matchingDate.length; i++) {
@@ -177,42 +202,53 @@ export const DailySchedule = (props) => {
             let sample_v1 = removeBackslashes(`${jsonString}`);
             let sample_v2 = removeQuotes(sample_v1)
 
-            console.log(sample_v2)
+            // console.log(sample_v2)
 
             if (sample_v2 == input) {
-                console.log(i)
+                // console.log(i)
                 let item = JSON.stringify(matchingDate[i].entry[0].item);
                 item = removeQuotes(item);
                 let amount = JSON.stringify(matchingDate[i].entry[0].amount);
                 amount = removeQuotes(amount)
+                let nutrients = JSON.stringify(matchingDate[i].entry[0].nutrients);
+                nutrients = removeBackslashes(nutrients)
+                nutrients = removeQuotes(nutrients)
+                nutrients = JSON.parse(nutrients)
+                // console.log(nutrients.calories)
 
-                let item_amount = {item: item, amount: amount}
-                console.log(item_amount)
+                let item_amount = { item: item, amount: amount, nutrients: nutrients }
+                // console.log(item_amount)
 
                 // console.log("# - item: " + item)
                 // console.log("# - amount: " + amount)
 
                 if (sample_v2 == "First Thing") {
+                    setFirstThingData(prev => [...prev, item_amount])
                 }
                 if (sample_v2 == "Breakfast") {
                     setBreakfastData(prev => [...prev, item_amount])
                 }
                 if (sample_v2 == "Midmorning") {
+                    setMidmorningData(prev => [...prev, item_amount])
                 }
                 if (sample_v2 == "Lunch") {
+                    setLunchData(prev => [...prev, item_amount])
                 }
                 if (sample_v2 == "Midafter-noon") {
+                    setMidafternoonData(prev => [...prev, item_amount])
                 }
                 if (sample_v2 == "Dinner") {
+                    setDinnerData(prev => [...prev, item_amount])
                 }
                 if (sample_v2 == "Before Bed") {
+                    setBeforeBedData(prev => [...prev, item_amount])
                 }
             }
         }
     }
 
     useEffect(() => {
-        console.log(breakfastData)
+        // console.log(breakfastData)
     }, [breakfastData])
 
 
@@ -289,6 +325,115 @@ export const DailySchedule = (props) => {
                             />
                         </View>
                     </TouchableOpacity>
+                    {firstThingData.map((data) => (
+                        <View 
+                            style={{
+                                backgroundColor: '#a39bc9',
+                                borderRadius: HeightRatio(10),
+                                margin: HeightRatio(10),
+                                width: windowWidth - HeightRatio(110),
+                                alignSelf: 'center'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    width: windowWidth - HeightRatio(120),
+                                    alignSelf: 'center'
+                                }}
+                            >
+                                <View style={{
+                                    flexDirection: 'row',
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: 'white',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center'
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: 'black',
+                                            fontSize: HeightRatio(30),
+
+                                        }}
+                                    >
+                                        {data.item}
+                                    </Text>
+                                    <View
+                                        style={{
+                                            backgroundColor: '#0095ff',
+                                            margin: HeightRatio(10),
+                                            padding: HeightRatio(10),
+                                            borderRadius: HeightRatio(20)
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: HeightRatio(20),
+                                            }}
+                                        >
+                                            {data.amount}
+                                        </Text>
+                                    </View>
+                                </View>
+
+                                <Text
+                                    style={{
+                                        color: 'black',
+                                        fontSize: HeightRatio(20),
+                                        marginTop: HeightRatio(5)
+                                    }}
+                                >
+                                    Nutrition Details
+                                </Text>
+                            </View>
+                            <View style={{
+                                padding: 10,
+                                marginBottom: 10,
+                                alignSelf: 'center'
+                            }}>
+                                {Object.keys(data.nutrients).map((key) => (
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            marginBottom: 5,
+                                            width: windowWidth - HeightRatio(130),
+                                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                                            margin: HeightRatio(2),
+                                            padding: HeightRatio(2),
+                                            borderRadius: HeightRatio(4)
+                                        }}
+                                        key={key}
+                                    >
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular"
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {key.replace('_', ' ')}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {data.nutrients[key].amount} {data.nutrients[key].unit}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+
+                    ))}
 
                     {/* BREAKFAST */}
                     <TouchableOpacity
@@ -360,45 +505,120 @@ export const DailySchedule = (props) => {
                         </View>
                     </TouchableOpacity>
                     {breakfastData.map((data) => (
-                        <View
+                        <View 
                             style={{
-                                display: 'flex',
-                                // alignItems: "center",
-                                justifyContent: "center",
                                 backgroundColor: '#a39bc9',
-                                width: '70%',
-                                alignSelf: 'center',
-                                padding: HeightRatio(10),
                                 borderRadius: HeightRatio(10),
-                                margin: HeightRatio(10)
+                                margin: HeightRatio(10),
+                                width: windowWidth - HeightRatio(110),
+                                alignSelf: 'center'
                             }}
                         >
-                            <Text
+                            <View
                                 style={{
-                                    color: 'black',
-                                    fontSize: HeightRatio(20),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    width: windowWidth - HeightRatio(120),
+                                    alignSelf: 'center'
                                 }}
                             >
-                                {data.item}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: 'black',
-                                    fontSize: HeightRatio(20),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                }}
-                            >
-                                {data.amount}
-                            </Text>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: 'white',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center'
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: 'black',
+                                            fontSize: HeightRatio(30),
+
+                                        }}
+                                    >
+                                        {data.item}
+                                    </Text>
+                                    <View
+                                        style={{
+                                            backgroundColor: '#0095ff',
+                                            margin: HeightRatio(10),
+                                            padding: HeightRatio(10),
+                                            borderRadius: HeightRatio(20)
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: HeightRatio(20),
+                                            }}
+                                        >
+                                            {data.amount}
+                                        </Text>
+                                    </View>
+                                </View>
+
+                                <Text
+                                    style={{
+                                        color: 'black',
+                                        fontSize: HeightRatio(20),
+                                        marginTop: HeightRatio(5)
+                                    }}
+                                >
+                                    Nutrition Details
+                                </Text>
+                            </View>
+                            <View style={{
+                                padding: 10,
+                                marginBottom: 10,
+                                alignSelf: 'center'
+                            }}>
+                                {Object.keys(data.nutrients).map((key) => (
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            marginBottom: 5,
+                                            width: windowWidth - HeightRatio(130),
+                                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                                            margin: HeightRatio(2),
+                                            padding: HeightRatio(2),
+                                            borderRadius: HeightRatio(4)
+                                        }}
+                                        key={key}
+                                    >
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular"
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {key.replace('_', ' ')}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {data.nutrients[key].amount} {data.nutrients[key].unit}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
                         </View>
+
                     ))}
-                    
+
 
 
                     {/* MIDMORNING */}
                     <TouchableOpacity
-                        onPress={() => console.log("MIDMORNING")}
+                        onPress={() => displayScheduleData("Midmorning")}
                         style={{
                             backgroundColor: "rgba(255, 255, 255, 0.5)",
                             width: '90%',
@@ -465,10 +685,119 @@ export const DailySchedule = (props) => {
                             />
                         </View>
                     </TouchableOpacity>
+                    {midmorningData.map((data) => (
+                        <View 
+                            style={{
+                                backgroundColor: '#a39bc9',
+                                borderRadius: HeightRatio(10),
+                                margin: HeightRatio(10),
+                                width: windowWidth - HeightRatio(110),
+                                alignSelf: 'center'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    width: windowWidth - HeightRatio(120),
+                                    alignSelf: 'center'
+                                }}
+                            >
+                                <View style={{
+                                    flexDirection: 'row',
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: 'white',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center'
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: 'black',
+                                            fontSize: HeightRatio(30),
+
+                                        }}
+                                    >
+                                        {data.item}
+                                    </Text>
+                                    <View
+                                        style={{
+                                            backgroundColor: '#0095ff',
+                                            margin: HeightRatio(10),
+                                            padding: HeightRatio(10),
+                                            borderRadius: HeightRatio(20)
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: HeightRatio(20),
+                                            }}
+                                        >
+                                            {data.amount}
+                                        </Text>
+                                    </View>
+                                </View>
+
+                                <Text
+                                    style={{
+                                        color: 'black',
+                                        fontSize: HeightRatio(20),
+                                        marginTop: HeightRatio(5)
+                                    }}
+                                >
+                                    Nutrition Details
+                                </Text>
+                            </View>
+                            <View style={{
+                                padding: 10,
+                                marginBottom: 10,
+                                alignSelf: 'center'
+                            }}>
+                                {Object.keys(data.nutrients).map((key) => (
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            marginBottom: 5,
+                                            width: windowWidth - HeightRatio(130),
+                                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                                            margin: HeightRatio(2),
+                                            padding: HeightRatio(2),
+                                            borderRadius: HeightRatio(4)
+                                        }}
+                                        key={key}
+                                    >
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular"
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {key.replace('_', ' ')}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {data.nutrients[key].amount} {data.nutrients[key].unit}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+
+                    ))}
 
                     {/* LUNCH */}
                     <TouchableOpacity
-                        onPress={() => console.log("LUNCH")}
+                        onPress={() => displayScheduleData("Lunch")}
                         style={{
                             backgroundColor: "rgba(255, 255, 255, 0.5)",
                             width: '90%',
@@ -535,10 +864,119 @@ export const DailySchedule = (props) => {
                             />
                         </View>
                     </TouchableOpacity>
+                    {lunchData.map((data) => (
+                        <View 
+                            style={{
+                                backgroundColor: '#a39bc9',
+                                borderRadius: HeightRatio(10),
+                                margin: HeightRatio(10),
+                                width: windowWidth - HeightRatio(110),
+                                alignSelf: 'center'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    width: windowWidth - HeightRatio(120),
+                                    alignSelf: 'center'
+                                }}
+                            >
+                                <View style={{
+                                    flexDirection: 'row',
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: 'white',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center'
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: 'black',
+                                            fontSize: HeightRatio(30),
+
+                                        }}
+                                    >
+                                        {data.item}
+                                    </Text>
+                                    <View
+                                        style={{
+                                            backgroundColor: '#0095ff',
+                                            margin: HeightRatio(10),
+                                            padding: HeightRatio(10),
+                                            borderRadius: HeightRatio(20)
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: HeightRatio(20),
+                                            }}
+                                        >
+                                            {data.amount}
+                                        </Text>
+                                    </View>
+                                </View>
+
+                                <Text
+                                    style={{
+                                        color: 'black',
+                                        fontSize: HeightRatio(20),
+                                        marginTop: HeightRatio(5)
+                                    }}
+                                >
+                                    Nutrition Details
+                                </Text>
+                            </View>
+                            <View style={{
+                                padding: 10,
+                                marginBottom: 10,
+                                alignSelf: 'center'
+                            }}>
+                                {Object.keys(data.nutrients).map((key) => (
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            marginBottom: 5,
+                                            width: windowWidth - HeightRatio(130),
+                                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                                            margin: HeightRatio(2),
+                                            padding: HeightRatio(2),
+                                            borderRadius: HeightRatio(4)
+                                        }}
+                                        key={key}
+                                    >
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular"
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {key.replace('_', ' ')}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {data.nutrients[key].amount} {data.nutrients[key].unit}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+
+                    ))}
 
                     {/* MIDAFTER-NOON */}
                     <TouchableOpacity
-                        onPress={() => console.log("MIDAFTER-NOON")}
+                        onPress={() => displayScheduleData("Midafter-noon")}
                         style={{
                             backgroundColor: "rgba(255, 255, 255, 0.5)",
                             width: '90%',
@@ -605,11 +1043,120 @@ export const DailySchedule = (props) => {
                             />
                         </View>
                     </TouchableOpacity>
+                    {midafternoonData.map((data) => (
+                        <View 
+                            style={{
+                                backgroundColor: '#a39bc9',
+                                borderRadius: HeightRatio(10),
+                                margin: HeightRatio(10),
+                                width: windowWidth - HeightRatio(110),
+                                alignSelf: 'center'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    width: windowWidth - HeightRatio(120),
+                                    alignSelf: 'center'
+                                }}
+                            >
+                                <View style={{
+                                    flexDirection: 'row',
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: 'white',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center'
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: 'black',
+                                            fontSize: HeightRatio(30),
+
+                                        }}
+                                    >
+                                        {data.item}
+                                    </Text>
+                                    <View
+                                        style={{
+                                            backgroundColor: '#0095ff',
+                                            margin: HeightRatio(10),
+                                            padding: HeightRatio(10),
+                                            borderRadius: HeightRatio(20)
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: HeightRatio(20),
+                                            }}
+                                        >
+                                            {data.amount}
+                                        </Text>
+                                    </View>
+                                </View>
+
+                                <Text
+                                    style={{
+                                        color: 'black',
+                                        fontSize: HeightRatio(20),
+                                        marginTop: HeightRatio(5)
+                                    }}
+                                >
+                                    Nutrition Details
+                                </Text>
+                            </View>
+                            <View style={{
+                                padding: 10,
+                                marginBottom: 10,
+                                alignSelf: 'center'
+                            }}>
+                                {Object.keys(data.nutrients).map((key) => (
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            marginBottom: 5,
+                                            width: windowWidth - HeightRatio(130),
+                                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                                            margin: HeightRatio(2),
+                                            padding: HeightRatio(2),
+                                            borderRadius: HeightRatio(4)
+                                        }}
+                                        key={key}
+                                    >
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular"
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {key.replace('_', ' ')}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {data.nutrients[key].amount} {data.nutrients[key].unit}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+
+                    ))}
 
 
                     {/* DINNER */}
                     <TouchableOpacity
-                        onPress={() => console.log("DINNER")}
+                        onPress={() => displayScheduleData("Dinner")}
                         style={{
                             backgroundColor: "rgba(255, 255, 255, 0.5)",
                             width: '90%',
@@ -676,11 +1223,120 @@ export const DailySchedule = (props) => {
                             />
                         </View>
                     </TouchableOpacity>
+                    {dinnerData.map((data) => (
+                        <View 
+                            style={{
+                                backgroundColor: '#a39bc9',
+                                borderRadius: HeightRatio(10),
+                                margin: HeightRatio(10),
+                                width: windowWidth - HeightRatio(110),
+                                alignSelf: 'center'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    width: windowWidth - HeightRatio(120),
+                                    alignSelf: 'center'
+                                }}
+                            >
+                                <View style={{
+                                    flexDirection: 'row',
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: 'white',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center'
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: 'black',
+                                            fontSize: HeightRatio(30),
+
+                                        }}
+                                    >
+                                        {data.item}
+                                    </Text>
+                                    <View
+                                        style={{
+                                            backgroundColor: '#0095ff',
+                                            margin: HeightRatio(10),
+                                            padding: HeightRatio(10),
+                                            borderRadius: HeightRatio(20)
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: HeightRatio(20),
+                                            }}
+                                        >
+                                            {data.amount}
+                                        </Text>
+                                    </View>
+                                </View>
+
+                                <Text
+                                    style={{
+                                        color: 'black',
+                                        fontSize: HeightRatio(20),
+                                        marginTop: HeightRatio(5)
+                                    }}
+                                >
+                                    Nutrition Details
+                                </Text>
+                            </View>
+                            <View style={{
+                                padding: 10,
+                                marginBottom: 10,
+                                alignSelf: 'center'
+                            }}>
+                                {Object.keys(data.nutrients).map((key) => (
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            marginBottom: 5,
+                                            width: windowWidth - HeightRatio(130),
+                                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                                            margin: HeightRatio(2),
+                                            padding: HeightRatio(2),
+                                            borderRadius: HeightRatio(4)
+                                        }}
+                                        key={key}
+                                    >
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular"
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {key.replace('_', ' ')}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {data.nutrients[key].amount} {data.nutrients[key].unit}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+
+                    ))}
 
 
                     {/* BEFORE BED */}
                     <TouchableOpacity
-                        onPress={() => console.log("BEFORE BED")}
+                        onPress={() => displayScheduleData("Before Bed")}
                         style={{
                             backgroundColor: "rgba(255, 255, 255, 0.5)",
                             width: '90%',
@@ -747,6 +1403,115 @@ export const DailySchedule = (props) => {
                             />
                         </View>
                     </TouchableOpacity>
+                    {beforeBedData.map((data) => (
+                        <View 
+                            style={{
+                                backgroundColor: '#a39bc9',
+                                borderRadius: HeightRatio(10),
+                                margin: HeightRatio(10),
+                                width: windowWidth - HeightRatio(110),
+                                alignSelf: 'center'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    width: windowWidth - HeightRatio(120),
+                                    alignSelf: 'center'
+                                }}
+                            >
+                                <View style={{
+                                    flexDirection: 'row',
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: 'white',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center'
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: 'black',
+                                            fontSize: HeightRatio(30),
+
+                                        }}
+                                    >
+                                        {data.item}
+                                    </Text>
+                                    <View
+                                        style={{
+                                            backgroundColor: '#0095ff',
+                                            margin: HeightRatio(10),
+                                            padding: HeightRatio(10),
+                                            borderRadius: HeightRatio(20)
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: HeightRatio(20),
+                                            }}
+                                        >
+                                            {data.amount}
+                                        </Text>
+                                    </View>
+                                </View>
+
+                                <Text
+                                    style={{
+                                        color: 'black',
+                                        fontSize: HeightRatio(20),
+                                        marginTop: HeightRatio(5)
+                                    }}
+                                >
+                                    Nutrition Details
+                                </Text>
+                            </View>
+                            <View style={{
+                                padding: 10,
+                                marginBottom: 10,
+                                alignSelf: 'center'
+                            }}>
+                                {Object.keys(data.nutrients).map((key) => (
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            marginBottom: 5,
+                                            width: windowWidth - HeightRatio(130),
+                                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                                            margin: HeightRatio(2),
+                                            padding: HeightRatio(2),
+                                            borderRadius: HeightRatio(4)
+                                        }}
+                                        key={key}
+                                    >
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular"
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {key.replace('_', ' ')}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                flex: 1,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {data.nutrients[key].amount} {data.nutrients[key].unit}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+
+                    ))}
 
                 </ScrollView>
             </SafeAreaView>
