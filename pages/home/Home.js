@@ -53,14 +53,19 @@ export const HomeScreen = ({ navigation }) => {
     const [displaySignUpModal, setDisplaySignUpModal] = useState(false);
     const authState = useRef(false);
     const userID = useRef(null);
-    const [refreshing, setRefreshing] = React.useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+    const [refreshing_Nutrition, setRefreshing_Nutrition] = useState(false);
+
 
     const onRefresh = useCallback(() => {
+        refetch();
         setRefreshing(true);
+        setRefreshing_Nutrition(true)
         setTimeout(() => {
-          setRefreshing(false);
+            setRefreshing(false);
+            setRefreshing_Nutrition(false)
         }, 2000);
-      }, []);
+    }, []);
 
     const [addEntry] = useMutation(ADD_ENTRY);
     const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
@@ -80,6 +85,7 @@ export const HomeScreen = ({ navigation }) => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [displayDetails, setDisplayDetails] = useState(false);
     const [displayLoading, setDisplayLoading] = useState(false);
+    const refreshHandlerInterval = useRef(null);
 
     // # - NUTRITION
     const [nutritionFacts, setNutritionFacts] = useState([])
@@ -120,6 +126,14 @@ export const HomeScreen = ({ navigation }) => {
             }, 500)
         }, 500)
 
+        setInterval(() => {
+            if (mainState.current.triggerRefresh) {
+                setRefreshing(true)
+                refetch()
+            } else {
+                setRefreshing(false)
+            }
+        }, 500)
     }, [])
 
 
@@ -169,6 +183,7 @@ export const HomeScreen = ({ navigation }) => {
     const getNutritionValue = async (input) => {
         setDisplayNutritionValueLoading(true)
         setNutritionFacts([])
+        setRefreshing_Nutrition(true)
         const data = {
             search: input,
             quantity: mainState.current.selectedFood_Quantity,
@@ -218,6 +233,7 @@ export const HomeScreen = ({ navigation }) => {
                                 nutrients: `${nutrients_JSON}`
                             }
                         });
+                        onRefresh();
                     }
                     updateUserEntry();
 
@@ -521,10 +537,39 @@ export const HomeScreen = ({ navigation }) => {
     }
     return (
         <>
+            {refreshing || refreshing_Nutrition &&
+                <View
+                    style={{
+                        // backgroundColor: refreshing ? 'rgba(0, 0, 0, 0.75)' : null,
+                        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                        position: 'absolute',
+                        zIndex: 100,
+                        height: windowHeight,
+                        width: windowWidth,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: '#ffff00',
+                            textAlign: 'center',
+                            fontSize: HeightRatio(30),
+                            fontFamily: 'GochiHand_400Regular',
+                            marginTop: HeightRatio(10)
+                        }}
+                        allowFontScaling={false}
+                    >
+                        Updating...
+                    </Text>
+                </View>
+            }
             <View
                 style={{ ...Styling.container, backgroundColor: 'rgba(71, 66, 106, 1.00)', display: 'flex', alignItems: 'center', width: windowWidth }}
                 onLayout={onLayoutRootView}
             >
+
                 <View
                     style={{
                         backgroundColor: 'rgba(71, 66, 106, 1.00)',
@@ -680,8 +725,9 @@ export const HomeScreen = ({ navigation }) => {
                     </>
                 } */}
 
-                
 
+                {!refreshing && !refreshing_Nutrition &&
+                <>
                 <DailySchedule date={currentDateReadable} />
 
 
@@ -720,6 +766,8 @@ export const HomeScreen = ({ navigation }) => {
                         Add Food
                     </Text>
                 </TouchableOpacity>
+                </>
+                }
             </View>
 
             <Modal

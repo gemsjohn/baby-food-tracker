@@ -188,6 +188,12 @@ mutation Mutation($date: String, $schedule: String, $item: String, $amount: Stri
 }
 `;
 
+export const DELETE_ENTRY = gql`
+  mutation Mutation($deleteEntryId: ID!) {
+    deleteEntry(id: $deleteEntryId)
+  }
+`;
+
 export const UPDATE_TOKEN_COUNT = gql`
   mutation Mutation($userid: String, $remove: String, $add: String, $amount: String) {
   updateTokenCount(userid: $userid, remove: $remove, add: $add, amount: $amount) {

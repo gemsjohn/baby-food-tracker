@@ -29,8 +29,9 @@ import {
     faBars
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { HeightRatio, windowWidth } from "../../../Styling"
+import { HeightRatio, windowWidth, WidthRatio } from "../../../Styling"
 import { useMutation, useQuery } from '@apollo/client';
+import { DELETE_ENTRY } from '../../../utils/mutations';
 import { GET_USER_BY_ID } from '../../../utils/queries';
 import { MainStateContext } from '../../../App';
 
@@ -49,6 +50,7 @@ export const DailySchedule = (props) => {
     const [breakfastCalTotal, setBreakfastCalTotal] = useState(null)
     const [breakfastData, setBreakfastData] = useState([]);
     const [displayBreakfastNutrients, setDisplayBreakfastNutrients] = useState(false);
+    const [deleteID, setDeleteID] = useState(null)
 
     const [midmorning, setMidmorning] = useState([]);
     const [midmorningCalTotal, setMidmorningCalTotal] = useState(null)
@@ -71,9 +73,10 @@ export const DailySchedule = (props) => {
     const [beforeBedData, setBeforeBedData] = useState([]);
 
     const [totalCalorieCount, setTotalCalorieCount] = useState(null)
+    const [modalVisible, setModalVisible] = useState(false);
 
 
-
+    const [deleteEntry] = useMutation(DELETE_ENTRY)
     const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
         variables: { id: mainState.current.userID }
     });
@@ -81,6 +84,16 @@ export const DailySchedule = (props) => {
     useEffect(() => {
         refetch()
     }, [])
+
+    // const [refreshing, setRefreshing] = useState(false);
+
+    // const onRefresh = useCallback(() => {
+    //     refetch();
+    //     setRefreshing(true);
+    //     setTimeout(() => {
+    //       setRefreshing(false);
+    //     }, 2000);
+    // }, []);
 
 
     const getTrackerEntryByDate = (date) => {
@@ -120,6 +133,7 @@ export const DailySchedule = (props) => {
         setDinnerData([])
         setBeforeBedData([])
         getTrackerEntryByDate(props.date)
+        // refetch()
 
     }, [props.date])
 
@@ -158,6 +172,7 @@ export const DailySchedule = (props) => {
             sample_v2 = removeBackslashes(sample_v2)
             sample_v2 = removeQuotes(sample_v2)
             sample_v2 = JSON.parse(sample_v2)
+            // console.log("# - ====================")
             sample_v2 = sample_v2.calories.amount
 
 
@@ -286,6 +301,8 @@ export const DailySchedule = (props) => {
         setMidafternoonData([])
         setDinnerData([])
         setBeforeBedData([])
+
+        setDeleteID(null)
         console.log("# - displayScheduleData: " + input)
 
         for (let i = 0; i < matchingDate.length; i++) {
@@ -321,9 +338,9 @@ export const DailySchedule = (props) => {
                 nutrients = removeBackslashes(nutrients)
                 nutrients = removeQuotes(nutrients)
                 nutrients = JSON.parse(nutrients)
-                // console.log(nutrients.calories)
+                let id = matchingDate[i]._id;
 
-                let item_amount = { item: item, amount: amount, nutrients: nutrients }
+                let item_amount = { item: item, amount: amount, nutrients: nutrients, id: id }
                 // console.log(item_amount)
 
                 // console.log("# - item: " + item)
@@ -358,6 +375,27 @@ export const DailySchedule = (props) => {
         // console.log(breakfastData)
     }, [breakfastData])
 
+    const handleDeleteEntry = async() => {
+        console.log(deleteID)
+        setMainState({
+            triggerRefresh: true
+        })
+        await deleteEntry({
+            variables: {
+                deleteEntryId: deleteID
+            }
+        })
+        refetch()
+        setTimeout(() => {
+            setMainState({
+                triggerRefresh: false
+            })
+        }, 100)
+        
+        // refetch()
+        // onRefresh();
+    }
+
 
     return (
         <>
@@ -386,7 +424,12 @@ export const DailySchedule = (props) => {
                 </Text>
             </View>
             <SafeAreaView style={styles.container}>
-                <ScrollView style={styles.scrollView}>
+                <ScrollView 
+                    style={styles.scrollView}
+                    // refreshControl={
+                    //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    // }
+                >
                     {/* FIRST THING */}
                     <TouchableOpacity
                         onPress={() => displayScheduleData("First Thing")}
@@ -640,7 +683,7 @@ export const DailySchedule = (props) => {
                                 backgroundColor: '#a39bc9',
                                 borderRadius: HeightRatio(10),
                                 margin: HeightRatio(10),
-                                width: windowWidth - HeightRatio(110),
+                                width: windowWidth - HeightRatio(80),
                                 alignSelf: 'center'
                             }}
                         >
@@ -653,19 +696,17 @@ export const DailySchedule = (props) => {
                                 <TouchableOpacity
                                     onPress={() => setDisplayBreakfastNutrients(current => !current)}
                                     style={{
-                                        flexDirection: 'row',
-                                        borderBottomWidth: 1,
-                                        borderBottomColor: 'white',
-                                        display: 'flex',
-                                        justifyContent: 'flex-start',
-                                        alignItems: 'center'
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between", // changed to 'space-between'
+                                        flexDirection: 'row'
                                     }}
                                 >
                                     <Text
                                         style={{
                                             color: 'black',
-                                            fontSize: HeightRatio(30),
-
+                                            fontSize: HeightRatio(25),
+                                            fontFamily: "SofiaSansSemiCondensed-Regular"
                                         }}
                                     >
                                         {data.item}
@@ -674,86 +715,136 @@ export const DailySchedule = (props) => {
                                         style={{
                                             backgroundColor: '#0095ff',
                                             margin: HeightRatio(10),
-                                            padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(20)
+                                            padding: HeightRatio(4),
+                                            paddingLeft: HeightRatio(20),
+                                            paddingRight: HeightRatio(20),
+                                            borderRadius: HeightRatio(10)
                                         }}
                                     >
                                         <Text
                                             style={{
                                                 color: 'white',
                                                 fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular"
                                             }}
                                         >
                                             {data.amount}
                                         </Text>
                                     </View>
+                                    <View
+                                        style={{
+                                            padding: HeightRatio(10),
+                                            borderRadius: HeightRatio(30),
+                                            height: HeightRatio(40),
+                                            width: HeightRatio(40),
+                                            display: 'flex',
+                                            alignItems: "flex-end",
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faSolid, faBars}
+                                            style={{
+                                                color: 'black',
+                                            }}
+                                            size={20}
+                                        />
+                                    </View>
                                 </TouchableOpacity>
+
 
                             </View>
                             {displayBreakfastNutrients &&
-                            <>
-                            <View
-                                style={{
-                                    width: windowWidth - HeightRatio(120),
-                                    alignSelf: 'center'
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        color: 'black',
-                                        fontSize: HeightRatio(20),
-                                        marginTop: HeightRatio(5)
-                                    }}
-                                >
-                                    Nutrition Details
-                                </Text>
-                            </View>
-                            <View style={{
-                                padding: 10,
-                                marginBottom: 10,
-                                alignSelf: 'center'
-                            }}>
-                                {Object.keys(data.nutrients).map((key) => (
+                                <>
                                     <View
                                         style={{
-                                            flexDirection: 'row',
-                                            justifyContent: 'space-between',
-                                            marginBottom: 5,
-                                            width: windowWidth - HeightRatio(130),
-                                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                                            margin: HeightRatio(2),
-                                            padding: HeightRatio(2),
-                                            borderRadius: HeightRatio(4)
+                                            width: windowWidth - HeightRatio(120),
+                                            alignSelf: 'center'
                                         }}
-                                        key={key}
                                     >
                                         <Text
                                             style={{
-                                                flex: 1,
-                                                textAlign: 'left',
+                                                color: 'black',
                                                 fontSize: HeightRatio(20),
+                                                marginTop: HeightRatio(5),
                                                 fontFamily: "SofiaSansSemiCondensed-Regular"
                                             }}
-                                            allowFontScaling={false}
                                         >
-                                            {key.replace('_', ' ')}
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                flex: 1,
-                                                textAlign: 'left',
-                                                fontSize: HeightRatio(20),
-                                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                                            }}
-                                            allowFontScaling={false}
-                                        >
-                                            {data.nutrients[key].amount} {data.nutrients[key].unit}
+                                            Nutrition Details
                                         </Text>
                                     </View>
-                                ))}
-                            </View>
-                            </>
+                                    <View style={{
+                                        padding: 10,
+                                        marginBottom: HeightRatio(4),
+                                        alignSelf: 'center'
+                                    }}>
+                                        {Object.keys(data.nutrients).map((key) => (
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    justifyContent: 'space-between',
+                                                    marginBottom: 5,
+                                                    width: windowWidth - HeightRatio(130),
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                                                    margin: HeightRatio(2),
+                                                    padding: HeightRatio(2),
+                                                    borderRadius: HeightRatio(4)
+                                                }}
+                                                key={key}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        flex: 1,
+                                                        textAlign: 'left',
+                                                        fontSize: HeightRatio(20),
+                                                        fontFamily: "SofiaSansSemiCondensed-Regular"
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    {key.replace('_', ' ')}
+                                                </Text>
+                                                <Text
+                                                    style={{
+                                                        flex: 1,
+                                                        textAlign: 'left',
+                                                        fontSize: HeightRatio(20),
+                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    {data.nutrients[key].amount} {data.nutrients[key].unit}
+                                                </Text>
+                                            </View>
+                                        ))}
+                                    </View>
+                                    <TouchableOpacity
+                                        onPress={() => {setModalVisible(true); setDeleteID(data.id)}}
+                                        style={{
+                                            backgroundColor: 'rgba(255, 0, 75, 0.50)',
+                                            margin: HeightRatio(10),
+                                            padding: HeightRatio(4),
+                                            paddingLeft: HeightRatio(20),
+                                            paddingRight: HeightRatio(20),
+                                            borderRadius: HeightRatio(10),
+                                            width: WidthRatio(100),
+                                            alignSelf: 'center'
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: HeightRatio(25),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                textAlign: 'center'
+                                            }}
+                                        >
+                                            Delete
+                                        </Text>
+                                    </TouchableOpacity>
+                                </>
                             }
+
+
                         </View>
 
                     ))}
@@ -1655,6 +1746,112 @@ export const DailySchedule = (props) => {
 
                 </ScrollView>
             </SafeAreaView>
+
+            <Modal
+                visible={modalVisible}
+                animationType="slide"
+                transparent={true}
+            >
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'rgba(0, 0, 0, 0.75)'
+                    }}
+                >
+                    <View
+                        style={{
+                            // flex: 1,
+                            backgroundColor: "#2f2c4f",
+                            margin: 20,
+                            zIndex: 999,
+                            borderRadius: 10,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
+                        }}
+                    >
+                        <View
+                            style={{
+                                margin: HeightRatio(20),
+                                alignSelf: 'center'
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontSize: HeightRatio(30),
+                                    width: (windowWidth - WidthRatio(100)),
+                                }}
+                            >
+                                Are you sure that you want to delete this entry?
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignSelf: 'center'
+                            }}
+                        >
+                            <TouchableOpacity onPress={() => setModalVisible(false)}>
+                                <View style={{
+                                    backgroundColor: 'rgba(26, 105, 125, 0.50)',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    padding: HeightRatio(10),
+                                    borderRadius: HeightRatio(10),
+                                    alignSelf: 'center',
+                                    width: (windowWidth - WidthRatio(100)) / 2,
+                                    margin: HeightRatio(10)
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: HeightRatio(25),
+                                            alignSelf: 'center',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Close
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                onPress={() => {
+                                    setModalVisible(false);
+                                    handleDeleteEntry()
+                                    
+                                }}
+                            >
+                                <View style={{
+                                    backgroundColor: 'rgba(255, 0, 75, 0.50)',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    padding: HeightRatio(10),
+                                    borderRadius: HeightRatio(10),
+                                    alignSelf: 'center',
+                                    width: (windowWidth - WidthRatio(100)) / 2,
+                                    margin: HeightRatio(10)
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: HeightRatio(25),
+                                            alignSelf: 'center',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Delete
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+            </Modal>
         </>
     )
 }
