@@ -50,6 +50,7 @@ export const DailySchedule = (props) => {
     const [breakfastCalTotal, setBreakfastCalTotal] = useState(null)
     const [breakfastData, setBreakfastData] = useState([]);
     const [displayBreakfastNutrients, setDisplayBreakfastNutrients] = useState(false);
+    const [displayBreakfastNutrientsForIndex, setDisplayBreakfastNutrientsForIndex] = useState(null)
     const [deleteID, setDeleteID] = useState(null)
 
     const [midmorning, setMidmorning] = useState([]);
@@ -105,7 +106,7 @@ export const DailySchedule = (props) => {
             console.log("# - User Tracker Length: " + userByID?.user.tracker.length)
             for (let i = 0; i < userByID?.user.tracker.length; i++) {
                 if (userByID?.user.tracker[i].date == date) {
-                    console.log("# - Tracker array, matching date: " + i)
+                    // console.log("# - Tracker array, matching date: " + i)
                     setMatchingDate(prev => [...prev, userByID?.user.tracker[i]]);
 
                 }
@@ -145,12 +146,9 @@ export const DailySchedule = (props) => {
         setMidafternoon([])
         setDinner([])
         setBeforeBed([])
-        // console.log(input.length)
         for (let i = 0; i < input.length; i++) {
             const schedule = JSON.stringify(input[i].entry[0].schedule);
             const jsonString = JSON.stringify(input[i].entry[0].nutrients);
-            // console.log(i)
-            // console.log(jsonString)
 
             function removeBackslashes(str) {
                 let pattern = /(?<!\\)\\(?!\\)/g;
@@ -172,13 +170,8 @@ export const DailySchedule = (props) => {
             sample_v2 = removeBackslashes(sample_v2)
             sample_v2 = removeQuotes(sample_v2)
             sample_v2 = JSON.parse(sample_v2)
-            // console.log("# - ====================")
             sample_v2 = sample_v2.calories.amount
 
-
-
-            // console.log("+++++++")
-            // console.log(sample_v2)
 
             if (sampleSchedule_v2 == "First Thing") {
                 setFirstThing(prev => [...prev, sample_v2])
@@ -285,7 +278,6 @@ export const DailySchedule = (props) => {
 
     // TOTAL ALL SCHEDULE SECTIONS
     useEffect(() => {
-        console.log("# - TOTAL:")
         let total = firstThingCalTotal + breakfastCalTotal + midmorningCalTotal + lunchCalTotal + midafternoonCalTotal + dinnerCalTotal + beforeBedCalTotal;
         setTotalCalorieCount(total)
     }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, midafternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
@@ -376,7 +368,6 @@ export const DailySchedule = (props) => {
     }, [breakfastData])
 
     const handleDeleteEntry = async() => {
-        console.log(deleteID)
         setMainState({
             triggerRefresh: true
         })
@@ -677,7 +668,7 @@ export const DailySchedule = (props) => {
                             />
                         </View>
                     </TouchableOpacity>
-                    {breakfastData.map((data) => (
+                    {breakfastData.map((data, index) => (
                         <View
                             style={{
                                 backgroundColor: '#a39bc9',
@@ -686,6 +677,7 @@ export const DailySchedule = (props) => {
                                 width: windowWidth - HeightRatio(80),
                                 alignSelf: 'center'
                             }}
+                            key={index}
                         >
                             <View
                                 style={{
@@ -694,42 +686,58 @@ export const DailySchedule = (props) => {
                                 }}
                             >
                                 <TouchableOpacity
-                                    onPress={() => setDisplayBreakfastNutrients(current => !current)}
+                                    onPress={() => {
+                                        setDisplayBreakfastNutrients(current => displayBreakfastNutrientsForIndex == index ? !current : true);
+                                        setDisplayBreakfastNutrientsForIndex(index)
+                                    }}
                                     style={{
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "space-between", // changed to 'space-between'
-                                        flexDirection: 'row'
+                                        flexDirection: 'row',
+                                        padding: HeightRatio(5),
+                                        paddingTop: HeightRatio(10)
                                     }}
                                 >
-                                    <Text
-                                        style={{
-                                            color: 'black',
-                                            fontSize: HeightRatio(25),
-                                            fontFamily: "SofiaSansSemiCondensed-Regular"
-                                        }}
-                                    >
-                                        {data.item}
-                                    </Text>
                                     <View
-                                        style={{
-                                            backgroundColor: '#0095ff',
-                                            margin: HeightRatio(10),
-                                            padding: HeightRatio(4),
-                                            paddingLeft: HeightRatio(20),
-                                            paddingRight: HeightRatio(20),
-                                            borderRadius: HeightRatio(10)
-                                        }}
+                                        style={{flexDirection: 'column'}}
                                     >
-                                        <Text
+                                        <View
                                             style={{
-                                                color: 'white',
-                                                fontSize: HeightRatio(20),
-                                                fontFamily: "SofiaSansSemiCondensed-Regular"
+                                                borderBottomWidth: 2,
+                                                borderBottomColor: 'black'
                                             }}
                                         >
-                                            {data.amount}
-                                        </Text>
+                                            <Text
+                                                style={{
+                                                    color: 'black',
+                                                    fontSize: HeightRatio(25),
+                                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold"
+                                                }}
+                                            >
+                                                {data.item}
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
+                                                margin: HeightRatio(10),
+                                                padding: HeightRatio(4),
+                                                paddingLeft: HeightRatio(20),
+                                                paddingRight: HeightRatio(20),
+                                                borderRadius: HeightRatio(10)
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: 'black',
+                                                    fontSize: HeightRatio(20),
+                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
+                                                }}
+                                            >
+                                                {data.amount}
+                                            </Text>
+                                        </View>
                                     </View>
                                     <View
                                         style={{
@@ -754,24 +762,32 @@ export const DailySchedule = (props) => {
 
 
                             </View>
-                            {displayBreakfastNutrients &&
+                            {displayBreakfastNutrients && displayBreakfastNutrientsForIndex == index &&
                                 <>
                                     <View
                                         style={{
                                             width: windowWidth - HeightRatio(120),
-                                            alignSelf: 'center'
+                                            alignSelf: 'center',
+                                            padding: HeightRatio(5)
                                         }}
                                     >
-                                        <Text
+                                        <View
                                             style={{
-                                                color: 'black',
-                                                fontSize: HeightRatio(20),
-                                                marginTop: HeightRatio(5),
-                                                fontFamily: "SofiaSansSemiCondensed-Regular"
+                                                borderBottomWidth: 2,
+                                                borderBottomColor: 'black'
                                             }}
                                         >
-                                            Nutrition Details
-                                        </Text>
+                                            <Text
+                                                style={{
+                                                    color: 'black',
+                                                    fontSize: HeightRatio(25),
+                                                    // marginTop: HeightRatio(5),
+                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
+                                                }}
+                                            >
+                                                Nutrition Details
+                                            </Text>
+                                        </View>
                                     </View>
                                     <View style={{
                                         padding: 10,
@@ -781,13 +797,15 @@ export const DailySchedule = (props) => {
                                         {Object.keys(data.nutrients).map((key) => (
                                             <View
                                                 style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
                                                     flexDirection: 'row',
                                                     justifyContent: 'space-between',
                                                     marginBottom: 5,
                                                     width: windowWidth - HeightRatio(130),
                                                     backgroundColor: 'rgba(255, 255, 255, 0.5)',
                                                     margin: HeightRatio(2),
-                                                    padding: HeightRatio(2),
+                                                    padding: HeightRatio(10),
                                                     borderRadius: HeightRatio(4)
                                                 }}
                                                 key={key}
@@ -806,7 +824,7 @@ export const DailySchedule = (props) => {
                                                 <Text
                                                     style={{
                                                         flex: 1,
-                                                        textAlign: 'left',
+                                                        textAlign: 'right',
                                                         fontSize: HeightRatio(20),
                                                         fontFamily: "SofiaSansSemiCondensed-Regular",
                                                     }}
@@ -820,13 +838,13 @@ export const DailySchedule = (props) => {
                                     <TouchableOpacity
                                         onPress={() => {setModalVisible(true); setDeleteID(data.id)}}
                                         style={{
-                                            backgroundColor: 'rgba(255, 0, 75, 0.50)',
+                                            backgroundColor: 'rgba(255, 0, 75, 0.90)',
                                             margin: HeightRatio(10),
-                                            padding: HeightRatio(4),
+                                            padding: HeightRatio(10),
                                             paddingLeft: HeightRatio(20),
                                             paddingRight: HeightRatio(20),
                                             borderRadius: HeightRatio(10),
-                                            width: WidthRatio(100),
+                                            width: '80%',
                                             alignSelf: 'center'
                                         }}
                                     >
@@ -838,7 +856,7 @@ export const DailySchedule = (props) => {
                                                 textAlign: 'center'
                                             }}
                                         >
-                                            Delete
+                                            Remove
                                         </Text>
                                     </TouchableOpacity>
                                 </>

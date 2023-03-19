@@ -24,7 +24,8 @@ import {
     faX,
     faArrowRight,
     faArrowLeft,
-    faPlus
+    faPlus,
+    faBars
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { StatusBar } from 'expo-status-bar';
@@ -43,6 +44,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { ADD_ENTRY } from '../../utils/mutations';
 import { GET_USER_BY_ID } from '../../utils/queries';
 import { DailySchedule } from './auxilliary/DailySchedule';
+import { set } from 'traverse';
 
 
 
@@ -55,6 +57,9 @@ export const HomeScreen = ({ navigation }) => {
     const userID = useRef(null);
     const [refreshing, setRefreshing] = useState(false);
     const [refreshing_Nutrition, setRefreshing_Nutrition] = useState(false);
+    const [recentFoodData, setRecentFoodData] = useState([])
+    const [clearSuggestions, setClearSuggestions] = useState(false)
+    const [selectRecentlyUsed, setSelectRecentlyUsed] = useState(null)
 
 
     const onRefresh = useCallback(() => {
@@ -142,6 +147,7 @@ export const HomeScreen = ({ navigation }) => {
     }, [currentDate])
 
     const handleSearch = async () => {
+        setClearSuggestions(true)
         console.log(`Searching for: ${searchQuery}`);
         setDisplayLoading(true)
         const data = {
@@ -189,195 +195,244 @@ export const HomeScreen = ({ navigation }) => {
             quantity: mainState.current.selectedFood_Quantity,
             measurement: mainState.current.selectedFood_Measurement
         };
-        const prompt = encodeURIComponent(JSON.stringify(data));
 
-        const config = {
-            method: "POST",
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            url: `http://192.168.1.198:3001/api/npc/${prompt}`
+        if (recentFoodData!= [] && selectRecentlyUsed != null && recentFoodData[selectRecentlyUsed].number == data.quantity && recentFoodData[selectRecentlyUsed].measurement == data.measurement) {
+            console.log("# - getNutritionValue / recentFoodData[selectRecentlyUsed]")
+            const nutrients_JSON = JSON.stringify(recentFoodData[selectRecentlyUsed].nutrients);
+            const updateUserEntry = async () => {
+
+                await addEntry({
+                    variables: {
+                        date: `${currentDateReadable}`,
+                        schedule: `${mainState.current.selectedFood_Schedule}`,
+                        item: `${recentFoodData[selectRecentlyUsed].item}`,
+                        amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
+                        nutrients: `${nutrients_JSON}`
+                    }
+                });
+                onRefresh();
+            }
+            updateUserEntry();
+        } else {
+            console.log("# - getNutritionValue / newFoodData")
+
+            const prompt = encodeURIComponent(JSON.stringify(data));
+
+            const config = {
+                method: "POST",
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                url: `http://192.168.1.198:3001/api/npc/${prompt}`
+            }
+
+            axios(config)
+                .then((response) => {
+                    if (response.data.result[0] === "ERROR") {
+                        // setErrorResponse(
+                        //     <View>
+                        //         <Text style={{ color: 'red', alignSelf: 'center' }}>
+                        //             Error: This service is temporarily down.
+                        //         </Text>
+                        //     </View>
+                        // )
+                        console.log("ERROR")
+                    } else {
+                        console.log("# - getNutritionvalue:")
+                        console.log(mainState.current.selectedFood_Quantity)
+                        console.log(mainState.current.selectedFood_Measurement)
+                        console.log(mainState.current.selectedFood_Schedule)
+                        console.log("# --------------------------------------")
+                        setNutritionFacts({ food: input.description, nutrition: response.data.result, schedule: mainState.current.selectedFood_Schedule })
+                        Table(response.data.result)
+
+                        const nutrients_JSON = JSON.stringify(response.data.result);
+                        console.log(nutrients_JSON)
+                        const updateUserEntry = async () => {
+
+                            await addEntry({
+                                variables: {
+                                    date: `${currentDateReadable}`,
+                                    schedule: `${mainState.current.selectedFood_Schedule}`,
+                                    item: `${input.description}`,
+                                    amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
+                                    nutrients: `${nutrients_JSON}`
+                                }
+                            });
+                            onRefresh();
+                        }
+                        updateUserEntry();
+
+
+                        // console.log(response.data.result)
+                        // setDisplayLoading(false)
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+
         }
 
-        axios(config)
-            .then((response) => {
-                if (response.data.result[0] === "ERROR") {
-                    // setErrorResponse(
-                    //     <View>
-                    //         <Text style={{ color: 'red', alignSelf: 'center' }}>
-                    //             Error: This service is temporarily down.
-                    //         </Text>
-                    //     </View>
-                    // )
-                    console.log("ERROR")
-                } else {
-                    console.log("# - getNutritionvalue:")
-                    console.log(mainState.current.selectedFood_Quantity)
-                    console.log(mainState.current.selectedFood_Measurement)
-                    console.log(mainState.current.selectedFood_Schedule)
-                    console.log("# --------------------------------------")
-                    setNutritionFacts({ food: input.description, nutrition: response.data.result, schedule: mainState.current.selectedFood_Schedule })
-                    Table(response.data.result)
-
-                    const nutrients_JSON = JSON.stringify(response.data.result);
-                    console.log(nutrients_JSON)
-                    const updateUserEntry = async () => {
-
-                        await addEntry({
-                            variables: {
-                                date: `${currentDateReadable}`,
-                                schedule: `${mainState.current.selectedFood_Schedule}`,
-                                item: `${input.description}`,
-                                amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
-                                nutrients: `${nutrients_JSON}`
-                            }
-                        });
-                        onRefresh();
-                    }
-                    updateUserEntry();
 
 
-                    // console.log(response.data.result)
-                    // setDisplayLoading(false)
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
     };
 
     const RecentFood = () => {
-        refetch();
+        setRecentFoodData([])
+        setSelectRecentlyUsed(null)
         const data = userByID?.user.tracker;
-        const data_array = data.slice(-10);
-        const jsonString = JSON.stringify(data_array[0].entry[0].item);
+        const data_array = data.slice(-5);
 
-        function removeBackslashes(str) {
-            let pattern = /(?<!\\)\\(?!\\)/g;
-            let replacement = '';
-            let updatedStr = str.replace(pattern, replacement);
+        for (let i = 0; i < data_array.length; i++) {
+            function removeBackslashes(str) {
+                let pattern = /(?<!\\)\\(?!\\)/g;
+                let replacement = '';
+                let updatedStr = str.replace(pattern, replacement);
 
-            return updatedStr;
+                return updatedStr;
+            }
+
+            const removeQuotes = (str) => {
+                return str.replace(/^"(.*)"$/, '$1');
+            }
+
+            // data_array[0].entry[0].item
+            let item = JSON.stringify(data_array[i].entry[0].item);
+            item = removeQuotes(item);
+            let amount = JSON.stringify(data_array[i].entry[0].amount);
+            amount = removeQuotes(amount)
+            let nutrients = JSON.stringify(data_array[i].entry[0].nutrients);
+            nutrients = removeBackslashes(nutrients)
+            nutrients = removeQuotes(nutrients)
+            nutrients = JSON.parse(nutrients)
+            let id = data_array[i]._id;
+
+            function separateMeasurement(inputString) {
+                const regex = /(\d+\.\d+|\d+)\s*(\w+)/;
+                const matches = inputString.match(regex);
+
+                if (matches && matches.length === 3) {
+                    const number = parseFloat(matches[1]);
+                    const measurement = matches[2];
+
+                    return { number, measurement };
+                }
+
+                return null;
+            }
+
+            const result = separateMeasurement(amount);
+
+            let item_amount = { item: item, amount: amount, number: result.number, measurement: result.measurement, nutrients: nutrients, id: id }
+            setRecentFoodData(prev => [...prev, item_amount])
+
         }
 
-        const removeQuotes = (str) => {
-            return str.replace(/^"(.*)"$/, '$1');
-        }
+        // return (
+        //     <>
+        //         {recentFoodData.map((data, index) => (
+        //             <View
+        //                 style={{
+        //                     backgroundColor: '#a39bc9',
+        //                     borderRadius: HeightRatio(10),
+        //                     margin: HeightRatio(10),
+        //                     width: windowWidth - HeightRatio(80),
+        //                     alignSelf: 'center'
+        //                 }}
+        //                 key={index}
+        //             >
+        //                 <View
+        //                     style={{
+        //                         width: windowWidth - HeightRatio(120),
+        //                         alignSelf: 'center'
+        //                     }}
+        //                 >
+        //                     <TouchableOpacity
+        //                         onPress={() => {
+        //                             // setDisplayBreakfastNutrients(current => displayBreakfastNutrientsForIndex == index ? !current : true);
+        //                             // setDisplayBreakfastNutrientsForIndex(index)
+        //                             console.log(`${data.item}`)
+        //                         }}
+        //                         style={{
+        //                             display: "flex",
+        //                             alignItems: "center",
+        //                             justifyContent: "space-between", // changed to 'space-between'
+        //                             flexDirection: 'row',
+        //                             padding: HeightRatio(5),
+        //                             paddingTop: HeightRatio(10)
+        //                         }}
+        //                     >
+        //                         <View
+        //                             style={{ flexDirection: 'column' }}
+        //                         >
+        //                             <View
+        //                                 style={{
+        //                                     borderBottomWidth: 2,
+        //                                     borderBottomColor: 'black'
+        //                                 }}
+        //                             >
+        //                                 <Text
+        //                                     style={{
+        //                                         color: 'black',
+        //                                         fontSize: HeightRatio(25),
+        //                                         fontFamily: "SofiaSansSemiCondensed-ExtraBold"
+        //                                     }}
+        //                                 >
+        //                                     {data.item}
+        //                                 </Text>
+        //                             </View>
+        //                             <View
+        //                                 style={{
+        //                                     backgroundColor: 'rgba(30, 228, 168, 1.0)',
+        //                                     margin: HeightRatio(10),
+        //                                     padding: HeightRatio(4),
+        //                                     paddingLeft: HeightRatio(20),
+        //                                     paddingRight: HeightRatio(20),
+        //                                     borderRadius: HeightRatio(10)
+        //                                 }}
+        //                             >
+        //                                 <Text
+        //                                     style={{
+        //                                         color: 'black',
+        //                                         fontSize: HeightRatio(20),
+        //                                         fontFamily: "SofiaSansSemiCondensed-Regular"
+        //                                     }}
+        //                                 >
+        //                                     {data.amount}
+        //                                 </Text>
+        //                             </View>
+        //                         </View>
+        //                         {/* <View
+        //                             style={{
+        //                                 padding: HeightRatio(10),
+        //                                 borderRadius: HeightRatio(30),
+        //                                 height: HeightRatio(40),
+        //                                 width: HeightRatio(40),
+        //                                 display: 'flex',
+        //                                 alignItems: "flex-end",
+        //                                 justifyContent: "center",
+        //                             }}
+        //                         >
+        //                             <FontAwesomeIcon
+        //                                 icon={faSolid, faBars}
+        //                                 style={{
+        //                                     color: 'black',
+        //                                 }}
+        //                                 size={20}
+        //                             />
+        //                         </View> */}
+        //                     </TouchableOpacity>
 
 
-
-        let sample = removeBackslashes(`${jsonString}`);
-
-        console.log(removeQuotes(sample))
-
-        return (
-            <>
-                {/* {item.description != '' && */}
-                <View
-                    style={{
-                        backgroundColor: "rgba(255, 255, 255, 0.5)",
-                        width: '90%',
-                        padding: HeightRatio(15),
-                        margin: HeightRatio(4),
-                        borderRadius: HeightRatio(10),
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        alignSelf: 'center',
-                    }}
-                // key={}
-                >
-                    <Text
-                        style={{
-                            color: "black",
-                            fontSize: HeightRatio(25),
-                            fontFamily: "SofiaSansSemiCondensed-Regular",
-                            textAlign: 'center',
-                            width: '80%',
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                        }}
-                        allowFontScaling={false}
-                    >
-                        {removeQuotes(sample)}
-                    </Text>
-
-                    {displayDetails ?
-                        <>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setSelectedItem(null);
-                                    setDisplayDetails(false)
-                                }}
-                                style={{
-                                    height: HeightRatio(46),
-                                    width: HeightRatio(40),
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    position: 'absolute',
-                                    top: 0,
-                                    right: HeightRatio(0),
-                                    borderTopRightRadius: HeightRatio(10),
-                                    borderBottomRightRadius: HeightRatio(10)
-
-                                }}
-                            >
-                                <FontAwesomeIcon
-                                    icon={faSolid, faX}
-                                    style={{
-                                        color: 'red',
-                                    }}
-                                    size={20}
-                                />
-                            </TouchableOpacity>
-                            <SelectedFoodDetails />
-                        </>
-                        :
-                        <TouchableOpacity
-                            onPress={() => {
-                                // setSelectedItem(removeQuotes(sample));
-                                // setDisplayDetails(true)
-                            }}
-                            style={{
-                                height: HeightRatio(46),
-                                width: HeightRatio(40),
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                position: 'absolute',
-                                right: HeightRatio(0),
-                                borderTopRightRadius: HeightRatio(10),
-                                borderBottomRightRadius: HeightRatio(10)
-
-                            }}
-                        >
-                            <FontAwesomeIcon
-                                icon={faSolid, faPlus}
-                                style={{
-                                    color: 'green',
-                                }}
-                                size={20}
-                            />
-                        </TouchableOpacity>
-                    }
-                </View>
-                {/* } */}
-                {/* {data_array.map((data) => (
-                <View 
-                    style={{
-                        backgroundColor: 'red',
-                        height: 10,
-                        width: 100
-                    }}
-                    key={data.entry._id}
-            >
-                <Text>{data.entry.item}</Text>
-            </View>
-            ))} */}
+        //                 </View>
+        //             </View>
+        //         ))}
 
 
-            </>
-        )
+        //     </>
+        // )
     }
 
     const Table = (data) => {
@@ -522,8 +577,8 @@ export const HomeScreen = ({ navigation }) => {
 
     const [fontsLoaded] = useFonts({
         'GochiHand_400Regular': require('../../assets/fonts/GochiHand-Regular.ttf'),
-        'SofiaSansSemiCondensed-Regular': require('../../assets/fonts/SofiaSansSemiCondensed-Regular.ttf')
-
+        'SofiaSansSemiCondensed-Regular': require('../../assets/fonts/SofiaSansSemiCondensed-Regular.ttf'),
+        'SofiaSansSemiCondensed-ExtraBold': require('../../assets/fonts/SofiaSansSemiCondensed-ExtraBold.ttf')
     });
 
     const onLayoutRootView = useCallback(async () => {
@@ -726,47 +781,77 @@ export const HomeScreen = ({ navigation }) => {
                 } */}
 
 
-                {!refreshing && !refreshing_Nutrition &&
-                <>
-                <DailySchedule date={currentDateReadable} />
+                {!refreshing && !refreshing_Nutrition ?
+                    <>
+                        <DailySchedule date={currentDateReadable} />
 
 
 
 
-                {/* Add Button */}
-                <TouchableOpacity
-                    onPress={() => {
-                        setModalVisible(true);
-                        setSearchQuery('');
-                        setSelectedItem(null);
-                        setDisplayDetails(false);
-                        setFoodData([]);
-                    }}
-                    style={{
-                        backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: HeightRatio(20),
-                        borderRadius: HeightRatio(10),
-                        alignSelf: 'center',
-                        width: windowWidth - WidthRatio(50),
-                        margin: HeightRatio(4)
-                    }}
-                >
-                    <Text
+                        {/* Add Button */}
+                        <TouchableOpacity
+                            onPress={() => {
+                                setClearSuggestions(false)
+                                RecentFood()
+                                setModalVisible(true);
+                                setSearchQuery('');
+                                setSelectedItem(null);
+                                setDisplayDetails(false);
+                                setFoodData([]);
+
+                            }}
+                            style={{
+                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                padding: HeightRatio(20),
+                                borderRadius: HeightRatio(10),
+                                alignSelf: 'center',
+                                width: windowWidth - WidthRatio(50),
+                                margin: HeightRatio(4)
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: 'black',
+                                    fontSize: HeightRatio(30),
+                                    alignSelf: 'center',
+                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                }}
+                                allowFontScaling={false}
+                            >
+                                Add Food
+                            </Text>
+                        </TouchableOpacity>
+                    </>
+                    :
+                    <View
                         style={{
-                            color: 'black',
-                            fontSize: HeightRatio(30),
-                            alignSelf: 'center',
-                            fontFamily: 'SofiaSansSemiCondensed-Regular'
+                            // backgroundColor: refreshing ? 'rgba(0, 0, 0, 0.75)' : null,
+                            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                            position: 'absolute',
+                            zIndex: 100,
+                            height: windowHeight,
+                            width: windowWidth,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
                         }}
-                        allowFontScaling={false}
                     >
-                        Add Food
-                    </Text>
-                </TouchableOpacity>
-                </>
+                        <Text
+                            style={{
+                                color: '#ffff00',
+                                textAlign: 'center',
+                                fontSize: HeightRatio(30),
+                                fontFamily: 'GochiHand_400Regular',
+                                marginTop: HeightRatio(10)
+                            }}
+                            allowFontScaling={false}
+                        >
+                            Updating...
+                        </Text>
+                    </View>
                 }
             </View>
 
@@ -831,8 +916,183 @@ export const HomeScreen = ({ navigation }) => {
                             </Text>
                         </View>
                     </TouchableOpacity>
+                    {!clearSuggestions && !searchQuery &&
+                        <>
+                            {/* <RecentFood /> */}
+                            <View style={{
+                                // backgroundColor: 'rgba(30, 228, 168, 0.50)',
+                                display: 'flex',
+                                justifyContent: 'flex-start',
+                                padding: HeightRatio(10),
+                                alignSelf: 'center',
+                                width: windowWidth - WidthRatio(100),
+                                margin: HeightRatio(10),
+                                borderTopWidth: 2,
+                                borderTopColor: 'white'
+                            }}>
+                                <Text
+                                    style={{
+                                        color: 'white',
+                                        fontSize: HeightRatio(25),
+                                        alignSelf: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Recently Used
+                                </Text>
+                            </View>
+                            <SafeAreaView style={styles.container}>
+                                <ScrollView
+                                    style={styles.scrollView}
+                                // refreshControl={
+                                //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                                // }
+                                >
+                                    <View>
+                                        {recentFoodData.map((data, index) => (
+                                            <>
+                                                {selectRecentlyUsed == null ?
 
-                    {/* <RecentFood /> */}
+                                                    <View
+                                                        style={{
+                                                            backgroundColor: '#a39bc9',
+                                                            borderRadius: HeightRatio(10),
+                                                            margin: HeightRatio(10),
+                                                            width: windowWidth - HeightRatio(80),
+                                                            alignSelf: 'center'
+                                                        }}
+                                                        key={index}
+                                                    >
+                                                        <View
+                                                            style={{
+                                                                width: windowWidth - HeightRatio(120),
+                                                                alignSelf: 'center'
+                                                            }}
+                                                        >
+                                                            <View
+                                                                style={{
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "space-between", // changed to 'space-between'
+                                                                    flexDirection: 'row',
+                                                                    padding: HeightRatio(5),
+                                                                    paddingTop: HeightRatio(10)
+                                                                }}
+                                                            >
+                                                                <View
+                                                                    style={{ flexDirection: 'column' }}
+                                                                >
+                                                                    <View
+                                                                        style={{
+                                                                            borderBottomWidth: 2,
+                                                                            borderBottomColor: 'black'
+                                                                        }}
+                                                                    >
+                                                                        <Text
+                                                                            style={{
+                                                                                color: 'black',
+                                                                                fontSize: HeightRatio(25),
+                                                                                fontFamily: "SofiaSansSemiCondensed-ExtraBold"
+                                                                            }}
+                                                                        >
+                                                                            {data.item}
+                                                                        </Text>
+                                                                    </View>
+                                                                    <View
+                                                                        style={{
+                                                                            backgroundColor: 'rgba(30, 228, 168, 1.0)',
+                                                                            margin: HeightRatio(10),
+                                                                            padding: HeightRatio(4),
+                                                                            paddingLeft: HeightRatio(20),
+                                                                            paddingRight: HeightRatio(20),
+                                                                            borderRadius: HeightRatio(10)
+                                                                        }}
+                                                                    >
+                                                                        <Text
+                                                                            style={{
+                                                                                color: 'black',
+                                                                                fontSize: HeightRatio(20),
+                                                                                fontFamily: "SofiaSansSemiCondensed-Regular"
+                                                                            }}
+                                                                        >
+                                                                            {data.amount}
+                                                                        </Text>
+                                                                    </View>
+                                                                </View>
+                                                                <TouchableOpacity
+                                                                    onPress={() => {setSelectRecentlyUsed(index);}}
+                                                                    style={{
+                                                                        backgroundColor: 'rgba(26, 105, 125, 1.00)',
+                                                                        margin: HeightRatio(10),
+                                                                        padding: HeightRatio(10),
+                                                                        borderRadius: HeightRatio(10),
+                                                                        height: HeightRatio(40),
+                                                                        // width: HeightRatio(40),
+                                                                        display: 'flex',
+                                                                        alignItems: "flex-end",
+                                                                        justifyContent: "center",
+                                                                    }}
+                                                                >
+                                                                    <Text
+                                                                        style={{
+                                                                            color: 'white',
+                                                                            fontSize: HeightRatio(20),
+                                                                            fontFamily: "SofiaSansSemiCondensed-ExtraBold"
+                                                                        }}
+                                                                    >
+                                                                        Use
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            </View>
+
+                                                        </View>
+                                                    </View>
+                                                    :
+                                                    <>
+                                                        {selectRecentlyUsed == index &&
+                                                            <View
+                                                                style={{
+                                                                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                                                                    width: '90%',
+                                                                    padding: HeightRatio(15),
+                                                                    margin: HeightRatio(4),
+                                                                    borderRadius: HeightRatio(10),
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "center",
+                                                                    alignSelf: 'center',
+                                                                }}
+                                                            >
+                                                                <Text
+                                                                    style={{
+                                                                        color: "black",
+                                                                        fontSize: HeightRatio(25),
+                                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                                        textAlign: 'center',
+                                                                        width: '80%',
+                                                                        display: 'flex',
+                                                                        flexWrap: 'wrap',
+                                                                    }}
+                                                                    allowFontScaling={false}
+                                                                >
+                                                                    {data.item}
+                                                                </Text>
+                                                                <SelectedFoodDetails textInputValue={`${data.number}`} selectedItem={`${data.measurement}`} />
+                                                            </View>
+                                                        }
+                                                    </>
+                                                }
+                                            </>
+                                        ))}
+
+
+                                    </View>
+
+                                </ScrollView>
+                            </SafeAreaView>
+                        </>
+                    }
 
                     {foodData != [] &&
                         <View style={{ flex: 1 }}>
@@ -854,9 +1114,9 @@ export const HomeScreen = ({ navigation }) => {
                             alignSelf: 'center'
                         }}
                     >
-                        {selectedItem ?
+                        {selectedItem || selectRecentlyUsed != null ?
                             <>
-                                <TouchableOpacity onPress={() => setModalVisible(false)}>
+                                <TouchableOpacity onPress={() => { setModalVisible(false); }}>
                                     <View style={{
                                         backgroundColor: 'rgba(255, 0, 75, 0.50)',
                                         display: 'flex',
@@ -882,7 +1142,7 @@ export const HomeScreen = ({ navigation }) => {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={() => {
-                                        getNutritionValue(selectedItem);
+                                        getNutritionValue(selectedItem || recentFoodData.item);
                                         setModalVisible(false);
                                     }}
                                 >
@@ -1069,5 +1329,15 @@ const styles = StyleSheet.create({
         flex: 1,
         textAlign: 'left',
 
+    },
+    container: {
+        //   flex: 1,
+        height: HeightRatio(460)
+
+    },
+    scrollView: {
+        //   backgroundColor: 'blue',
+        width: windowWidth - HeightRatio(20),
+        alignSelf: 'center'
     },
 });

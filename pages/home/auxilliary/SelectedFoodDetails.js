@@ -31,7 +31,7 @@ import { Styling, windowWidth, windowHeight, HeightRatio, WidthRatio } from '../
 import { MainStateContext } from '../../../App';
 
 
-export const SelectedFoodDetails = () => {
+export const SelectedFoodDetails = (props) => {
     const { mainState, setMainState } = useContext(MainStateContext);
     const options = [
         "Cups",
@@ -49,15 +49,15 @@ export const SelectedFoodDetails = () => {
         "Dinner",
         "Before Bed"
     ]
-    const [textInputValue, setTextInputValue] = useState('');
-    const [selectedItem, setSelectedItem] = useState(null);
+    const [textInputValue, setTextInputValue] = useState(props.textInputValue || '');
+    const [selectedItem, setSelectedItem] = useState(props.selectedItem || null);
     const [selectedTime, setSelectedTime] = useState(null);
 
 
     useEffect(() => {
         setMainState({
-            selectedFood_Quantity: null,
-            selectedFood_Measurement: null
+            selectedFood_Quantity: props.textInputValue || null,
+            selectedFood_Measurement: props.selectedItem || null
           })
     }, [])
 
@@ -190,6 +190,7 @@ export const SelectedFoodDetails = () => {
                                         width: WidthRatio(140),
                                         margin: HeightRatio(4)
                                     }}
+                                    key={option}
                                 >
                                     <Text
                                         style={{
@@ -289,6 +290,7 @@ export const SelectedFoodDetails = () => {
                                         width: WidthRatio(140),
                                         margin: HeightRatio(4)
                                     }}
+                                    key={option}
                                 >
                                     <Text
                                         style={{
