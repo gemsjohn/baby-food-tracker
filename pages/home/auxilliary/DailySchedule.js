@@ -82,21 +82,6 @@ export const DailySchedule = (props) => {
         variables: { id: mainState.current.userID }
     });
 
-    useEffect(() => {
-        refetch()
-    }, [])
-
-    // const [refreshing, setRefreshing] = useState(false);
-
-    // const onRefresh = useCallback(() => {
-    //     refetch();
-    //     setRefreshing(true);
-    //     setTimeout(() => {
-    //       setRefreshing(false);
-    //     }, 2000);
-    // }, []);
-
-
     const getTrackerEntryByDate = (date) => {
         refetch()
         setMatchingDate([])
@@ -114,7 +99,6 @@ export const DailySchedule = (props) => {
         }
 
     }
-
     useEffect(() => {
         console.log('# --------------------------------------')
         console.log('# - Date: ' + props.date)
@@ -134,9 +118,14 @@ export const DailySchedule = (props) => {
         setDinnerData([])
         setBeforeBedData([])
         getTrackerEntryByDate(props.date)
-        // refetch()
 
     }, [props.date])
+
+    useEffect(() => {
+        if (userByID?.user != undefined) {
+            getTrackerEntryByDate(props.date)
+        }
+    }, [userByID?.user])
 
     const breakDownMatchingDate = (input) => {
         setFirstThing([])

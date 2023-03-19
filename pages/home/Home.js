@@ -117,10 +117,10 @@ export const HomeScreen = ({ navigation }) => {
 
     useEffect(() => {
         setNutritionFacts([])
-
         setLoading(true)
 
         setTimeout(() => {
+
             authState.current = mainState.current.authState
             userID.current = mainState.current.userID;
 
@@ -783,7 +783,7 @@ export const HomeScreen = ({ navigation }) => {
 
                 {!refreshing && !refreshing_Nutrition ?
                     <>
-                        <DailySchedule date={currentDateReadable} />
+                        <DailySchedule date={currentDateReadable} userID={mainState.current.userID} />
 
 
 
@@ -951,7 +951,7 @@ export const HomeScreen = ({ navigation }) => {
                                 >
                                     <View>
                                         {recentFoodData.map((data, index) => (
-                                            <>
+                                            <View key={index}>
                                                 {selectRecentlyUsed == null ?
 
                                                     <View
@@ -962,7 +962,7 @@ export const HomeScreen = ({ navigation }) => {
                                                             width: windowWidth - HeightRatio(80),
                                                             alignSelf: 'center'
                                                         }}
-                                                        key={index}
+                                                        
                                                     >
                                                         <View
                                                             style={{
@@ -1083,7 +1083,7 @@ export const HomeScreen = ({ navigation }) => {
                                                         }
                                                     </>
                                                 }
-                                            </>
+                                            </View>
                                         ))}
 
 
