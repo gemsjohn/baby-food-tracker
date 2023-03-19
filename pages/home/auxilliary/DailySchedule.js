@@ -42,19 +42,35 @@ export const DailySchedule = (props) => {
 
     // Schedule Arrays
     const [firstThing, setFirstThing] = useState([]);
+    const [firstThingCalTotal, setFirstThingCalTotal] = useState(null)
     const [firstThingData, setFirstThingData] = useState([]);
+
     const [breakfast, setBreakfast] = useState([]);
+    const [breakfastCalTotal, setBreakfastCalTotal] = useState(null)
     const [breakfastData, setBreakfastData] = useState([]);
+    const [displayBreakfastNutrients, setDisplayBreakfastNutrients] = useState(false);
+
     const [midmorning, setMidmorning] = useState([]);
+    const [midmorningCalTotal, setMidmorningCalTotal] = useState(null)
     const [midmorningData, setMidmorningData] = useState([]);
+
     const [lunch, setLunch] = useState([]);
+    const [lunchCalTotal, setLunchCalTotal] = useState(null)
     const [lunchData, setLunchData] = useState([]);
+
     const [midafternoon, setMidafternoon] = useState([]);
+    const [midafternoonCalTotal, setMidafternoonCalTotal] = useState(null)
     const [midafternoonData, setMidafternoonData] = useState([]);
+
     const [dinner, setDinner] = useState([]);
+    const [dinnerCalTotal, setDinnerCalTotal] = useState(null)
     const [dinnerData, setDinnerData] = useState([]);
+
     const [beforeBed, setBeforeBed] = useState([]);
+    const [beforeBedCalTotal, setBeforeBedCalTotal] = useState(null)
     const [beforeBedData, setBeforeBedData] = useState([]);
+
+    const [totalCalorieCount, setTotalCalorieCount] = useState(null)
 
 
 
@@ -117,7 +133,8 @@ export const DailySchedule = (props) => {
         setBeforeBed([])
         // console.log(input.length)
         for (let i = 0; i < input.length; i++) {
-            const jsonString = JSON.stringify(input[i].entry[0].schedule);
+            const schedule = JSON.stringify(input[i].entry[0].schedule);
+            const jsonString = JSON.stringify(input[i].entry[0].nutrients);
             // console.log(i)
             // console.log(jsonString)
 
@@ -133,31 +150,40 @@ export const DailySchedule = (props) => {
                 return str.replace(/^"(.*)"$/, '$1');
             }
 
+            let sampleSchedule_v1 = removeBackslashes(`${schedule}`);
+            let sampleSchedule_v2 = removeQuotes(sampleSchedule_v1)
 
             let sample_v1 = removeBackslashes(`${jsonString}`);
             let sample_v2 = removeQuotes(sample_v1)
+            sample_v2 = removeBackslashes(sample_v2)
+            sample_v2 = removeQuotes(sample_v2)
+            sample_v2 = JSON.parse(sample_v2)
+            sample_v2 = sample_v2.calories.amount
 
+
+
+            // console.log("+++++++")
             // console.log(sample_v2)
 
-            if (sample_v2 == "First Thing") {
+            if (sampleSchedule_v2 == "First Thing") {
                 setFirstThing(prev => [...prev, sample_v2])
             }
-            if (sample_v2 == "Breakfast") {
+            if (sampleSchedule_v2 == "Breakfast") {
                 setBreakfast(prev => [...prev, sample_v2])
             }
-            if (sample_v2 == "Midmorning") {
+            if (sampleSchedule_v2 == "Midmorning") {
                 setMidmorning(prev => [...prev, sample_v2])
             }
-            if (sample_v2 == "Lunch") {
+            if (sampleSchedule_v2 == "Lunch") {
                 setLunch(prev => [...prev, sample_v2])
             }
-            if (sample_v2 == "Midafter-noon") {
+            if (sampleSchedule_v2 == "Midafter-noon") {
                 setMidafternoon(prev => [...prev, sample_v2])
             }
-            if (sample_v2 == "Dinner") {
+            if (sampleSchedule_v2 == "Dinner") {
                 setDinner(prev => [...prev, sample_v2])
             }
-            if (sample_v2 == "Before Bed") {
+            if (sampleSchedule_v2 == "Before Bed") {
                 setBeforeBed(prev => [...prev, sample_v2])
             }
 
@@ -166,10 +192,91 @@ export const DailySchedule = (props) => {
 
     }
 
-
     useEffect(() => {
         breakDownMatchingDate(matchingDate)
     }, [matchingDate])
+
+
+    // UPDATE SCHEDULE SECTION TOTAL CAL's
+    useEffect(() => {
+        let sum = 0;
+
+        for (let i = 0; i < firstThing.length; i++) {
+            sum += firstThing[i];
+        }
+
+        setFirstThingCalTotal(sum)
+    }, [firstThing])
+
+    useEffect(() => {
+        let sum = 0;
+
+        for (let i = 0; i < breakfast.length; i++) {
+            sum += breakfast[i];
+        }
+
+        setBreakfastCalTotal(sum)
+    }, [breakfast])
+
+    useEffect(() => {
+        let sum = 0;
+
+        for (let i = 0; i < midmorning.length; i++) {
+            sum += midmorning[i];
+        }
+
+        setMidmorningCalTotal(sum)
+    }, [midmorning])
+
+    useEffect(() => {
+        let sum = 0;
+
+        for (let i = 0; i < lunch.length; i++) {
+            sum += lunch[i];
+        }
+
+        setLunchCalTotal(sum)
+    }, [lunch])
+
+    useEffect(() => {
+        let sum = 0;
+
+        for (let i = 0; i < midafternoon.length; i++) {
+            sum += midafternoon[i];
+        }
+
+        setMidafternoonCalTotal(sum)
+    }, [midafternoon])
+
+    useEffect(() => {
+        let sum = 0;
+
+        for (let i = 0; i < dinner.length; i++) {
+            sum += dinner[i];
+        }
+
+        setDinnerCalTotal(sum)
+    }, [dinner])
+
+    useEffect(() => {
+        let sum = 0;
+
+        for (let i = 0; i < beforeBed.length; i++) {
+            sum += beforeBed[i];
+        }
+
+        setBeforeBedCalTotal(sum)
+    }, [beforeBed])
+
+    // TOTAL ALL SCHEDULE SECTIONS
+    useEffect(() => {
+        console.log("# - TOTAL:")
+        let total = firstThingCalTotal + breakfastCalTotal + midmorningCalTotal + lunchCalTotal + midafternoonCalTotal + dinnerCalTotal + beforeBedCalTotal;
+        setTotalCalorieCount(total)
+    }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, midafternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
+
+
+
 
     const displayScheduleData = (input) => {
         setFirstThingData([])
@@ -254,6 +361,30 @@ export const DailySchedule = (props) => {
 
     return (
         <>
+            <View
+                style={{
+                    alignSelf: 'center',
+                    backgroundColor: "#47426a",
+                    margin: HeightRatio(5),
+                    marginTop: HeightRatio(20),
+                    borderRadius: 10,
+                    // padding: HeightRatio(10),
+                    width: '80%'
+                }}
+            >
+                <Text
+                    style={{
+                        color: 'white',
+                        fontSize: HeightRatio(30),
+                        borderBottomWidth: 1,
+                        borderBottomColor: 'white',
+                        textAlign: 'center'
+                    }}
+                >
+                    Total Calories: {totalCalorieCount} Cal
+
+                </Text>
+            </View>
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView}>
                     {/* FIRST THING */}
@@ -289,7 +420,6 @@ export const DailySchedule = (props) => {
                                 padding: HeightRatio(10),
                                 borderRadius: HeightRatio(30),
                                 height: HeightRatio(40),
-                                width: HeightRatio(40),
                                 display: 'flex',
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -302,7 +432,7 @@ export const DailySchedule = (props) => {
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
-                                {firstThing.length}
+                                {firstThingCalTotal} Cal
                             </Text>
                         </View>
                         <View
@@ -326,7 +456,7 @@ export const DailySchedule = (props) => {
                         </View>
                     </TouchableOpacity>
                     {firstThingData.map((data) => (
-                        <View 
+                        <View
                             style={{
                                 backgroundColor: '#a39bc9',
                                 borderRadius: HeightRatio(10),
@@ -468,7 +598,7 @@ export const DailySchedule = (props) => {
                                 padding: HeightRatio(10),
                                 borderRadius: HeightRatio(30),
                                 height: HeightRatio(40),
-                                width: HeightRatio(40),
+                                // width: HeightRatio(40),
                                 display: 'flex',
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -481,7 +611,7 @@ export const DailySchedule = (props) => {
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
-                                {breakfast.length}
+                                {breakfastCalTotal} Cal
                             </Text>
                         </View>
                         <View
@@ -505,7 +635,7 @@ export const DailySchedule = (props) => {
                         </View>
                     </TouchableOpacity>
                     {breakfastData.map((data) => (
-                        <View 
+                        <View
                             style={{
                                 backgroundColor: '#a39bc9',
                                 borderRadius: HeightRatio(10),
@@ -520,14 +650,17 @@ export const DailySchedule = (props) => {
                                     alignSelf: 'center'
                                 }}
                             >
-                                <View style={{
-                                    flexDirection: 'row',
-                                    borderBottomWidth: 1,
-                                    borderBottomColor: 'white',
-                                    display: 'flex',
-                                    justifyContent: 'flex-start',
-                                    alignItems: 'center'
-                                }}>
+                                <TouchableOpacity
+                                    onPress={() => setDisplayBreakfastNutrients(current => !current)}
+                                    style={{
+                                        flexDirection: 'row',
+                                        borderBottomWidth: 1,
+                                        borderBottomColor: 'white',
+                                        display: 'flex',
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'center'
+                                    }}
+                                >
                                     <Text
                                         style={{
                                             color: 'black',
@@ -554,8 +687,17 @@ export const DailySchedule = (props) => {
                                             {data.amount}
                                         </Text>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
 
+                            </View>
+                            {displayBreakfastNutrients &&
+                            <>
+                            <View
+                                style={{
+                                    width: windowWidth - HeightRatio(120),
+                                    alignSelf: 'center'
+                                }}
+                            >
                                 <Text
                                     style={{
                                         color: 'black',
@@ -610,6 +752,8 @@ export const DailySchedule = (props) => {
                                     </View>
                                 ))}
                             </View>
+                            </>
+                            }
                         </View>
 
                     ))}
@@ -649,7 +793,7 @@ export const DailySchedule = (props) => {
                                 padding: HeightRatio(10),
                                 borderRadius: HeightRatio(30),
                                 height: HeightRatio(40),
-                                width: HeightRatio(40),
+                                // width: HeightRatio(40),
                                 display: 'flex',
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -662,7 +806,7 @@ export const DailySchedule = (props) => {
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
-                                {midmorning.length}
+                                {midmorningCalTotal} Cal
                             </Text>
                         </View>
                         <View
@@ -686,7 +830,7 @@ export const DailySchedule = (props) => {
                         </View>
                     </TouchableOpacity>
                     {midmorningData.map((data) => (
-                        <View 
+                        <View
                             style={{
                                 backgroundColor: '#a39bc9',
                                 borderRadius: HeightRatio(10),
@@ -828,7 +972,6 @@ export const DailySchedule = (props) => {
                                 padding: HeightRatio(10),
                                 borderRadius: HeightRatio(30),
                                 height: HeightRatio(40),
-                                width: HeightRatio(40),
                                 display: 'flex',
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -841,7 +984,7 @@ export const DailySchedule = (props) => {
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
-                                {lunch.length}
+                                {lunchCalTotal} Cal
                             </Text>
                         </View>
                         <View
@@ -865,7 +1008,7 @@ export const DailySchedule = (props) => {
                         </View>
                     </TouchableOpacity>
                     {lunchData.map((data) => (
-                        <View 
+                        <View
                             style={{
                                 backgroundColor: '#a39bc9',
                                 borderRadius: HeightRatio(10),
@@ -1007,7 +1150,6 @@ export const DailySchedule = (props) => {
                                 padding: HeightRatio(10),
                                 borderRadius: HeightRatio(30),
                                 height: HeightRatio(40),
-                                width: HeightRatio(40),
                                 display: 'flex',
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -1020,7 +1162,7 @@ export const DailySchedule = (props) => {
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
-                                {midafternoon.length}
+                                {midafternoonCalTotal} Cal
                             </Text>
                         </View>
                         <View
@@ -1044,7 +1186,7 @@ export const DailySchedule = (props) => {
                         </View>
                     </TouchableOpacity>
                     {midafternoonData.map((data) => (
-                        <View 
+                        <View
                             style={{
                                 backgroundColor: '#a39bc9',
                                 borderRadius: HeightRatio(10),
@@ -1187,7 +1329,6 @@ export const DailySchedule = (props) => {
                                 padding: HeightRatio(10),
                                 borderRadius: HeightRatio(30),
                                 height: HeightRatio(40),
-                                width: HeightRatio(40),
                                 display: 'flex',
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -1200,7 +1341,7 @@ export const DailySchedule = (props) => {
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
-                                {dinner.length}
+                                {dinnerCalTotal} Cal
                             </Text>
                         </View>
                         <View
@@ -1224,7 +1365,7 @@ export const DailySchedule = (props) => {
                         </View>
                     </TouchableOpacity>
                     {dinnerData.map((data) => (
-                        <View 
+                        <View
                             style={{
                                 backgroundColor: '#a39bc9',
                                 borderRadius: HeightRatio(10),
@@ -1367,7 +1508,6 @@ export const DailySchedule = (props) => {
                                 padding: HeightRatio(10),
                                 borderRadius: HeightRatio(30),
                                 height: HeightRatio(40),
-                                width: HeightRatio(40),
                                 display: 'flex',
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -1380,7 +1520,7 @@ export const DailySchedule = (props) => {
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
-                                {beforeBed.length}
+                                {beforeBedCalTotal} Cal
                             </Text>
                         </View>
                         <View
@@ -1404,7 +1544,7 @@ export const DailySchedule = (props) => {
                         </View>
                     </TouchableOpacity>
                     {beforeBedData.map((data) => (
-                        <View 
+                        <View
                             style={{
                                 backgroundColor: '#a39bc9',
                                 borderRadius: HeightRatio(10),

@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useContext, useRef, useCallback } from 'react';
 import {
     Text,
     TouchableOpacity,
@@ -15,7 +15,7 @@ import {
     StyleSheet,
     TextInput,
     FlatList,
-    ActivityIndicator
+    ActivityIndicator,
 } from 'react-native';
 import {
     faSolid,
@@ -53,6 +53,14 @@ export const HomeScreen = ({ navigation }) => {
     const [displaySignUpModal, setDisplaySignUpModal] = useState(false);
     const authState = useRef(false);
     const userID = useRef(null);
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+          setRefreshing(false);
+        }, 2000);
+      }, []);
 
     const [addEntry] = useMutation(ADD_ENTRY);
     const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
@@ -113,6 +121,7 @@ export const HomeScreen = ({ navigation }) => {
         }, 500)
 
     }, [])
+
 
     useEffect(() => {
         setCurrentDateReadable(convertDateFormat(currentDate));
@@ -232,7 +241,7 @@ export const HomeScreen = ({ navigation }) => {
             let pattern = /(?<!\\)\\(?!\\)/g;
             let replacement = '';
             let updatedStr = str.replace(pattern, replacement);
-            
+
             return updatedStr;
         }
 
@@ -243,76 +252,47 @@ export const HomeScreen = ({ navigation }) => {
 
 
         let sample = removeBackslashes(`${jsonString}`);
-        
+
         console.log(removeQuotes(sample))
 
         return (
             <>
                 {/* {item.description != '' && */}
-                    <View
+                <View
+                    style={{
+                        backgroundColor: "rgba(255, 255, 255, 0.5)",
+                        width: '90%',
+                        padding: HeightRatio(15),
+                        margin: HeightRatio(4),
+                        borderRadius: HeightRatio(10),
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        alignSelf: 'center',
+                    }}
+                // key={}
+                >
+                    <Text
                         style={{
-                            backgroundColor: "rgba(255, 255, 255, 0.5)",
-                            width: '90%',
-                            padding: HeightRatio(15),
-                            margin: HeightRatio(4),
-                            borderRadius: HeightRatio(10),
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            alignSelf: 'center',
+                            color: "black",
+                            fontSize: HeightRatio(25),
+                            fontFamily: "SofiaSansSemiCondensed-Regular",
+                            textAlign: 'center',
+                            width: '80%',
+                            display: 'flex',
+                            flexWrap: 'wrap',
                         }}
-                        // key={}
+                        allowFontScaling={false}
                     >
-                        <Text
-                            style={{
-                                color: "black",
-                                fontSize: HeightRatio(25),
-                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                                textAlign: 'center',
-                                width: '80%',
-                                display: 'flex',
-                                flexWrap: 'wrap',
-                            }}
-                            allowFontScaling={false}
-                        >
-                            {removeQuotes(sample)}
-                        </Text>
+                        {removeQuotes(sample)}
+                    </Text>
 
-                        {displayDetails ?
-                            <>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setSelectedItem(null);
-                                        setDisplayDetails(false)
-                                    }}
-                                    style={{
-                                        height: HeightRatio(46),
-                                        width: HeightRatio(40),
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        position: 'absolute',
-                                        top: 0,
-                                        right: HeightRatio(0),
-                                        borderTopRightRadius: HeightRatio(10),
-                                        borderBottomRightRadius: HeightRatio(10)
-
-                                    }}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faSolid, faX}
-                                        style={{
-                                            color: 'red',
-                                        }}
-                                        size={20}
-                                    />
-                                </TouchableOpacity>
-                                <SelectedFoodDetails />
-                            </>
-                            :
+                    {displayDetails ?
+                        <>
                             <TouchableOpacity
                                 onPress={() => {
-                                    // setSelectedItem(removeQuotes(sample));
-                                    // setDisplayDetails(true)
+                                    setSelectedItem(null);
+                                    setDisplayDetails(false)
                                 }}
                                 style={{
                                     height: HeightRatio(46),
@@ -320,6 +300,7 @@ export const HomeScreen = ({ navigation }) => {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     position: 'absolute',
+                                    top: 0,
                                     right: HeightRatio(0),
                                     borderTopRightRadius: HeightRatio(10),
                                     borderBottomRightRadius: HeightRatio(10)
@@ -327,15 +308,43 @@ export const HomeScreen = ({ navigation }) => {
                                 }}
                             >
                                 <FontAwesomeIcon
-                                    icon={faSolid, faPlus}
+                                    icon={faSolid, faX}
                                     style={{
-                                        color: 'green',
+                                        color: 'red',
                                     }}
                                     size={20}
                                 />
                             </TouchableOpacity>
-                        }
-                    </View>
+                            <SelectedFoodDetails />
+                        </>
+                        :
+                        <TouchableOpacity
+                            onPress={() => {
+                                // setSelectedItem(removeQuotes(sample));
+                                // setDisplayDetails(true)
+                            }}
+                            style={{
+                                height: HeightRatio(46),
+                                width: HeightRatio(40),
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                position: 'absolute',
+                                right: HeightRatio(0),
+                                borderTopRightRadius: HeightRatio(10),
+                                borderBottomRightRadius: HeightRatio(10)
+
+                            }}
+                        >
+                            <FontAwesomeIcon
+                                icon={faSolid, faPlus}
+                                style={{
+                                    color: 'green',
+                                }}
+                                size={20}
+                            />
+                        </TouchableOpacity>
+                    }
+                </View>
                 {/* } */}
                 {/* {data_array.map((data) => (
                 <View 
@@ -524,7 +533,7 @@ export const HomeScreen = ({ navigation }) => {
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        height: HeightRatio(140)
+                        height: HeightRatio(100)
                     }}
                 >
                     <TouchableOpacity
@@ -624,7 +633,7 @@ export const HomeScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
 
-                {displayNutritionValueLoading ?
+                {/* {displayNutritionValueLoading ?
                     <>
 
                         <View
@@ -669,9 +678,13 @@ export const HomeScreen = ({ navigation }) => {
                             <DisplayDailyEntry facts={nutritionFacts} table={nutritionTable} />
                         }
                     </>
-                }
+                } */}
+
+                
 
                 <DailySchedule date={currentDateReadable} />
+
+
 
 
                 {/* Add Button */}
@@ -772,7 +785,7 @@ export const HomeScreen = ({ navigation }) => {
                     </TouchableOpacity>
 
                     {/* <RecentFood /> */}
-                    
+
                     {foodData != [] &&
                         <View style={{ flex: 1 }}>
                             {displayLoading ?
