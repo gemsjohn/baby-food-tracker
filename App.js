@@ -12,8 +12,8 @@ import { Auth } from './pages/auth/auth';
 import * as SecureStore from 'expo-secure-store';
 
 export const MainStateContext = createContext();
-// export const GLOBAL_GRAPHQL_API_URL = "https://npc-ai.herokuapp.com";
-export const GLOBAL_GRAPHQL_API_URL = "http://192.168.1.198:3001";
+export const GLOBAL_GRAPHQL_API_URL = "https://baby-food-tracker.herokuapp.com";
+// export const GLOBAL_GRAPHQL_API_URL = "http://192.168.1.198:3001";
 
 
 const Stack = createNativeStackNavigator();
@@ -79,8 +79,8 @@ export default function App() {
             // onStateChange={(state) => { console.log('New state is', state.routes); }}
           >
             <Stack.Navigator
-              // initialRouteName={initRoute}
-              initialRouteName={"Key"}
+              initialRouteName={initRoute}
+              // initialRouteName={"Key"}
               screenOptions={{
                 headerShown: false,
                 

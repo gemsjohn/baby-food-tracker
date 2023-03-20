@@ -53,6 +53,7 @@ export const Navbar = (props) => {
     }
 
     const pingServer = async () => {
+        console.log(GLOBAL_GRAPHQL_API_URL)
         try {
             const response = await fetch(`${GLOBAL_GRAPHQL_API_URL}/ping`, {
                 method: 'GET',

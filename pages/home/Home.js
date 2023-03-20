@@ -37,6 +37,7 @@ import axios from 'axios'
 import * as SecureStore from 'expo-secure-store';
 import { Navbar } from '../../components/Navbar';
 import { MainStateContext } from '../../App';
+import { GLOBAL_GRAPHQL_API_URL } from '../../App'
 import { convertDateFormat } from './auxilliary/ConvertDateFormat';
 import { SelectedFoodDetails } from './auxilliary/SelectedFoodDetails';
 import { DisplayDailyEntry } from './auxilliary/DisplayDailyEntry';
@@ -162,7 +163,7 @@ export const HomeScreen = ({ navigation }) => {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            url: `http://192.168.1.198:3001/query-usda/${prompt}`
+            url: `${GLOBAL_GRAPHQL_API_URL}/query-usda/${prompt}`
         }
 
         axios(config)
@@ -224,7 +225,7 @@ export const HomeScreen = ({ navigation }) => {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
-                url: `http://192.168.1.198:3001/api/npc/${prompt}`
+                url: `${GLOBAL_GRAPHQL_API_URL}/api/npc/${prompt}`
             }
 
             axios(config)
@@ -330,109 +331,7 @@ export const HomeScreen = ({ navigation }) => {
 
         }
 
-        // return (
-        //     <>
-        //         {recentFoodData.map((data, index) => (
-        //             <View
-        //                 style={{
-        //                     backgroundColor: '#a39bc9',
-        //                     borderRadius: HeightRatio(10),
-        //                     margin: HeightRatio(10),
-        //                     width: windowWidth - HeightRatio(80),
-        //                     alignSelf: 'center'
-        //                 }}
-        //                 key={index}
-        //             >
-        //                 <View
-        //                     style={{
-        //                         width: windowWidth - HeightRatio(120),
-        //                         alignSelf: 'center'
-        //                     }}
-        //                 >
-        //                     <TouchableOpacity
-        //                         onPress={() => {
-        //                             // setDisplayBreakfastNutrients(current => displayBreakfastNutrientsForIndex == index ? !current : true);
-        //                             // setDisplayBreakfastNutrientsForIndex(index)
-        //                             console.log(`${data.item}`)
-        //                         }}
-        //                         style={{
-        //                             display: "flex",
-        //                             alignItems: "center",
-        //                             justifyContent: "space-between", // changed to 'space-between'
-        //                             flexDirection: 'row',
-        //                             padding: HeightRatio(5),
-        //                             paddingTop: HeightRatio(10)
-        //                         }}
-        //                     >
-        //                         <View
-        //                             style={{ flexDirection: 'column' }}
-        //                         >
-        //                             <View
-        //                                 style={{
-        //                                     borderBottomWidth: 2,
-        //                                     borderBottomColor: 'black'
-        //                                 }}
-        //                             >
-        //                                 <Text
-        //                                     style={{
-        //                                         color: 'black',
-        //                                         fontSize: HeightRatio(25),
-        //                                         fontFamily: "SofiaSansSemiCondensed-ExtraBold"
-        //                                     }}
-        //                                 >
-        //                                     {data.item}
-        //                                 </Text>
-        //                             </View>
-        //                             <View
-        //                                 style={{
-        //                                     backgroundColor: 'rgba(30, 228, 168, 1.0)',
-        //                                     margin: HeightRatio(10),
-        //                                     padding: HeightRatio(4),
-        //                                     paddingLeft: HeightRatio(20),
-        //                                     paddingRight: HeightRatio(20),
-        //                                     borderRadius: HeightRatio(10)
-        //                                 }}
-        //                             >
-        //                                 <Text
-        //                                     style={{
-        //                                         color: 'black',
-        //                                         fontSize: HeightRatio(20),
-        //                                         fontFamily: "SofiaSansSemiCondensed-Regular"
-        //                                     }}
-        //                                 >
-        //                                     {data.amount}
-        //                                 </Text>
-        //                             </View>
-        //                         </View>
-        //                         {/* <View
-        //                             style={{
-        //                                 padding: HeightRatio(10),
-        //                                 borderRadius: HeightRatio(30),
-        //                                 height: HeightRatio(40),
-        //                                 width: HeightRatio(40),
-        //                                 display: 'flex',
-        //                                 alignItems: "flex-end",
-        //                                 justifyContent: "center",
-        //                             }}
-        //                         >
-        //                             <FontAwesomeIcon
-        //                                 icon={faSolid, faBars}
-        //                                 style={{
-        //                                     color: 'black',
-        //                                 }}
-        //                                 size={20}
-        //                             />
-        //                         </View> */}
-        //                     </TouchableOpacity>
-
-
-        //                 </View>
-        //             </View>
-        //         ))}
-
-
-        //     </>
-        // )
+        
     }
 
     const Table = (data) => {
@@ -732,54 +631,6 @@ export const HomeScreen = ({ navigation }) => {
                         />
                     </TouchableOpacity>
                 </View>
-
-                {/* {displayNutritionValueLoading ?
-                    <>
-
-                        <View
-                            style={{
-                                alignSelf: 'center',
-                                backgroundColor: "#47426a",
-                                margin: 20,
-                                borderRadius: 10,
-                                padding: HeightRatio(10),
-                                width: '80%'
-                            }}
-                        >
-                            {nutritionFacts !== [] &&
-                                <>
-                                    <Text
-                                        style={{
-                                            color: 'white',
-                                            fontSize: HeightRatio(30),
-                                            borderBottomWidth: 1,
-                                            borderBottomColor: 'white'
-                                        }}
-                                    >
-                                        {selectedItem.description}
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            color: 'white',
-                                            fontSize: HeightRatio(20)
-                                        }}
-                                    >
-                                        Nutrition Details
-                                    </Text>
-                                    <ActivityIndicator />
-                                </>
-                            }
-
-                        </View>
-                    </>
-                    :
-                    <>
-                        {nutritionFacts != [] && nutritionTable != null &&
-                            <DisplayDailyEntry facts={nutritionFacts} table={nutritionTable} />
-                        }
-                    </>
-                } */}
-
 
                 {!refreshing && !refreshing_Nutrition ?
                     <>
