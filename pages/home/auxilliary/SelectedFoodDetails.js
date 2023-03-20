@@ -91,18 +91,30 @@ export const SelectedFoodDetails = (props) => {
       
     return (
         <View style={styles.container}>
-            <View style={{ flexDirection: 'column' }}>
+            <View 
+                style={{ 
+                    flexDirection: 'row',
+                    // display: 'flex',
+                    // alignItems: 'center',
+                    // justifyContent: 'center',
+                    // alignSelf: 'flex-start',
+                    // backgroundColor: 'red' 
+                }}
+            >
                 <Text
                     style={styles.header}
                     allowFontScaling={false}
-                >Quantity</Text>
+                >
+                    Quantity
+                </Text>
                 <TextInput
-                    placeholder="Enter a number"
+                    placeholder=""
                     keyboardType="numeric"
                     value={textInputValue}
                     onChangeText={handleTextChange}
                     style={{
                         ...Styling.textInputStyle,
+                        color: 'white',
                         height: HeightRatio(50),
                         fontSize: HeightRatio(20),
                         fontFamily: 'SofiaSansSemiCondensed-Regular',
@@ -115,8 +127,13 @@ export const SelectedFoodDetails = (props) => {
                 />
             </View>
 
-            <View style={{ flexDirection: 'column' }}>
-                <Text style={styles.header}>Measurement</Text>
+            <View style={{ flexDirection: 'row' }}>
+                <Text
+                    style={styles.header}
+                    allowFontScaling={false}
+                >
+                    Measurement
+                </Text>
                 <View style={{ marginTop: HeightRatio(10) }}>
                     {selectedItem != null ?
                         <View style={{flexDirection: 'row'}}>
@@ -215,8 +232,13 @@ export const SelectedFoodDetails = (props) => {
 
 
 
-            <View style={{ flexDirection: 'column' }}>
-                <Text style={styles.header}>Schedule</Text>
+            <View style={{ flexDirection: 'row' }}>
+                <Text
+                    style={styles.header}
+                    allowFontScaling={false}
+                >
+                    Schedule
+                </Text>
                 <View style={{ marginTop: HeightRatio(10) }}>
                     {selectedTime != null ?
                         <View style={{flexDirection: 'row'}}>
@@ -317,14 +339,22 @@ export const SelectedFoodDetails = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'flex-start',
+        // alignItems: 'flex-start',
+        // alignSelf: 'center',
         flexDirection: 'column',
-        width: '90%'
+        width: windowWidth - HeightRatio(100),
+        // backgroundColor: 'red',
+        // display: 'flex',
+        // alignItems: 'center',
+        // justifyContent: 'center'
     },
     header: {
+        color: 'white',
         fontSize: HeightRatio(25),
         fontFamily: 'SofiaSansSemiCondensed-Regular',
-        marginTop: 20,
+        width: WidthRatio(125),
+        marginTop: HeightRatio(10),
+        marginRight: HeightRatio(10)
     },
     textInput: {
         borderWidth: 1,

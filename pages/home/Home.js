@@ -28,6 +28,7 @@ import {
     faBars
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import { Styling, windowHeight, windowWidth, HeightRatio, WidthRatio } from '../../Styling';
 import { useFonts } from 'expo-font';
@@ -45,7 +46,8 @@ import { useMutation, useQuery } from '@apollo/client';
 import { ADD_ENTRY } from '../../utils/mutations';
 import { GET_USER_BY_ID } from '../../utils/queries';
 import { DailySchedule } from './auxilliary/DailySchedule';
-import { set } from 'traverse';
+import { Loading } from '../../components/Loading';
+
 
 
 
@@ -61,9 +63,11 @@ export const HomeScreen = ({ navigation }) => {
     const [recentFoodData, setRecentFoodData] = useState([])
     const [clearSuggestions, setClearSuggestions] = useState(false)
     const [selectRecentlyUsed, setSelectRecentlyUsed] = useState(null)
+    const [totalCalorieCount, setTotalCalorieCount] = useState(null)
 
 
     const onRefresh = useCallback(() => {
+        setLoading(true)
         refetch();
         setRefreshing(true);
         setRefreshing_Nutrition(true)
@@ -133,6 +137,7 @@ export const HomeScreen = ({ navigation }) => {
         }, 500)
 
         setInterval(() => {
+            getTotalCalorieCount()
             if (mainState.current.triggerRefresh) {
                 setRefreshing(true)
                 refetch()
@@ -197,7 +202,7 @@ export const HomeScreen = ({ navigation }) => {
             measurement: mainState.current.selectedFood_Measurement
         };
 
-        if (recentFoodData!= [] && selectRecentlyUsed != null && recentFoodData[selectRecentlyUsed].number == data.quantity && recentFoodData[selectRecentlyUsed].measurement == data.measurement) {
+        if (recentFoodData != [] && selectRecentlyUsed != null && recentFoodData[selectRecentlyUsed].number == data.quantity && recentFoodData[selectRecentlyUsed].measurement == data.measurement) {
             console.log("# - getNutritionValue / recentFoodData[selectRecentlyUsed]")
             const nutrients_JSON = JSON.stringify(recentFoodData[selectRecentlyUsed].nutrients);
             const updateUserEntry = async () => {
@@ -331,7 +336,7 @@ export const HomeScreen = ({ navigation }) => {
 
         }
 
-        
+
     }
 
     const Table = (data) => {
@@ -381,39 +386,29 @@ export const HomeScreen = ({ navigation }) => {
     const renderItem = ({ item }) => {
         return (
             <>
+
                 {item.description != '' &&
                     <View
                         style={{
-                            backgroundColor: "rgba(255, 255, 255, 0.5)",
-                            width: '90%',
-                            padding: HeightRatio(15),
-                            margin: HeightRatio(4),
+                            backgroundColor: 'rgba(0, 0, 0, 0.3)',
                             borderRadius: HeightRatio(10),
-                            display: "flex",
+                            margin: HeightRatio(4),
+                            width: windowWidth - HeightRatio(80),
+                            alignSelf: 'center',
+                            display: 'flex',
                             alignItems: "center",
                             justifyContent: "center",
-                            alignSelf: 'center',
+                            flexDirection: 'row',
+                            padding: HeightRatio(10)
                         }}
                         key={item.fdcId}
                     >
-                        <Text
-                            style={{
-                                color: "black",
-                                fontSize: HeightRatio(25),
-                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                                textAlign: 'center',
-                                width: '80%',
-                                display: 'flex',
-                                flexWrap: 'wrap',
-                            }}
-                            allowFontScaling={false}
-                        >
-                            {item.description}
-                        </Text>
+
+
 
                         {displayDetails ?
                             <>
-                                <TouchableOpacity
+                                {/* <TouchableOpacity
                                     onPress={() => {
                                         setSelectedItem(null);
                                         setDisplayDetails(false)
@@ -424,8 +419,9 @@ export const HomeScreen = ({ navigation }) => {
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         position: 'absolute',
-                                        top: 0,
-                                        right: HeightRatio(0),
+                                        zIndex: 1000,
+                                        top: HeightRatio(-10),
+                                        right: HeightRatio(-10),
                                         borderTopRightRadius: HeightRatio(10),
                                         borderBottomRightRadius: HeightRatio(10)
 
@@ -438,41 +434,83 @@ export const HomeScreen = ({ navigation }) => {
                                         }}
                                         size={20}
                                     />
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 <SelectedFoodDetails />
                             </>
                             :
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setSelectedItem(item);
-                                    setDisplayDetails(true)
-                                }}
-                                style={{
-                                    height: HeightRatio(46),
-                                    width: HeightRatio(40),
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    position: 'absolute',
-                                    right: HeightRatio(0),
-                                    borderTopRightRadius: HeightRatio(10),
-                                    borderBottomRightRadius: HeightRatio(10)
-
-                                }}
-                            >
-                                <FontAwesomeIcon
-                                    icon={faSolid, faPlus}
+                            <>
+                                <View
                                     style={{
-                                        color: 'green',
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between", // changed to 'space-between'
+                                        flexDirection: 'row',
+                                        padding: HeightRatio(8),
+                                        width: windowWidth - HeightRatio(140),
                                     }}
-                                    size={20}
-                                />
-                            </TouchableOpacity>
+                                >
+                                    <Text
+                                        style={{
+                                            color: "white",
+                                            fontSize: HeightRatio(25),
+                                            fontFamily: "SofiaSansSemiCondensed-Regular",
+                                            // textAlign: 'center',
+                                            // width: '80%',
+                                            display: 'flex',
+                                            flexWrap: 'wrap',
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        {item.description}
+                                    </Text>
+                                </View>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setSelectedItem(item);
+                                        setDisplayDetails(true)
+                                    }}
+                                    style={{
+                                        backgroundColor: 'rgba(247, 255, 108, 1.00)',
+                                        borderRadius: HeightRatio(10),
+                                        height: HeightRatio(40),
+                                        width: HeightRatio(40),
+                                        display: 'flex',
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            color: 'black',
+                                            fontSize: HeightRatio(30),
+                                            fontFamily: "SofiaSansSemiCondensed-ExtraBold"
+                                        }}
+                                    >
+                                        +
+                                    </Text>
+                                </TouchableOpacity>
+                            </>
                         }
                     </View>
                 }
             </>
         );
     };
+
+    const getTotalCalorieCount = async () => {
+        try {
+            const value = await AsyncStorage.getItem('@TotalCalorieCount')
+            if (value !== null) {
+                // value previously stored
+                setTotalCalorieCount(value)
+                setTimeout(() => {
+                    setLoading(false)
+                }, 100)
+            }
+        } catch (e) {
+            // error reading value
+        }
+    }
 
     const [fontsLoaded] = useFonts({
         'GochiHand_400Regular': require('../../assets/fonts/GochiHand-Regular.ttf'),
@@ -491,546 +529,356 @@ export const HomeScreen = ({ navigation }) => {
     }
     return (
         <>
-            {refreshing || refreshing_Nutrition &&
-                <View
-                    style={{
-                        // backgroundColor: refreshing ? 'rgba(0, 0, 0, 0.75)' : null,
-                        backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                        position: 'absolute',
-                        zIndex: 100,
-                        height: windowHeight,
-                        width: windowWidth,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                >
-                    <Text
-                        style={{
-                            color: '#ffff00',
-                            textAlign: 'center',
-                            fontSize: HeightRatio(30),
-                            fontFamily: 'GochiHand_400Regular',
-                            marginTop: HeightRatio(10)
-                        }}
-                        allowFontScaling={false}
-                    >
-                        Updating...
-                    </Text>
-                </View>
-            }
-            <View
-                style={{ ...Styling.container, backgroundColor: 'rgba(71, 66, 106, 1.00)', display: 'flex', alignItems: 'center', width: windowWidth }}
-                onLayout={onLayoutRootView}
-            >
-
-                <View
-                    style={{
-                        backgroundColor: 'rgba(71, 66, 106, 1.00)',
-                        width: windowWidth,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: HeightRatio(100)
-                    }}
-                >
-                    <TouchableOpacity
-                        onPress={() => handlePreviousDay()}
-                        style={{
-                            height: '100%',
-                            width: HeightRatio(90),
-                            borderRadius: HeightRatio(20),
-                            margin: HeightRatio(40),
-                            marginRight: HeightRatio(10),
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                    >
-                        <FontAwesomeIcon
-                            icon={faSolid, faArrowLeft}
+            {!loading ?
+                <>
+                    {refreshing || refreshing_Nutrition &&
+                        <View
                             style={{
-                                color: 'white',
+                                // backgroundColor: refreshing ? 'rgba(0, 0, 0, 0.75)' : null,
+                                backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                                position: 'absolute',
+                                zIndex: 100,
+                                height: windowHeight,
+                                width: windowWidth,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
                             }}
-                            size={25}
-                        />
-                    </TouchableOpacity>
-                    <View
-                        style={{
-                            flexDirection: 'column',
-                            display: 'flex',
-                            alignItems: 'center'
-                        }}
-                    >
-                        <Text
-                            style={{
-                                color: 'white',
-                                fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                marginLeft: HeightRatio(10),
-                                marginRight: HeightRatio(10)
-
-                            }}
-                            allowFontScaling={false}
                         >
-                            {currentDateReadable}
-                        </Text>
-                        {currentDate != moment().format(formatString) &&
-                            <TouchableOpacity
-                                onPress={() => setCurrentDate(moment().format(formatString))}
+                            <Text
                                 style={{
-                                    backgroundColor: 'rgba(235, 35, 81, 0.50)',
-                                    width: HeightRatio(100),
-                                    borderRadius: HeightRatio(10),
-                                    position: 'absolute',
-                                    alignSelf: 'center',
-                                    top: HeightRatio(40),
+                                    color: '#ffff00',
+                                    textAlign: 'center',
+                                    fontSize: HeightRatio(30),
+                                    fontFamily: 'GochiHand_400Regular',
+                                    marginTop: HeightRatio(10)
+                                }}
+                                allowFontScaling={false}
+                            >
+                                Updating...
+                            </Text>
+                        </View>
+                    }
+                    {modalVisible && <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)', height: '100%', width: '100%', position: 'absolute', zIndex: 10 }} />}
+                    <View
+                        style={{ ...Styling.container, backgroundColor: '#1f1f27', display: 'flex', alignItems: 'center', width: windowWidth }}
+                        onLayout={onLayoutRootView}
+                    >
+
+
+                        <View
+                            style={{
+                                // backgroundColor: 'rgba(71, 66, 106, 0.25)',
+                                width: windowWidth,
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: HeightRatio(80)
+                            }}
+                        >
+                            <TouchableOpacity
+                                onPress={() => {
+                                    handlePreviousDay();
+                                    setLoading(true);
+                                }}
+                                style={{
+                                    height: '100%',
+                                    width: HeightRatio(90),
+                                    // borderRadius: HeightRatio(20),
+                                    // margin: HeightRatio(40),
+                                    // marginRight: HeightRatio(10),
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    padding: HeightRatio(10)
+                                    width: windowWidth * 0.2,
+                                    backgroundColor: 'rgba(71, 66, 106, 0.25)',
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faSolid, faArrowLeft}
+                                    style={{
+                                        color: 'white',
+                                    }}
+                                    size={25}
+                                />
+                            </TouchableOpacity>
+                            <View
+                                style={{
+                                    flexDirection: 'column',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    height: '100%',
+                                    width: windowWidth / 1.5,
+                                    backgroundColor: 'rgba(71, 66, 106, 0.25)',
+                                    // backgroundColor: ' rgba(218, 140, 242, 1.00)',
+                                    // padding: HeightRatio(10),
+                                    // borderRadius: HeightRatio(10)
                                 }}
                             >
                                 <Text
                                     style={{
                                         color: 'white',
-                                        fontSize: HeightRatio(20),
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-
+                                        fontSize: HeightRatio(30),
+                                        fontFamily: 'GochiHand_400Regular',
+                                        marginLeft: HeightRatio(10),
+                                        marginRight: HeightRatio(10)
 
                                     }}
                                     allowFontScaling={false}
                                 >
-                                    Reset
+                                    {currentDateReadable}
                                 </Text>
+                                {currentDate != moment().format(formatString) &&
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setCurrentDate(moment().format(formatString));
+                                            setLoading(true)
+                                        }}
+                                        style={{
+                                            backgroundColor: 'rgba(235, 35, 81, 1.00)',
+                                            // width: HeightRatio(100),
+                                            borderRadius: HeightRatio(10),
+                                            position: 'absolute',
+                                            alignSelf: 'center',
+                                            top: HeightRatio(65),
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            padding: HeightRatio(4),
+                                            paddingLeft: HeightRatio(10),
+                                            paddingRight: HeightRatio(10)
+
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: 'SofiaSansSemiCondensed-Regular',
+
+
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Return to Today
+                                        </Text>
+                                    </TouchableOpacity>
+                                }
+                            </View>
+
+
+                            <TouchableOpacity
+                                onPress={() => {
+                                    handleNextDay();
+                                    setLoading(true);
+                                }}
+                                style={{
+                                    height: '100%',
+                                    width: HeightRatio(90),
+                                    // borderRadius: HeightRatio(20),
+                                    // margin: HeightRatio(40),
+                                    // marginLeft: HeightRatio(10),
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    width: windowWidth * 0.2,
+                                    backgroundColor: 'rgba(71, 66, 106, 0.25)',
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faSolid, faArrowRight}
+                                    style={{
+                                        color: 'white',
+                                    }}
+                                    size={25}
+                                />
                             </TouchableOpacity>
+                        </View>
+
+                        {!refreshing && !refreshing_Nutrition ?
+                            <>
+                                <Image
+                                    source={require('../../assets/pattern_1.png')}
+                                    style={{
+                                        height: '100%',
+                                        width: '100%',
+                                        opacity: 0.02,
+                                        position: 'absolute',
+                                        zIndex: -10
+                                    }}
+                                />
+                                <DailySchedule date={currentDateReadable} userID={mainState.current.userID} />
+
+                                <View style={{ flexDirection: 'row', marginTop: HeightRatio(10) }}>
+                                    <View
+                                        style={{
+                                            alignSelf: 'center',
+                                            backgroundColor: ' rgba(247, 255, 108, 1.00)',
+                                            margin: HeightRatio(5),
+                                            // marginTop: HeightRatio(20),
+                                            borderRadius: 10,
+                                            padding: HeightRatio(10),
+
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexDirection: 'row'
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'black',
+                                                fontSize: HeightRatio(60),
+                                                textAlign: 'center',
+                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                            }}
+                                        >
+                                            {totalCalorieCount}
+                                            {/* 1000 */}
+
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: 'black',
+                                                fontSize: HeightRatio(20),
+                                                textAlign: 'center',
+                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+
+                                            }}
+                                        >
+                                            CALORIES
+
+                                        </Text>
+                                    </View>
+
+                                    {/* Add Button */}
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setClearSuggestions(false)
+                                            RecentFood()
+                                            setModalVisible(true);
+                                            setSearchQuery('');
+                                            setSelectedItem(null);
+                                            setDisplayDetails(false);
+                                            setFoodData([]);
+
+                                        }}
+                                        style={{
+                                            backgroundColor: 'rgba(30, 228, 168, 1.0)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            padding: HeightRatio(20),
+                                            borderRadius: HeightRatio(10),
+                                            alignSelf: 'center',
+                                            // height: HeightRatio(100),
+                                            // width: HeightRatio(150),
+                                            margin: HeightRatio(4)
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'black',
+                                                fontSize: HeightRatio(30),
+                                                textAlign: 'center',
+                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            ADD
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </>
+                            :
+                            <View
+                                style={{
+                                    // backgroundColor: refreshing ? 'rgba(0, 0, 0, 0.75)' : null,
+                                    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                                    position: 'absolute',
+                                    zIndex: 100,
+                                    height: windowHeight,
+                                    width: windowWidth,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: '#ffff00',
+                                        textAlign: 'center',
+                                        fontSize: HeightRatio(30),
+                                        fontFamily: 'GochiHand_400Regular',
+                                        marginTop: HeightRatio(10)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Updating...
+                                </Text>
+                            </View>
                         }
                     </View>
 
 
-                    <TouchableOpacity
-                        onPress={() => handleNextDay()}
+                    <Modal
+                        visible={modalVisible}
+                        animationType="slide"
+                        transparent={true}
                         style={{
-                            height: '100%',
-                            width: HeightRatio(90),
-                            borderRadius: HeightRatio(20),
-                            margin: HeightRatio(40),
-                            marginLeft: HeightRatio(10),
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
+                            width: windowWidth,
                         }}
                     >
-                        <FontAwesomeIcon
-                            icon={faSolid, faArrowRight}
+                        <View
                             style={{
-                                color: 'white',
-                            }}
-                            size={25}
-                        />
-                    </TouchableOpacity>
-                </View>
-
-                {!refreshing && !refreshing_Nutrition ?
-                    <>
-                        <DailySchedule date={currentDateReadable} userID={mainState.current.userID} />
-
-
-
-
-                        {/* Add Button */}
-                        <TouchableOpacity
-                            onPress={() => {
-                                setClearSuggestions(false)
-                                RecentFood()
-                                setModalVisible(true);
-                                setSearchQuery('');
-                                setSelectedItem(null);
-                                setDisplayDetails(false);
-                                setFoodData([]);
-
-                            }}
-                            style={{
-                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
+                                // flex: 1,
+                                backgroundColor: "#1f1f27",
+                                zIndex: 999,
+                                width: windowWidth - HeightRatio(10),
+                                // height: '100%',
+                                padding: HeightRatio(20),
+                                borderRadius: HeightRatio(10),
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                padding: HeightRatio(20),
-                                borderRadius: HeightRatio(10),
                                 alignSelf: 'center',
-                                width: windowWidth - WidthRatio(50),
-                                margin: HeightRatio(4)
+                                margin: HeightRatio(10)
                             }}
                         >
-                            <Text
+                            <TextInput
+                                type="text"
+                                name="search"
+                                placeholder="Search for food"
+                                placeholderTextColor="white"
+                                value={searchQuery}
+                                onChangeText={setSearchQuery}
+                                onSubmitEditing={handleSearch}
                                 style={{
-                                    color: 'black',
+                                    ...Styling.textInputStyle,
+                                    marginTop: HeightRatio(20),
+                                    height: HeightRatio(70),
                                     fontSize: HeightRatio(30),
-                                    alignSelf: 'center',
                                     fontFamily: 'SofiaSansSemiCondensed-Regular'
                                 }}
+                                disableFullscreenUI={true}
                                 allowFontScaling={false}
-                            >
-                                Add Food
-                            </Text>
-                        </TouchableOpacity>
-                    </>
-                    :
-                    <View
-                        style={{
-                            // backgroundColor: refreshing ? 'rgba(0, 0, 0, 0.75)' : null,
-                            backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                            position: 'absolute',
-                            zIndex: 100,
-                            height: windowHeight,
-                            width: windowWidth,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                    >
-                        <Text
-                            style={{
-                                color: '#ffff00',
-                                textAlign: 'center',
-                                fontSize: HeightRatio(30),
-                                fontFamily: 'GochiHand_400Regular',
-                                marginTop: HeightRatio(10)
-                            }}
-                            allowFontScaling={false}
-                        >
-                            Updating...
-                        </Text>
-                    </View>
-                }
-            </View>
-
-            <Modal
-                visible={modalVisible}
-                animationType="slide"
-                transparent={true}
-            >
-                <View
-                    style={{
-                        flex: 1,
-                        backgroundColor: "#2f2c4f",
-                        margin: 20,
-                        zIndex: 999,
-                        borderRadius: 10,
-                    }}
-                >
-                    <TextInput
-                        type="text"
-                        name="search"
-                        placeholder="Search"
-                        placeholderTextColor="white"
-                        value={searchQuery}
-                        onChangeText={setSearchQuery}
-                        onSubmitEditing={handleSearch}
-                        style={{
-                            ...Styling.textInputStyle,
-                            marginTop: HeightRatio(20),
-                            height: HeightRatio(70),
-                            fontSize: HeightRatio(30),
-                            fontFamily: 'SofiaSansSemiCondensed-Regular'
-                        }}
-                        disableFullscreenUI={true}
-                        allowFontScaling={false}
-                    />
-                    <TouchableOpacity
-                        onPress={() => {
-                            handleSearch()
-                        }}
-
-                    >
-                        <View style={{
-                            backgroundColor: 'rgba(30, 228, 168, 0.50)',
-                            display: 'flex',
-                            justifyContent: 'flex-start',
-                            padding: HeightRatio(10),
-                            borderRadius: HeightRatio(10),
-                            alignSelf: 'center',
-                            width: windowWidth - WidthRatio(100),
-                            margin: HeightRatio(10)
-                        }}>
-                            <Text
-                                style={{
-                                    color: 'white',
-                                    fontSize: HeightRatio(25),
-                                    alignSelf: 'center',
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
+                            />
+                            <TouchableOpacity
+                                onPress={() => {
+                                    handleSearch()
                                 }}
-                                allowFontScaling={false}
+
                             >
-                                Search
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                    {!clearSuggestions && !searchQuery &&
-                        <>
-                            {/* <RecentFood /> */}
-                            <View style={{
-                                // backgroundColor: 'rgba(30, 228, 168, 0.50)',
-                                display: 'flex',
-                                justifyContent: 'flex-start',
-                                padding: HeightRatio(10),
-                                alignSelf: 'center',
-                                width: windowWidth - WidthRatio(100),
-                                margin: HeightRatio(10),
-                                borderTopWidth: 2,
-                                borderTopColor: 'white'
-                            }}>
-                                <Text
-                                    style={{
-                                        color: 'white',
-                                        fontSize: HeightRatio(25),
-                                        alignSelf: 'center',
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    Recently Used
-                                </Text>
-                            </View>
-                            <SafeAreaView style={styles.container}>
-                                <ScrollView
-                                    style={styles.scrollView}
-                                // refreshControl={
-                                //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                                // }
-                                >
-                                    <View>
-                                        {recentFoodData.map((data, index) => (
-                                            <View key={index}>
-                                                {selectRecentlyUsed == null ?
-
-                                                    <View
-                                                        style={{
-                                                            backgroundColor: '#a39bc9',
-                                                            borderRadius: HeightRatio(10),
-                                                            margin: HeightRatio(10),
-                                                            width: windowWidth - HeightRatio(80),
-                                                            alignSelf: 'center'
-                                                        }}
-                                                        
-                                                    >
-                                                        <View
-                                                            style={{
-                                                                width: windowWidth - HeightRatio(120),
-                                                                alignSelf: 'center'
-                                                            }}
-                                                        >
-                                                            <View
-                                                                style={{
-                                                                    display: "flex",
-                                                                    alignItems: "center",
-                                                                    justifyContent: "space-between", // changed to 'space-between'
-                                                                    flexDirection: 'row',
-                                                                    padding: HeightRatio(5),
-                                                                    paddingTop: HeightRatio(10)
-                                                                }}
-                                                            >
-                                                                <View
-                                                                    style={{ flexDirection: 'column' }}
-                                                                >
-                                                                    <View
-                                                                        style={{
-                                                                            borderBottomWidth: 2,
-                                                                            borderBottomColor: 'black'
-                                                                        }}
-                                                                    >
-                                                                        <Text
-                                                                            style={{
-                                                                                color: 'black',
-                                                                                fontSize: HeightRatio(25),
-                                                                                fontFamily: "SofiaSansSemiCondensed-ExtraBold"
-                                                                            }}
-                                                                        >
-                                                                            {data.item}
-                                                                        </Text>
-                                                                    </View>
-                                                                    <View
-                                                                        style={{
-                                                                            backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                                                            margin: HeightRatio(10),
-                                                                            padding: HeightRatio(4),
-                                                                            paddingLeft: HeightRatio(20),
-                                                                            paddingRight: HeightRatio(20),
-                                                                            borderRadius: HeightRatio(10)
-                                                                        }}
-                                                                    >
-                                                                        <Text
-                                                                            style={{
-                                                                                color: 'black',
-                                                                                fontSize: HeightRatio(20),
-                                                                                fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                                            }}
-                                                                        >
-                                                                            {data.amount}
-                                                                        </Text>
-                                                                    </View>
-                                                                </View>
-                                                                <TouchableOpacity
-                                                                    onPress={() => {setSelectRecentlyUsed(index);}}
-                                                                    style={{
-                                                                        backgroundColor: 'rgba(26, 105, 125, 1.00)',
-                                                                        margin: HeightRatio(10),
-                                                                        padding: HeightRatio(10),
-                                                                        borderRadius: HeightRatio(10),
-                                                                        height: HeightRatio(40),
-                                                                        // width: HeightRatio(40),
-                                                                        display: 'flex',
-                                                                        alignItems: "flex-end",
-                                                                        justifyContent: "center",
-                                                                    }}
-                                                                >
-                                                                    <Text
-                                                                        style={{
-                                                                            color: 'white',
-                                                                            fontSize: HeightRatio(20),
-                                                                            fontFamily: "SofiaSansSemiCondensed-ExtraBold"
-                                                                        }}
-                                                                    >
-                                                                        Use
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            </View>
-
-                                                        </View>
-                                                    </View>
-                                                    :
-                                                    <>
-                                                        {selectRecentlyUsed == index &&
-                                                            <View
-                                                                style={{
-                                                                    backgroundColor: "rgba(255, 255, 255, 0.5)",
-                                                                    width: '90%',
-                                                                    padding: HeightRatio(15),
-                                                                    margin: HeightRatio(4),
-                                                                    borderRadius: HeightRatio(10),
-                                                                    display: "flex",
-                                                                    alignItems: "center",
-                                                                    justifyContent: "center",
-                                                                    alignSelf: 'center',
-                                                                }}
-                                                            >
-                                                                <Text
-                                                                    style={{
-                                                                        color: "black",
-                                                                        fontSize: HeightRatio(25),
-                                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                                        textAlign: 'center',
-                                                                        width: '80%',
-                                                                        display: 'flex',
-                                                                        flexWrap: 'wrap',
-                                                                    }}
-                                                                    allowFontScaling={false}
-                                                                >
-                                                                    {data.item}
-                                                                </Text>
-                                                                <SelectedFoodDetails textInputValue={`${data.number}`} selectedItem={`${data.measurement}`} />
-                                                            </View>
-                                                        }
-                                                    </>
-                                                }
-                                            </View>
-                                        ))}
-
-
-                                    </View>
-
-                                </ScrollView>
-                            </SafeAreaView>
-                        </>
-                    }
-
-                    {foodData != [] &&
-                        <View style={{ flex: 1 }}>
-                            {displayLoading ?
-                                <ActivityIndicator />
-                                :
-                                <FlatList
-                                    data={selectedItem ? [selectedItem] : foodData}
-                                    renderItem={renderItem}
-                                    keyExtractor={(item) => item.fdcId.toString()}
-                                />
-                            }
-                        </View>
-                    }
-
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignSelf: 'center'
-                        }}
-                    >
-                        {selectedItem || selectRecentlyUsed != null ?
-                            <>
-                                <TouchableOpacity onPress={() => { setModalVisible(false); }}>
-                                    <View style={{
-                                        backgroundColor: 'rgba(255, 0, 75, 0.50)',
-                                        display: 'flex',
-                                        justifyContent: 'flex-start',
-                                        padding: HeightRatio(10),
-                                        borderRadius: HeightRatio(10),
-                                        alignSelf: 'center',
-                                        width: (windowWidth - WidthRatio(100)) / 2,
-                                        margin: HeightRatio(10)
-                                    }}>
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: HeightRatio(25),
-                                                alignSelf: 'center',
-                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                            }}
-                                            allowFontScaling={false}
-                                        >
-                                            Close
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        getNutritionValue(selectedItem || recentFoodData.item);
-                                        setModalVisible(false);
-                                    }}
-                                >
-                                    <View style={{
-                                        backgroundColor: 'rgba(30, 228, 168, 0.5)',
-                                        display: 'flex',
-                                        justifyContent: 'flex-start',
-                                        padding: HeightRatio(10),
-                                        borderRadius: HeightRatio(10),
-                                        alignSelf: 'center',
-                                        width: (windowWidth - WidthRatio(100)) / 2,
-                                        margin: HeightRatio(10)
-                                    }}>
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: HeightRatio(25),
-                                                alignSelf: 'center',
-                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                            }}
-                                            allowFontScaling={false}
-                                        >
-                                            Save
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </>
-                            :
-                            <TouchableOpacity onPress={() => setModalVisible(false)}>
                                 <View style={{
-                                    backgroundColor: 'rgba(255, 0, 75, 0.50)',
+                                    backgroundColor: 'rgba(30, 228, 168, 0.50)',
                                     display: 'flex',
                                     justifyContent: 'flex-start',
                                     padding: HeightRatio(10),
                                     borderRadius: HeightRatio(10),
                                     alignSelf: 'center',
-                                    width: (windowWidth - WidthRatio(100)),
+                                    width: windowWidth - WidthRatio(100),
                                     margin: HeightRatio(10)
                                 }}>
                                     <Text
@@ -1042,34 +890,354 @@ export const HomeScreen = ({ navigation }) => {
                                         }}
                                         allowFontScaling={false}
                                     >
-                                        Close
+                                        Search
                                     </Text>
                                 </View>
                             </TouchableOpacity>
-                        }
+                        </View>
+                        <View
+                            style={{
+                                // flex: 1,
+                                backgroundColor: "#1f1f27",
+                                zIndex: 999,
+                                padding: HeightRatio(20),
+                                borderRadius: HeightRatio(10),
+                                width: windowWidth - HeightRatio(10),
+                                height: windowHeight / 1.9,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                alignSelf: 'center',
+                                // margin: HeightRatio(10)
+                            }}
+                        >
+                            {!clearSuggestions && !searchQuery &&
+                                <>
+                                    {/* <RecentFood /> */}
+                                    <View style={{
+                                        // backgroundColor: 'rgba(30, 228, 168, 0.50)',
+                                        display: 'flex',
+                                        justifyContent: 'flex-start',
+                                        padding: HeightRatio(10),
+                                        alignSelf: 'center',
+                                        width: windowWidth - WidthRatio(100),
+                                        marginTop: HeightRatio(10),
+                                        // borderTopWidth: 2,
+                                        // borderTopColor: 'white'
+                                    }}>
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: HeightRatio(30),
+                                                alignSelf: 'center',
+                                                fontFamily: 'GochiHand_400Regular'
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Recently Used
+                                        </Text>
+                                    </View>
+                                    <SafeAreaView style={styles.container}>
+                                        <ScrollView
+                                            style={styles.scrollView}
+                                        // refreshControl={
+                                        //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                                        // }
+                                        >
+                                            <View>
+                                                {recentFoodData.map((data, index) => (
+                                                    <View key={index}>
+                                                        {selectRecentlyUsed == null ?
 
-                    </View>
+                                                            <View
+                                                                style={{
+                                                                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                                                                    borderRadius: HeightRatio(10),
+                                                                    margin: HeightRatio(4),
+                                                                    width: windowWidth - HeightRatio(80),
+                                                                    alignSelf: 'center',
+                                                                    display: 'flex',
+                                                                    alignItems: "center",
+                                                                    justifyContent: "center",
+                                                                }}
 
-                </View>
+                                                            >
+                                                                <View
+                                                                    style={{
+                                                                        width: windowWidth - HeightRatio(120),
+                                                                        alignSelf: 'center'
+                                                                    }}
+                                                                >
+                                                                    <View
+                                                                        style={{
+                                                                            display: "flex",
+                                                                            alignItems: "center",
+                                                                            justifyContent: "space-between", // changed to 'space-between'
+                                                                            flexDirection: 'row',
+                                                                            padding: HeightRatio(8),
+                                                                            // paddingTop: HeightRatio(10)
+                                                                        }}
+                                                                    >
+                                                                        <View
+                                                                            style={{ flexDirection: 'column' }}
+                                                                        >
+                                                                            <View>
+                                                                                <Text
+                                                                                    style={{
+                                                                                        color: 'white',
+                                                                                        fontSize: HeightRatio(25),
+                                                                                        fontFamily: "SofiaSansSemiCondensed-ExtraBold"
+                                                                                    }}
+                                                                                >
+                                                                                    {data.item}
+                                                                                </Text>
+                                                                            </View>
+                                                                            <View
+                                                                                style={{
+                                                                                    marginLeft: HeightRatio(5),
+                                                                                }}
+                                                                            >
+                                                                                <Text
+                                                                                    style={{
+                                                                                        color: 'white',
+                                                                                        fontSize: HeightRatio(20),
+                                                                                        fontFamily: "SofiaSansSemiCondensed-Regular"
+                                                                                    }}
+                                                                                >
+                                                                                    {data.amount}
+                                                                                </Text>
+                                                                            </View>
+                                                                        </View>
+                                                                        <TouchableOpacity
+                                                                            onPress={() => { setSelectRecentlyUsed(index); }}
+                                                                            style={{
+                                                                                backgroundColor: 'rgba(247, 255, 108, 1.00)',
+                                                                                borderRadius: HeightRatio(10),
+                                                                                height: HeightRatio(40),
+                                                                                width: HeightRatio(40),
+                                                                                display: 'flex',
+                                                                                alignItems: "center",
+                                                                                justifyContent: "center",
+                                                                            }}
+                                                                        >
+                                                                            <Text
+                                                                                style={{
+                                                                                    color: 'black',
+                                                                                    fontSize: HeightRatio(30),
+                                                                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold"
+                                                                                }}
+                                                                            >
+                                                                                +
+                                                                            </Text>
+                                                                        </TouchableOpacity>
+                                                                    </View>
 
-            </Modal>
+                                                                </View>
+                                                            </View>
+                                                            :
+                                                            <>
+                                                                {selectRecentlyUsed == index &&
+                                                                    <View
+                                                                        style={{
+                                                                            backgroundColor: "rgba(255, 255, 255, 0.5)",
+                                                                            width: '90%',
+                                                                            padding: HeightRatio(15),
+                                                                            margin: HeightRatio(4),
+                                                                            borderRadius: HeightRatio(10),
+                                                                            display: "flex",
+                                                                            alignItems: "center",
+                                                                            justifyContent: "center",
+                                                                            alignSelf: 'center',
+                                                                        }}
+                                                                    >
+                                                                        <Text
+                                                                            style={{
+                                                                                color: "black",
+                                                                                fontSize: HeightRatio(25),
+                                                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                                                textAlign: 'center',
+                                                                                width: '80%',
+                                                                                display: 'flex',
+                                                                                flexWrap: 'wrap',
+                                                                            }}
+                                                                            allowFontScaling={false}
+                                                                        >
+                                                                            {data.item}
+                                                                        </Text>
+                                                                        <SelectedFoodDetails textInputValue={`${data.number}`} selectedItem={`${data.measurement}`} />
+                                                                    </View>
+                                                                }
+                                                            </>
+                                                        }
+                                                    </View>
+                                                ))}
 
-            {/* SIGN UP MODAL */}
-            <Modal
-                animationType="none"
-                transparent={true}
-                visible={displaySignUpModal}
-                onRequestClose={() => {
-                    setDisplaySignUpModal(!displaySignUpModal);
 
-                }}
-            >
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "#47426a", }}>
-                    <View style={{ borderTopRightRadius: HeightRatio(10) }}>
+                                            </View>
 
-                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                        </ScrollView>
+                                    </SafeAreaView>
+                                </>
+                            }
 
-                            {/* <Image
+                            {foodData != [] &&
+                                <View style={{ flex: 1 }}>
+                                    {displayLoading ?
+                                        <ActivityIndicator />
+                                        :
+                                        <>
+                                            {displayDetails &&
+                                                <>
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            setSelectedItem(null);
+                                                            setDisplayDetails(false)
+                                                        }}
+                                                        style={{
+                                                            height: HeightRatio(40),
+                                                            width: HeightRatio(40),
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            position: 'absolute',
+                                                            zIndex: 1000,
+                                                            top: HeightRatio(-10),
+                                                            right: HeightRatio(-25),
+                                                            borderRadius: HeightRatio(10),
+                                                            backgroundColor: 'red'
+
+                                                        }}
+                                                    >
+                                                        <FontAwesomeIcon
+                                                            icon={faSolid, faX}
+                                                            style={{
+                                                                color: 'white',
+                                                            }}
+                                                            size={20}
+                                                        />
+                                                    </TouchableOpacity>
+                                                </>
+                                            }
+                                            <FlatList
+                                                data={selectedItem ? [selectedItem] : foodData}
+                                                renderItem={renderItem}
+                                                keyExtractor={(item) => item.fdcId.toString()}
+                                            />
+                                        </>
+                                    }
+                                </View>
+                            }
+
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignSelf: 'center'
+                                }}
+                            >
+                                {selectedItem || selectRecentlyUsed != null ?
+                                    <>
+                                        <TouchableOpacity onPress={() => { setModalVisible(false); }}>
+                                            <View style={{
+                                                backgroundColor: 'rgba(255, 0, 75, 0.50)',
+                                                display: 'flex',
+                                                justifyContent: 'flex-start',
+                                                padding: HeightRatio(10),
+                                                borderRadius: HeightRatio(10),
+                                                alignSelf: 'center',
+                                                width: (windowWidth - WidthRatio(100)) / 2,
+                                                margin: HeightRatio(10)
+                                            }}>
+                                                <Text
+                                                    style={{
+                                                        color: 'white',
+                                                        fontSize: HeightRatio(25),
+                                                        alignSelf: 'center',
+                                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    Close
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                getNutritionValue(selectedItem || recentFoodData.item);
+                                                setModalVisible(false);
+                                            }}
+                                        >
+                                            <View style={{
+                                                backgroundColor: 'rgba(30, 228, 168, 0.5)',
+                                                display: 'flex',
+                                                justifyContent: 'flex-start',
+                                                padding: HeightRatio(10),
+                                                borderRadius: HeightRatio(10),
+                                                alignSelf: 'center',
+                                                width: (windowWidth - WidthRatio(100)) / 2,
+                                                margin: HeightRatio(10)
+                                            }}>
+                                                <Text
+                                                    style={{
+                                                        color: 'white',
+                                                        fontSize: HeightRatio(25),
+                                                        alignSelf: 'center',
+                                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    Save
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </>
+                                    :
+                                    <TouchableOpacity onPress={() => setModalVisible(false)}>
+                                        <View style={{
+                                            backgroundColor: 'rgba(255, 0, 75, 0.50)',
+                                            display: 'flex',
+                                            justifyContent: 'flex-start',
+                                            padding: HeightRatio(10),
+                                            borderRadius: HeightRatio(10),
+                                            alignSelf: 'center',
+                                            width: (windowWidth - WidthRatio(100)),
+                                            margin: HeightRatio(10)
+                                        }}>
+                                            <Text
+                                                style={{
+                                                    color: 'white',
+                                                    fontSize: HeightRatio(25),
+                                                    alignSelf: 'center',
+                                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                }}
+                                                allowFontScaling={false}
+                                            >
+                                                Close
+                                            </Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                }
+
+                            </View>
+
+                        </View>
+
+                    </Modal>
+
+                    {/* SIGN UP MODAL */}
+                    <Modal
+                        animationType="none"
+                        transparent={true}
+                        visible={displaySignUpModal}
+                        onRequestClose={() => {
+                            setDisplaySignUpModal(!displaySignUpModal);
+
+                        }}
+                    >
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "#47426a", }}>
+                            <View style={{ borderTopRightRadius: HeightRatio(10) }}>
+
+                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+
+                                    {/* <Image
                                 source={require('../../assets/blink.gif')}
                                 style={{
                                     height: HeightRatio(150),
@@ -1078,88 +1246,106 @@ export const HomeScreen = ({ navigation }) => {
                                     marginTop: HeightRatio(10)
                                 }}
                             /> */}
-                            <Text
-                                style={{
-                                    color: '#ffff00',
-                                    textAlign: 'center',
-                                    fontSize: HeightRatio(30),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                    marginTop: HeightRatio(10)
-                                }}
-                                allowFontScaling={false}
-                            >
-                                Baby Food Tracker
-                            </Text>
-                            <View style={{ height: 10 }}></View>
-
-
-                            <TouchableOpacity
-                                onPress={() => navigation.dispatch(resetActionAuth)}
-                                style={{ ...Styling.modalWordButton, marginTop: 10 }}
-                            >
-                                <View style={{
-                                    backgroundColor: 'rgba(30, 228, 168, 0.5)',
-                                    display: 'flex',
-                                    justifyContent: 'flex-start',
-                                    padding: HeightRatio(20),
-                                    borderRadius: HeightRatio(10),
-                                    alignSelf: 'center',
-                                    width: windowWidth - WidthRatio(50)
-                                }}>
                                     <Text
                                         style={{
-                                            color: 'white',
+                                            color: '#ffff00',
+                                            textAlign: 'center',
                                             fontSize: HeightRatio(30),
-                                            alignSelf: 'center',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            marginTop: HeightRatio(10)
                                         }}
                                         allowFontScaling={false}
                                     >
-                                        Sign Up or Login
+                                        Baby Food Tracker
                                     </Text>
+                                    <View style={{ height: 10 }}></View>
+
+
+                                    <TouchableOpacity
+                                        onPress={() => navigation.dispatch(resetActionAuth)}
+                                        style={{ ...Styling.modalWordButton, marginTop: 10 }}
+                                    >
+                                        <View style={{
+                                            backgroundColor: 'rgba(30, 228, 168, 0.5)',
+                                            display: 'flex',
+                                            justifyContent: 'flex-start',
+                                            padding: HeightRatio(20),
+                                            borderRadius: HeightRatio(10),
+                                            alignSelf: 'center',
+                                            width: windowWidth - WidthRatio(50)
+                                        }}>
+                                            <Text
+                                                style={{
+                                                    color: 'white',
+                                                    fontSize: HeightRatio(30),
+                                                    alignSelf: 'center',
+                                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                }}
+                                                allowFontScaling={false}
+                                            >
+                                                Sign Up or Login
+                                            </Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setDisplaySignUpModal(!displaySignUpModal);
+                                            setMainState({
+                                                displaySignUpModal: false
+                                            })
+                                        }}
+                                        style={{
+                                            borderWidth: 3,
+                                            borderColor: '#ff0076',
+                                            borderRadius: 100,
+                                            height: HeightRatio(60),
+                                            width: HeightRatio(60),
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faSolid, faX}
+                                            style={{
+                                                color: '#ff0076',
+                                            }}
+                                        />
+                                    </TouchableOpacity>
+
+
                                 </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setDisplaySignUpModal(!displaySignUpModal);
-                                    setMainState({
-                                        displaySignUpModal: false
-                                    })
-                                }}
-                                style={{
-                                    borderWidth: 3,
-                                    borderColor: '#ff0076',
-                                    borderRadius: 100,
-                                    height: HeightRatio(60),
-                                    width: HeightRatio(60),
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}
-                            >
-                                <FontAwesomeIcon
-                                    icon={faSolid, faX}
-                                    style={{
-                                        color: '#ff0076',
-                                    }}
-                                />
-                            </TouchableOpacity>
-
-
+                            </View>
                         </View>
-                    </View>
+                    </Modal>
+
+
+                </>
+                :
+                <View
+                    style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: HeightRatio(505),
+                        backgroundColor: 'rgba(71, 66, 106, 1.00)'
+                    }}
+                >
+                    {/* <ActivityIndicator size="large" color="#1ee4a8" /> */}
+                    <Loading />
                 </View>
-            </Modal>
-
-            <Navbar nav={navigation} auth={mainState.current.authState} position={'absolute'} from={'home'} />
-
+            }
+            {!modalVisible &&
+                <Navbar nav={navigation} auth={mainState.current.authState} position={'absolute'} from={'home'} />
+            }
             <StatusBar
                 barStyle="default"
-                hidden={false}
+                hidden={true}
                 backgroundColor="transparent"
                 translucent={true}
                 networkActivityIndicatorVisible={true}
             />
         </>
+
     )
 }
 
@@ -1183,12 +1369,12 @@ const styles = StyleSheet.create({
     },
     container: {
         //   flex: 1,
-        height: HeightRatio(460)
+        height: '80%'
 
     },
     scrollView: {
         //   backgroundColor: 'blue',
-        width: windowWidth - HeightRatio(20),
+        width: '80%',
         alignSelf: 'center'
     },
 });

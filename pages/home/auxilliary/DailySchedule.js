@@ -29,6 +29,7 @@ import {
     faBars
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HeightRatio, windowWidth, WidthRatio } from "../../../Styling"
 import { useMutation, useQuery } from '@apollo/client';
 import { DELETE_ENTRY } from '../../../utils/mutations';
@@ -295,8 +296,16 @@ export const DailySchedule = (props) => {
     useEffect(() => {
         let total = firstThingCalTotal + breakfastCalTotal + midmorningCalTotal + lunchCalTotal + midafternoonCalTotal + dinnerCalTotal + beforeBedCalTotal;
         setTotalCalorieCount(total)
+        const storeTotalCalorieCount = async (value) => {
+            try {
+                const jsonValue = JSON.stringify(value)
+              await AsyncStorage.setItem('@TotalCalorieCount', jsonValue)
+            } catch (e) {
+              // saving error
+            }
+        }
+        storeTotalCalorieCount(total)
     }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, midafternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
-
 
 
 
@@ -408,30 +417,7 @@ export const DailySchedule = (props) => {
 
     return (
         <>
-            <View
-                style={{
-                    alignSelf: 'center',
-                    backgroundColor: "#47426a",
-                    margin: HeightRatio(5),
-                    marginTop: HeightRatio(20),
-                    borderRadius: 10,
-                    // padding: HeightRatio(10),
-                    width: '80%'
-                }}
-            >
-                <Text
-                    style={{
-                        color: 'white',
-                        fontSize: HeightRatio(30),
-                        borderBottomWidth: 1,
-                        borderBottomColor: 'white',
-                        textAlign: 'center'
-                    }}
-                >
-                    Total Calories: {totalCalorieCount} Cal
-
-                </Text>
-            </View>
+            
             <SafeAreaView style={styles.container}>
                 <ScrollView 
                     style={styles.scrollView}
@@ -442,11 +428,20 @@ export const DailySchedule = (props) => {
                     {/* FIRST THING */}
                     <TouchableOpacity
                         // onPress={() => displayScheduleData("First Thing")}
-                        onPress={() => {displayScheduleData(!displaBool_FirstThing ? "First Thing" : null); setDisplaBool_FirstThing(current => !current)}}
+                        onPress={() => {
+                            displayScheduleData(!displaBool_FirstThing ? "First Thing" : null); 
+                            setDisplaBool_FirstThing(current => !current)
+                            setDisplaBool_Breakfast(false)
+                            setDisplaBool_Midmorning(false)
+                            setDisplaBool_Lunch(false)
+                            setDisplaBool_Midafternoon(false)
+                            setDisplaBool_Dinner(false)
+                            setDisplaBool_BeforeBed(false)
+                        }}
                         style={{
-                            backgroundColor: "rgba(255, 255, 255, 0.5)",
+                            backgroundColor: displaBool_FirstThing? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
                             width: '90%',
-                            padding: HeightRatio(15),
+                            // padding: HeightRatio(15),
                             margin: HeightRatio(4),
                             borderRadius: HeightRatio(10),
                             display: "flex",
@@ -456,12 +451,23 @@ export const DailySchedule = (props) => {
                             flexDirection: 'row'
                         }}
                     >
+                        <Image
+                            source={require('../../../assets/pattern_0.png')}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                opacity: 0.05,
+                                borderRadius: HeightRatio(10),
+                                position: 'absolute'
+                            }}
+                        />
                         <Text
                             style={{
-                                color: 'black',
+                                color: displaBool_FirstThing? 'black' : 'white',
                                 fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                marginRight: HeightRatio(10)
+                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                marginRight: HeightRatio(10),
+                                margin: HeightRatio(15)
                             }}
                         >
                             First Thing
@@ -469,10 +475,10 @@ export const DailySchedule = (props) => {
                         <View style={{ flex: 1 }} />
                         <View
                             style={{
-                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
+                                backgroundColor: 'rgba(0,0,0, 0.2)',
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
-                                height: HeightRatio(40),
+                                borderRadius: HeightRatio(10),
+                                // height: HeightRatio(40),
                                 display: 'flex',
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -480,8 +486,8 @@ export const DailySchedule = (props) => {
                         >
                             <Text
                                 style={{
-                                    color: 'black',
-                                    fontSize: HeightRatio(20),
+                                    color: displaBool_FirstThing? 'black' : 'white',
+                                    fontSize: HeightRatio(25),
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
@@ -491,7 +497,7 @@ export const DailySchedule = (props) => {
                         <View
                             style={{
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
+                                borderRadius: HeightRatio(10),
                                 height: HeightRatio(40),
                                 width: HeightRatio(40),
                                 display: 'flex',
@@ -511,8 +517,10 @@ export const DailySchedule = (props) => {
                     {firstThingData.map((data, index) => (
                         <View
                             style={{
-                                backgroundColor: '#a39bc9',
-                                borderRadius: HeightRatio(10),
+                                // backgroundColor: 'rgba(247, 255, 108, 0.20)',
+                                // borderRadius: HeightRatio(10),
+                                borderBottomWidth: 1,
+                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
                                 margin: HeightRatio(10),
                                 width: windowWidth - HeightRatio(80),
                                 alignSelf: 'center'
@@ -542,15 +550,10 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{flexDirection: 'column'}}
                                     >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
-                                            }}
-                                        >
+                                        <View>
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     fontFamily: "SofiaSansSemiCondensed-ExtraBold"
                                                 }}
@@ -560,8 +563,7 @@ export const DailySchedule = (props) => {
                                         </View>
                                         <View
                                             style={{
-                                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                                margin: HeightRatio(10),
+                                                margin: HeightRatio(5),
                                                 padding: HeightRatio(4),
                                                 paddingLeft: HeightRatio(20),
                                                 paddingRight: HeightRatio(20),
@@ -570,7 +572,7 @@ export const DailySchedule = (props) => {
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(20),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
                                                 }}
@@ -582,7 +584,7 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{
                                             padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(30),
+                                            borderRadius: HeightRatio(10),
                                             height: HeightRatio(40),
                                             width: HeightRatio(40),
                                             display: 'flex',
@@ -593,7 +595,7 @@ export const DailySchedule = (props) => {
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
                                             style={{
-                                                color: 'black',
+                                                color: 'white',
                                             }}
                                             size={20}
                                         />
@@ -613,13 +615,13 @@ export const DailySchedule = (props) => {
                                     >
                                         <View
                                             style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
+                                                borderBottomWidth: 1,
+                                                borderBottomColor: 'white'
                                             }}
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     // marginTop: HeightRatio(5),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
@@ -709,11 +711,20 @@ export const DailySchedule = (props) => {
 
                     {/* BREAKFAST */}
                     <TouchableOpacity
-                        onPress={() => {displayScheduleData(!displaBool_Breakfast ? "Breakfast" : null); setDisplaBool_Breakfast(current => !current)}}
+                        onPress={() => {
+                            displayScheduleData(!displaBool_Breakfast ? "Breakfast" : null); 
+                            setDisplaBool_FirstThing(false)
+                            setDisplaBool_Breakfast(current => !current)
+                            setDisplaBool_Midmorning(false)
+                            setDisplaBool_Lunch(false)
+                            setDisplaBool_Midafternoon(false)
+                            setDisplaBool_Dinner(false)
+                            setDisplaBool_BeforeBed(false)
+                        }}
                         style={{
-                            backgroundColor: "rgba(255, 255, 255, 0.5)",
+                            backgroundColor: displaBool_Breakfast? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
                             width: '90%',
-                            padding: HeightRatio(15),
+                            // padding: HeightRatio(15),
                             margin: HeightRatio(4),
                             borderRadius: HeightRatio(10),
                             display: "flex",
@@ -723,12 +734,23 @@ export const DailySchedule = (props) => {
                             flexDirection: 'row'
                         }}
                     >
+                        <Image
+                            source={require('../../../assets/pattern_0.png')}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                opacity: 0.05,
+                                borderRadius: HeightRatio(10),
+                                position: 'absolute'
+                            }}
+                        />
                         <Text
                             style={{
-                                color: 'black',
+                                color: displaBool_Breakfast? 'black' : 'white',
                                 fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                marginRight: HeightRatio(10)
+                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                marginRight: HeightRatio(10),
+                                margin: HeightRatio(15)
                             }}
                         >
                             Breakfast
@@ -736,9 +758,9 @@ export const DailySchedule = (props) => {
                         <View style={{ flex: 1 }} />
                         <View
                             style={{
-                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
+                                backgroundColor: 'rgba(0,0,0, 0.2)',
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
+                                borderRadius: HeightRatio(10),
                                 height: HeightRatio(40),
                                 // width: HeightRatio(40),
                                 display: 'flex',
@@ -748,8 +770,8 @@ export const DailySchedule = (props) => {
                         >
                             <Text
                                 style={{
-                                    color: 'black',
-                                    fontSize: HeightRatio(20),
+                                    color: displaBool_Breakfast? 'black' : 'white',
+                                    fontSize: HeightRatio(25),
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
@@ -759,7 +781,7 @@ export const DailySchedule = (props) => {
                         <View
                             style={{
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
+                                borderRadius: HeightRatio(10),
                                 height: HeightRatio(40),
                                 width: HeightRatio(40),
                                 display: 'flex',
@@ -779,8 +801,10 @@ export const DailySchedule = (props) => {
                     {breakfastData.map((data, index) => (
                         <View
                             style={{
-                                backgroundColor: '#a39bc9',
-                                borderRadius: HeightRatio(10),
+                                // backgroundColor: '#a39bc9',
+                                // borderRadius: HeightRatio(10),
+                                borderBottomWidth: 1,
+                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
                                 margin: HeightRatio(10),
                                 width: windowWidth - HeightRatio(80),
                                 alignSelf: 'center'
@@ -810,15 +834,10 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{flexDirection: 'column'}}
                                     >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
-                                            }}
-                                        >
+                                        <View>
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     fontFamily: "SofiaSansSemiCondensed-ExtraBold"
                                                 }}
@@ -828,8 +847,7 @@ export const DailySchedule = (props) => {
                                         </View>
                                         <View
                                             style={{
-                                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                                margin: HeightRatio(10),
+                                                margin: HeightRatio(5),
                                                 padding: HeightRatio(4),
                                                 paddingLeft: HeightRatio(20),
                                                 paddingRight: HeightRatio(20),
@@ -838,7 +856,7 @@ export const DailySchedule = (props) => {
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(20),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
                                                 }}
@@ -850,7 +868,7 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{
                                             padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(30),
+                                            borderRadius: HeightRatio(10),
                                             height: HeightRatio(40),
                                             width: HeightRatio(40),
                                             display: 'flex',
@@ -861,7 +879,7 @@ export const DailySchedule = (props) => {
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
                                             style={{
-                                                color: 'black',
+                                                color: 'white',
                                             }}
                                             size={20}
                                         />
@@ -881,13 +899,13 @@ export const DailySchedule = (props) => {
                                     >
                                         <View
                                             style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
+                                                borderBottomWidth: 1,
+                                                borderBottomColor: 'white'
                                             }}
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     // marginTop: HeightRatio(5),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
@@ -980,11 +998,20 @@ export const DailySchedule = (props) => {
                     {/* MIDMORNING */}
                     <TouchableOpacity
                         // onPress={() => displayScheduleData("Midmorning")}
-                        onPress={() => {displayScheduleData(!displaBool_Midmorning ? "Midmorning" : null); setDisplaBool_Midmorning(current => !current)}}
+                        onPress={() => {
+                            displayScheduleData(!displaBool_Midmorning ? "Midmorning" : null); 
+                            setDisplaBool_FirstThing(false)
+                            setDisplaBool_Breakfast(false)
+                            setDisplaBool_Midmorning(current => !current)
+                            setDisplaBool_Lunch(false)
+                            setDisplaBool_Midafternoon(false)
+                            setDisplaBool_Dinner(false)
+                            setDisplaBool_BeforeBed(false)
+                        }}
                         style={{
-                            backgroundColor: "rgba(255, 255, 255, 0.5)",
+                            backgroundColor: displaBool_Midmorning? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
                             width: '90%',
-                            padding: HeightRatio(15),
+                            // padding: HeightRatio(15),
                             margin: HeightRatio(4),
                             borderRadius: HeightRatio(10),
                             display: "flex",
@@ -994,12 +1021,23 @@ export const DailySchedule = (props) => {
                             flexDirection: 'row'
                         }}
                     >
+                        <Image
+                            source={require('../../../assets/pattern_0.png')}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                opacity: 0.05,
+                                borderRadius: HeightRatio(10),
+                                position: 'absolute'
+                            }}
+                        />
                         <Text
                             style={{
-                                color: 'black',
+                                color: displaBool_Midmorning? 'black' : 'white',
                                 fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                marginRight: HeightRatio(10)
+                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                marginRight: HeightRatio(10),
+                                margin: HeightRatio(15)
                             }}
                         >
                             Midmorning
@@ -1007,9 +1045,9 @@ export const DailySchedule = (props) => {
                         <View style={{ flex: 1 }} />
                         <View
                             style={{
-                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
+                                backgroundColor: 'rgba(0,0,0, 0.2)',
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
+                                borderRadius: HeightRatio(10),
                                 height: HeightRatio(40),
                                 // width: HeightRatio(40),
                                 display: 'flex',
@@ -1019,8 +1057,8 @@ export const DailySchedule = (props) => {
                         >
                             <Text
                                 style={{
-                                    color: 'black',
-                                    fontSize: HeightRatio(20),
+                                    color: displaBool_Midmorning? 'black' : 'white',
+                                    fontSize: HeightRatio(25),
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
@@ -1030,7 +1068,7 @@ export const DailySchedule = (props) => {
                         <View
                             style={{
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
+                                borderRadius: HeightRatio(10),
                                 height: HeightRatio(40),
                                 width: HeightRatio(40),
                                 display: 'flex',
@@ -1050,8 +1088,10 @@ export const DailySchedule = (props) => {
                     {midmorningData.map((data, index) => (
                         <View
                             style={{
-                                backgroundColor: '#a39bc9',
-                                borderRadius: HeightRatio(10),
+                                // backgroundColor: '#a39bc9',
+                                // borderRadius: HeightRatio(10),
+                                borderBottomWidth: 1,
+                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
                                 margin: HeightRatio(10),
                                 width: windowWidth - HeightRatio(80),
                                 alignSelf: 'center'
@@ -1081,15 +1121,10 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{flexDirection: 'column'}}
                                     >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
-                                            }}
-                                        >
+                                        <View>
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     fontFamily: "SofiaSansSemiCondensed-ExtraBold"
                                                 }}
@@ -1099,8 +1134,7 @@ export const DailySchedule = (props) => {
                                         </View>
                                         <View
                                             style={{
-                                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                                margin: HeightRatio(10),
+                                                margin: HeightRatio(5),
                                                 padding: HeightRatio(4),
                                                 paddingLeft: HeightRatio(20),
                                                 paddingRight: HeightRatio(20),
@@ -1109,7 +1143,7 @@ export const DailySchedule = (props) => {
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(20),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
                                                 }}
@@ -1121,7 +1155,7 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{
                                             padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(30),
+                                            borderRadius: HeightRatio(10),
                                             height: HeightRatio(40),
                                             width: HeightRatio(40),
                                             display: 'flex',
@@ -1132,7 +1166,7 @@ export const DailySchedule = (props) => {
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
                                             style={{
-                                                color: 'black',
+                                                color: 'white',
                                             }}
                                             size={20}
                                         />
@@ -1152,13 +1186,13 @@ export const DailySchedule = (props) => {
                                     >
                                         <View
                                             style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
+                                                borderBottomWidth: 1,
+                                                borderBottomColor: 'white'
                                             }}
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     // marginTop: HeightRatio(5),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
@@ -1249,11 +1283,20 @@ export const DailySchedule = (props) => {
                     {/* LUNCH */}
                     <TouchableOpacity
                         // onPress={() => displayScheduleData("Lunch")}
-                        onPress={() => {displayScheduleData(!displaBool_Lunch ? "Lunch" : null); setDisplaBool_Lunch(current => !current)}}
+                        onPress={() => {
+                            displayScheduleData(!displaBool_Lunch ? "Lunch" : null); 
+                            setDisplaBool_FirstThing(false)
+                            setDisplaBool_Breakfast(false)
+                            setDisplaBool_Midmorning(false)
+                            setDisplaBool_Lunch(current => !current)
+                            setDisplaBool_Midafternoon(false)
+                            setDisplaBool_Dinner(false)
+                            setDisplaBool_BeforeBed(false)
+                        }}
                         style={{
-                            backgroundColor: "rgba(255, 255, 255, 0.5)",
+                            backgroundColor: displaBool_Lunch? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
                             width: '90%',
-                            padding: HeightRatio(15),
+                            // padding: HeightRatio(15),
                             margin: HeightRatio(4),
                             borderRadius: HeightRatio(10),
                             display: "flex",
@@ -1263,12 +1306,23 @@ export const DailySchedule = (props) => {
                             flexDirection: 'row'
                         }}
                     >
+                        <Image
+                            source={require('../../../assets/pattern_0.png')}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                opacity: 0.05,
+                                borderRadius: HeightRatio(10),
+                                position: 'absolute'
+                            }}
+                        />
                         <Text
                             style={{
-                                color: 'black',
+                                color: displaBool_Lunch? 'black' : 'white',
                                 fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                marginRight: HeightRatio(10)
+                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                marginRight: HeightRatio(10),
+                                margin: HeightRatio(15)
                             }}
                         >
                             Lunch
@@ -1276,9 +1330,9 @@ export const DailySchedule = (props) => {
                         <View style={{ flex: 1 }} />
                         <View
                             style={{
-                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
+                                backgroundColor: 'rgba(0,0,0, 0.2)',
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
+                                borderRadius: HeightRatio(10),
                                 height: HeightRatio(40),
                                 display: 'flex',
                                 alignItems: "center",
@@ -1287,8 +1341,8 @@ export const DailySchedule = (props) => {
                         >
                             <Text
                                 style={{
-                                    color: 'black',
-                                    fontSize: HeightRatio(20),
+                                    color: displaBool_Lunch? 'black' : 'white',
+                                    fontSize: HeightRatio(25),
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
@@ -1298,7 +1352,7 @@ export const DailySchedule = (props) => {
                         <View
                             style={{
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
+                                borderRadius: HeightRatio(10),
                                 height: HeightRatio(40),
                                 width: HeightRatio(40),
                                 display: 'flex',
@@ -1318,8 +1372,10 @@ export const DailySchedule = (props) => {
                     {lunchData.map((data, index) => (
                         <View
                             style={{
-                                backgroundColor: '#a39bc9',
-                                borderRadius: HeightRatio(10),
+                                // backgroundColor: '#a39bc9',
+                                // borderRadius: HeightRatio(10),
+                                borderBottomWidth: 1,
+                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
                                 margin: HeightRatio(10),
                                 width: windowWidth - HeightRatio(80),
                                 alignSelf: 'center'
@@ -1349,15 +1405,10 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{flexDirection: 'column'}}
                                     >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
-                                            }}
-                                        >
+                                        <View>
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     fontFamily: "SofiaSansSemiCondensed-ExtraBold"
                                                 }}
@@ -1367,8 +1418,7 @@ export const DailySchedule = (props) => {
                                         </View>
                                         <View
                                             style={{
-                                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                                margin: HeightRatio(10),
+                                                margin: HeightRatio(5),
                                                 padding: HeightRatio(4),
                                                 paddingLeft: HeightRatio(20),
                                                 paddingRight: HeightRatio(20),
@@ -1377,7 +1427,7 @@ export const DailySchedule = (props) => {
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(20),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
                                                 }}
@@ -1389,7 +1439,7 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{
                                             padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(30),
+                                            borderRadius: HeightRatio(10),
                                             height: HeightRatio(40),
                                             width: HeightRatio(40),
                                             display: 'flex',
@@ -1400,7 +1450,7 @@ export const DailySchedule = (props) => {
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
                                             style={{
-                                                color: 'black',
+                                                color: 'white',
                                             }}
                                             size={20}
                                         />
@@ -1420,13 +1470,13 @@ export const DailySchedule = (props) => {
                                     >
                                         <View
                                             style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
+                                                borderBottomWidth: 1,
+                                                borderBottomColor: 'white'
                                             }}
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     // marginTop: HeightRatio(5),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
@@ -1517,11 +1567,20 @@ export const DailySchedule = (props) => {
                     {/* MIDAFTER-NOON */}
                     <TouchableOpacity
                         // onPress={() => displayScheduleData("Midafter-noon")}
-                        onPress={() => {displayScheduleData(!displaBool_Midafternoon ? "Midafter-noon" : null); setDisplaBool_Midafternoon(current => !current)}}
+                        onPress={() => {
+                            displayScheduleData(!displaBool_Midafternoon ? "Midafter-noon" : null); 
+                            setDisplaBool_FirstThing(false)
+                            setDisplaBool_Breakfast(false)
+                            setDisplaBool_Midmorning(false)
+                            setDisplaBool_Lunch(false)
+                            setDisplaBool_Midafternoon(current => !current)
+                            setDisplaBool_Dinner(false)
+                            setDisplaBool_BeforeBed(false)
+                        }}
                         style={{
-                            backgroundColor: "rgba(255, 255, 255, 0.5)",
+                            backgroundColor: displaBool_Midafternoon? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
                             width: '90%',
-                            padding: HeightRatio(15),
+                            // padding: HeightRatio(15),
                             margin: HeightRatio(4),
                             borderRadius: HeightRatio(10),
                             display: "flex",
@@ -1531,12 +1590,23 @@ export const DailySchedule = (props) => {
                             flexDirection: 'row'
                         }}
                     >
+                        <Image
+                            source={require('../../../assets/pattern_0.png')}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                opacity: 0.05,
+                                borderRadius: HeightRatio(10),
+                                position: 'absolute'
+                            }}
+                        />
                         <Text
                             style={{
-                                color: 'black',
+                                color: displaBool_Midafternoon? 'black' : 'white',
                                 fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                marginRight: HeightRatio(10)
+                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                marginRight: HeightRatio(10),
+                                margin: HeightRatio(15)
                             }}
                         >
                             Midafter-noon
@@ -1544,9 +1614,9 @@ export const DailySchedule = (props) => {
                         <View style={{ flex: 1 }} />
                         <View
                             style={{
-                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
+                                backgroundColor: 'rgba(0,0,0, 0.2)',
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
+                                borderRadius: HeightRatio(10),
                                 height: HeightRatio(40),
                                 display: 'flex',
                                 alignItems: "center",
@@ -1555,8 +1625,8 @@ export const DailySchedule = (props) => {
                         >
                             <Text
                                 style={{
-                                    color: 'black',
-                                    fontSize: HeightRatio(20),
+                                    color: displaBool_Midafternoon? 'black' : 'white',
+                                    fontSize: HeightRatio(25),
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
@@ -1566,7 +1636,7 @@ export const DailySchedule = (props) => {
                         <View
                             style={{
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
+                                borderRadius: HeightRatio(10),
                                 height: HeightRatio(40),
                                 width: HeightRatio(40),
                                 display: 'flex',
@@ -1586,8 +1656,10 @@ export const DailySchedule = (props) => {
                     {midafternoonData.map((data, index) => (
                         <View
                             style={{
-                                backgroundColor: '#a39bc9',
-                                borderRadius: HeightRatio(10),
+                                // backgroundColor: '#a39bc9',
+                                // borderRadius: HeightRatio(10),
+                                borderBottomWidth: 1,
+                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
                                 margin: HeightRatio(10),
                                 width: windowWidth - HeightRatio(80),
                                 alignSelf: 'center'
@@ -1617,15 +1689,10 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{flexDirection: 'column'}}
                                     >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
-                                            }}
-                                        >
+                                        <View>
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     fontFamily: "SofiaSansSemiCondensed-ExtraBold"
                                                 }}
@@ -1635,8 +1702,7 @@ export const DailySchedule = (props) => {
                                         </View>
                                         <View
                                             style={{
-                                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                                margin: HeightRatio(10),
+                                                margin: HeightRatio(5),
                                                 padding: HeightRatio(4),
                                                 paddingLeft: HeightRatio(20),
                                                 paddingRight: HeightRatio(20),
@@ -1645,7 +1711,7 @@ export const DailySchedule = (props) => {
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(20),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
                                                 }}
@@ -1657,7 +1723,7 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{
                                             padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(30),
+                                            borderRadius: HeightRatio(10),
                                             height: HeightRatio(40),
                                             width: HeightRatio(40),
                                             display: 'flex',
@@ -1668,7 +1734,7 @@ export const DailySchedule = (props) => {
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
                                             style={{
-                                                color: 'black',
+                                                color: 'white',
                                             }}
                                             size={20}
                                         />
@@ -1688,13 +1754,13 @@ export const DailySchedule = (props) => {
                                     >
                                         <View
                                             style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
+                                                borderBottomWidth: 1,
+                                                borderBottomColor: 'white'
                                             }}
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     // marginTop: HeightRatio(5),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
@@ -1786,11 +1852,20 @@ export const DailySchedule = (props) => {
                     {/* DINNER */}
                     <TouchableOpacity
                         // onPress={() => displayScheduleData("Dinner")}
-                        onPress={() => {displayScheduleData(!displaBool_Dinner ? "Dinner" : null); setDisplaBool_Dinner(current => !current)}}
+                        onPress={() => {
+                            displayScheduleData(!displaBool_Dinner ? "Dinner" : null); 
+                            setDisplaBool_FirstThing(false)
+                            setDisplaBool_Breakfast(false)
+                            setDisplaBool_Midmorning(false)
+                            setDisplaBool_Lunch(false)
+                            setDisplaBool_Midafternoon(false)
+                            setDisplaBool_Dinner(current => !current)
+                            setDisplaBool_BeforeBed(false)
+                        }}
                         style={{
-                            backgroundColor: "rgba(255, 255, 255, 0.5)",
+                            backgroundColor: displaBool_Dinner? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
                             width: '90%',
-                            padding: HeightRatio(15),
+                            // padding: HeightRatio(15),
                             margin: HeightRatio(4),
                             borderRadius: HeightRatio(10),
                             display: "flex",
@@ -1800,12 +1875,23 @@ export const DailySchedule = (props) => {
                             flexDirection: 'row'
                         }}
                     >
+                        <Image
+                            source={require('../../../assets/pattern_0.png')}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                opacity: 0.05,
+                                borderRadius: HeightRatio(10),
+                                position: 'absolute'
+                            }}
+                        />
                         <Text
                             style={{
-                                color: 'black',
+                                color: displaBool_Dinner? 'black' : 'white',
                                 fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                marginRight: HeightRatio(10)
+                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                marginRight: HeightRatio(10),
+                                margin: HeightRatio(15)
                             }}
                         >
                             Dinner
@@ -1813,9 +1899,9 @@ export const DailySchedule = (props) => {
                         <View style={{ flex: 1 }} />
                         <View
                             style={{
-                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
+                                backgroundColor: 'rgba(0,0,0, 0.2)',
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
+                                borderRadius: HeightRatio(10),
                                 height: HeightRatio(40),
                                 display: 'flex',
                                 alignItems: "center",
@@ -1824,8 +1910,8 @@ export const DailySchedule = (props) => {
                         >
                             <Text
                                 style={{
-                                    color: 'black',
-                                    fontSize: HeightRatio(20),
+                                    color: displaBool_Dinner? 'black' : 'white',
+                                    fontSize: HeightRatio(25),
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
@@ -1835,7 +1921,7 @@ export const DailySchedule = (props) => {
                         <View
                             style={{
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
+                                borderRadius: HeightRatio(10),
                                 height: HeightRatio(40),
                                 width: HeightRatio(40),
                                 display: 'flex',
@@ -1855,8 +1941,10 @@ export const DailySchedule = (props) => {
                     {dinnerData.map((data, index) => (
                         <View
                             style={{
-                                backgroundColor: '#a39bc9',
-                                borderRadius: HeightRatio(10),
+                                // backgroundColor: '#a39bc9',
+                                // borderRadius: HeightRatio(10),
+                                borderBottomWidth: 1,
+                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
                                 margin: HeightRatio(10),
                                 width: windowWidth - HeightRatio(80),
                                 alignSelf: 'center'
@@ -1886,15 +1974,10 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{flexDirection: 'column'}}
                                     >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
-                                            }}
-                                        >
+                                        <View>
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     fontFamily: "SofiaSansSemiCondensed-ExtraBold"
                                                 }}
@@ -1904,8 +1987,7 @@ export const DailySchedule = (props) => {
                                         </View>
                                         <View
                                             style={{
-                                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                                margin: HeightRatio(10),
+                                                margin: HeightRatio(5),
                                                 padding: HeightRatio(4),
                                                 paddingLeft: HeightRatio(20),
                                                 paddingRight: HeightRatio(20),
@@ -1914,7 +1996,7 @@ export const DailySchedule = (props) => {
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(20),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
                                                 }}
@@ -1926,7 +2008,7 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{
                                             padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(30),
+                                            borderRadius: HeightRatio(10),
                                             height: HeightRatio(40),
                                             width: HeightRatio(40),
                                             display: 'flex',
@@ -1937,7 +2019,7 @@ export const DailySchedule = (props) => {
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
                                             style={{
-                                                color: 'black',
+                                                color: 'white',
                                             }}
                                             size={20}
                                         />
@@ -1957,13 +2039,13 @@ export const DailySchedule = (props) => {
                                     >
                                         <View
                                             style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
+                                                borderBottomWidth: 1,
+                                                borderBottomColor: 'white'
                                             }}
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     // marginTop: HeightRatio(5),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
@@ -2054,11 +2136,20 @@ export const DailySchedule = (props) => {
 
                     {/* BEFORE BED */}
                     <TouchableOpacity
-                        onPress={() => {displayScheduleData(!displaBool_BeforeBed ? "Before Bed" : null); setDisplaBool_BeforeBed(current => !current)}}
+                        onPress={() => {
+                            displayScheduleData(!displaBool_BeforeBed ? "Before Bed" : null); 
+                            setDisplaBool_FirstThing(false)
+                            setDisplaBool_Breakfast(false)
+                            setDisplaBool_Midmorning(false)
+                            setDisplaBool_Lunch(false)
+                            setDisplaBool_Midafternoon(false)
+                            setDisplaBool_Dinner(false)
+                            setDisplaBool_BeforeBed(current => !current)
+                        }}
                         style={{
-                            backgroundColor: "rgba(255, 255, 255, 0.5)",
+                            backgroundColor: displaBool_BeforeBed? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
                             width: '90%',
-                            padding: HeightRatio(15),
+                            // padding: HeightRatio(15),
                             margin: HeightRatio(4),
                             borderRadius: HeightRatio(10),
                             display: "flex",
@@ -2068,12 +2159,23 @@ export const DailySchedule = (props) => {
                             flexDirection: 'row'
                         }}
                     >
+                        <Image
+                            source={require('../../../assets/pattern_0.png')}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                opacity: 0.05,
+                                borderRadius: HeightRatio(10),
+                                position: 'absolute'
+                            }}
+                        />
                         <Text
                             style={{
-                                color: 'black',
+                                color: displaBool_BeforeBed? 'black' : 'white',
                                 fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                marginRight: HeightRatio(10)
+                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                marginRight: HeightRatio(10),
+                                margin: HeightRatio(15)
                             }}
                         >
                             Before Bed
@@ -2081,9 +2183,9 @@ export const DailySchedule = (props) => {
                         <View style={{ flex: 1 }} />
                         <View
                             style={{
-                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
+                                backgroundColor: 'rgba(0,0,0, 0.2)',
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
+                                borderRadius: HeightRatio(10),
                                 height: HeightRatio(40),
                                 display: 'flex',
                                 alignItems: "center",
@@ -2092,8 +2194,8 @@ export const DailySchedule = (props) => {
                         >
                             <Text
                                 style={{
-                                    color: 'black',
-                                    fontSize: HeightRatio(20),
+                                    color: displaBool_BeforeBed? 'black' : 'white',
+                                    fontSize: HeightRatio(25),
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
@@ -2103,7 +2205,7 @@ export const DailySchedule = (props) => {
                         <View
                             style={{
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(30),
+                                borderRadius: HeightRatio(10),
                                 height: HeightRatio(40),
                                 width: HeightRatio(40),
                                 display: 'flex',
@@ -2123,8 +2225,10 @@ export const DailySchedule = (props) => {
                     {beforeBedData.map((data, index) => (
                         <View
                             style={{
-                                backgroundColor: '#a39bc9',
-                                borderRadius: HeightRatio(10),
+                                // backgroundColor: '#a39bc9',
+                                // borderRadius: HeightRatio(10),
+                                borderBottomWidth: 1,
+                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
                                 margin: HeightRatio(10),
                                 width: windowWidth - HeightRatio(80),
                                 alignSelf: 'center'
@@ -2154,15 +2258,10 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{flexDirection: 'column'}}
                                     >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
-                                            }}
-                                        >
+                                        <View>
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     fontFamily: "SofiaSansSemiCondensed-ExtraBold"
                                                 }}
@@ -2172,8 +2271,7 @@ export const DailySchedule = (props) => {
                                         </View>
                                         <View
                                             style={{
-                                                backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                                margin: HeightRatio(10),
+                                                margin: HeightRatio(5),
                                                 padding: HeightRatio(4),
                                                 paddingLeft: HeightRatio(20),
                                                 paddingRight: HeightRatio(20),
@@ -2182,7 +2280,7 @@ export const DailySchedule = (props) => {
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(20),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
                                                 }}
@@ -2194,7 +2292,7 @@ export const DailySchedule = (props) => {
                                     <View
                                         style={{
                                             padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(30),
+                                            borderRadius: HeightRatio(10),
                                             height: HeightRatio(40),
                                             width: HeightRatio(40),
                                             display: 'flex',
@@ -2205,7 +2303,7 @@ export const DailySchedule = (props) => {
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
                                             style={{
-                                                color: 'black',
+                                                color: 'white',
                                             }}
                                             size={20}
                                         />
@@ -2225,13 +2323,13 @@ export const DailySchedule = (props) => {
                                     >
                                         <View
                                             style={{
-                                                borderBottomWidth: 2,
-                                                borderBottomColor: 'black'
+                                                borderBottomWidth: 1,
+                                                borderBottomColor: 'white'
                                             }}
                                         >
                                             <Text
                                                 style={{
-                                                    color: 'black',
+                                                    color: 'white',
                                                     fontSize: HeightRatio(25),
                                                     // marginTop: HeightRatio(5),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular"
@@ -2318,6 +2416,7 @@ export const DailySchedule = (props) => {
                         </View>
 
                     ))}
+                    <View style={{height: HeightRatio(40)}} />
 
                 </ScrollView>
             </SafeAreaView>
@@ -2434,11 +2533,15 @@ export const DailySchedule = (props) => {
 const styles = StyleSheet.create({
     container: {
         //   flex: 1,
-        height: HeightRatio(530)
+        marginTop: HeightRatio(20),
+        height: HeightRatio(560),
+        // backgroundColor: 'red'
 
     },
     scrollView: {
-        //   backgroundColor: 'blue',
+        backgroundColor: '#282830',
         width: windowWidth - HeightRatio(20),
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(10)
     },
 });

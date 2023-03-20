@@ -213,7 +213,7 @@ export const Styling = StyleSheet.create({
         paddingLeft: HeightRatio(20),
         borderWidth: 2,
         borderColor: 'white',
-        borderRadius: 40,
+        borderRadius: HeightRatio(10),
         alignSelf: 'center',
         margin: HeightRatio(8),
         width: windowWidth - 80

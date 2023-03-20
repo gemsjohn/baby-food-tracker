@@ -177,7 +177,7 @@ export const Navbar = (props) => {
                                 isGameInProgress: false
                             })
                         }}
-                        style={{ backgroundColor: fromHome ? 'rgba(30, 228, 168, 1.0)' : 'rgba(22, 27, 33, 1.00)', borderTopLeftRadius: HeightRatio(30) }}
+                        style={{ backgroundColor: fromHome ? 'rgba(30, 228, 168, 1.0)' : 'black', borderTopLeftRadius: HeightRatio(30) }}
                     >
                         <View
                             style={{
@@ -217,7 +217,7 @@ export const Navbar = (props) => {
                                     isGameInProgress: false
                                 })
                             }}
-                            style={{ backgroundColor: fromProfile ? 'rgba(30, 228, 168, 1.0)' : 'rgba(22, 27, 33, 1.00)', borderTopRightRadius: HeightRatio(30) }}
+                            style={{ backgroundColor: fromProfile ? 'rgba(30, 228, 168, 1.0)' : 'black', borderTopRightRadius: HeightRatio(30) }}
                         >
                             <View
                                 style={{
@@ -248,7 +248,7 @@ export const Navbar = (props) => {
                         :
                         <TouchableOpacity
                             onPress={() => { props.nav.dispatch(resetActionAuth); }}
-                            style={{ backgroundColor: fromProfile ? 'rgba(30, 228, 168, 1.0)' : 'rgba(22, 27, 33, 1.00)', borderTopRightRadius: HeightRatio(30) }}
+                            style={{ backgroundColor: fromProfile ? 'rgba(30, 228, 168, 1.0)' : 'black', borderTopRightRadius: HeightRatio(30) }}
                         >
                             <View
                                 style={{

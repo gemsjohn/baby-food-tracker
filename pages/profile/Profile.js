@@ -140,13 +140,13 @@ export const ProfileScreen = ({ navigation }) => {
     return (
         <>
             <View
-                style={{ ...Styling.container, backgroundColor: '#161b21' }}
+                style={{ ...Styling.container, backgroundColor: '#1f1f27' }}
                 onLayout={onLayoutRootView}
             >
                 {!loading ?
                     <SafeAreaView style={{  }}>
                         <ScrollView
-                            style={{ backgroundColor: 'rgba(71, 66, 106, 1.00)' }}
+                            style={{ backgroundColor: '#1f1f27' }}
                             refreshControl={
                                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                             }
@@ -474,7 +474,7 @@ export const ProfileScreen = ({ navigation }) => {
 
             <StatusBar
                 barStyle="default"
-                hidden={false}
+                hidden={true}
                 backgroundColor="transparent"
                 translucent={true}
                 networkActivityIndicatorVisible={true}
