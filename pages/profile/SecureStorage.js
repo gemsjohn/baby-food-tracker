@@ -81,6 +81,7 @@ export const SecureStorage = () => {
   const [fontsLoaded] = useFonts({
     'GochiHand_400Regular': require('../../assets/fonts/GochiHand-Regular.ttf'),
     'SofiaSansSemiCondensed-Regular': require('../../assets/fonts/SofiaSansSemiCondensed-Regular.ttf'),
+    'SofiaSansSemiCondensed-ExtraBold': require('../../assets/fonts/SofiaSansSemiCondensed-ExtraBold.ttf'),
     'CormorantGaramond-Regular': require('../../assets/fonts/CormorantGaramond-Regular.ttf'),
     'CormorantGaramond-Bold': require('../../assets/fonts/CormorantGaramond-Bold.ttf')
 

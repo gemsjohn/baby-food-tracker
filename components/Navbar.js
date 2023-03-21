@@ -274,7 +274,7 @@ export const Navbar = (props) => {
                                     }}
                                     allowFontScaling={false}
                                 >
-                                    PROFILE
+                                    LOGIN / SIGN UP
                                 </Text>
                             </View>
                         </TouchableOpacity>
@@ -293,52 +293,55 @@ export const Navbar = (props) => {
 
                 }}
             >
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "#47426a", }}>
-                    <View style={{ borderTopRightRadius: HeightRatio(10) }}>
-
-                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'rgba(0, 0, 0, 0.75)'
+                    }}
+                >
+                    <View
+                        style={{
+                            // flex: 1,
+                            backgroundColor: "#2f2c4f",
+                            margin: 20,
+                            zIndex: 999,
+                            borderRadius: 10,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
+                        }}
+                    >
+                        <View
+                            style={{
+                                margin: HeightRatio(20),
+                                alignSelf: 'center'
+                            }}
+                        >
                             <Text
                                 style={{
-                                    color: '#ffff00',
-                                    textAlign: 'center',
+                                    color: 'white',
                                     fontSize: HeightRatio(30),
+                                    // width: (windowWidth - WidthRatio(100)),
+                                    alignSelf: 'center'
+                                }}
+                            >
+                                Baby Food Tracker
+                            </Text>
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    textAlign: 'center',
+                                    fontSize: HeightRatio(20),
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                     marginTop: HeightRatio(10)
                                 }}
                                 allowFontScaling={false}
                             >
-                                Baby Food Tracker
+                                You need an account to use this service.
                             </Text>
                             <View style={{ height: 10 }}></View>
 
-
-                            <TouchableOpacity
-                                onPress={() => navigation.dispatch(resetActionAuth)}
-                                style={{ ...Styling.modalWordButton, marginTop: 10 }}
-                            >
-                                <View style={{
-                                    backgroundColor: 'rgba(30, 228, 168, 0.5)',
-                                    display: 'flex',
-                                    justifyContent: 'flex-start',
-                                    padding: HeightRatio(20),
-                                    borderRadius: HeightRatio(10),
-                                    alignSelf: 'center',
-                                    width: windowWidth - WidthRatio(50)
-                                }}>
-                                    <Text
-                                        style={{
-                                            color: 'white',
-                                            fontSize: HeightRatio(30),
-                                            alignSelf: 'center',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                        }}
-                                        allowFontScaling={false}
-                                    >
-                                        Sign Up or Login
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => {
                                     setDisplaySignUpModal(!displaySignUpModal);
@@ -347,16 +350,26 @@ export const Navbar = (props) => {
                                     })
                                 }}
                                 style={{
-                                    borderWidth: 3,
-                                    borderColor: '#ff0076',
-                                    borderRadius: 100,
-                                    height: HeightRatio(60),
-                                    width: HeightRatio(60),
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}
-                            >
-                                <Text>CLOSE</Text>
+                                    backgroundColor: 'rgba(255, 0, 75, 0.50)',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    padding: HeightRatio(10),
+                                    borderRadius: HeightRatio(10),
+                                    alignSelf: 'center',
+                                    width: (windowWidth - WidthRatio(100)) / 2,
+                                    margin: HeightRatio(10)
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: HeightRatio(25),
+                                            alignSelf: 'center',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Close
+                                    </Text>
                             </TouchableOpacity>
 
 

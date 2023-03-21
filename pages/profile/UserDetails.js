@@ -210,7 +210,7 @@ export const UserDetails = (props) => {
                             flexDirection: 'column',
                             margin: HeightRatio(5),
                             alignSelf: 'center',
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                            backgroundColor: 'rgba(0, 0, 0, 0.2)'
                         }}
 
                     >
@@ -220,7 +220,7 @@ export const UserDetails = (props) => {
                                 style={{
                                     color: 'white',
                                     fontSize: HeightRatio(28),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
                                     margin: HeightRatio(5)
                                 }} 
                                 allowFontScaling={false}
@@ -230,7 +230,7 @@ export const UserDetails = (props) => {
                                 style={{
                                     color: '#ffff00',
                                     // alignSelf: 'center', 
-                                    fontSize: HeightRatio(15),
+                                    fontSize: HeightRatio(20),
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                     margin: HeightRatio(10),
                                     marginLeft: HeightRatio(20),
@@ -262,7 +262,7 @@ export const UserDetails = (props) => {
                                     <Text
                                         style={{
                                             color: 'black',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
                                             fontSize: HeightRatio(23),
                                             alignSelf: 'flex-end'
                                         }}
@@ -369,7 +369,7 @@ export const UserDetails = (props) => {
                                                                     style={{
                                                                         color: 'white',
                                                                         fontSize: HeightRatio(20),
-                                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
                                                                     }}
                                                                     allowFontScaling={false}
                                                                 >SUBMIT &nbsp;</Text>
@@ -463,7 +463,7 @@ export const UserDetails = (props) => {
                                                                 style={{
                                                                     color: 'white',
                                                                     fontSize: HeightRatio(20),
-                                                                    fontFamily: 'GochiHand_400Regular',
+                                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
                                                                 }}
                                                                 allowFontScaling={false}
                                                             >SUBMIT &nbsp;</Text>
