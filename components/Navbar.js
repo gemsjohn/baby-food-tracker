@@ -318,6 +318,14 @@ export const Navbar = (props) => {
                                 alignSelf: 'center'
                             }}
                         >
+                            <Image
+                                source={require('../assets/favicon_0.png')}
+                                style={{
+                                    height: HeightRatio(80),
+                                    width: HeightRatio(80),
+                                    alignSelf: 'center'
+                                }}
+                            />
                             <Text
                                 style={{
                                     color: 'white',

@@ -32,34 +32,38 @@ export const Loading = () => {
     }
 
     return (
-        <View style={{alignSelf: 'center', flexDirection: 'column'}}>
-        {/* <Image 
-            source={require('../assets/npc_loading.gif')}
-            style={{height: HeightRatio(200), width: HeightRatio(200)}}
-        /> */}
-        <Text
-            style={{
-                fontFamily: 'GochiHand_400Regular',
-                color: 'white',
-                fontSize: HeightRatio(50),
-                // fontWeight: 'bold',
-                top: HeightRatio(20),
-                textAlign: 'center',
-                width: WidthRatio(200)
-            }}
-            allowFontScaling={false}
-        >Baby Food Tracker</Text>
-        <Text
-            style={{
-                fontFamily: 'GochiHand_400Regular',
-                color: '#ffff00',
-                fontSize: HeightRatio(30),
-                // fontWeight: 'bold',
-                top: HeightRatio(20),
-                alignSelf: 'center'
-            }}
-            allowFontScaling={false}
-        >Loading...</Text>
-    </View>
+        <View style={{ alignSelf: 'center', flexDirection: 'column' }}>
+            <Image
+                source={require('../assets/favicon_0.png')}
+                style={{
+                    height: HeightRatio(80),
+                    width: HeightRatio(80),
+                    alignSelf: 'center'
+                }}
+            />
+            <Text
+                style={{
+                    fontFamily: 'GochiHand_400Regular',
+                    color: 'white',
+                    fontSize: HeightRatio(50),
+                    // fontWeight: 'bold',
+                    top: HeightRatio(20),
+                    textAlign: 'center',
+                    width: WidthRatio(200)
+                }}
+                allowFontScaling={false}
+            >Baby Food Tracker</Text>
+            <Text
+                style={{
+                    fontFamily: 'GochiHand_400Regular',
+                    color: '#ffff00',
+                    fontSize: HeightRatio(30),
+                    // fontWeight: 'bold',
+                    top: HeightRatio(20),
+                    alignSelf: 'center'
+                }}
+                allowFontScaling={false}
+            >Loading...</Text>
+        </View>
     )
 }

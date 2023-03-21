@@ -130,15 +130,14 @@ export const KeyScreen = ({ navigation }) => {
                         translucent={true}
                         networkActivityIndicatorVisible={true}
                     />
-                    {/* <Image
-                        source={require('../../assets/blink.gif')}
+                    <Image
+                        source={require('../../assets/favicon_0.png')}
                         style={{
-                            height: HeightRatio(150),
-                            width: HeightRatio(150),
-                            alignSelf: 'center',
-                            marginTop: HeightRatio(30)
+                            height: HeightRatio(80),
+                            width: HeightRatio(80),
+                            alignSelf: 'center'
                         }}
-                    /> */}
+                    />
                     <Text
                         style={{
                             color: 'white',
@@ -157,7 +156,7 @@ export const KeyScreen = ({ navigation }) => {
                                 <View style={{
                                     backgroundColor: '#fff1ff',
                                     height: HeightRatio(50),
-                                    width: windowWidth/8,
+                                    width: windowWidth / 8,
                                     margin: HeightRatio(5),
                                     borderRadius: HeightRatio(10)
                                     // borderTopLeftRadius: HeightRatio(25)
@@ -167,7 +166,7 @@ export const KeyScreen = ({ navigation }) => {
                                 <View style={{
                                     backgroundColor: 'rgba(0, 0, 0, 0.25)',
                                     height: HeightRatio(50),
-                                    width: windowWidth/8,
+                                    width: windowWidth / 8,
                                     margin: HeightRatio(5),
                                     borderRadius: HeightRatio(10)
                                     // borderTopLeftRadius: HeightRatio(25)
@@ -177,7 +176,7 @@ export const KeyScreen = ({ navigation }) => {
                                 <View style={{
                                     backgroundColor: '#fff1ff',
                                     height: HeightRatio(50),
-                                    width: windowWidth/8,
+                                    width: windowWidth / 8,
                                     margin: HeightRatio(5),
                                     borderRadius: HeightRatio(10)
                                 }} />
@@ -186,7 +185,7 @@ export const KeyScreen = ({ navigation }) => {
                                 <View style={{
                                     backgroundColor: 'rgba(0, 0, 0, 0.25)',
                                     height: HeightRatio(50),
-                                    width: windowWidth/8,
+                                    width: windowWidth / 8,
                                     margin: HeightRatio(5),
                                     borderRadius: HeightRatio(10)
                                 }} />
@@ -195,7 +194,7 @@ export const KeyScreen = ({ navigation }) => {
                                 <View style={{
                                     backgroundColor: '#fff1ff',
                                     height: HeightRatio(50),
-                                    width: windowWidth/8,
+                                    width: windowWidth / 8,
                                     margin: HeightRatio(5),
                                     borderRadius: HeightRatio(10)
                                 }} />
@@ -204,7 +203,7 @@ export const KeyScreen = ({ navigation }) => {
                                 <View style={{
                                     backgroundColor: 'rgba(0, 0, 0, 0.25)',
                                     height: HeightRatio(50),
-                                    width: windowWidth/8,
+                                    width: windowWidth / 8,
                                     margin: HeightRatio(5),
                                     borderRadius: HeightRatio(10)
                                 }} />
@@ -213,7 +212,7 @@ export const KeyScreen = ({ navigation }) => {
                                 <View style={{
                                     backgroundColor: '#fff1ff',
                                     height: HeightRatio(50),
-                                    width: windowWidth/8,
+                                    width: windowWidth / 8,
                                     margin: HeightRatio(5),
                                     borderRadius: HeightRatio(10)
                                 }} />
@@ -222,7 +221,7 @@ export const KeyScreen = ({ navigation }) => {
                                 <View style={{
                                     backgroundColor: 'rgba(0, 0, 0, 0.25)',
                                     height: HeightRatio(50),
-                                    width: windowWidth/8,
+                                    width: windowWidth / 8,
                                     margin: HeightRatio(5),
                                     borderRadius: HeightRatio(10)
                                 }} />
