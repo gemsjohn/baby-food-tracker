@@ -40,6 +40,7 @@ export const Auth = ({ navigation }) => {
   const [newUser, setNewUser] = useState(true);
   const [displayLoginFailureAlert, setDisplayLoginFailureAlert] = useState(false)
   const [loading, setLoading] = useState(false);
+  const [navigateToProfile, setNavigateToProfile] = useState(false)
 
 
   // Sign Up: Email
@@ -95,6 +96,7 @@ export const Auth = ({ navigation }) => {
 
         setIsTokenValid(true)
         navigation.dispatch(resetActionProfile)
+
         return true;
       } else {
         // Token is no longer valid
@@ -109,7 +111,7 @@ export const Auth = ({ navigation }) => {
   }
 
   const handleLogin = async () => {
-
+    setNavigateToProfile(true)
     try {
       const { data } = await login({
         variables: {
@@ -141,6 +143,7 @@ export const Auth = ({ navigation }) => {
         checkToken(`Bearer ${data.login.token}`)
       }
     } catch (e) {
+      setNavigateToProfile(false)
       console.log("Auth - Login Error")
       setDisplayLoading(false);
       console.error(e);
@@ -160,6 +163,7 @@ export const Auth = ({ navigation }) => {
 
 
   const handleFormSubmit = async () => {
+    setNavigateToProfile(true)
     try {
       const { data } = await addUser({
         variables: {
@@ -194,6 +198,7 @@ export const Auth = ({ navigation }) => {
         checkToken(`Bearer ${data.addUser.token}`)
       }
     } catch (e) {
+      setNavigateToProfile(false)
       setDisplayLoading(false);
       setPromptEmailInput("")
       setPromptUsernameInput("")
@@ -288,6 +293,9 @@ export const Auth = ({ navigation }) => {
 
   const [fontsLoaded] = useFonts({
     'GochiHand_400Regular': require('../../assets/fonts/GochiHand-Regular.ttf'),
+    'SofiaSansSemiCondensed-Regular': require('../../assets/fonts/SofiaSansSemiCondensed-Regular.ttf'),
+    'CormorantGaramond-Regular': require('../../assets/fonts/CormorantGaramond-Regular.ttf'),
+    'CormorantGaramond-Bold': require('../../assets/fonts/CormorantGaramond-Bold.ttf')
   });
 
   const onLayoutRootView = useCallback(async () => {
@@ -303,17 +311,17 @@ export const Auth = ({ navigation }) => {
 
   return (
     <>
-    {!loading ?
-    <>
-      <View
-        style={{ ...Styling.container, backgroundColor: 'rgba(71, 66, 106, 1.00)' }}
-        onLayout={onLayoutRootView}
-      >
-        <SafeAreaView style={{ height: '90%', marginBottom: 32, marginTop: 32 }}>
-          <ScrollView style={{}} keyboardShouldPersistTaps={'always'} keyboardDismissMode="on-drag">
+      {!navigateToProfile && !loading ?
+        <>
+          <View
+            style={{ ...Styling.container, backgroundColor: 'rgba(71, 66, 106, 1.00)' }}
+            onLayout={onLayoutRootView}
+          >
+            <SafeAreaView style={{ height: '90%', marginBottom: 32, marginTop: 32 }}>
+              <ScrollView style={{}} keyboardShouldPersistTaps={'always'} keyboardDismissMode="on-drag">
 
-            {!isTokenValid &&
-              <>
+                {!isTokenValid &&
+                  <>
                     {newUser ?
                       <>
                         <Text
@@ -616,7 +624,8 @@ export const Auth = ({ navigation }) => {
                       :
                       <>
                         {displayLoading ?
-                          <Loading />
+                          // <Loading />
+                          null
                           :
                           <View>
                             <Text
@@ -806,7 +815,7 @@ export const Auth = ({ navigation }) => {
                                     </TouchableOpacity>
                                   </View>
                                   {resetRequestStatus != '' &&
-                                    <View style={{width: windowWidth, alignSelf: 'center'}}>
+                                    <View style={{ width: windowWidth, alignSelf: 'center' }}>
                                       <Text
                                         style={{
                                           color: 'red',
@@ -1042,22 +1051,23 @@ export const Auth = ({ navigation }) => {
                         }
                       </>
                     }
-              </>
-            }
-            <View style={{ marginBottom: HeightRatio(400) }}></View>
-          </ScrollView>
-        </SafeAreaView>
-        {/* </ImageBackground> */}
-        {displayNavbar &&
-          <Navbar nav={navigation} auth={isTokenValid} position={'absolute'} from={'profile'} />
-        }
-      </View>
-      </>
+                  </>
+                }
+                <View style={{ marginBottom: HeightRatio(400) }}></View>
+              </ScrollView>
+            </SafeAreaView>
+            {/* </ImageBackground> */}
 
-      :
-      <View
-        style={{ ...Styling.container, backgroundColor: 'rgba(71, 66, 106, 1.00)' }}
-      ></View>
+          </View>
+        </>
+
+        :
+        <View
+          style={{ ...Styling.container, backgroundColor: 'rgba(71, 66, 106, 1.00)' }}
+        />
+      }
+      {displayNavbar &&
+        <Navbar nav={navigation} auth={isTokenValid} position={'absolute'} from={'profile'} />
       }
 
 

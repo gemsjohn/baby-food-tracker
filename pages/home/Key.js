@@ -13,6 +13,11 @@ const resetActionHome = CommonActions.reset({
     routes: [{ name: 'Home', params: {} }]
 });
 
+const resetActionAuth = CommonActions.reset({
+    index: 1,
+    routes: [{ name: 'Auth', params: {} }]
+});
+
 async function deleteKey(key) {
     await SecureStore.deleteItemAsync(key);
 }
@@ -41,7 +46,7 @@ export const KeyScreen = ({ navigation }) => {
             console.log("PAGE LOAD COMPLETE?")
 
         } else {
-            navigation.dispatch(resetActionHome);
+            navigation.dispatch(resetActionAuth);
         }
     }
 

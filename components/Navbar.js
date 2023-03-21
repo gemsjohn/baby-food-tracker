@@ -1,5 +1,5 @@
 import React, { useEffect, useInsertionEffect, useState, useContext, useRef } from 'react';
-import { View, Text, Button, Dimensions, Image, TouchableOpacity, PixelRatio, TouchableHighlight, Linking } from 'react-native';
+import { View, Text, Button, Dimensions, Image, TouchableOpacity, PixelRatio, TouchableHighlight, Linking, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
 import { useQuery } from '@apollo/client';
@@ -16,10 +16,11 @@ export const Navbar = (props) => {
     const [isTokenValid, setIsTokenValid] = useState(null);
     const [minimizeNav, setMinimizeNav] = useState(false);
     const [displayTokenModal, setDisplayTokenModal] = useState(mainState.current.displayTokenModal);
-    const [fromHome, setFromHome] = useState(true);
+    const [fromHome, setFromHome] = useState(false);
     const [fromGame, setFromGame] = useState(false);
     const [fromProfile, setFromProfile] = useState(false);
     const [networkConnected, setNetworkConnected] = useState(true);
+    const [displaySignUpModal, setDisplaySignUpModal] = useState(false);
 
 
     const authState = useRef(false);
@@ -97,20 +98,20 @@ export const Navbar = (props) => {
         if (props.from == 'home') {
             // console.log("Home")
             setFromHome(true)
-            setFromGame(false)
+            // setFromGame(false)
             setFromProfile(false)
 
         }
-        if (props.from == 'chat') {
-            console.log("chat")
-            setFromHome(false)
-            setFromGame(true)
-            setFromProfile(false)
-        }
+        // if (props.from == 'chat') {
+        //     console.log("chat")
+        //     setFromHome(false)
+        //     setFromGame(true)
+        //     setFromProfile(false)
+        // }
         if (props.from == 'profile') {
             // console.log("profile")
             setFromHome(false)
-            setFromGame(false)
+            // setFromGame(false)
             setFromProfile(true)
         }
 
@@ -172,13 +173,11 @@ export const Navbar = (props) => {
                         :
                         null
                     }
+
                     {/* [[[HOME]]] */}
                     <TouchableOpacity
                         onPress={() => {
-                            props.nav.dispatch(resetActionHome);
-                            setMainState({
-                                isGameInProgress: false
-                            })
+                            isTokenValid ? props.nav.dispatch(resetActionHome) : setDisplaySignUpModal(true);
                         }}
                         style={{ backgroundColor: fromHome ? 'rgba(30, 228, 168, 1.0)' : 'black', borderTopLeftRadius: HeightRatio(30) }}
                     >
@@ -209,7 +208,7 @@ export const Navbar = (props) => {
                         </View>
                     </TouchableOpacity>
 
-                    
+
 
                     {/* [[[PROFILE]]] */}
                     {isTokenValid ?
@@ -283,7 +282,89 @@ export const Navbar = (props) => {
                     }
                 </View>
             </>
-            
+
+            {/* SIGN UP MODAL */}
+            <Modal
+                animationType="none"
+                transparent={true}
+                visible={displaySignUpModal}
+                onRequestClose={() => {
+                    setDisplaySignUpModal(!displaySignUpModal);
+
+                }}
+            >
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "#47426a", }}>
+                    <View style={{ borderTopRightRadius: HeightRatio(10) }}>
+
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+
+                            <Text
+                                style={{
+                                    color: '#ffff00',
+                                    textAlign: 'center',
+                                    fontSize: HeightRatio(30),
+                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    marginTop: HeightRatio(10)
+                                }}
+                                allowFontScaling={false}
+                            >
+                                Baby Food Tracker
+                            </Text>
+                            <View style={{ height: 10 }}></View>
+
+
+                            <TouchableOpacity
+                                onPress={() => navigation.dispatch(resetActionAuth)}
+                                style={{ ...Styling.modalWordButton, marginTop: 10 }}
+                            >
+                                <View style={{
+                                    backgroundColor: 'rgba(30, 228, 168, 0.5)',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    padding: HeightRatio(20),
+                                    borderRadius: HeightRatio(10),
+                                    alignSelf: 'center',
+                                    width: windowWidth - WidthRatio(50)
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: HeightRatio(30),
+                                            alignSelf: 'center',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Sign Up or Login
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setDisplaySignUpModal(!displaySignUpModal);
+                                    setMainState({
+                                        displaySignUpModal: false
+                                    })
+                                }}
+                                style={{
+                                    borderWidth: 3,
+                                    borderColor: '#ff0076',
+                                    borderRadius: 100,
+                                    height: HeightRatio(60),
+                                    width: HeightRatio(60),
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Text>CLOSE</Text>
+                            </TouchableOpacity>
+
+
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
         </>
     )
 }

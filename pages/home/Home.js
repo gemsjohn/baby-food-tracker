@@ -64,7 +64,8 @@ export const HomeScreen = ({ navigation }) => {
     const [clearSuggestions, setClearSuggestions] = useState(false)
     const [selectRecentlyUsed, setSelectRecentlyUsed] = useState(null)
     const [totalCalorieCount, setTotalCalorieCount] = useState(null)
-
+    const [selectRecentlyUsedData, setSelectRecentlyUsedData] = useState(null)
+    const [selectedFoodDataEntrered, setSelectedFoodDataEntrered] = useState(false);
 
     const onRefresh = useCallback(() => {
         setLoading(true)
@@ -115,7 +116,7 @@ export const HomeScreen = ({ navigation }) => {
         if (result && authState.current) {
             setDisplayUsername(true)
         } else if (!result && !authState.current) {
-            setDisplaySignUpModal(true)
+            // setDisplaySignUpModal(true)
             // setDisplayUsername(false)
         }
     }
@@ -138,13 +139,21 @@ export const HomeScreen = ({ navigation }) => {
 
         setInterval(() => {
             getTotalCalorieCount()
+
             if (mainState.current.triggerRefresh) {
                 setRefreshing(true)
                 refetch()
             } else {
                 setRefreshing(false)
             }
-        }, 500)
+
+            if (mainState.current.selectedFood_Quantity != null && mainState.current.selectedFood_Measurement != null && mainState.current.selectedFood_Schedule != null) {
+                setSelectedFoodDataEntrered(true)
+            } else {
+                setSelectedFoodDataEntrered(false)
+
+            }
+        }, 200)
     }, [])
 
 
@@ -196,6 +205,10 @@ export const HomeScreen = ({ navigation }) => {
         setDisplayNutritionValueLoading(true)
         setNutritionFacts([])
         setRefreshing_Nutrition(true)
+        console.log('# - INPUT: ')
+        console.log(input)
+        console.log(typeof input)
+
         const data = {
             search: input,
             quantity: mainState.current.selectedFood_Quantity,
@@ -205,6 +218,8 @@ export const HomeScreen = ({ navigation }) => {
         if (recentFoodData != [] && selectRecentlyUsed != null && recentFoodData[selectRecentlyUsed].number == data.quantity && recentFoodData[selectRecentlyUsed].measurement == data.measurement) {
             console.log("# - getNutritionValue / recentFoodData[selectRecentlyUsed]")
             const nutrients_JSON = JSON.stringify(recentFoodData[selectRecentlyUsed].nutrients);
+            console.log(input)
+            console.log(data.search)
             const updateUserEntry = async () => {
 
                 await addEntry({
@@ -257,11 +272,17 @@ export const HomeScreen = ({ navigation }) => {
                         console.log(nutrients_JSON)
                         const updateUserEntry = async () => {
 
+                            let itemData = input.description;
+
+                            if (input.description == undefined && recentFoodData[selectRecentlyUsed].item != '') {
+                                itemData = recentFoodData[selectRecentlyUsed].item;
+                            }   
+
                             await addEntry({
                                 variables: {
                                     date: `${currentDateReadable}`,
                                     schedule: `${mainState.current.selectedFood_Schedule}`,
-                                    item: `${input.description}`,
+                                    item: `${itemData}`,
                                     amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
                                     nutrients: `${nutrients_JSON}`
                                 }
@@ -330,6 +351,7 @@ export const HomeScreen = ({ navigation }) => {
             }
 
             const result = separateMeasurement(amount);
+
 
             let item_amount = { item: item, amount: amount, number: result.number, measurement: result.measurement, nutrients: nutrients, id: id }
             setRecentFoodData(prev => [...prev, item_amount])
@@ -763,6 +785,11 @@ export const HomeScreen = ({ navigation }) => {
                                             setSelectedItem(null);
                                             setDisplayDetails(false);
                                             setFoodData([]);
+                                            setMainState({
+                                                selectedFood_Quantity: null,
+                                                selectedFood_Measurement: null,
+                                                selectedFood_Schedule: null
+                                            })
 
                                         }}
                                         style={{
@@ -1035,7 +1062,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                             </View>
                                                                         </View>
                                                                         <TouchableOpacity
-                                                                            onPress={() => { setSelectRecentlyUsed(index); }}
+                                                                            onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); console.log(data) }}
                                                                             style={{
                                                                                 backgroundColor: 'rgba(247, 255, 108, 1.00)',
                                                                                 borderRadius: HeightRatio(10),
@@ -1096,6 +1123,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                         <TouchableOpacity
                                                                             onPress={() => {
                                                                                 setSelectRecentlyUsed(null)
+                                                                                setSelectRecentlyUsedData(null)
                                                                             }}
                                                                             style={{
                                                                                 height: HeightRatio(30),
@@ -1188,7 +1216,7 @@ export const HomeScreen = ({ navigation }) => {
                                     alignSelf: 'center'
                                 }}
                             >
-                                {selectedItem || selectRecentlyUsed != null ?
+                                {selectedFoodDataEntrered ? // {selectedItem || selectRecentlyUsed != null && selectedFoodDataEntrered ?
                                     <>
                                         <TouchableOpacity onPress={() => { setModalVisible(false); }}>
                                             <View style={{
@@ -1216,7 +1244,7 @@ export const HomeScreen = ({ navigation }) => {
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             onPress={() => {
-                                                getNutritionValue(selectedItem || recentFoodData.item);
+                                                getNutritionValue(selectedItem == null && selectRecentlyUsedData.item != null ? selectRecentlyUsedData.item : selectedItem); // selectedItem == null && recentFoodData.item != null ? recentFoodData.item : selectedItem
                                                 setModalVisible(false);
                                             }}
                                         >
@@ -1277,101 +1305,7 @@ export const HomeScreen = ({ navigation }) => {
 
                     </Modal>
 
-                    {/* SIGN UP MODAL */}
-                    <Modal
-                        animationType="none"
-                        transparent={true}
-                        visible={displaySignUpModal}
-                        onRequestClose={() => {
-                            setDisplaySignUpModal(!displaySignUpModal);
-
-                        }}
-                    >
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "#47426a", }}>
-                            <View style={{ borderTopRightRadius: HeightRatio(10) }}>
-
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-
-                                    {/* <Image
-                                source={require('../../assets/blink.gif')}
-                                style={{
-                                    height: HeightRatio(150),
-                                    width: HeightRatio(150),
-                                    alignSelf: 'center',
-                                    marginTop: HeightRatio(10)
-                                }}
-                            /> */}
-                                    <Text
-                                        style={{
-                                            color: '#ffff00',
-                                            textAlign: 'center',
-                                            fontSize: HeightRatio(30),
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                            marginTop: HeightRatio(10)
-                                        }}
-                                        allowFontScaling={false}
-                                    >
-                                        Baby Food Tracker
-                                    </Text>
-                                    <View style={{ height: 10 }}></View>
-
-
-                                    <TouchableOpacity
-                                        onPress={() => navigation.dispatch(resetActionAuth)}
-                                        style={{ ...Styling.modalWordButton, marginTop: 10 }}
-                                    >
-                                        <View style={{
-                                            backgroundColor: 'rgba(30, 228, 168, 0.5)',
-                                            display: 'flex',
-                                            justifyContent: 'flex-start',
-                                            padding: HeightRatio(20),
-                                            borderRadius: HeightRatio(10),
-                                            alignSelf: 'center',
-                                            width: windowWidth - WidthRatio(50)
-                                        }}>
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(30),
-                                                    alignSelf: 'center',
-                                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                }}
-                                                allowFontScaling={false}
-                                            >
-                                                Sign Up or Login
-                                            </Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            setDisplaySignUpModal(!displaySignUpModal);
-                                            setMainState({
-                                                displaySignUpModal: false
-                                            })
-                                        }}
-                                        style={{
-                                            borderWidth: 3,
-                                            borderColor: '#ff0076',
-                                            borderRadius: 100,
-                                            height: HeightRatio(60),
-                                            width: HeightRatio(60),
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}
-                                    >
-                                        <FontAwesomeIcon
-                                            icon={faSolid, faX}
-                                            style={{
-                                                color: '#ff0076',
-                                            }}
-                                        />
-                                    </TouchableOpacity>
-
-
-                                </View>
-                            </View>
-                        </View>
-                    </Modal>
+                    
 
 
                 </>

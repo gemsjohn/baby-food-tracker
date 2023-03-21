@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef, useEffect, useCallback } from 'rea
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, Button } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { MainStateContext } from '../../App';
-import { HeightRatio, Styling } from '../../Styling';
+import { HeightRatio, WidthRatio, windowHeight, windowWidth, Styling } from '../../Styling';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -80,261 +80,271 @@ export const SecureStorage = () => {
 
   const [fontsLoaded] = useFonts({
     'GochiHand_400Regular': require('../../assets/fonts/GochiHand-Regular.ttf'),
-    'SofiaSansSemiCondensed-Regular': require('../../assets/fonts/SofiaSansSemiCondensed-Regular.ttf')
+    'SofiaSansSemiCondensed-Regular': require('../../assets/fonts/SofiaSansSemiCondensed-Regular.ttf'),
+    'CormorantGaramond-Regular': require('../../assets/fonts/CormorantGaramond-Regular.ttf'),
+    'CormorantGaramond-Bold': require('../../assets/fonts/CormorantGaramond-Bold.ttf')
 
   });
 
   const onLayoutRootView = useCallback(async () => {
-      if (fontsLoaded) {
-          await SplashScreen.hideAsync();
-      }
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
   }, [fontsLoaded]);
 
   if (!fontsLoaded) {
-      return null;
+    return null;
   }
 
 
   return (
     <>
       {!displaySetCode ?
-      <View style={{  }}>
-        <Text
-          style={{ 
-            color: 'white', 
-            fontSize: HeightRatio(40), 
-            fontFamily: 'SofiaSansSemiCondensed-Regular',
-            textAlign: 'center', 
-            margin: HeightRatio(20) 
-          }}
-          allowFontScaling={false}>
-          Set a Keycode for easy login!
-        </Text>
-        <>
-          <View style={{ marginTop: HeightRatio(30), flexDirection: 'row', alignSelf: 'center' }}>
-            {count > 0 ?
-              <View style={{
-                backgroundColor: 'rgba(255, 255, 255, 1.0)',
-                height: HeightRatio(30),
-                width: HeightRatio(30),
-                margin: HeightRatio(10),
-                display: 'flex', 
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <Text style={{
-                  color: 'black',
-                  fontSize: HeightRatio(20),
-                  fontWeight: 'bold',
-                  alignSelf: 'center'
-                }}
-                  allowFontScaling={false}>
-                  {keyArray[0]}
-                </Text>
-              </View>
+        <View style={{}}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: HeightRatio(40),
+              fontFamily: 'SofiaSansSemiCondensed-Regular',
+              textAlign: 'center',
+              margin: HeightRatio(20)
+            }}
+            allowFontScaling={false}>
+            Set a Keycode for easy login!
+          </Text>
+          <>
+            <View style={{ marginTop: HeightRatio(30), flexDirection: 'row', alignSelf: 'center' }}>
+              {count > 0 ?
+                <View style={{
+                  backgroundColor: 'rgba(255, 255, 255, 1.0)',
+                  height: HeightRatio(50),
+                  width: windowWidth / 8,
+                  margin: HeightRatio(5),
+                  borderRadius: HeightRatio(10),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Text style={{
+                    color: 'black',
+                    fontSize: HeightRatio(20),
+                    fontWeight: 'bold',
+                    alignSelf: 'center'
+                  }}
+                    allowFontScaling={false}>
+                    {keyArray[0]}
+                  </Text>
+                </View>
 
-              :
-              <View style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                height: HeightRatio(30),
-                width: HeightRatio(30),
-                margin: HeightRatio(10)
-              }} />
-            }
-            {count > 1 ?
-              <View style={{
-                backgroundColor: 'rgba(255, 255, 255, 1.0)',
-                height: HeightRatio(30),
-                width: HeightRatio(30),
-                margin: HeightRatio(10),
-                display: 'flex', 
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <Text style={{
-                  color: 'black',
-                  fontSize: HeightRatio(20),
-                  fontWeight: 'bold',
-                  alignSelf: 'center'
-                }}
-                  allowFontScaling={false}>
-                  {keyArray[1]}
-                </Text>
-              </View>
+                :
+                <View style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  height: HeightRatio(50),
+                  width: windowWidth / 8,
+                  margin: HeightRatio(5),
+                  borderRadius: HeightRatio(10),
+                }} />
+              }
+              {count > 1 ?
+                <View style={{
+                  backgroundColor: 'rgba(255, 255, 255, 1.0)',
+                  height: HeightRatio(50),
+                  width: windowWidth / 8,
+                  margin: HeightRatio(5),
+                  borderRadius: HeightRatio(10),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Text style={{
+                    color: 'black',
+                    fontSize: HeightRatio(20),
+                    fontWeight: 'bold',
+                    alignSelf: 'center'
+                  }}
+                    allowFontScaling={false}>
+                    {keyArray[1]}
+                  </Text>
+                </View>
 
-              :
-              <View style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                height: HeightRatio(30),
-                width: HeightRatio(30),
-                margin: HeightRatio(10)
-              }} />
-            }
-            {count > 2 ?
-              <View style={{
-                backgroundColor: 'rgba(255, 255, 255, 1.0)',
-                height: HeightRatio(30),
-                width: HeightRatio(30),
-                margin: HeightRatio(10),
-                display: 'flex', 
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <Text style={{
-                  color: 'black',
-                  fontSize: HeightRatio(20),
-                  fontWeight: 'bold',
-                  alignSelf: 'center'
-                }}
-                  allowFontScaling={false}>
-                  {keyArray[2]}
-                </Text>
-              </View>
+                :
+                <View style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  height: HeightRatio(50),
+                  width: windowWidth / 8,
+                  margin: HeightRatio(5),
+                  borderRadius: HeightRatio(10),
+                }} />
+              }
+              {count > 2 ?
+                <View style={{
+                  backgroundColor: 'rgba(255, 255, 255, 1.0)',
+                  height: HeightRatio(50),
+                  width: windowWidth / 8,
+                  margin: HeightRatio(5),
+                  borderRadius: HeightRatio(10),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Text style={{
+                    color: 'black',
+                    fontSize: HeightRatio(20),
+                    fontWeight: 'bold',
+                    alignSelf: 'center'
+                  }}
+                    allowFontScaling={false}>
+                    {keyArray[2]}
+                  </Text>
+                </View>
 
-              :
-              <View style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                height: HeightRatio(30),
-                width: HeightRatio(30),
-                margin: HeightRatio(10)
-              }} />
-            }
-            {count > 3 ?
-              <View style={{
-                backgroundColor: 'rgba(255, 255, 255, 1.0)',
-                height: HeightRatio(30),
-                width: HeightRatio(30),
-                margin: HeightRatio(10),
-                display: 'flex', 
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <Text style={{
-                  color: 'black',
-                  fontSize: HeightRatio(20),
-                  fontWeight: 'bold',
-                  alignSelf: 'center'
-                }}
-                  allowFontScaling={false}>
-                  {keyArray[3]}
-                </Text>
-              </View>
+                :
+                <View style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  height: HeightRatio(50),
+                  width: windowWidth / 8,
+                  margin: HeightRatio(5),
+                  borderRadius: HeightRatio(10),
+                }} />
+              }
+              {count > 3 ?
+                <View style={{
+                  backgroundColor: 'rgba(255, 255, 255, 1.0)',
+                  height: HeightRatio(50),
+                  width: windowWidth / 8,
+                  margin: HeightRatio(5),
+                  borderRadius: HeightRatio(10),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Text style={{
+                    color: 'black',
+                    fontSize: HeightRatio(20),
+                    fontWeight: 'bold',
+                    alignSelf: 'center'
+                  }}
+                    allowFontScaling={false}>
+                    {keyArray[3]}
+                  </Text>
+                </View>
 
-              :
-              <View style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                height: HeightRatio(30),
-                width: HeightRatio(30),
-                margin: HeightRatio(10)
-              }} />
-            }
+                :
+                <View style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  height: HeightRatio(50),
+                  width: windowWidth / 8,
+                  margin: HeightRatio(5),
+                  borderRadius: HeightRatio(10),
+                }} />
+              }
 
 
 
-          </View>
-
-          {warning &&
-            <Text style={{ color: 'red', fontSize: HeightRatio(20), alignSelf: 'center', marginTop: 20 }}>
-              Must be 4 #'s!
-            </Text>
-          }
-
-          <View style={{ marginTop: 10, marginBottom: 10 }}>
-            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-              <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 0.10)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('1')}>
-                <Text
-                  style={{ color: 'white', fontSize: HeightRatio(40), alignSelf: 'center', fontStyle: 'SofiaSansSemiCondensed-Regular' }}
-                  allowFontScaling={false}
-                >1</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 0.10)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('2')}>
-                <Text
-                  style={{ color: 'white', fontSize: HeightRatio(40), alignSelf: 'center', fontStyle: 'SofiaSansSemiCondensed-Regular'  }}
-                  allowFontScaling={false}
-                >2</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 0.10)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('3')}>
-                <Text
-                  style={{ color: 'white', fontSize: HeightRatio(40), alignSelf: 'center', fontStyle: 'SofiaSansSemiCondensed-Regular'  }}
-                  allowFontScaling={false}
-                >3</Text>
-              </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-              <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 0.10)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('4')}>
-                <Text
-                  style={{ color: 'white', fontSize: HeightRatio(40), alignSelf: 'center', fontStyle: 'SofiaSansSemiCondensed-Regular'  }}
-                  allowFontScaling={false}
-                >4</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 0.10)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('5')}>
-                <Text
-                  style={{ color: 'white', fontSize: HeightRatio(40), alignSelf: 'center', fontStyle: 'SofiaSansSemiCondensed-Regular'  }}
-                  allowFontScaling={false}
-                >5</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 0.10)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('6')}>
-                <Text
-                  style={{ color: 'white', fontSize: HeightRatio(40), alignSelf: 'center', fontStyle: 'SofiaSansSemiCondensed-Regular'  }}
-                  allowFontScaling={false}
-                >6</Text>
-              </TouchableOpacity>
+
+            {warning &&
+              <Text style={{ color: 'red', fontSize: HeightRatio(20), alignSelf: 'center', marginTop: 20 }}>
+                Must be 4 #'s!
+              </Text>
+            }
+
+            <View style={{ marginTop: 10, marginBottom: 10 }}>
+              <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                <TouchableOpacity style={{ backgroundColor: '#f7ff6c', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('1')}>
+                  <Text
+                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center' }}
+                    allowFontScaling={false}
+                  >1</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ backgroundColor: '#f7ff6c', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('2')}>
+                  <Text
+                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                    allowFontScaling={false}
+                  >2</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ backgroundColor: '#f7ff6c', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('3')}>
+                  <Text
+                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                    allowFontScaling={false}
+                  >3</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                <TouchableOpacity style={{ backgroundColor: '#f7ff6c', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('4')}>
+                  <Text
+                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                    allowFontScaling={false}
+                  >4</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ backgroundColor: '#f7ff6c', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('5')}>
+                  <Text
+                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                    allowFontScaling={false}
+                  >5</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ backgroundColor: '#f7ff6c', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('6')}>
+                  <Text
+                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                    allowFontScaling={false}
+                  >6</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                <TouchableOpacity style={{ backgroundColor: '#f7ff6c', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('7')}>
+                  <Text
+                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                    allowFontScaling={false}
+                  >7</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ backgroundColor: '#f7ff6c', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('8')}>
+                  <Text
+                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                    allowFontScaling={false}
+                  >8</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ backgroundColor: '#f7ff6c', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('9')}>
+                  <Text
+                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                    allowFontScaling={false}
+                  >9</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                <TouchableOpacity
+                  style={{ backgroundColor: 'rgba(235, 35, 81, 1.00)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  onPress={() => clearKeyCode()}>
+                  <Text style={{ color: 'white', fontSize: HeightRatio(20), alignSelf: 'center', fontFamily: 'SofiaSansSemiCondensed-ExtraBold' }}
+                    allowFontScaling={false}
+                  >Clear</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ backgroundColor: '#f7ff6c', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('0')}>
+                  <Text
+                    style={{ color: 'black', fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
+                    allowFontScaling={false}
+                  >0</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ backgroundColor: 'rgba(30, 228, 168, 0.5)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  onPress={() => setKeyCode()}>
+                  <Text style={{ color: 'white', fontSize: HeightRatio(20), alignSelf: 'center', fontFamily: 'SofiaSansSemiCondensed-ExtraBold' }}
+                    allowFontScaling={false}
+                  >Save</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-              <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 0.10)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('7')}>
-                <Text
-                  style={{ color: 'white', fontSize: HeightRatio(40), alignSelf: 'center', fontStyle: 'SofiaSansSemiCondensed-Regular'  }}
-                  allowFontScaling={false}
-                >7</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 0.10)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('8')}>
-                <Text
-                  style={{ color: 'white', fontSize: HeightRatio(40), alignSelf: 'center', fontStyle: 'SofiaSansSemiCondensed-Regular'  }}
-                  allowFontScaling={false}
-                >8</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 0.10)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('9')}>
-                <Text
-                  style={{ color: 'white', fontSize: HeightRatio(40), alignSelf: 'center', fontStyle: 'SofiaSansSemiCondensed-Regular'  }}
-                  allowFontScaling={false}
-                >9</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-              <TouchableOpacity
-                style={{ backgroundColor: 'red', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                onPress={() => clearKeyCode()}>
-                <Text style={{ color: 'white', fontSize: HeightRatio(20), alignSelf: 'center', fontStyle: 'SofiaSansSemiCondensed-Regular'  }}
-                  allowFontScaling={false}
-                >Clear</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ backgroundColor: 'rgba(30, 228, 168, 0.10)', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('0')}>
-                <Text
-                  style={{ color: 'white', fontSize: HeightRatio(40), alignSelf: 'center', fontStyle: 'SofiaSansSemiCondensed-Regular'  }}
-                  allowFontScaling={false}
-                >0</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ backgroundColor: 'green', height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                onPress={() => setKeyCode()}>
-                <Text style={{ color: 'white', fontSize: HeightRatio(20), alignSelf: 'center', fontStyle: 'SofiaSansSemiCondensed-Regular'  }}
-                  allowFontScaling={false}
-                >Save</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </>
-      </View>
-      :
-      <View style={{alignSelf: 'center'}}>
-        <Text style={{
-          color: 'white',
-          fontSize: HeightRatio(100), 
-          fontFamily: 'GochiHand_400Regular',
+          </>
+        </View>
+        :
+        <View style={{ alignSelf: 'center' }}>
+          <Text style={{
+            color: 'white',
+            fontSize: HeightRatio(100),
+            fontFamily: 'GochiHand_400Regular',
           }}>
-        &nbsp; Saved &nbsp;
-        </Text>
-      </View>
+            &nbsp; Saved &nbsp;
+          </Text>
+        </View>
       }
     </>
 

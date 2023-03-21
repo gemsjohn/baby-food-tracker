@@ -12,8 +12,8 @@ import { Auth } from './pages/auth/auth';
 import * as SecureStore from 'expo-secure-store';
 
 export const MainStateContext = createContext();
-// export const GLOBAL_GRAPHQL_API_URL = "https://baby-food-tracker.herokuapp.com";
-export const GLOBAL_GRAPHQL_API_URL = "http://192.168.1.198:3001";
+export const GLOBAL_GRAPHQL_API_URL = "https://baby-food-tracker.herokuapp.com";
+// export const GLOBAL_GRAPHQL_API_URL = "http://192.168.1.198:3001";
 
 
 const Stack = createNativeStackNavigator();
@@ -24,22 +24,6 @@ export default function App() {
     mainStateRef.current = { ...mainStateRef.current, ...newState };
   };
 
-  const [initRoute, setInitRoute] = useState("Key");
-
-  async function getValueFor(key) {
-    let result = await SecureStore.getItemAsync(key);
-    if (result) {
-      setInitRoute("Key")
-
-    } else {
-      setInitRoute("Home")
-    }
-  }
-
-  useEffect(() => {
-    getValueFor('cosmicKey')
-  }, [])
-
   const GRAPHQL_API_URL = `${GLOBAL_GRAPHQL_API_URL}/graphql`
   const asyncAuthLink = setContext(async () => {
     return {
@@ -48,8 +32,6 @@ export default function App() {
       },
     };
   });
-
-  
 
   const httpLink = new HttpLink({
     uri: GRAPHQL_API_URL,
@@ -79,8 +61,7 @@ export default function App() {
             // onStateChange={(state) => { console.log('New state is', state.routes); }}
           >
             <Stack.Navigator
-              initialRouteName={initRoute}
-              // initialRouteName={"Key"}
+              initialRouteName={"Key"}
               screenOptions={{
                 headerShown: false,
                 
@@ -112,15 +93,6 @@ export default function App() {
                   
                 }}
               />
-              {/* <Stack.Screen
-                name="Chat"
-                component={ChatScreen}
-                options={{
-                  headerShown: false,
-                  orientation: 'portrait_up',
-                  
-                }}
-              /> */}
               <Stack.Screen
                 name="Profile"
                 component={ProfileScreen}

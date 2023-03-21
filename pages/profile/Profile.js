@@ -139,11 +139,12 @@ export const ProfileScreen = ({ navigation }) => {
 
     return (
         <>
+        {!loading ?
             <View
                 style={{ ...Styling.container, backgroundColor: '#1f1f27' }}
                 onLayout={onLayoutRootView}
             >
-                {!loading ?
+                
                     <SafeAreaView style={{  }}>
                         <ScrollView
                             style={{ backgroundColor: '#1f1f27' }}
@@ -363,26 +364,27 @@ export const ProfileScreen = ({ navigation }) => {
                             </View >
                         </ScrollView>
                     </SafeAreaView>
-                    :
-                    <View
-                        style={{
-                            flex: 1,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: HeightRatio(505),
-                            backgroundColor: 'rgba(71, 66, 106, 1.00)'
-                        }}
-                    >
-                        {/* <ActivityIndicator size="large" color="#1ee4a8" /> */}
-                        <Loading />
-                    </View>
-                }
-                {/* </ImageBackground> */}
-                {displayNavbar && !displayTokens &&
-                    <Navbar nav={navigation} auth={mainState.current.authState} position={'absolute'} from={'profile'} />
-                }
+                    
+                
 
             </View>
+            :
+            <View
+                style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: HeightRatio(505),
+                    backgroundColor: 'rgba(71, 66, 106, 1.00)'
+                }}
+            >
+                <Loading />
+            </View>
+        }
+
+            {displayNavbar && !displayTokens &&
+                    <Navbar nav={navigation} auth={mainState.current.authState} position={'absolute'} from={'profile'} />
+                }
             {displayTokens &&
                 <View style={{ position: 'absolute', zIndex: 20, width: windowWidth, height: windowHeight }}>
                     {/* <PurchaseFilter nav={navigation} from={'profile'} /> */}
@@ -421,7 +423,7 @@ export const ProfileScreen = ({ navigation }) => {
                     setDisplaySetUpCosmicKeyModal(!displaySetUpCosmicKeyModal);
                 }}
             >
-                <View style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(71, 66, 106, 1.00)' }}>
+                <View style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#1f1f27' }}>
                     <View style={{ padding: HeightRatio(20) }}>
                         <View style={{ flexDirection: 'column' }}>
 
@@ -429,21 +431,20 @@ export const ProfileScreen = ({ navigation }) => {
 
                             <TouchableOpacity
                                 onPress={() => setDisplaySetUpCosmicKeyModal(!displaySetUpCosmicKeyModal)}
-                                style={{ marginTop: HeightRatio(20) }}>
+                                style={Styling.modalWordButton}>
                                 <View style={{
-                                    backgroundColor: 'rgba(255, 0, 118, 0.50)',
+                                    backgroundColor: '#f7ff6c',
                                     display: 'flex',
                                     justifyContent: 'flex-start',
                                     padding: HeightRatio(20),
                                     borderRadius: HeightRatio(10),
                                     alignSelf: 'center',
-                                    width: windowWidth - WidthRatio(50)
+                                    width: windowWidth - WidthRatio(150)
                                 }}>
                                     <Text
                                         style={{
-                                            color: 'white',
+                                            color: 'black',
                                             fontSize: HeightRatio(30),
-                                            // fontWeight: 'bold',
                                             alignSelf: 'center',
                                             fontFamily: 'SofiaSansSemiCondensed-Regular'
                                         }}

@@ -49,50 +49,52 @@ export const SelectedFoodDetails = (props) => {
         "Dinner",
         "Before Bed"
     ]
-    const [textInputValue, setTextInputValue] = useState(props.textInputValue || '');
+    const [textInputValue, setTextInputValue] = useState(props.textInputValue || null);
     const [selectedItem, setSelectedItem] = useState(props.selectedItem || null);
     const [selectedTime, setSelectedTime] = useState(null);
 
 
     useEffect(() => {
+        console.log("# - USE EFFECT")
         setMainState({
             selectedFood_Quantity: props.textInputValue || null,
-            selectedFood_Measurement: props.selectedItem || null
-          })
+            selectedFood_Measurement: props.selectedItem || null,
+            selectedFood_Schedule: null
+        })
     }, [])
 
     const handleTextChange = (text) => {
         // Only allow numbers, decimals, and fractions in the TextInput
         const numericValue = text.replace(/[^0-9./]/g, '');
         setTextInputValue(numericValue);
-        
+
         // Check if the numericValue is a valid fraction
         const isFraction = numericValue.includes('/');
         let selectedFood_Quantity;
-        
+
         if (isFraction) {
-          const fractionValues = numericValue.split('/');
-          
-          if (fractionValues.length === 2 && !isNaN(fractionValues[0]) && !isNaN(fractionValues[1])) {
-            // Convert the fraction to a decimal value
-            const decimalValue = parseFloat(fractionValues[0]) / parseFloat(fractionValues[1]);
-            selectedFood_Quantity = decimalValue.toFixed(2);
-          } else {
-            selectedFood_Quantity = '';
-          }
+            const fractionValues = numericValue.split('/');
+
+            if (fractionValues.length === 2 && !isNaN(fractionValues[0]) && !isNaN(fractionValues[1])) {
+                // Convert the fraction to a decimal value
+                const decimalValue = parseFloat(fractionValues[0]) / parseFloat(fractionValues[1]);
+                selectedFood_Quantity = decimalValue.toFixed(2);
+            } else {
+                selectedFood_Quantity = '';
+            }
         } else {
-          selectedFood_Quantity = parseFloat(numericValue).toFixed(2);
+            selectedFood_Quantity = parseFloat(numericValue).toFixed(2);
         }
-        
+
         setMainState({
-          selectedFood_Quantity: selectedFood_Quantity
+            selectedFood_Quantity: selectedFood_Quantity
         })
     };
-      
+
     return (
         <View style={styles.container}>
-            <View 
-                style={{ 
+            <View
+                style={{
                     flexDirection: 'row',
                     // display: 'flex',
                     // alignItems: 'center',
@@ -136,7 +138,7 @@ export const SelectedFoodDetails = (props) => {
                 </Text>
                 <View style={{ marginTop: HeightRatio(10) }}>
                     {selectedItem != null ?
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{ flexDirection: 'row' }}>
                             <View
                                 style={{
                                     backgroundColor: 'rgba(30, 228, 168, 1.0)',
@@ -163,7 +165,12 @@ export const SelectedFoodDetails = (props) => {
                                 </Text>
                             </View>
                             <TouchableOpacity
-                                onPress={() => { setSelectedItem(null); }}
+                                onPress={() => { 
+                                    setSelectedItem(null); 
+                                    setMainState({
+                                        selectedFood_Measurement: null
+                                    })
+                                }}
                                 style={{
                                     height: HeightRatio(46),
                                     width: HeightRatio(40),
@@ -185,13 +192,14 @@ export const SelectedFoodDetails = (props) => {
                                     size={20}
                                 />
                             </TouchableOpacity>
+
                         </View>
                         :
                         <>
                             {options.map((option) => (
                                 <TouchableOpacity
-                                    onPress={() => { 
-                                        setSelectedItem(option); 
+                                    onPress={() => {
+                                        setSelectedItem(option);
                                         setMainState({
                                             selectedFood_Measurement: option
                                         })
@@ -241,7 +249,7 @@ export const SelectedFoodDetails = (props) => {
                 </Text>
                 <View style={{ marginTop: HeightRatio(10) }}>
                     {selectedTime != null ?
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{ flexDirection: 'row' }}>
                             <View
                                 style={{
                                     backgroundColor: 'rgba(30, 228, 168, 1.0)',
@@ -268,7 +276,12 @@ export const SelectedFoodDetails = (props) => {
                                 </Text>
                             </View>
                             <TouchableOpacity
-                                onPress={() => { setSelectedTime(null); }}
+                                onPress={() => { 
+                                    setSelectedTime(null); 
+                                    setMainState({
+                                        selectedFood_Schedule: null
+                                    })
+                                }}
                                 style={{
                                     height: HeightRatio(46),
                                     width: HeightRatio(40),
@@ -295,8 +308,8 @@ export const SelectedFoodDetails = (props) => {
                         <>
                             {options_time.map((option) => (
                                 <TouchableOpacity
-                                    onPress={() => { 
-                                        setSelectedTime(option); 
+                                    onPress={() => {
+                                        setSelectedTime(option);
                                         setMainState({
                                             selectedFood_Schedule: option
                                         })
