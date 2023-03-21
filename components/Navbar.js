@@ -145,20 +145,23 @@ export const Navbar = (props) => {
                     {!networkConnected ?
                         <View style={{
                             position: 'absolute',
-                            top: HeightRatio(-30),
+                            top: HeightRatio(-40),
                             display: 'flex',
                             flexDirection: 'row',
                             justifyContent: 'center',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            backgroundColor: 'rgba(235, 35, 81, 1.00)',
+                            padding: HeightRatio(10),
+                            borderRadius: HeightRatio(10)
 
                         }}>
                             <Text style={{
                                 fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                color: 'rgba(255, 0, 118, 1.00)',
+                                color: 'white',
                                 fontSize: HeightRatio(20),
                                 alignSelf: 'center',
-                                borderBottomWidth: 2,
-                                borderColor: 'white'
+                                // borderBottomWidth: 2,
+                                // borderColor: 'red'
                             }}
                                 allowFontScaling={false}
                                 ellipsizeMode='tail'

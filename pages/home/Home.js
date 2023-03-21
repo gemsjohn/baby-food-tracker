@@ -831,6 +831,7 @@ export const HomeScreen = ({ navigation }) => {
                             width: windowWidth,
                         }}
                     >
+
                         <View
                             style={{
                                 // flex: 1,
@@ -847,6 +848,18 @@ export const HomeScreen = ({ navigation }) => {
                                 margin: HeightRatio(10)
                             }}
                         >
+                            <Image
+                                source={require('../../assets/pattern_1.png')}
+                                style={{
+                                    height: '100%',
+                                    width: '100%',
+                                    opacity: 0.02,
+                                    position: 'absolute',
+                                    zIndex: -10,
+                                    margin: HeightRatio(20),
+                                    borderRadius: HeightRatio(10)
+                                }}
+                            />
                             <TextInput
                                 type="text"
                                 name="search"
@@ -911,6 +924,19 @@ export const HomeScreen = ({ navigation }) => {
                                 // margin: HeightRatio(10)
                             }}
                         >
+                            <Image
+                                source={require('../../assets/pattern_1.png')}
+                                style={{
+                                    height: '100%',
+                                    width: '100%',
+                                    opacity: 0.02,
+                                    position: 'absolute',
+                                    zIndex: -10,
+                                    margin: HeightRatio(20),
+                                    alignSelf: 'center'
+                                }}
+                            />
+
                             {!clearSuggestions && !searchQuery &&
                                 <>
                                     {/* <RecentFood /> */}
@@ -1037,35 +1063,63 @@ export const HomeScreen = ({ navigation }) => {
                                                             :
                                                             <>
                                                                 {selectRecentlyUsed == index &&
-                                                                    <View
-                                                                        style={{
-                                                                            backgroundColor: "rgba(255, 255, 255, 0.5)",
-                                                                            width: '90%',
-                                                                            padding: HeightRatio(15),
-                                                                            margin: HeightRatio(4),
-                                                                            borderRadius: HeightRatio(10),
-                                                                            display: "flex",
-                                                                            alignItems: "center",
-                                                                            justifyContent: "center",
-                                                                            alignSelf: 'center',
-                                                                        }}
-                                                                    >
-                                                                        <Text
+                                                                    <>
+                                                                        <View
                                                                             style={{
-                                                                                color: "black",
-                                                                                fontSize: HeightRatio(25),
-                                                                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                                                textAlign: 'center',
-                                                                                width: '80%',
+                                                                                backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                                                                                borderRadius: HeightRatio(10),
+                                                                                margin: HeightRatio(4),
+                                                                                width: windowWidth - HeightRatio(80),
+                                                                                alignSelf: 'center',
                                                                                 display: 'flex',
-                                                                                flexWrap: 'wrap',
+                                                                                alignItems: "center",
+                                                                                justifyContent: "center",
                                                                             }}
-                                                                            allowFontScaling={false}
                                                                         >
-                                                                            {data.item}
-                                                                        </Text>
-                                                                        <SelectedFoodDetails textInputValue={`${data.number}`} selectedItem={`${data.measurement}`} />
-                                                                    </View>
+                                                                            <Text
+                                                                                style={{
+                                                                                    color: "white",
+                                                                                    fontSize: HeightRatio(25),
+                                                                                    fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                                                    textAlign: 'center',
+                                                                                    width: '80%',
+                                                                                    display: 'flex',
+                                                                                    flexWrap: 'wrap',
+                                                                                    margin: HeightRatio(5)
+                                                                                }}
+                                                                                allowFontScaling={false}
+                                                                            >
+                                                                                {data.item}
+                                                                            </Text>
+                                                                            <SelectedFoodDetails textInputValue={`${data.number}`} selectedItem={`${data.measurement}`} />
+                                                                        </View>
+                                                                        <TouchableOpacity
+                                                                            onPress={() => {
+                                                                                setSelectRecentlyUsed(null)
+                                                                            }}
+                                                                            style={{
+                                                                                height: HeightRatio(30),
+                                                                                width: HeightRatio(30),
+                                                                                alignItems: 'center',
+                                                                                justifyContent: 'center',
+                                                                                position: 'absolute',
+                                                                                zIndex: 1000,
+                                                                                top: HeightRatio(5),
+                                                                                right: HeightRatio(5),
+                                                                                borderRadius: HeightRatio(10),
+                                                                                backgroundColor: 'red'
+
+                                                                            }}
+                                                                        >
+                                                                            <FontAwesomeIcon
+                                                                                icon={faSolid, faX}
+                                                                                style={{
+                                                                                    color: 'white',
+                                                                                }}
+                                                                                size={20}
+                                                                            />
+                                                                        </TouchableOpacity>
+                                                                    </>
                                                                 }
                                                             </>
                                                         }
@@ -1094,8 +1148,8 @@ export const HomeScreen = ({ navigation }) => {
                                                             setDisplayDetails(false)
                                                         }}
                                                         style={{
-                                                            height: HeightRatio(40),
-                                                            width: HeightRatio(40),
+                                                            height: HeightRatio(30),
+                                                            width: HeightRatio(30),
                                                             alignItems: 'center',
                                                             justifyContent: 'center',
                                                             position: 'absolute',
@@ -1117,6 +1171,7 @@ export const HomeScreen = ({ navigation }) => {
                                                     </TouchableOpacity>
                                                 </>
                                             }
+
                                             <FlatList
                                                 data={selectedItem ? [selectedItem] : foodData}
                                                 renderItem={renderItem}
