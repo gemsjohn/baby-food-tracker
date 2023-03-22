@@ -3,28 +3,12 @@ import {
     Text,
     TouchableOpacity,
     View,
-    Dimensions,
-    Modal,
-    SafeAreaView,
-    ScrollView,
-    ImageBackground,
-    Image,
-    RefreshControl,
-    Animated,
-    Button,
     StyleSheet,
     TextInput,
-    FlatList,
-    ActivityIndicator,
 } from 'react-native';
 import {
     faSolid,
-    faFlagCheckered,
-    faSliders,
     faX,
-    faArrowRight,
-    faArrowLeft,
-    faPlus
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { Styling, windowWidth, windowHeight, HeightRatio, WidthRatio } from '../../../Styling';
@@ -38,14 +22,15 @@ export const SelectedFoodDetails = (props) => {
         "Milligrams",
         "Millileters",
         "Servings",
-        "Tablespoons"
+        "Tablespoons",
+        "Teaspoons"
     ]
     const options_time = [
         "First Thing",
         "Breakfast",
         "Midmorning",
         "Lunch",
-        "Midafter-noon",
+        "Afternoon",
         "Dinner",
         "Before Bed"
     ]
@@ -55,7 +40,7 @@ export const SelectedFoodDetails = (props) => {
 
 
     useEffect(() => {
-        console.log("# - USE EFFECT")
+        console.log("# - home/auxilliary/SelectedFoodDetails - Primary useEffect")
         setMainState({
             selectedFood_Quantity: props.textInputValue || null,
             selectedFood_Measurement: props.selectedItem || null,
@@ -64,6 +49,7 @@ export const SelectedFoodDetails = (props) => {
     }, [])
 
     const handleTextChange = (text) => {
+        console.log("# - home/auxilliary/SelectedFoodDetails - handleTextChange")
         // Only allow numbers, decimals, and fractions in the TextInput
         const numericValue = text.replace(/[^0-9./]/g, '');
         setTextInputValue(numericValue);
@@ -93,16 +79,7 @@ export const SelectedFoodDetails = (props) => {
 
     return (
         <View style={styles.container}>
-            <View
-                style={{
-                    flexDirection: 'row',
-                    // display: 'flex',
-                    // alignItems: 'center',
-                    // justifyContent: 'center',
-                    // alignSelf: 'flex-start',
-                    // backgroundColor: 'red' 
-                }}
-            >
+            <View style={{ flexDirection: 'row' }}>
                 <Text
                     style={styles.header}
                     allowFontScaling={false}
@@ -114,18 +91,7 @@ export const SelectedFoodDetails = (props) => {
                     keyboardType="numeric"
                     value={textInputValue}
                     onChangeText={handleTextChange}
-                    style={{
-                        ...Styling.textInputStyle,
-                        color: 'white',
-                        height: HeightRatio(50),
-                        fontSize: HeightRatio(20),
-                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-                        borderRadius: HeightRatio(10),
-                        width: WidthRatio(140),
-                        margin: 0,
-                        marginTop: HeightRatio(10)
-
-                    }}
+                    style={styles.textInput_Quantity}
                 />
             </View>
 
@@ -139,56 +105,26 @@ export const SelectedFoodDetails = (props) => {
                 <View style={{ marginTop: HeightRatio(10) }}>
                     {selectedItem != null ?
                         <View style={{ flexDirection: 'row' }}>
-                            <View
-                                style={{
-                                    backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    padding: HeightRatio(10),
-                                    borderRadius: HeightRatio(10),
-                                    alignSelf: 'center',
-                                    width: WidthRatio(140),
-                                    margin: HeightRatio(4)
-                                }}
-                            >
+                            <View style={styles.itemButton}>
                                 <Text
-                                    style={{
-                                        color: 'black',
-                                        fontSize: HeightRatio(20),
-                                        alignSelf: 'center',
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                    }}
+                                    style={styles.itemButton_Text}
                                     allowFontScaling={false}
                                 >
                                     {selectedItem}
                                 </Text>
                             </View>
                             <TouchableOpacity
-                                onPress={() => { 
-                                    setSelectedItem(null); 
+                                onPress={() => {
+                                    setSelectedItem(null);
                                     setMainState({
                                         selectedFood_Measurement: null
                                     })
                                 }}
-                                style={{
-                                    height: HeightRatio(46),
-                                    width: HeightRatio(40),
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    position: 'absolute',
-                                    top: 0,
-                                    right: HeightRatio(0),
-                                    borderTopRightRadius: HeightRatio(10),
-                                    borderBottomRightRadius: HeightRatio(10)
-
-                                }}
+                                style={styles.itemButton_faX}
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faX}
-                                    style={{
-                                        color: 'red',
-                                    }}
+                                    style={{ color: 'red' }}
                                     size={20}
                                 />
                             </TouchableOpacity>
@@ -204,26 +140,11 @@ export const SelectedFoodDetails = (props) => {
                                             selectedFood_Measurement: option
                                         })
                                     }}
-                                    style={{
-                                        backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        padding: HeightRatio(10),
-                                        borderRadius: HeightRatio(10),
-                                        alignSelf: 'center',
-                                        width: WidthRatio(140),
-                                        margin: HeightRatio(4)
-                                    }}
+                                    style={styles.itemButton}
                                     key={option}
                                 >
                                     <Text
-                                        style={{
-                                            color: 'black',
-                                            fontSize: HeightRatio(20),
-                                            alignSelf: 'center',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                        }}
+                                        style={styles.itemButton_Text}
                                         allowFontScaling={false}
                                     >
                                         {option}
@@ -231,14 +152,9 @@ export const SelectedFoodDetails = (props) => {
                                 </TouchableOpacity>
                             ))}
                         </>
-
                     }
-
                 </View>
             </View>
-
-
-
 
             <View style={{ flexDirection: 'row' }}>
                 <Text
@@ -250,56 +166,26 @@ export const SelectedFoodDetails = (props) => {
                 <View style={{ marginTop: HeightRatio(10) }}>
                     {selectedTime != null ?
                         <View style={{ flexDirection: 'row' }}>
-                            <View
-                                style={{
-                                    backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    padding: HeightRatio(10),
-                                    borderRadius: HeightRatio(10),
-                                    alignSelf: 'center',
-                                    width: WidthRatio(140),
-                                    margin: HeightRatio(4)
-                                }}
-                            >
+                            <View style={styles.itemButton}>
                                 <Text
-                                    style={{
-                                        color: 'black',
-                                        fontSize: HeightRatio(20),
-                                        alignSelf: 'center',
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                    }}
+                                    style={styles.itemButton_Text}
                                     allowFontScaling={false}
                                 >
                                     {selectedTime}
                                 </Text>
                             </View>
                             <TouchableOpacity
-                                onPress={() => { 
-                                    setSelectedTime(null); 
+                                onPress={() => {
+                                    setSelectedTime(null);
                                     setMainState({
                                         selectedFood_Schedule: null
                                     })
                                 }}
-                                style={{
-                                    height: HeightRatio(46),
-                                    width: HeightRatio(40),
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    position: 'absolute',
-                                    top: 0,
-                                    right: HeightRatio(0),
-                                    borderTopRightRadius: HeightRatio(10),
-                                    borderBottomRightRadius: HeightRatio(10)
-
-                                }}
+                                style={styles.itemButton_faX}
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faX}
-                                    style={{
-                                        color: 'red',
-                                    }}
+                                    style={{color: 'red'}}
                                     size={20}
                                 />
                             </TouchableOpacity>
@@ -314,26 +200,11 @@ export const SelectedFoodDetails = (props) => {
                                             selectedFood_Schedule: option
                                         })
                                     }}
-                                    style={{
-                                        backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        padding: HeightRatio(10),
-                                        borderRadius: HeightRatio(10),
-                                        alignSelf: 'center',
-                                        width: WidthRatio(140),
-                                        margin: HeightRatio(4)
-                                    }}
+                                    style={styles.itemButton}
                                     key={option}
                                 >
                                     <Text
-                                        style={{
-                                            color: 'black',
-                                            fontSize: HeightRatio(20),
-                                            alignSelf: 'center',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                        }}
+                                        style={styles.itemButton_Text}
                                         allowFontScaling={false}
                                     >
                                         {option}
@@ -341,9 +212,7 @@ export const SelectedFoodDetails = (props) => {
                                 </TouchableOpacity>
                             ))}
                         </>
-
                     }
-
                 </View>
             </View>
         </View>
@@ -352,14 +221,8 @@ export const SelectedFoodDetails = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        // alignItems: 'flex-start',
-        // alignSelf: 'center',
         flexDirection: 'column',
         width: windowWidth - HeightRatio(100),
-        // backgroundColor: 'red',
-        // display: 'flex',
-        // alignItems: 'center',
-        // justifyContent: 'center'
     },
     header: {
         color: 'white',
@@ -369,13 +232,44 @@ const styles = StyleSheet.create({
         marginTop: HeightRatio(10),
         marginRight: HeightRatio(10)
     },
-    textInput: {
-        borderWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 5,
-        padding: 10,
-        marginTop: 20,
-        width: '80%',
-        textAlign: 'center',
+    textInput_Quantity: {
+        ...Styling.textInputStyle,
+        color: 'white',
+        fontSize: HeightRatio(20),
+        fontFamily: 'SofiaSansSemiCondensed-Regular',
+        height: HeightRatio(50),
+        width: WidthRatio(140),
+        margin: 0,
+        marginTop: HeightRatio(10),
+        borderRadius: HeightRatio(10),
     },
+    itemButton: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        padding: HeightRatio(10),
+        margin: HeightRatio(4),
+        width: WidthRatio(140),
+        borderRadius: HeightRatio(10),
+        backgroundColor: 'rgba(30, 228, 168, 1.0)',
+    },
+    itemButton_Text: {
+        color: 'black',
+        fontSize: HeightRatio(20),
+        alignSelf: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
+    },
+    itemButton_faX: {
+        height: HeightRatio(40),
+        width: HeightRatio(40),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        top: HeightRatio(0),
+        right: HeightRatio(0),
+        borderTopRightRadius: HeightRatio(10),
+        borderBottomRightRadius: HeightRatio(10)
+    }
 });

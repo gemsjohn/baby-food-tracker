@@ -47,6 +47,7 @@ import { ADD_ENTRY } from '../../utils/mutations';
 import { GET_USER_BY_ID } from '../../utils/queries';
 import { DailySchedule } from './auxilliary/DailySchedule';
 import { Loading } from '../../components/Loading';
+import { Calendar } from 'react-native-calendars';
 
 
 
@@ -87,6 +88,15 @@ export const HomeScreen = ({ navigation }) => {
     const formatString = 'DD/MM/YYYY';
     const [currentDate, setCurrentDate] = useState(moment().format(formatString));
     const [currentDateReadable, setCurrentDateReadable] = useState('')
+
+    //  # - Calendar
+    const [calendarModalVisible, setCalendarModalVisible] = useState(false);
+    const [selectedCalendarModalDate, setSelectedCalendarModalDate] = useState('');
+
+    const onDateSelect = (day) => {
+        setSelectedCalendarModalDate(day.dateString);
+        console.log(day.dateString);
+    };
 
 
     // # - ADD FOOD
@@ -276,7 +286,7 @@ export const HomeScreen = ({ navigation }) => {
 
                             if (input.description == undefined && recentFoodData[selectRecentlyUsed].item != '') {
                                 itemData = recentFoodData[selectRecentlyUsed].item;
-                            }   
+                            }
 
                             await addEntry({
                                 variables: {
@@ -639,19 +649,23 @@ export const HomeScreen = ({ navigation }) => {
                                     // borderRadius: HeightRatio(10)
                                 }}
                             >
-                                <Text
-                                    style={{
-                                        color: 'white',
-                                        fontSize: HeightRatio(30),
-                                        fontFamily: 'GochiHand_400Regular',
-                                        marginLeft: HeightRatio(10),
-                                        marginRight: HeightRatio(10)
-
-                                    }}
-                                    allowFontScaling={false}
+                                <TouchableOpacity
+                                    onPress={() => setCalendarModalVisible(true)}
                                 >
-                                    {currentDateReadable}
-                                </Text>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: HeightRatio(30),
+                                            fontFamily: 'GochiHand_400Regular',
+                                            marginLeft: HeightRatio(10),
+                                            marginRight: HeightRatio(10)
+
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        {currentDateReadable}
+                                    </Text>
+                                </TouchableOpacity>
                                 {currentDate != moment().format(formatString) &&
                                     <TouchableOpacity
                                         onPress={() => {
@@ -1305,7 +1319,25 @@ export const HomeScreen = ({ navigation }) => {
 
                     </Modal>
 
-                    
+                    <Modal visible={calendarModalVisible}>
+                        <View>
+                        <Calendar
+                            onDayPress={(day) => onDateSelect(day)}
+                            markedDates={{ [selectedCalendarModalDate]: { selected: true } }}
+                            theme={{
+                            textMonthFontSize: 20,
+                            monthTextColor: 'black',
+                            arrowColor: 'black',
+                            }}
+                            style={{ height: 350 }}
+                        />
+                        <TouchableOpacity onPress={() => setCalendarModalVisible(false)}>
+                            <Text>Close</Text>
+                        </TouchableOpacity>
+                        </View>
+                    </Modal>
+
+
 
 
                 </>

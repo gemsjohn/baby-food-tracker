@@ -73,12 +73,12 @@ export const DailySchedule = (props) => {
     const [displaBool_Lunch, setDisplaBool_Lunch] = useState(false);
 
 
-    const [midafternoon, setMidafternoon] = useState([]);
-    const [midafternoonCalTotal, setMidafternoonCalTotal] = useState(null)
-    const [midafternoonData, setMidafternoonData] = useState([]);
-    const [displayMidafternoonNutrients, setDisplayMidafternoonNutrients] = useState(false);
-    const [displayMidafternoonNutrientsForIndex, setDisplayMidafternoonNutrientsForIndex] = useState(null)
-    const [displaBool_Midafternoon, setDisplaBool_Midafternoon] = useState(false);
+    const [afternoon, setAfternoon] = useState([]);
+    const [afternoonCalTotal, setAfternoonCalTotal] = useState(null)
+    const [afternoonData, setAfternoonData] = useState([]);
+    const [displayAfternoonNutrients, setDisplayAfternoonNutrients] = useState(false);
+    const [displayAfternoonNutrientsForIndex, setDisplayAfternoonNutrientsForIndex] = useState(null)
+    const [displaBool_Afternoon, setDisplaBool_Afternoon] = useState(false);
 
 
     const [dinner, setDinner] = useState([]);
@@ -134,14 +134,14 @@ export const DailySchedule = (props) => {
         setBreakfast([])
         setMidmorning([])
         setLunch([])
-        setMidafternoon([])
+        setAfternoon([])
         setDinner([])
         setBeforeBed([])
         setFirstThingData([])
         setBreakfastData([])
         setMidmorningData([])
         setLunchData([])
-        setMidafternoonData([])
+        setAfternoonData([])
         setDinnerData([])
         setBeforeBedData([])
         getTrackerEntryByDate(props.date)
@@ -159,7 +159,7 @@ export const DailySchedule = (props) => {
         setBreakfast([])
         setMidmorning([])
         setLunch([])
-        setMidafternoon([])
+        setAfternoon([])
         setDinner([])
         setBeforeBed([])
         for (let i = 0; i < input.length; i++) {
@@ -201,8 +201,8 @@ export const DailySchedule = (props) => {
             if (sampleSchedule_v2 == "Lunch") {
                 setLunch(prev => [...prev, sample_v2])
             }
-            if (sampleSchedule_v2 == "Midafter-noon") {
-                setMidafternoon(prev => [...prev, sample_v2])
+            if (sampleSchedule_v2 == "Afternoon") {
+                setAfternoon(prev => [...prev, sample_v2])
             }
             if (sampleSchedule_v2 == "Dinner") {
                 setDinner(prev => [...prev, sample_v2])
@@ -265,12 +265,12 @@ export const DailySchedule = (props) => {
     useEffect(() => {
         let sum = 0;
 
-        for (let i = 0; i < midafternoon.length; i++) {
-            sum += midafternoon[i];
+        for (let i = 0; i < afternoon.length; i++) {
+            sum += afternoon[i];
         }
 
-        setMidafternoonCalTotal(sum)
-    }, [midafternoon])
+        setAfternoonCalTotal(sum)
+    }, [afternoon])
 
     useEffect(() => {
         let sum = 0;
@@ -294,7 +294,7 @@ export const DailySchedule = (props) => {
 
     // TOTAL ALL SCHEDULE SECTIONS
     useEffect(() => {
-        let total = firstThingCalTotal + breakfastCalTotal + midmorningCalTotal + lunchCalTotal + midafternoonCalTotal + dinnerCalTotal + beforeBedCalTotal;
+        let total = firstThingCalTotal + breakfastCalTotal + midmorningCalTotal + lunchCalTotal + afternoonCalTotal + dinnerCalTotal + beforeBedCalTotal;
         setTotalCalorieCount(total)
         const storeTotalCalorieCount = async (value) => {
             try {
@@ -305,7 +305,7 @@ export const DailySchedule = (props) => {
             }
         }
         storeTotalCalorieCount(total)
-    }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, midafternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
+    }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, afternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
 
 
 
@@ -314,7 +314,7 @@ export const DailySchedule = (props) => {
         setBreakfastData([])
         setMidmorningData([])
         setLunchData([])
-        setMidafternoonData([])
+        setAfternoonData([])
         setDinnerData([])
         setBeforeBedData([])
 
@@ -376,8 +376,8 @@ export const DailySchedule = (props) => {
                     if (sample_v2 == "Lunch") {
                         setLunchData(prev => [...prev, item_amount])
                     }
-                    if (sample_v2 == "Midafter-noon") {
-                        setMidafternoonData(prev => [...prev, item_amount])
+                    if (sample_v2 == "Afternoon") {
+                        setAfternoonData(prev => [...prev, item_amount])
                     }
                     if (sample_v2 == "Dinner") {
                         setDinnerData(prev => [...prev, item_amount])
@@ -434,7 +434,7 @@ export const DailySchedule = (props) => {
                             setDisplaBool_Breakfast(false)
                             setDisplaBool_Midmorning(false)
                             setDisplaBool_Lunch(false)
-                            setDisplaBool_Midafternoon(false)
+                            setDisplaBool_Afternoon(false)
                             setDisplaBool_Dinner(false)
                             setDisplaBool_BeforeBed(false)
                         }}
@@ -717,7 +717,7 @@ export const DailySchedule = (props) => {
                             setDisplaBool_Breakfast(current => !current)
                             setDisplaBool_Midmorning(false)
                             setDisplaBool_Lunch(false)
-                            setDisplaBool_Midafternoon(false)
+                            setDisplaBool_Afternoon(false)
                             setDisplaBool_Dinner(false)
                             setDisplaBool_BeforeBed(false)
                         }}
@@ -1004,7 +1004,7 @@ export const DailySchedule = (props) => {
                             setDisplaBool_Breakfast(false)
                             setDisplaBool_Midmorning(current => !current)
                             setDisplaBool_Lunch(false)
-                            setDisplaBool_Midafternoon(false)
+                            setDisplaBool_Afternoon(false)
                             setDisplaBool_Dinner(false)
                             setDisplaBool_BeforeBed(false)
                         }}
@@ -1289,7 +1289,7 @@ export const DailySchedule = (props) => {
                             setDisplaBool_Breakfast(false)
                             setDisplaBool_Midmorning(false)
                             setDisplaBool_Lunch(current => !current)
-                            setDisplaBool_Midafternoon(false)
+                            setDisplaBool_Afternoon(false)
                             setDisplaBool_Dinner(false)
                             setDisplaBool_BeforeBed(false)
                         }}
@@ -1566,19 +1566,19 @@ export const DailySchedule = (props) => {
 
                     {/* MIDAFTER-NOON */}
                     <TouchableOpacity
-                        // onPress={() => displayScheduleData("Midafter-noon")}
+                        // onPress={() => displayScheduleData("Afternoon")}
                         onPress={() => {
-                            displayScheduleData(!displaBool_Midafternoon ? "Midafter-noon" : null); 
+                            displayScheduleData(!displaBool_Afternoon ? "Afternoon" : null); 
                             setDisplaBool_FirstThing(false)
                             setDisplaBool_Breakfast(false)
                             setDisplaBool_Midmorning(false)
                             setDisplaBool_Lunch(false)
-                            setDisplaBool_Midafternoon(current => !current)
+                            setDisplaBool_Afternoon(current => !current)
                             setDisplaBool_Dinner(false)
                             setDisplaBool_BeforeBed(false)
                         }}
                         style={{
-                            backgroundColor: displaBool_Midafternoon? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
+                            backgroundColor: displaBool_Afternoon? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
                             width: '90%',
                             // padding: HeightRatio(15),
                             margin: HeightRatio(4),
@@ -1602,7 +1602,7 @@ export const DailySchedule = (props) => {
                         />
                         <Text
                             style={{
-                                color: displaBool_Midafternoon? 'black' : 'white',
+                                color: displaBool_Afternoon? 'black' : 'white',
                                 fontSize: HeightRatio(30),
                                 fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
                                 marginRight: HeightRatio(10),
@@ -1625,12 +1625,12 @@ export const DailySchedule = (props) => {
                         >
                             <Text
                                 style={{
-                                    color: displaBool_Midafternoon? 'black' : 'white',
+                                    color: displaBool_Afternoon? 'black' : 'white',
                                     fontSize: HeightRatio(25),
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
                             >
-                                {midafternoonCalTotal} Cal
+                                {afternoonCalTotal} Cal
                             </Text>
                         </View>
                         <View
@@ -1653,7 +1653,7 @@ export const DailySchedule = (props) => {
                             />
                         </View>
                     </TouchableOpacity>
-                    {midafternoonData.map((data, index) => (
+                    {afternoonData.map((data, index) => (
                         <View
                             style={{
                                 // backgroundColor: '#a39bc9',
@@ -1674,8 +1674,8 @@ export const DailySchedule = (props) => {
                             >
                                 <TouchableOpacity
                                     onPress={() => {
-                                        setDisplayMidafternoonNutrients(current => displayMidafternoonNutrientsForIndex == index ? !current : true);
-                                        setDisplayMidafternoonNutrientsForIndex(index)
+                                        setDisplayAfternoonNutrients(current => displayAfternoonNutrientsForIndex == index ? !current : true);
+                                        setDisplayAfternoonNutrientsForIndex(index)
                                     }}
                                     style={{
                                         display: "flex",
@@ -1743,7 +1743,7 @@ export const DailySchedule = (props) => {
 
 
                             </View>
-                            {displayMidafternoonNutrients && displayMidafternoonNutrientsForIndex == index &&
+                            {displayAfternoonNutrients && displayAfternoonNutrientsForIndex == index &&
                                 <>
                                     <View
                                         style={{
@@ -1858,7 +1858,7 @@ export const DailySchedule = (props) => {
                             setDisplaBool_Breakfast(false)
                             setDisplaBool_Midmorning(false)
                             setDisplaBool_Lunch(false)
-                            setDisplaBool_Midafternoon(false)
+                            setDisplaBool_Afternoon(false)
                             setDisplaBool_Dinner(current => !current)
                             setDisplaBool_BeforeBed(false)
                         }}
@@ -2142,7 +2142,7 @@ export const DailySchedule = (props) => {
                             setDisplaBool_Breakfast(false)
                             setDisplaBool_Midmorning(false)
                             setDisplaBool_Lunch(false)
-                            setDisplaBool_Midafternoon(false)
+                            setDisplaBool_Afternoon(false)
                             setDisplaBool_Dinner(false)
                             setDisplaBool_BeforeBed(current => !current)
                         }}

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "baby",
-    "slug": "baby",
-    "version": "1.0.0",
+    "name": "Baby Food Tracker",
+    "slug": "babyFoodTracker",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/favicon.png",
     "userInterfaceStyle": "light",
@@ -18,8 +18,8 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.baby",
-      "versionCode": 1,
+      "package": "com.babyFoodTracker",
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/favicon.png",
         "backgroundColor": "#ffffff"
@@ -30,13 +30,18 @@
     },
     "plugins": [
       [
-      "expo-build-properties",
-      {
-        "android": {
-          "enableProguardInReleaseBuilds": true
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true
+          }
         }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b9cdea52-7519-4f2d-a5e8-ceb28b5fb3bc"
       }
-    ]
-    ]
+    }
   }
 }
