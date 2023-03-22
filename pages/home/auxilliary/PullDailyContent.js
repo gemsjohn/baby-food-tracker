@@ -40,6 +40,7 @@ export const usePullDailyContent = (input) => {
     const { mainState, setMainState } = useContext(MainStateContext);
     const [matchingDate, setMatchingDate] = useState([]);
     const [totalCalorieCount, setTotalCalorieCount] = useState(null);
+    const [uniqueItemsArray, setUniqueItemsArray] = useState(null)
 
     // Schedule Arrays
     const [firstThing, setFirstThing] = useState([]);
@@ -86,7 +87,6 @@ export const usePullDailyContent = (input) => {
 
     useEffect(() => {
         getTrackerEntryByDate(input)
-        console.log(input)
     }, [input])
 
     const breakDownMatchingDate = (input) => {
@@ -97,6 +97,9 @@ export const usePullDailyContent = (input) => {
         setAfternoon([])
         setDinner([])
         setBeforeBed([])
+
+        let itemsArray = []; // create an empty array to store food items
+
         for (let i = 0; i < input.length; i++) {
             const schedule = JSON.stringify(input[i].entry[0].schedule);
             const jsonString = JSON.stringify(input[i].entry[0].nutrients);
@@ -112,6 +115,11 @@ export const usePullDailyContent = (input) => {
             const removeQuotes = (str) => {
                 return str.replace(/^"(.*)"$/, '$1');
             }
+
+            let foodItem = JSON.stringify(input[i].entry[0].item);
+            foodItem  = removeQuotes(foodItem);
+            itemsArray.push(foodItem); // add foodItem to the itemsArray
+
 
             let sampleSchedule_v1 = removeBackslashes(`${schedule}`);
             let sampleSchedule_v2 = removeQuotes(sampleSchedule_v1)
@@ -147,6 +155,8 @@ export const usePullDailyContent = (input) => {
             }
         }
 
+        // remove duplicates from the itemsArray using the filter method
+        setUniqueItemsArray(itemsArray.filter((item, index) => itemsArray.indexOf(item) === index));
     }
 
     // UPDATE SCHEDULE SECTION TOTAL CAL's
@@ -225,12 +235,11 @@ export const usePullDailyContent = (input) => {
         let total = firstThingCalTotal + breakfastCalTotal + midmorningCalTotal + lunchCalTotal + afternoonCalTotal + dinnerCalTotal + beforeBedCalTotal;
         
         setTotalCalorieCount(total)
-        console.log("# - Pull Daily Content: " + total)
     }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, afternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
 
     useEffect(() => {
         breakDownMatchingDate(matchingDate)
     }, [matchingDate])
 
-    return { calendarModalCalorieTotal: totalCalorieCount, calendarModalDate: input }
+    return { calendarModalCalorieTotal: totalCalorieCount, calendarModalDate: input, calendarModalFoods: uniqueItemsArray }
 }

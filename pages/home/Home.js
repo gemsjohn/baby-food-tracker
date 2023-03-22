@@ -88,7 +88,7 @@ export const HomeScreen = ({ navigation }) => {
     //  # - Calendar
     const [calendarModalVisible, setCalendarModalVisible] = useState(false);
     const [selectedCalendarModalDate, setSelectedCalendarModalDate] = useState('');
-    const[selectedDateFromCalendar, setSelectedDateFromCalendar] = useState(null)
+    const [selectedDateFromCalendar, setSelectedDateFromCalendar] = useState(null)
 
     const onDateSelect = (day) => {
         const selectedDate = moment(day.dateString).format(formatString); // convert date to desired format
@@ -97,7 +97,7 @@ export const HomeScreen = ({ navigation }) => {
         // setCurrentDate(selectedDate); // update current date with formatted date
     };
 
-    const { calendarModalCalorieTotal, calendarModalDate } = usePullDailyContent(`${convertDateFormat(selectedDateFromCalendar)}`);
+    const { calendarModalCalorieTotal, calendarModalDate, calendarModalFoods } = usePullDailyContent(`${convertDateFormat(selectedDateFromCalendar)}`);
 
 
     // # - ADD FOOD
@@ -795,7 +795,7 @@ export const HomeScreen = ({ navigation }) => {
                                 }}
                             />
                             {!selectedCalendarModalDate &&
-                                <TouchableOpacity 
+                                <TouchableOpacity
                                     onPress={() => {
                                         setCalendarModalVisible(false);
                                         setSelectedCalendarModalDate('')
@@ -816,10 +816,10 @@ export const HomeScreen = ({ navigation }) => {
                             <View style={styles.modalVisible_Container}>
                                 <View
                                     style={{
-                                        height: HeightRatio(200)
+                                        height: HeightRatio(300)
                                     }}
                                 >
-                                    <View style={{flexDirection: 'row'}}>
+                                    <View style={{ flexDirection: 'row' }}>
                                         <View style={styles.homePrimary_TotalCalories}>
                                             <Text
                                                 style={{
@@ -831,26 +831,76 @@ export const HomeScreen = ({ navigation }) => {
                                                 {calendarModalDate}
                                             </Text>
                                         </View>
-                                        <View style={{...styles.homePrimary_TotalCalories, backgroundColor: 'transparent',}}>
-                                            <Text 
-                                                style={{...styles.homePrimary_TotalCalories_Text, fontSize: HeightRatio(20), color: 'white'}}
+                                        <View style={{ ...styles.homePrimary_TotalCalories, backgroundColor: 'transparent', }}>
+                                            <Text
+                                                style={{ ...styles.homePrimary_TotalCalories_Text, fontSize: HeightRatio(20), color: 'white' }}
                                                 allowFontScaling={false}
                                             >
                                                 {calendarModalCalorieTotal} CALORIES
                                             </Text>
                                         </View>
                                     </View>
+                                    {/* calendarModalFoods */}
+                                    <SafeAreaView 
+                                        style={{
+                                            alignSelf: 'center',
+                                            height: '80%',
+                                        }}
+                                    >
+                                        <ScrollView 
+                                            style={{
+                                                alignSelf: 'center',
+                                            }}
+                                        >
+                                            <View style={{}}>
+                                                {calendarModalFoods.map((data, index) => (
+                                                    <View
+                                                        style={{
+                                                            ...styles.renderItem_Search_Results,
+                                                            justifyContent: 'space-between',
+                                                        }}
+                                                        key={index}
+                                                    >
+                                                        <Text
+                                                            style={styles.renderItem_Search_Result_Container_Text}
+                                                        >
+                                                            {data}
+                                                        </Text>
+
+                                                        <View
+                                                            style={{
+                                                                backgroundColor: '#f99034',
+                                                                borderRadius: HeightRatio(5),
+                                                                padding: HeightRatio(4)
+                                                            }}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    ...styles.renderItem_Search_Result_Container_Text,
+                                                                    color: 'black',
+                                                                    fontSize: HeightRatio(18),
+                                                                }}
+                                                            >
+                                                                TOP 100
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                ))}
+                                            </View>
+                                        </ScrollView>
+                                    </SafeAreaView>
+
 
                                 </View>
-                                <View style={{flexDirection: 'row'}}>
-                                    <TouchableOpacity 
+                                <View style={{ flexDirection: 'row' }}>
+                                    <TouchableOpacity
                                         onPress={() => {
                                             setCalendarModalVisible(false);
                                             setSelectedCalendarModalDate('');
-                                            
+
                                         }}
                                     >
-                                        <View style={{...styles.modalVisible_HalfButton, backgroundColor: 'rgba(255, 0, 75, 0.50)'}}>
+                                        <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: 'rgba(255, 0, 75, 0.50)' }}>
                                             <Text
                                                 style={styles.modalVisible_Button_Text}
                                                 allowFontScaling={false}
@@ -859,15 +909,14 @@ export const HomeScreen = ({ navigation }) => {
                                             </Text>
                                         </View>
                                     </TouchableOpacity>
-                                    <TouchableOpacity 
+                                    <TouchableOpacity
                                         onPress={() => {
-                                            // setCurrentDate(selectedDateFromCalendar);
-                                            // setCalendarModalVisible(false);
-                                            // setSelectedCalendarModalDate('');
-                                            console.log("# - Home: " + calendarModalCalorieTotal)
+                                            setCurrentDate(selectedDateFromCalendar);
+                                            setCalendarModalVisible(false);
+                                            setSelectedCalendarModalDate('');
                                         }}
                                     >
-                                        <View style={{...styles.modalVisible_HalfButton, backgroundColor: 'rgba(30, 228, 168, 0.50)'}}>
+                                        <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: 'rgba(30, 228, 168, 0.50)' }}>
                                             <Text
                                                 style={styles.modalVisible_Button_Text}
                                                 allowFontScaling={false}
