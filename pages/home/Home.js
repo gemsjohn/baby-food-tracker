@@ -41,7 +41,6 @@ import { MainStateContext } from '../../App';
 import { GLOBAL_GRAPHQL_API_URL } from '../../App'
 import { convertDateFormat } from './auxilliary/ConvertDateFormat';
 import { SelectedFoodDetails } from './auxilliary/SelectedFoodDetails';
-import { DisplayDailyEntry } from './auxilliary/DisplayDailyEntry';
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_ENTRY } from '../../utils/mutations';
 import { GET_USER_BY_ID } from '../../utils/queries';
@@ -53,7 +52,6 @@ export const HomeScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
     const [loading, setLoading] = useState(false);
     const [displayUsername, setDisplayUsername] = useState(false);
-    const [displaySignUpModal, setDisplaySignUpModal] = useState(false);
     const authState = useRef(false);
     const userID = useRef(null);
     const [refreshing, setRefreshing] = useState(false);
@@ -95,7 +93,6 @@ export const HomeScreen = ({ navigation }) => {
         console.log(day.dateString);
     };
 
-
     // # - ADD FOOD
     const [searchQuery, setSearchQuery] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
@@ -103,12 +100,6 @@ export const HomeScreen = ({ navigation }) => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [displayDetails, setDisplayDetails] = useState(false);
     const [displayLoading, setDisplayLoading] = useState(false);
-    const refreshHandlerInterval = useRef(null);
-
-    // # - NUTRITION
-    const [nutritionFacts, setNutritionFacts] = useState([])
-    const [nutritionTable, setNutritionTable] = useState(null)
-    const [displayNutritionValueLoading, setDisplayNutritionValueLoading] = useState(false);
 
     const handlePreviousDay = () => {
         setCurrentDate(moment(currentDate, formatString).subtract(1, 'days').format(formatString));
@@ -118,27 +109,12 @@ export const HomeScreen = ({ navigation }) => {
         setCurrentDate(moment(currentDate, formatString).add(1, 'days').format(formatString));
     }
 
-    async function getValueFor(key) {
-        let result = await SecureStore.getItemAsync(key);
-        if (result && authState.current) {
-            setDisplayUsername(true)
-        } else if (!result && !authState.current) {
-            // setDisplaySignUpModal(true)
-            // setDisplayUsername(false)
-        }
-    }
-
     useEffect(() => {
-        // setNutritionFacts([])
         setLoading(true)
-
         setTimeout(() => {
-
             authState.current = mainState.current.authState
             userID.current = mainState.current.userID;
 
-
-            getValueFor('cosmicKey')
             setTimeout(() => {
                 setLoading(false)
             }, 500)
@@ -190,13 +166,6 @@ export const HomeScreen = ({ navigation }) => {
         axios(config)
             .then((response) => {
                 if (response.data.result[0] === "ERROR") {
-                    // setErrorResponse(
-                    //     <View>
-                    //         <Text style={{ color: 'red', alignSelf: 'center' }}>
-                    //             Error: This service is temporarily down.
-                    //         </Text>
-                    //     </View>
-                    // )
                     console.log("ERROR")
                 } else {
                     setFoodData(response.data.result);
@@ -209,8 +178,6 @@ export const HomeScreen = ({ navigation }) => {
     };
 
     const getNutritionValue = async (input) => {
-        setDisplayNutritionValueLoading(true)
-        // setNutritionFacts([])
         setRefreshing_Nutrition(true)
         console.log('# - INPUT: ')
         console.log(input)
@@ -258,13 +225,6 @@ export const HomeScreen = ({ navigation }) => {
             axios(config)
                 .then((response) => {
                     if (response.data.result[0] === "ERROR") {
-                        // setErrorResponse(
-                        //     <View>
-                        //         <Text style={{ color: 'red', alignSelf: 'center' }}>
-                        //             Error: This service is temporarily down.
-                        //         </Text>
-                        //     </View>
-                        // )
                         console.log("ERROR")
                     } else {
                         console.log("# - getNutritionvalue:")
@@ -272,11 +232,8 @@ export const HomeScreen = ({ navigation }) => {
                         console.log(mainState.current.selectedFood_Measurement)
                         console.log(mainState.current.selectedFood_Schedule)
                         console.log("# --------------------------------------")
-                        // setNutritionFacts({ food: input.description, nutrition: response.data.result, schedule: mainState.current.selectedFood_Schedule })
-                        // Table(response.data.result)
 
                         const nutrients_JSON = JSON.stringify(response.data.result);
-                        console.log(nutrients_JSON)
                         const updateUserEntry = async () => {
 
                             let itemData = input.description;
@@ -297,10 +254,6 @@ export const HomeScreen = ({ navigation }) => {
                             onRefresh();
                         }
                         updateUserEntry();
-
-
-                        // console.log(response.data.result)
-                        // setDisplayLoading(false)
                     }
                 })
                 .catch((error) => {
@@ -332,7 +285,6 @@ export const HomeScreen = ({ navigation }) => {
                 return str.replace(/^"(.*)"$/, '$1');
             }
 
-            // data_array[0].entry[0].item
             let item = JSON.stringify(data_array[i].entry[0].item);
             item = removeQuotes(item);
             let amount = JSON.stringify(data_array[i].entry[0].amount);
@@ -359,58 +311,10 @@ export const HomeScreen = ({ navigation }) => {
 
             const result = separateMeasurement(amount);
 
-
             let item_amount = { item: item, amount: amount, number: result.number, measurement: result.measurement, nutrients: nutrients, id: id }
             setRecentFoodData(prev => [...prev, item_amount])
-
         }
-
-
     }
-
-    // const Table = (data) => {
-
-    //     setNutritionTable(
-    //         <View style={styles.table}>
-    //             {Object.keys(data).map((key) => (
-    //                 <View
-    //                     style={{
-    //                         ...styles.row,
-    //                         backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    //                         margin: HeightRatio(2),
-    //                         padding: HeightRatio(2),
-    //                         borderRadius: HeightRatio(4)
-    //                     }}
-    //                     key={key}
-    //                 >
-    //                     <Text
-    //                         style={{
-    //                             ...styles.cell,
-    //                             fontSize: HeightRatio(20),
-    //                             fontFamily: "SofiaSansSemiCondensed-Regular"
-    //                         }}
-    //                         allowFontScaling={false}
-    //                     >
-    //                         {key.replace('_', ' ')}
-    //                     </Text>
-    //                     <Text
-    //                         style={{
-    //                             ...styles.cell,
-    //                             fontSize: HeightRatio(20),
-    //                             fontFamily: "SofiaSansSemiCondensed-Regular",
-    //                         }}
-    //                         allowFontScaling={false}
-    //                     >
-    //                         {data[key].amount} {data[key].unit}
-    //                     </Text>
-    //                 </View>
-    //             ))}
-    //         </View>
-    //     )
-    //     setDisplayNutritionValueLoading(false)
-
-    // };
-
 
     const renderItem = ({ item }) => {
         return (
@@ -418,76 +322,16 @@ export const HomeScreen = ({ navigation }) => {
 
                 {item.description != '' &&
                     <View
-                        style={{
-                            backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                            borderRadius: HeightRatio(10),
-                            margin: HeightRatio(4),
-                            width: windowWidth - HeightRatio(80),
-                            alignSelf: 'center',
-                            display: 'flex',
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexDirection: 'row',
-                            padding: HeightRatio(10)
-                        }}
+                        style={styles.renderItem_Search_Results}
                         key={item.fdcId}
                     >
-
-
-
                         {displayDetails ?
-                            <>
-                                {/* <TouchableOpacity
-                                    onPress={() => {
-                                        setSelectedItem(null);
-                                        setDisplayDetails(false)
-                                    }}
-                                    style={{
-                                        height: HeightRatio(46),
-                                        width: HeightRatio(40),
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        position: 'absolute',
-                                        zIndex: 1000,
-                                        top: HeightRatio(-10),
-                                        right: HeightRatio(-10),
-                                        borderTopRightRadius: HeightRatio(10),
-                                        borderBottomRightRadius: HeightRatio(10)
-
-                                    }}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faSolid, faX}
-                                        style={{
-                                            color: 'red',
-                                        }}
-                                        size={20}
-                                    />
-                                </TouchableOpacity> */}
-                                <SelectedFoodDetails />
-                            </>
+                            <SelectedFoodDetails />
                             :
                             <>
-                                <View
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between", // changed to 'space-between'
-                                        flexDirection: 'row',
-                                        padding: HeightRatio(8),
-                                        width: windowWidth - HeightRatio(140),
-                                    }}
-                                >
+                                <View style={styles.renderItem_Search_Result_Container}>
                                     <Text
-                                        style={{
-                                            color: "white",
-                                            fontSize: HeightRatio(25),
-                                            fontFamily: "SofiaSansSemiCondensed-Regular",
-                                            // textAlign: 'center',
-                                            // width: '80%',
-                                            display: 'flex',
-                                            flexWrap: 'wrap',
-                                        }}
+                                        style={styles.renderItem_Search_Result_Container_Text}
                                         allowFontScaling={false}
                                     >
                                         {item.description}
@@ -498,23 +342,9 @@ export const HomeScreen = ({ navigation }) => {
                                         setSelectedItem(item);
                                         setDisplayDetails(true)
                                     }}
-                                    style={{
-                                        backgroundColor: 'rgba(247, 255, 108, 1.00)',
-                                        borderRadius: HeightRatio(10),
-                                        height: HeightRatio(40),
-                                        width: HeightRatio(40),
-                                        display: 'flex',
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                    }}
+                                    style={styles.renderItem_Search_Result_Container_Plus}
                                 >
-                                    <Text
-                                        style={{
-                                            color: 'black',
-                                            fontSize: HeightRatio(30),
-                                            fontFamily: "SofiaSansSemiCondensed-ExtraBold"
-                                        }}
-                                    >
+                                    <Text style={styles.renderItem_Search_Result_Container_Plus_Text}>
                                         +
                                     </Text>
                                 </TouchableOpacity>
@@ -561,103 +391,40 @@ export const HomeScreen = ({ navigation }) => {
             {!loading ?
                 <>
                     {refreshing || refreshing_Nutrition &&
-                        <View
-                            style={{
-                                // backgroundColor: refreshing ? 'rgba(0, 0, 0, 0.75)' : null,
-                                backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                                position: 'absolute',
-                                zIndex: 100,
-                                height: windowHeight,
-                                width: windowWidth,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}
-                        >
+                        <View style={styles.updatingScreen_Container}>
                             <Text
-                                style={{
-                                    color: '#ffff00',
-                                    textAlign: 'center',
-                                    fontSize: HeightRatio(30),
-                                    fontFamily: 'GochiHand_400Regular',
-                                    marginTop: HeightRatio(10)
-                                }}
+                                style={styles.updatingScreen_Container_Text}
                                 allowFontScaling={false}
                             >
                                 Updating...
                             </Text>
                         </View>
                     }
-                    {modalVisible && <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)', height: '100%', width: '100%', position: 'absolute', zIndex: 10 }} />}
+                    {modalVisible && <View style={styles.modalVisible_Blackout} />}
                     <View
-                        style={{ ...Styling.container, backgroundColor: '#1f1f27', display: 'flex', alignItems: 'center', width: windowWidth }}
+                        style={styles.homePrimary_Container}
                         onLayout={onLayoutRootView}
                     >
-
-
-                        <View
-                            style={{
-                                // backgroundColor: 'rgba(71, 66, 106, 0.25)',
-                                width: windowWidth,
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                height: HeightRatio(80)
-                            }}
-                        >
+                        <View style={styles.homePrimary_Date}>
                             <TouchableOpacity
                                 onPress={() => {
                                     handlePreviousDay();
                                     setLoading(true);
                                 }}
-                                style={{
-                                    height: '100%',
-                                    width: HeightRatio(90),
-                                    // borderRadius: HeightRatio(20),
-                                    // margin: HeightRatio(40),
-                                    // marginRight: HeightRatio(10),
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    width: windowWidth * 0.2,
-                                    backgroundColor: 'rgba(71, 66, 106, 0.25)',
-                                }}
+                                style={styles.homePrimary_Date_Arrow}
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faArrowLeft}
-                                    style={{
-                                        color: 'white',
-                                    }}
+                                    style={{color: 'white'}}
                                     size={25}
                                 />
                             </TouchableOpacity>
-                            <View
-                                style={{
-                                    flexDirection: 'column',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    height: '100%',
-                                    width: windowWidth / 1.5,
-                                    backgroundColor: 'rgba(71, 66, 106, 0.25)',
-                                    // backgroundColor: ' rgba(218, 140, 242, 1.00)',
-                                    // padding: HeightRatio(10),
-                                    // borderRadius: HeightRatio(10)
-                                }}
-                            >
+                            <View style={styles.homePrimary_Date_Current}>
                                 <TouchableOpacity
                                     onPress={() => setCalendarModalVisible(true)}
                                 >
                                     <Text
-                                        style={{
-                                            color: 'white',
-                                            fontSize: HeightRatio(30),
-                                            fontFamily: 'GochiHand_400Regular',
-                                            marginLeft: HeightRatio(10),
-                                            marginRight: HeightRatio(10)
-
-                                        }}
+                                        style={styles.homePrimary_Date_Current_Text}
                                         allowFontScaling={false}
                                     >
                                         {currentDateReadable}
@@ -669,30 +436,10 @@ export const HomeScreen = ({ navigation }) => {
                                             setCurrentDate(moment().format(formatString));
                                             setLoading(true)
                                         }}
-                                        style={{
-                                            backgroundColor: 'rgba(235, 35, 81, 1.00)',
-                                            // width: HeightRatio(100),
-                                            borderRadius: HeightRatio(10),
-                                            position: 'absolute',
-                                            alignSelf: 'center',
-                                            top: HeightRatio(65),
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            padding: HeightRatio(4),
-                                            paddingLeft: HeightRatio(10),
-                                            paddingRight: HeightRatio(10)
-
-                                        }}
+                                        style={styles.homePrimary_Date_Return_Button}
                                     >
                                         <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: HeightRatio(20),
-                                                fontFamily: 'SofiaSansSemiCondensed-Regular',
-
-
-                                            }}
+                                            style={styles.homePrimary_Date_Return_Button_Text}
                                             allowFontScaling={false}
                                         >
                                             Return to Today
@@ -707,24 +454,11 @@ export const HomeScreen = ({ navigation }) => {
                                     handleNextDay();
                                     setLoading(true);
                                 }}
-                                style={{
-                                    height: '100%',
-                                    width: HeightRatio(90),
-                                    // borderRadius: HeightRatio(20),
-                                    // margin: HeightRatio(40),
-                                    // marginLeft: HeightRatio(10),
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    width: windowWidth * 0.2,
-                                    backgroundColor: 'rgba(71, 66, 106, 0.25)',
-                                }}
+                                style={styles.homePrimary_Date_Arrow}
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faArrowRight}
-                                    style={{
-                                        color: 'white',
-                                    }}
+                                    style={{color: 'white'}}
                                     size={25}
                                 />
                             </TouchableOpacity>
@@ -734,55 +468,22 @@ export const HomeScreen = ({ navigation }) => {
                             <>
                                 <Image
                                     source={require('../../assets/pattern_1.png')}
-                                    style={{
-                                        height: '100%',
-                                        width: '100%',
-                                        opacity: 0.02,
-                                        position: 'absolute',
-                                        zIndex: -10
-                                    }}
+                                    style={styles.homePrimary_Pattern_1}
                                 />
                                 <DailySchedule date={currentDateReadable} userID={mainState.current.userID} />
 
                                 <View style={{ flexDirection: 'row', marginTop: HeightRatio(10) }}>
-                                    <View
-                                        style={{
-                                            alignSelf: 'center',
-                                            backgroundColor: ' rgba(247, 255, 108, 1.00)',
-                                            margin: HeightRatio(5),
-                                            // marginTop: HeightRatio(20),
-                                            borderRadius: 10,
-                                            padding: HeightRatio(10),
-
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            flexDirection: 'row'
-                                        }}
-                                    >
-                                        <Text
-                                            style={{
-                                                color: 'black',
-                                                fontSize: HeightRatio(60),
-                                                textAlign: 'center',
-                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                            }}
-                                        >
+                                    <View style={styles.homePrimary_TotalCalories}>
+                                        <Text style={styles.homePrimary_TotalCalories_Text}>
                                             {totalCalorieCount}
-                                            {/* 1000 */}
-
                                         </Text>
                                         <Text
                                             style={{
-                                                color: 'black',
+                                                ...styles.homePrimary_TotalCalories_Text,
                                                 fontSize: HeightRatio(20),
-                                                textAlign: 'center',
-                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-
                                             }}
                                         >
                                             CALORIES
-
                                         </Text>
                                     </View>
 
@@ -801,28 +502,11 @@ export const HomeScreen = ({ navigation }) => {
                                                 selectedFood_Measurement: null,
                                                 selectedFood_Schedule: null
                                             })
-
                                         }}
-                                        style={{
-                                            backgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            padding: HeightRatio(20),
-                                            borderRadius: HeightRatio(10),
-                                            alignSelf: 'center',
-                                            // height: HeightRatio(100),
-                                            // width: HeightRatio(150),
-                                            margin: HeightRatio(4)
-                                        }}
+                                        style={styles.homePrimary_Add_Button}
                                     >
                                         <Text
-                                            style={{
-                                                color: 'black',
-                                                fontSize: HeightRatio(30),
-                                                textAlign: 'center',
-                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                            }}
+                                            style={styles.homePrimary_Add_Button_Text}
                                             allowFontScaling={false}
                                         >
                                             ADD
@@ -831,27 +515,9 @@ export const HomeScreen = ({ navigation }) => {
                                 </View>
                             </>
                             :
-                            <View
-                                style={{
-                                    // backgroundColor: refreshing ? 'rgba(0, 0, 0, 0.75)' : null,
-                                    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                                    position: 'absolute',
-                                    zIndex: 100,
-                                    height: windowHeight,
-                                    width: windowWidth,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}
-                            >
+                            <View style={styles.updatingScreen_Container}>
                                 <Text
-                                    style={{
-                                        color: '#ffff00',
-                                        textAlign: 'center',
-                                        fontSize: HeightRatio(30),
-                                        fontFamily: 'GochiHand_400Regular',
-                                        marginTop: HeightRatio(10)
-                                    }}
+                                    style={styles.updatingScreen_Container_Text}
                                     allowFontScaling={false}
                                 >
                                     Updating...
@@ -870,30 +536,11 @@ export const HomeScreen = ({ navigation }) => {
                         }}
                     >
 
-                        <View
-                            style={{
-                                // flex: 1,
-                                backgroundColor: "#1f1f27",
-                                zIndex: 999,
-                                width: windowWidth - HeightRatio(10),
-                                // height: '100%',
-                                padding: HeightRatio(20),
-                                borderRadius: HeightRatio(10),
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                alignSelf: 'center',
-                                margin: HeightRatio(10)
-                            }}
-                        >
+                        <View style={styles.modalVisible_Container}>
                             <Image
                                 source={require('../../assets/pattern_1.png')}
                                 style={{
-                                    height: '100%',
-                                    width: '100%',
-                                    opacity: 0.02,
-                                    position: 'absolute',
-                                    zIndex: -10,
+                                    ...styles.homePrimary_Pattern_1,
                                     margin: HeightRatio(20),
                                     borderRadius: HeightRatio(10)
                                 }}
@@ -906,39 +553,14 @@ export const HomeScreen = ({ navigation }) => {
                                 value={searchQuery}
                                 onChangeText={setSearchQuery}
                                 onSubmitEditing={handleSearch}
-                                style={{
-                                    ...Styling.textInputStyle,
-                                    marginTop: HeightRatio(20),
-                                    height: HeightRatio(70),
-                                    fontSize: HeightRatio(30),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                }}
+                                style={styles.modalVisible_TextInput}
                                 disableFullscreenUI={true}
                                 allowFontScaling={false}
                             />
-                            <TouchableOpacity
-                                onPress={() => {
-                                    handleSearch()
-                                }}
-
-                            >
-                                <View style={{
-                                    backgroundColor: 'rgba(30, 228, 168, 0.50)',
-                                    display: 'flex',
-                                    justifyContent: 'flex-start',
-                                    padding: HeightRatio(10),
-                                    borderRadius: HeightRatio(10),
-                                    alignSelf: 'center',
-                                    width: windowWidth - WidthRatio(100),
-                                    margin: HeightRatio(10)
-                                }}>
+                            <TouchableOpacity onPress={() => {handleSearch()}}>
+                                <View style={styles.modalVisible_Search_Button}>
                                     <Text
-                                        style={{
-                                            color: 'white',
-                                            fontSize: HeightRatio(25),
-                                            alignSelf: 'center',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                        }}
+                                        style={styles.modalVisible_Search_Button_Text}
                                         allowFontScaling={false}
                                     >
                                         Search
@@ -948,28 +570,15 @@ export const HomeScreen = ({ navigation }) => {
                         </View>
                         <View
                             style={{
-                                // flex: 1,
-                                backgroundColor: "#1f1f27",
-                                zIndex: 999,
-                                padding: HeightRatio(20),
-                                borderRadius: HeightRatio(10),
-                                width: windowWidth - HeightRatio(10),
+                                ...styles.modalVisible_Container,
                                 height: windowHeight / 1.9,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                alignSelf: 'center',
-                                // margin: HeightRatio(10)
+                                margin: HeightRatio(0)
                             }}
                         >
                             <Image
                                 source={require('../../assets/pattern_1.png')}
                                 style={{
-                                    height: '100%',
-                                    width: '100%',
-                                    opacity: 0.02,
-                                    position: 'absolute',
-                                    zIndex: -10,
+                                    ...styles.homePrimary_Pattern_1,
                                     margin: HeightRatio(20),
                                     alignSelf: 'center'
                                 }}
@@ -977,120 +586,41 @@ export const HomeScreen = ({ navigation }) => {
 
                             {!clearSuggestions && !searchQuery &&
                                 <>
-                                    {/* <RecentFood /> */}
-                                    <View style={{
-                                        // backgroundColor: 'rgba(30, 228, 168, 0.50)',
-                                        display: 'flex',
-                                        justifyContent: 'flex-start',
-                                        padding: HeightRatio(10),
-                                        alignSelf: 'center',
-                                        width: windowWidth - WidthRatio(100),
-                                        marginTop: HeightRatio(10),
-                                        // borderTopWidth: 2,
-                                        // borderTopColor: 'white'
-                                    }}>
+                                    <View style={styles.modalVisible_Title_Container}>
                                         <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: HeightRatio(30),
-                                                alignSelf: 'center',
-                                                fontFamily: 'GochiHand_400Regular'
-                                            }}
+                                            style={styles.modalVisible_Title_Container_Text}
                                             allowFontScaling={false}
                                         >
                                             Recently Used
                                         </Text>
                                     </View>
                                     <SafeAreaView style={styles.container}>
-                                        <ScrollView
-                                            style={styles.scrollView}
-                                        // refreshControl={
-                                        //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                                        // }
-                                        >
+                                        <ScrollView style={styles.scrollView}>
                                             <View>
                                                 {recentFoodData.map((data, index) => (
                                                     <View key={index}>
                                                         {selectRecentlyUsed == null ?
 
-                                                            <View
-                                                                style={{
-                                                                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                                                                    borderRadius: HeightRatio(10),
-                                                                    margin: HeightRatio(4),
-                                                                    width: windowWidth - HeightRatio(80),
-                                                                    alignSelf: 'center',
-                                                                    display: 'flex',
-                                                                    alignItems: "center",
-                                                                    justifyContent: "center",
-                                                                }}
-
-                                                            >
-                                                                <View
-                                                                    style={{
-                                                                        width: windowWidth - HeightRatio(120),
-                                                                        alignSelf: 'center'
-                                                                    }}
-                                                                >
-                                                                    <View
-                                                                        style={{
-                                                                            display: "flex",
-                                                                            alignItems: "center",
-                                                                            justifyContent: "space-between", // changed to 'space-between'
-                                                                            flexDirection: 'row',
-                                                                            padding: HeightRatio(8),
-                                                                            // paddingTop: HeightRatio(10)
-                                                                        }}
-                                                                    >
-                                                                        <View
-                                                                            style={{ flexDirection: 'column' }}
-                                                                        >
+                                                            <View style={styles.modalVisible_recentFoodData_Map_Container_0}>
+                                                                <View style={styles.modalVisible_recentFoodData_Map_Container_1}>
+                                                                    <View style={styles.modalVisible_recentFoodData_Map_Container_2}>
+                                                                        <View style={{ flexDirection: 'column' }}>
                                                                             <View>
-                                                                                <Text
-                                                                                    style={{
-                                                                                        color: 'white',
-                                                                                        fontSize: HeightRatio(25),
-                                                                                        fontFamily: "SofiaSansSemiCondensed-ExtraBold"
-                                                                                    }}
-                                                                                >
+                                                                                <Text style={styles.modalVisible_recentFoodData_Map_Text_Bold}>
                                                                                     {data.item}
                                                                                 </Text>
                                                                             </View>
-                                                                            <View
-                                                                                style={{
-                                                                                    marginLeft: HeightRatio(5),
-                                                                                }}
-                                                                            >
-                                                                                <Text
-                                                                                    style={{
-                                                                                        color: 'white',
-                                                                                        fontSize: HeightRatio(20),
-                                                                                        fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                                                    }}
-                                                                                >
+                                                                            <View style={{ marginLeft: HeightRatio(5)}}>
+                                                                                <Text style={styles.modalVisible_recentFoodData_Map_Text_Regular}>
                                                                                     {data.amount}
                                                                                 </Text>
                                                                             </View>
                                                                         </View>
                                                                         <TouchableOpacity
-                                                                            onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); console.log(data) }}
-                                                                            style={{
-                                                                                backgroundColor: 'rgba(247, 255, 108, 1.00)',
-                                                                                borderRadius: HeightRatio(10),
-                                                                                height: HeightRatio(40),
-                                                                                width: HeightRatio(40),
-                                                                                display: 'flex',
-                                                                                alignItems: "center",
-                                                                                justifyContent: "center",
-                                                                            }}
+                                                                            onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); }}
+                                                                            style={styles.modalVisible_recentFoodData_Map_Plus}
                                                                         >
-                                                                            <Text
-                                                                                style={{
-                                                                                    color: 'black',
-                                                                                    fontSize: HeightRatio(30),
-                                                                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold"
-                                                                                }}
-                                                                            >
+                                                                            <Text style={styles.modalVisible_recentFoodData_Map_Plus_Text}>
                                                                                 +
                                                                             </Text>
                                                                         </TouchableOpacity>
@@ -1102,29 +632,9 @@ export const HomeScreen = ({ navigation }) => {
                                                             <>
                                                                 {selectRecentlyUsed == index &&
                                                                     <>
-                                                                        <View
-                                                                            style={{
-                                                                                backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                                                                                borderRadius: HeightRatio(10),
-                                                                                margin: HeightRatio(4),
-                                                                                width: windowWidth - HeightRatio(80),
-                                                                                alignSelf: 'center',
-                                                                                display: 'flex',
-                                                                                alignItems: "center",
-                                                                                justifyContent: "center",
-                                                                            }}
-                                                                        >
+                                                                        <View style={styles.modalVisible_recentFoodData_Map_Container_0}>
                                                                             <Text
-                                                                                style={{
-                                                                                    color: "white",
-                                                                                    fontSize: HeightRatio(25),
-                                                                                    fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                                                    textAlign: 'center',
-                                                                                    width: '80%',
-                                                                                    display: 'flex',
-                                                                                    flexWrap: 'wrap',
-                                                                                    margin: HeightRatio(5)
-                                                                                }}
+                                                                                style={styles.modalVisible_recentFoodData_Map_Container_0_RecentlyUsed_Text}
                                                                                 allowFontScaling={false}
                                                                             >
                                                                                 {data.item}
@@ -1136,25 +646,11 @@ export const HomeScreen = ({ navigation }) => {
                                                                                 setSelectRecentlyUsed(null)
                                                                                 setSelectRecentlyUsedData(null)
                                                                             }}
-                                                                            style={{
-                                                                                height: HeightRatio(30),
-                                                                                width: HeightRatio(30),
-                                                                                alignItems: 'center',
-                                                                                justifyContent: 'center',
-                                                                                position: 'absolute',
-                                                                                zIndex: 1000,
-                                                                                top: HeightRatio(5),
-                                                                                right: HeightRatio(5),
-                                                                                borderRadius: HeightRatio(10),
-                                                                                backgroundColor: 'red'
-
-                                                                            }}
+                                                                            style={styles.modalVisible_faX}
                                                                         >
                                                                             <FontAwesomeIcon
                                                                                 icon={faSolid, faX}
-                                                                                style={{
-                                                                                    color: 'white',
-                                                                                }}
+                                                                                style={{color: 'white'}}
                                                                                 size={20}
                                                                             />
                                                                         </TouchableOpacity>
@@ -1164,10 +660,7 @@ export const HomeScreen = ({ navigation }) => {
                                                         }
                                                     </View>
                                                 ))}
-
-
                                             </View>
-
                                         </ScrollView>
                                     </SafeAreaView>
                                 </>
@@ -1187,24 +680,13 @@ export const HomeScreen = ({ navigation }) => {
                                                             setDisplayDetails(false)
                                                         }}
                                                         style={{
-                                                            height: HeightRatio(30),
-                                                            width: HeightRatio(30),
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            position: 'absolute',
-                                                            zIndex: 1000,
-                                                            top: HeightRatio(-10),
+                                                            ...styles.modalVisible_faX,
                                                             right: HeightRatio(-25),
-                                                            borderRadius: HeightRatio(10),
-                                                            backgroundColor: 'red'
-
                                                         }}
                                                     >
                                                         <FontAwesomeIcon
                                                             icon={faSolid, faX}
-                                                            style={{
-                                                                color: 'white',
-                                                            }}
+                                                            style={{color: 'white'}}
                                                             size={20}
                                                         />
                                                     </TouchableOpacity>
@@ -1227,26 +709,12 @@ export const HomeScreen = ({ navigation }) => {
                                     alignSelf: 'center'
                                 }}
                             >
-                                {selectedFoodDataEntrered ? // {selectedItem || selectRecentlyUsed != null && selectedFoodDataEntrered ?
+                                {selectedFoodDataEntrered ?
                                     <>
                                         <TouchableOpacity onPress={() => { setModalVisible(false); }}>
-                                            <View style={{
-                                                backgroundColor: 'rgba(255, 0, 75, 0.50)',
-                                                display: 'flex',
-                                                justifyContent: 'flex-start',
-                                                padding: HeightRatio(10),
-                                                borderRadius: HeightRatio(10),
-                                                alignSelf: 'center',
-                                                width: (windowWidth - WidthRatio(100)) / 2,
-                                                margin: HeightRatio(10)
-                                            }}>
+                                            <View style={{...styles.modalVisible_HalfButton, backgroundColor: 'rgba(255, 0, 75, 0.50)'}}>
                                                 <Text
-                                                    style={{
-                                                        color: 'white',
-                                                        fontSize: HeightRatio(25),
-                                                        alignSelf: 'center',
-                                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                    }}
+                                                    style={styles.modalVisible_Button_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     Close
@@ -1259,23 +727,9 @@ export const HomeScreen = ({ navigation }) => {
                                                 setModalVisible(false);
                                             }}
                                         >
-                                            <View style={{
-                                                backgroundColor: 'rgba(30, 228, 168, 0.5)',
-                                                display: 'flex',
-                                                justifyContent: 'flex-start',
-                                                padding: HeightRatio(10),
-                                                borderRadius: HeightRatio(10),
-                                                alignSelf: 'center',
-                                                width: (windowWidth - WidthRatio(100)) / 2,
-                                                margin: HeightRatio(10)
-                                            }}>
+                                            <View style={{...styles.modalVisible_HalfButton, backgroundColor: 'rgba(30, 228, 168, 0.5)'}}>
                                                 <Text
-                                                    style={{
-                                                        color: 'white',
-                                                        fontSize: HeightRatio(25),
-                                                        alignSelf: 'center',
-                                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                    }}
+                                                    style={styles.modalVisible_Button_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     Save
@@ -1285,23 +739,9 @@ export const HomeScreen = ({ navigation }) => {
                                     </>
                                     :
                                     <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                        <View style={{
-                                            backgroundColor: 'rgba(255, 0, 75, 0.50)',
-                                            display: 'flex',
-                                            justifyContent: 'flex-start',
-                                            padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(10),
-                                            alignSelf: 'center',
-                                            width: (windowWidth - WidthRatio(100)),
-                                            margin: HeightRatio(10)
-                                        }}>
+                                        <View style={styles.modalVisible_FullButton}>
                                             <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    alignSelf: 'center',
-                                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                }}
+                                                style={styles.modalVisible_Button_Text}
                                                 allowFontScaling={false}
                                             >
                                                 Close
@@ -1318,19 +758,19 @@ export const HomeScreen = ({ navigation }) => {
 
                     <Modal visible={calendarModalVisible}>
                         <View>
-                        <Calendar
-                            onDayPress={(day) => onDateSelect(day)}
-                            markedDates={{ [selectedCalendarModalDate]: { selected: true } }}
-                            theme={{
-                            textMonthFontSize: 20,
-                            monthTextColor: 'black',
-                            arrowColor: 'black',
-                            }}
-                            style={{ height: 350 }}
-                        />
-                        <TouchableOpacity onPress={() => setCalendarModalVisible(false)}>
-                            <Text>Close</Text>
-                        </TouchableOpacity>
+                            <Calendar
+                                onDayPress={(day) => onDateSelect(day)}
+                                markedDates={{ [selectedCalendarModalDate]: { selected: true } }}
+                                theme={{
+                                    textMonthFontSize: 20,
+                                    monthTextColor: 'black',
+                                    arrowColor: 'black',
+                                }}
+                                style={{ height: 350 }}
+                            />
+                            <TouchableOpacity onPress={() => setCalendarModalVisible(false)}>
+                                <Text>Close</Text>
+                            </TouchableOpacity>
                         </View>
                     </Modal>
 
@@ -1339,16 +779,7 @@ export const HomeScreen = ({ navigation }) => {
 
                 </>
                 :
-                <View
-                    style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: HeightRatio(505),
-                        backgroundColor: 'rgba(71, 66, 106, 1.00)'
-                    }}
-                >
-                    {/* <ActivityIndicator size="large" color="#1ee4a8" /> */}
+                <View style={styles.loading_Container}>
                     <Loading />
                 </View>
             }
@@ -1369,8 +800,6 @@ export const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     table: {
-        //   borderWidth: 1,
-        //   borderColor: '#ccc',
         padding: 10,
         marginBottom: 10,
     },
@@ -1386,13 +815,320 @@ const styles = StyleSheet.create({
 
     },
     container: {
-        //   flex: 1,
         height: '80%'
 
     },
     scrollView: {
-        //   backgroundColor: 'blue',
         width: '80%',
         alignSelf: 'center'
     },
+    renderItem_Search_Results: {
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        borderRadius: HeightRatio(10),
+        margin: HeightRatio(4),
+        width: windowWidth - HeightRatio(80),
+        alignSelf: 'center',
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: 'row',
+        padding: HeightRatio(10)
+    },
+    renderItem_Search_Result_Container: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexDirection: 'row',
+        padding: HeightRatio(8),
+        width: windowWidth - HeightRatio(140),
+    },
+    renderItem_Search_Result_Container_Text: {
+        color: "white",
+        fontSize: HeightRatio(25),
+        fontFamily: "SofiaSansSemiCondensed-Regular",
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    renderItem_Search_Result_Container_Plus: {
+        backgroundColor: 'rgba(247, 255, 108, 1.00)',
+        borderRadius: HeightRatio(10),
+        height: HeightRatio(40),
+        width: HeightRatio(40),
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    renderItem_Search_Result_Container_Plus_Text: {
+        color: 'black',
+        fontSize: HeightRatio(30),
+        fontFamily: "SofiaSansSemiCondensed-ExtraBold"
+    },
+    updatingScreen_Container: {
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        position: 'absolute',
+        zIndex: 100,
+        height: windowHeight,
+        width: windowWidth,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    updatingScreen_Container_Text: {
+        color: '#ffff00',
+        textAlign: 'center',
+        fontSize: HeightRatio(30),
+        fontFamily: 'GochiHand_400Regular',
+        marginTop: HeightRatio(10)
+    },
+    homePrimary_Container: {
+        flex: 1, 
+        backgroundColor: '#1f1f27', 
+        display: 'flex', 
+        alignItems: 'center', 
+        width: windowWidth
+    },
+    homePrimary_Date: {
+        width: windowWidth,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: HeightRatio(80)
+    },
+    homePrimary_Date_Arrow: {
+        height: '100%',
+        width: HeightRatio(90),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: windowWidth * 0.2,
+        backgroundColor: 'rgba(71, 66, 106, 0.25)',
+    },
+    homePrimary_Date_Current: {
+        flexDirection: 'column',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        width: windowWidth / 1.5,
+        backgroundColor: 'rgba(71, 66, 106, 0.25)',
+    },
+    homePrimary_Date_Current_Text: {
+        color: 'white',
+        fontSize: HeightRatio(30),
+        fontFamily: 'GochiHand_400Regular',
+        marginLeft: HeightRatio(10),
+        marginRight: HeightRatio(10) 
+    },
+    homePrimary_Date_Return_Button: {
+        backgroundColor: 'rgba(235, 35, 81, 1.00)',
+        borderRadius: HeightRatio(10),
+        position: 'absolute',
+        alignSelf: 'center',
+        top: HeightRatio(65),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: HeightRatio(4),
+        paddingLeft: HeightRatio(10),
+        paddingRight: HeightRatio(10)
+    },
+    homePrimary_Date_Return_Button_Text: {
+        color: 'white',
+        fontSize: HeightRatio(20),
+        fontFamily: 'SofiaSansSemiCondensed-Regular',
+    },
+    homePrimary_Pattern_1: {
+        height: '100%',
+        width: '100%',
+        opacity: 0.02,
+        position: 'absolute',
+        zIndex: -10
+    },
+    homePrimary_TotalCalories: {
+        alignSelf: 'center',
+        backgroundColor: ' rgba(247, 255, 108, 1.00)',
+        margin: HeightRatio(5),
+        borderRadius: 10,
+        padding: HeightRatio(10),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row'
+    },
+    homePrimary_TotalCalories_Text: {
+        color: 'black',
+        fontSize: HeightRatio(60),
+        textAlign: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+    },
+    homePrimary_Add_Button: {
+        backgroundColor: 'rgba(30, 228, 168, 1.0)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: HeightRatio(20),
+        borderRadius: HeightRatio(10),
+        alignSelf: 'center',
+        margin: HeightRatio(4)
+    },
+    homePrimary_Add_Button_Text: {
+        color: 'black',
+        fontSize: HeightRatio(30),
+        textAlign: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+    },
+    modalVisible_Blackout: {
+        backgroundColor: 'rgba(0, 0, 0, 0.9)', 
+        height: '100%', width: '100%', 
+        position: 'absolute', zIndex: 10
+    },
+    modalVisible_Container: {
+        backgroundColor: "#1f1f27",
+        zIndex: 999,
+        width: windowWidth - HeightRatio(10),
+        padding: HeightRatio(20),
+        borderRadius: HeightRatio(10),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        margin: HeightRatio(10)
+    },
+    modalVisible_TextInput: {
+        ...Styling.textInputStyle,
+        marginTop: HeightRatio(20),
+        height: HeightRatio(70),
+        fontSize: HeightRatio(30),
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
+    },
+    modalVisible_Search_Button: {
+        backgroundColor: 'rgba(30, 228, 168, 0.50)',
+        display: 'flex',
+        justifyContent: 'flex-start',
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(10),
+        alignSelf: 'center',
+        width: windowWidth - WidthRatio(100),
+        margin: HeightRatio(10)
+    },
+    modalVisible_Search_Button_Text: {
+        color: 'white',
+        fontSize: HeightRatio(25),
+        alignSelf: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
+    },
+    modalVisible_Title_Container: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        padding: HeightRatio(10),
+        alignSelf: 'center',
+        width: windowWidth - WidthRatio(100),
+        marginTop: HeightRatio(10),
+    },
+    modalVisible_Title_Container_Text: {
+        color: 'white',
+        fontSize: HeightRatio(30),
+        alignSelf: 'center',
+        fontFamily: 'GochiHand_400Regular'
+    },
+    modalVisible_recentFoodData_Map_Container_0: {
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        borderRadius: HeightRatio(10),
+        margin: HeightRatio(4),
+        width: windowWidth - HeightRatio(80),
+        alignSelf: 'center',
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    modalVisible_recentFoodData_Map_Container_1: {
+        width: windowWidth - HeightRatio(120),
+        alignSelf: 'center'
+    },
+    modalVisible_recentFoodData_Map_Container_2: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexDirection: 'row',
+        padding: HeightRatio(8),
+    },
+    modalVisible_recentFoodData_Map_Text_Bold: {
+        color: 'white',
+        fontSize: HeightRatio(25),
+        fontFamily: "SofiaSansSemiCondensed-ExtraBold"
+    },
+    modalVisible_recentFoodData_Map_Text_Regular: {
+        color: 'white',
+        fontSize: HeightRatio(20),
+        fontFamily: "SofiaSansSemiCondensed-Regular"
+    },
+    modalVisible_recentFoodData_Map_Plus: {
+        backgroundColor: 'rgba(247, 255, 108, 1.00)',
+        borderRadius: HeightRatio(10),
+        height: HeightRatio(40),
+        width: HeightRatio(40),
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    modalVisible_recentFoodData_Map_Plus_Text: {
+        color: 'black',
+        fontSize: HeightRatio(30),
+        fontFamily: "SofiaSansSemiCondensed-ExtraBold"
+    },
+    modalVisible_recentFoodData_Map_Container_0_RecentlyUsed_Text: {
+        color: "white",
+        fontSize: HeightRatio(25),
+        fontFamily: "SofiaSansSemiCondensed-Regular",
+        textAlign: 'center',
+        width: '80%',
+        display: 'flex',
+        flexWrap: 'wrap',
+        margin: HeightRatio(5)
+    },
+    modalVisible_faX: {
+        height: HeightRatio(30),
+        width: HeightRatio(30),
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        zIndex: 1000,
+        top: HeightRatio(5),
+        right: HeightRatio(5),
+        borderRadius: HeightRatio(10),
+        backgroundColor: 'red'
+    },
+    modalVisible_FullButton: {
+        backgroundColor: 'rgba(255, 0, 75, 0.50)',
+        display: 'flex',
+        justifyContent: 'flex-start',
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(10),
+        alignSelf: 'center',
+        width: (windowWidth - WidthRatio(100)),
+        margin: HeightRatio(10)
+    },
+    modalVisible_HalfButton: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(10),
+        alignSelf: 'center',
+        width: (windowWidth - WidthRatio(100)) / 2,
+        margin: HeightRatio(10)
+    },
+    modalVisible_Button_Text: {
+        color: 'white',
+        fontSize: HeightRatio(25),
+        alignSelf: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
+    },
+    loading_Container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: HeightRatio(505),
+        backgroundColor: 'rgba(71, 66, 106, 1.00)'
+    }
 });
