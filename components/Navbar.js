@@ -54,12 +54,11 @@ export const Navbar = (props) => {
     }
 
     const pingServer = async () => {
-        console.log(GLOBAL_GRAPHQL_API_URL)
+        console.log("# - Ping Server: " + GLOBAL_GRAPHQL_API_URL)
         try {
             const response = await fetch(`${GLOBAL_GRAPHQL_API_URL}/ping`, {
                 method: 'GET',
             });
-            console.log
             if (response.ok) {
                 setNetworkConnected(true)
                 return true;

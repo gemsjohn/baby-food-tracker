@@ -38,10 +38,10 @@ export const KeyScreen = ({ navigation }) => {
     };
 
     async function getValueFor(key) {
-        console.log("# - home/Key/getValueFor : cosmicKey")
+        console.log("# - Get value for cosmicKey")
         let result = await SecureStore.getItemAsync(key);
         if (result) {
-            console.log("# - home/Key/getValueFor - Key.js Loaded")
+            console.log("# - Key.js Loaded")
             setKey(result.split(''));
             setPageLoadComplete(true)
         } else {
@@ -59,7 +59,7 @@ export const KeyScreen = ({ navigation }) => {
     }
 
     const updateAuth = async () => {
-        console.log("# - home/Key/updateAuth")
+        console.log("# - Update Authorization")
         let localBearerToken = await SecureStore.getItemAsync('bearerToken');
         let localUserID = await SecureStore.getItemAsync('userID');
         let localAuthState = await SecureStore.getItemAsync('authState');

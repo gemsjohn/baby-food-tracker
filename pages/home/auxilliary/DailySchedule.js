@@ -64,14 +64,12 @@ export const DailySchedule = (props) => {
     const [displayMidmorningNutrientsForIndex, setDisplayMidmorningNutrientsForIndex] = useState(null)
     const [displaBool_Midmorning, setDisplaBool_Midmorning] = useState(false);
 
-
     const [lunch, setLunch] = useState([]);
     const [lunchCalTotal, setLunchCalTotal] = useState(null)
     const [lunchData, setLunchData] = useState([]);
     const [displayLunchNutrients, setDisplayLunchNutrients] = useState(false);
     const [displayLunchNutrientsForIndex, setDisplayLunchNutrientsForIndex] = useState(null)
     const [displaBool_Lunch, setDisplaBool_Lunch] = useState(false);
-
 
     const [afternoon, setAfternoon] = useState([]);
     const [afternoonCalTotal, setAfternoonCalTotal] = useState(null)
@@ -80,14 +78,12 @@ export const DailySchedule = (props) => {
     const [displayAfternoonNutrientsForIndex, setDisplayAfternoonNutrientsForIndex] = useState(null)
     const [displaBool_Afternoon, setDisplaBool_Afternoon] = useState(false);
 
-
     const [dinner, setDinner] = useState([]);
     const [dinnerCalTotal, setDinnerCalTotal] = useState(null)
     const [dinnerData, setDinnerData] = useState([]);
     const [displayDinnerNutrients, setDisplayDinnerNutrients] = useState(false);
     const [displayDinnerNutrientsForIndex, setDisplayDinnerNutrientsForIndex] = useState(null)
     const [displaBool_Dinner, setDisplaBool_Dinner] = useState(false);
-
 
     const [beforeBed, setBeforeBed] = useState([]);
     const [beforeBedCalTotal, setBeforeBedCalTotal] = useState(null)
@@ -96,11 +92,7 @@ export const DailySchedule = (props) => {
     const [displayBeforeBedNutrientsForIndex, setDisplayBeforeBedNutrientsForIndex] = useState(null)
     const [displaBool_BeforeBed, setDisplaBool_BeforeBed] = useState(false);
 
-
-
     const [deleteID, setDeleteID] = useState(null)
-
-    const [totalCalorieCount, setTotalCalorieCount] = useState(null)
     const [modalVisible, setModalVisible] = useState(false);
 
 
@@ -113,14 +105,10 @@ export const DailySchedule = (props) => {
         refetch()
         setMatchingDate([])
 
-
         if (userByID?.user.tracker != []) {
-            console.log("# - User Tracker Length: " + userByID?.user.tracker.length)
             for (let i = 0; i < userByID?.user.tracker.length; i++) {
                 if (userByID?.user.tracker[i].date == date) {
-                    // console.log("# - Tracker array, matching date: " + i)
                     setMatchingDate(prev => [...prev, userByID?.user.tracker[i]]);
-
                 }
             }
         }
@@ -129,7 +117,7 @@ export const DailySchedule = (props) => {
     useEffect(() => {
         console.log('# --------------------------------------')
         console.log('# - Date: ' + props.date)
-        console.log("# - Clear Everything")
+        console.log("# - Clear everything")
         setFirstThing([])
         setBreakfast([])
         setMidmorning([])
@@ -210,8 +198,6 @@ export const DailySchedule = (props) => {
             if (sampleSchedule_v2 == "Before Bed") {
                 setBeforeBed(prev => [...prev, sample_v2])
             }
-
-
         }
 
     }
@@ -295,13 +281,12 @@ export const DailySchedule = (props) => {
     // TOTAL ALL SCHEDULE SECTIONS
     useEffect(() => {
         let total = firstThingCalTotal + breakfastCalTotal + midmorningCalTotal + lunchCalTotal + afternoonCalTotal + dinnerCalTotal + beforeBedCalTotal;
-        setTotalCalorieCount(total)
         const storeTotalCalorieCount = async (value) => {
             try {
                 const jsonValue = JSON.stringify(value)
-              await AsyncStorage.setItem('@TotalCalorieCount', jsonValue)
+                await AsyncStorage.setItem('@TotalCalorieCount', jsonValue)
             } catch (e) {
-              // saving error
+                // saving error
             }
         }
         storeTotalCalorieCount(total)
@@ -321,12 +306,10 @@ export const DailySchedule = (props) => {
         setDeleteID(null)
 
         if (input != null) {
-            console.log("# - displayScheduleData: " + input)
+            console.log("# - Display schedule data for: " + input)
 
             for (let i = 0; i < matchingDate.length; i++) {
                 const jsonString = JSON.stringify(matchingDate[i].entry[0].schedule);
-                // console.log(i)
-                // console.log(jsonString)
 
                 function removeBackslashes(str) {
                     let pattern = /(?<!\\)\\(?!\\)/g;
@@ -344,10 +327,8 @@ export const DailySchedule = (props) => {
                 let sample_v1 = removeBackslashes(`${jsonString}`);
                 let sample_v2 = removeQuotes(sample_v1)
 
-                // console.log(sample_v2)
 
                 if (sample_v2 == input) {
-                    // console.log(i)
                     let item = JSON.stringify(matchingDate[i].entry[0].item);
                     item = removeQuotes(item);
                     let amount = JSON.stringify(matchingDate[i].entry[0].amount);
@@ -359,10 +340,6 @@ export const DailySchedule = (props) => {
                     let id = matchingDate[i]._id;
 
                     let item_amount = { item: item, amount: amount, nutrients: nutrients, id: id }
-                    // console.log(item_amount)
-
-                    // console.log("# - item: " + item)
-                    // console.log("# - amount: " + amount)
 
                     if (sample_v2 == "First Thing") {
                         setFirstThingData(prev => [...prev, item_amount])
@@ -390,11 +367,7 @@ export const DailySchedule = (props) => {
         }
     }
 
-    useEffect(() => {
-        // console.log(breakfastData)
-    }, [breakfastData])
-
-    const handleDeleteEntry = async() => {
+    const handleDeleteEntry = async () => {
         setMainState({
             triggerRefresh: true
         })
@@ -409,27 +382,20 @@ export const DailySchedule = (props) => {
                 triggerRefresh: false
             })
         }, 100)
-        
-        // refetch()
-        // onRefresh();
     }
 
 
     return (
         <>
-            
+
             <SafeAreaView style={styles.container}>
-                <ScrollView 
+                <ScrollView
                     style={styles.scrollView}
-                    // refreshControl={
-                    //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                    // }
                 >
                     {/* FIRST THING */}
                     <TouchableOpacity
-                        // onPress={() => displayScheduleData("First Thing")}
                         onPress={() => {
-                            displayScheduleData(!displaBool_FirstThing ? "First Thing" : null); 
+                            displayScheduleData(!displaBool_FirstThing ? "First Thing" : null);
                             setDisplaBool_FirstThing(current => !current)
                             setDisplaBool_Breakfast(false)
                             setDisplaBool_Midmorning(false)
@@ -439,164 +405,78 @@ export const DailySchedule = (props) => {
                             setDisplaBool_BeforeBed(false)
                         }}
                         style={{
-                            backgroundColor: displaBool_FirstThing? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
-                            width: '90%',
-                            // padding: HeightRatio(15),
-                            margin: HeightRatio(4),
-                            borderRadius: HeightRatio(10),
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between", // changed to 'space-between'
-                            alignSelf: 'center',
-                            flexDirection: 'row'
+                            ...styles.scheduleButton,
+                            backgroundColor: displaBool_FirstThing ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
                         }}
                     >
                         <Image
                             source={require('../../../assets/pattern_0.png')}
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                opacity: 0.05,
-                                borderRadius: HeightRatio(10),
-                                position: 'absolute'
-                            }}
+                            style={styles.scheduleButton_Pattern_0}
                         />
                         <Text
                             style={{
-                                color: displaBool_FirstThing? 'black' : 'white',
-                                fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                marginRight: HeightRatio(10),
-                                margin: HeightRatio(15)
+                                ...styles.scheduleButton_Text,
+                                color: displaBool_FirstThing ? 'black' : 'white',
                             }}
                         >
                             First Thing
                         </Text>
                         <View style={{ flex: 1 }} />
                         <View
-                            style={{
-                                backgroundColor: 'rgba(0,0,0, 0.2)',
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                // height: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_Calorie_Container}
                         >
                             <Text
                                 style={{
-                                    color: displaBool_FirstThing? 'black' : 'white',
-                                    fontSize: HeightRatio(25),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    ...styles.scheduleButton_Calorie_Container_Text,
+                                    color: displaBool_FirstThing ? 'black' : 'white',
                                 }}
                             >
                                 {firstThingCalTotal} Cal
                             </Text>
                         </View>
                         <View
-                            style={{
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                height: HeightRatio(40),
-                                width: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_faBars}
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{
-                                    color: 'black',
-                                }}
+                                style={{ color: 'black' }}
                                 size={20}
                             />
                         </View>
                     </TouchableOpacity>
                     {firstThingData.map((data, index) => (
                         <View
-                            style={{
-                                // backgroundColor: 'rgba(247, 255, 108, 0.20)',
-                                // borderRadius: HeightRatio(10),
-                                borderBottomWidth: 1,
-                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
-                                margin: HeightRatio(10),
-                                width: windowWidth - HeightRatio(80),
-                                alignSelf: 'center'
-                            }}
+                            style={styles.scheduleButton_subContent}
                             key={index}
                         >
-                            <View
-                                style={{
-                                    width: windowWidth - HeightRatio(120),
-                                    alignSelf: 'center'
-                                }}
-                            >
+                            <View style={styles.scheduleButton_subContent_Container}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         setDisplayFirstThingNutrients(current => displayFirstThingNutrientsForIndex == index ? !current : true);
                                         setDisplayFirstThingNutrientsForIndex(index)
                                     }}
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between", // changed to 'space-between'
-                                        flexDirection: 'row',
-                                        padding: HeightRatio(5),
-                                        paddingTop: HeightRatio(10)
-                                    }}
+                                    style={styles.scheduleButton_subContent_Container_Button}
                                 >
                                     <View
-                                        style={{flexDirection: 'column'}}
+                                        style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold"
-                                                }}
-                                            >
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.item}
                                             </Text>
                                         </View>
-                                        <View
-                                            style={{
-                                                margin: HeightRatio(5),
-                                                padding: HeightRatio(4),
-                                                paddingLeft: HeightRatio(20),
-                                                paddingRight: HeightRatio(20),
-                                                borderRadius: HeightRatio(10)
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(20),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                        <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.amount}
                                             </Text>
                                         </View>
                                     </View>
                                     <View
-                                        style={{
-                                            padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(10),
-                                            height: HeightRatio(40),
-                                            width: HeightRatio(40),
-                                            display: 'flex',
-                                            alignItems: "flex-end",
-                                            justifyContent: "center",
-                                        }}
+                                        style={styles.scheduleButton_faBars}
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{
-                                                color: 'white',
-                                            }}
+                                            style={{ color: 'white' }}
                                             size={20}
                                         />
                                     </View>
@@ -606,70 +486,27 @@ export const DailySchedule = (props) => {
                             </View>
                             {displayFirstThingNutrients && displayFirstThingNutrientsForIndex == index &&
                                 <>
-                                    <View
-                                        style={{
-                                            width: windowWidth - HeightRatio(120),
-                                            alignSelf: 'center',
-                                            padding: HeightRatio(5)
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 1,
-                                                borderBottomColor: 'white'
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    // marginTop: HeightRatio(5),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
+                                        <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
+                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
                                                 Nutrition Details
                                             </Text>
                                         </View>
                                     </View>
-                                    <View style={{
-                                        padding: 10,
-                                        marginBottom: HeightRatio(4),
-                                        alignSelf: 'center'
-                                    }}>
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Container_0}>
                                         {Object.keys(data.nutrients).map((key) => (
                                             <View
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    flexDirection: 'row',
-                                                    justifyContent: 'space-between',
-                                                    marginBottom: 5,
-                                                    width: windowWidth - HeightRatio(130),
-                                                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                                                    margin: HeightRatio(2),
-                                                    padding: HeightRatio(10),
-                                                    borderRadius: HeightRatio(4)
-                                                }}
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}
                                                 key={key}
                                             >
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'left',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {key.replace('_', ' ')}
                                                 </Text>
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'right',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {data.nutrients[key].amount} {data.nutrients[key].unit}
@@ -678,26 +515,10 @@ export const DailySchedule = (props) => {
                                         ))}
                                     </View>
                                     <TouchableOpacity
-                                        onPress={() => {setModalVisible(true); setDeleteID(data.id)}}
-                                        style={{
-                                            backgroundColor: 'rgba(255, 0, 75, 0.90)',
-                                            margin: HeightRatio(10),
-                                            padding: HeightRatio(10),
-                                            paddingLeft: HeightRatio(20),
-                                            paddingRight: HeightRatio(20),
-                                            borderRadius: HeightRatio(10),
-                                            width: '80%',
-                                            alignSelf: 'center'
-                                        }}
+                                        onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
+                                        style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: HeightRatio(25),
-                                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                textAlign: 'center'
-                                            }}
-                                        >
+                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -712,7 +533,7 @@ export const DailySchedule = (props) => {
                     {/* BREAKFAST */}
                     <TouchableOpacity
                         onPress={() => {
-                            displayScheduleData(!displaBool_Breakfast ? "Breakfast" : null); 
+                            displayScheduleData(!displaBool_Breakfast ? "Breakfast" : null);
                             setDisplaBool_FirstThing(false)
                             setDisplaBool_Breakfast(current => !current)
                             setDisplaBool_Midmorning(false)
@@ -722,165 +543,78 @@ export const DailySchedule = (props) => {
                             setDisplaBool_BeforeBed(false)
                         }}
                         style={{
-                            backgroundColor: displaBool_Breakfast? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
-                            width: '90%',
-                            // padding: HeightRatio(15),
-                            margin: HeightRatio(4),
-                            borderRadius: HeightRatio(10),
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between", // changed to 'space-between'
-                            alignSelf: 'center',
-                            flexDirection: 'row'
+                            ...styles.scheduleButton,
+                            backgroundColor: displaBool_Breakfast ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
                         }}
                     >
                         <Image
                             source={require('../../../assets/pattern_0.png')}
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                opacity: 0.05,
-                                borderRadius: HeightRatio(10),
-                                position: 'absolute'
-                            }}
+                            style={styles.scheduleButton_Pattern_0}
                         />
                         <Text
                             style={{
-                                color: displaBool_Breakfast? 'black' : 'white',
-                                fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                marginRight: HeightRatio(10),
-                                margin: HeightRatio(15)
+                                ...styles.scheduleButton_Text,
+                                color: displaBool_Breakfast ? 'black' : 'white',
                             }}
                         >
                             Breakfast
                         </Text>
                         <View style={{ flex: 1 }} />
                         <View
-                            style={{
-                                backgroundColor: 'rgba(0,0,0, 0.2)',
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                height: HeightRatio(40),
-                                // width: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_Calorie_Container}
                         >
                             <Text
                                 style={{
-                                    color: displaBool_Breakfast? 'black' : 'white',
-                                    fontSize: HeightRatio(25),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    ...styles.scheduleButton_Calorie_Container_Text,
+                                    color: displaBool_Breakfast ? 'black' : 'white',
                                 }}
                             >
                                 {breakfastCalTotal} Cal
                             </Text>
                         </View>
                         <View
-                            style={{
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                height: HeightRatio(40),
-                                width: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_faBars}
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{
-                                    color: 'black',
-                                }}
+                                style={{ color: 'black' }}
                                 size={20}
                             />
                         </View>
                     </TouchableOpacity>
                     {breakfastData.map((data, index) => (
                         <View
-                            style={{
-                                // backgroundColor: '#a39bc9',
-                                // borderRadius: HeightRatio(10),
-                                borderBottomWidth: 1,
-                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
-                                margin: HeightRatio(10),
-                                width: windowWidth - HeightRatio(80),
-                                alignSelf: 'center'
-                            }}
+                            style={styles.scheduleButton_subContent}
                             key={index}
                         >
-                            <View
-                                style={{
-                                    width: windowWidth - HeightRatio(120),
-                                    alignSelf: 'center'
-                                }}
-                            >
+                            <View style={styles.scheduleButton_subContent_Container}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         setDisplayBreakfastNutrients(current => displayBreakfastNutrientsForIndex == index ? !current : true);
                                         setDisplayBreakfastNutrientsForIndex(index)
                                     }}
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between", // changed to 'space-between'
-                                        flexDirection: 'row',
-                                        padding: HeightRatio(5),
-                                        paddingTop: HeightRatio(10)
-                                    }}
+                                    style={styles.scheduleButton_subContent_Container_Button}
                                 >
                                     <View
-                                        style={{flexDirection: 'column'}}
+                                        style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold"
-                                                }}
-                                            >
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.item}
                                             </Text>
                                         </View>
-                                        <View
-                                            style={{
-                                                margin: HeightRatio(5),
-                                                padding: HeightRatio(4),
-                                                paddingLeft: HeightRatio(20),
-                                                paddingRight: HeightRatio(20),
-                                                borderRadius: HeightRatio(10)
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(20),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                        <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.amount}
                                             </Text>
                                         </View>
                                     </View>
                                     <View
-                                        style={{
-                                            padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(10),
-                                            height: HeightRatio(40),
-                                            width: HeightRatio(40),
-                                            display: 'flex',
-                                            alignItems: "flex-end",
-                                            justifyContent: "center",
-                                        }}
+                                        style={styles.scheduleButton_faBars}
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{
-                                                color: 'white',
-                                            }}
+                                            style={{ color: 'white' }}
                                             size={20}
                                         />
                                     </View>
@@ -890,70 +624,27 @@ export const DailySchedule = (props) => {
                             </View>
                             {displayBreakfastNutrients && displayBreakfastNutrientsForIndex == index &&
                                 <>
-                                    <View
-                                        style={{
-                                            width: windowWidth - HeightRatio(120),
-                                            alignSelf: 'center',
-                                            padding: HeightRatio(5)
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 1,
-                                                borderBottomColor: 'white'
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    // marginTop: HeightRatio(5),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
+                                        <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
+                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
                                                 Nutrition Details
                                             </Text>
                                         </View>
                                     </View>
-                                    <View style={{
-                                        padding: 10,
-                                        marginBottom: HeightRatio(4),
-                                        alignSelf: 'center'
-                                    }}>
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Container_0}>
                                         {Object.keys(data.nutrients).map((key) => (
                                             <View
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    flexDirection: 'row',
-                                                    justifyContent: 'space-between',
-                                                    marginBottom: 5,
-                                                    width: windowWidth - HeightRatio(130),
-                                                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                                                    margin: HeightRatio(2),
-                                                    padding: HeightRatio(10),
-                                                    borderRadius: HeightRatio(4)
-                                                }}
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}
                                                 key={key}
                                             >
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'left',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {key.replace('_', ' ')}
                                                 </Text>
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'right',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {data.nutrients[key].amount} {data.nutrients[key].unit}
@@ -962,26 +653,10 @@ export const DailySchedule = (props) => {
                                         ))}
                                     </View>
                                     <TouchableOpacity
-                                        onPress={() => {setModalVisible(true); setDeleteID(data.id)}}
-                                        style={{
-                                            backgroundColor: 'rgba(255, 0, 75, 0.90)',
-                                            margin: HeightRatio(10),
-                                            padding: HeightRatio(10),
-                                            paddingLeft: HeightRatio(20),
-                                            paddingRight: HeightRatio(20),
-                                            borderRadius: HeightRatio(10),
-                                            width: '80%',
-                                            alignSelf: 'center'
-                                        }}
+                                        onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
+                                        style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: HeightRatio(25),
-                                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                textAlign: 'center'
-                                            }}
-                                        >
+                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -997,9 +672,8 @@ export const DailySchedule = (props) => {
 
                     {/* MIDMORNING */}
                     <TouchableOpacity
-                        // onPress={() => displayScheduleData("Midmorning")}
                         onPress={() => {
-                            displayScheduleData(!displaBool_Midmorning ? "Midmorning" : null); 
+                            displayScheduleData(!displaBool_Midmorning ? "Midmorning" : null);
                             setDisplaBool_FirstThing(false)
                             setDisplaBool_Breakfast(false)
                             setDisplaBool_Midmorning(current => !current)
@@ -1009,165 +683,78 @@ export const DailySchedule = (props) => {
                             setDisplaBool_BeforeBed(false)
                         }}
                         style={{
-                            backgroundColor: displaBool_Midmorning? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
-                            width: '90%',
-                            // padding: HeightRatio(15),
-                            margin: HeightRatio(4),
-                            borderRadius: HeightRatio(10),
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between", // changed to 'space-between'
-                            alignSelf: 'center',
-                            flexDirection: 'row'
+                            ...styles.scheduleButton,
+                            backgroundColor: displaBool_Midmorning ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
                         }}
                     >
                         <Image
                             source={require('../../../assets/pattern_0.png')}
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                opacity: 0.05,
-                                borderRadius: HeightRatio(10),
-                                position: 'absolute'
-                            }}
+                            style={styles.scheduleButton_Pattern_0}
                         />
                         <Text
                             style={{
-                                color: displaBool_Midmorning? 'black' : 'white',
-                                fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                marginRight: HeightRatio(10),
-                                margin: HeightRatio(15)
+                                ...styles.scheduleButton_Text,
+                                color: displaBool_Midmorning ? 'black' : 'white',
                             }}
                         >
                             Midmorning
                         </Text>
                         <View style={{ flex: 1 }} />
                         <View
-                            style={{
-                                backgroundColor: 'rgba(0,0,0, 0.2)',
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                height: HeightRatio(40),
-                                // width: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_Calorie_Container}
                         >
                             <Text
                                 style={{
-                                    color: displaBool_Midmorning? 'black' : 'white',
-                                    fontSize: HeightRatio(25),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    ...styles.scheduleButton_Calorie_Container_Text,
+                                    color: displaBool_Midmorning ? 'black' : 'white',
                                 }}
                             >
                                 {midmorningCalTotal} Cal
                             </Text>
                         </View>
                         <View
-                            style={{
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                height: HeightRatio(40),
-                                width: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_faBars}
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{
-                                    color: 'black',
-                                }}
+                                style={{ color: 'black' }}
                                 size={20}
                             />
                         </View>
                     </TouchableOpacity>
                     {midmorningData.map((data, index) => (
                         <View
-                            style={{
-                                // backgroundColor: '#a39bc9',
-                                // borderRadius: HeightRatio(10),
-                                borderBottomWidth: 1,
-                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
-                                margin: HeightRatio(10),
-                                width: windowWidth - HeightRatio(80),
-                                alignSelf: 'center'
-                            }}
+                            style={styles.scheduleButton_subContent}
                             key={index}
                         >
-                            <View
-                                style={{
-                                    width: windowWidth - HeightRatio(120),
-                                    alignSelf: 'center'
-                                }}
-                            >
+                            <View style={styles.scheduleButton_subContent_Container}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         setDisplayMidmorningNutrients(current => displayMidmorningNutrientsForIndex == index ? !current : true);
                                         setDisplayMidmorningNutrientsForIndex(index)
                                     }}
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between", // changed to 'space-between'
-                                        flexDirection: 'row',
-                                        padding: HeightRatio(5),
-                                        paddingTop: HeightRatio(10)
-                                    }}
+                                    style={styles.scheduleButton_subContent_Container_Button}
                                 >
                                     <View
-                                        style={{flexDirection: 'column'}}
+                                        style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold"
-                                                }}
-                                            >
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.item}
                                             </Text>
                                         </View>
-                                        <View
-                                            style={{
-                                                margin: HeightRatio(5),
-                                                padding: HeightRatio(4),
-                                                paddingLeft: HeightRatio(20),
-                                                paddingRight: HeightRatio(20),
-                                                borderRadius: HeightRatio(10)
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(20),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                        <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.amount}
                                             </Text>
                                         </View>
                                     </View>
                                     <View
-                                        style={{
-                                            padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(10),
-                                            height: HeightRatio(40),
-                                            width: HeightRatio(40),
-                                            display: 'flex',
-                                            alignItems: "flex-end",
-                                            justifyContent: "center",
-                                        }}
+                                        style={styles.scheduleButton_faBars}
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{
-                                                color: 'white',
-                                            }}
+                                            style={{ color: 'white' }}
                                             size={20}
                                         />
                                     </View>
@@ -1177,70 +764,27 @@ export const DailySchedule = (props) => {
                             </View>
                             {displayMidmorningNutrients && displayMidmorningNutrientsForIndex == index &&
                                 <>
-                                    <View
-                                        style={{
-                                            width: windowWidth - HeightRatio(120),
-                                            alignSelf: 'center',
-                                            padding: HeightRatio(5)
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 1,
-                                                borderBottomColor: 'white'
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    // marginTop: HeightRatio(5),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
+                                        <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
+                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
                                                 Nutrition Details
                                             </Text>
                                         </View>
                                     </View>
-                                    <View style={{
-                                        padding: 10,
-                                        marginBottom: HeightRatio(4),
-                                        alignSelf: 'center'
-                                    }}>
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Container_0}>
                                         {Object.keys(data.nutrients).map((key) => (
                                             <View
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    flexDirection: 'row',
-                                                    justifyContent: 'space-between',
-                                                    marginBottom: 5,
-                                                    width: windowWidth - HeightRatio(130),
-                                                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                                                    margin: HeightRatio(2),
-                                                    padding: HeightRatio(10),
-                                                    borderRadius: HeightRatio(4)
-                                                }}
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}
                                                 key={key}
                                             >
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'left',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {key.replace('_', ' ')}
                                                 </Text>
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'right',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {data.nutrients[key].amount} {data.nutrients[key].unit}
@@ -1249,26 +793,10 @@ export const DailySchedule = (props) => {
                                         ))}
                                     </View>
                                     <TouchableOpacity
-                                        onPress={() => {setModalVisible(true); setDeleteID(data.id)}}
-                                        style={{
-                                            backgroundColor: 'rgba(255, 0, 75, 0.90)',
-                                            margin: HeightRatio(10),
-                                            padding: HeightRatio(10),
-                                            paddingLeft: HeightRatio(20),
-                                            paddingRight: HeightRatio(20),
-                                            borderRadius: HeightRatio(10),
-                                            width: '80%',
-                                            alignSelf: 'center'
-                                        }}
+                                        onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
+                                        style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: HeightRatio(25),
-                                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                textAlign: 'center'
-                                            }}
-                                        >
+                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -1282,9 +810,8 @@ export const DailySchedule = (props) => {
 
                     {/* LUNCH */}
                     <TouchableOpacity
-                        // onPress={() => displayScheduleData("Lunch")}
                         onPress={() => {
-                            displayScheduleData(!displaBool_Lunch ? "Lunch" : null); 
+                            displayScheduleData(!displaBool_Lunch ? "Lunch" : null);
                             setDisplaBool_FirstThing(false)
                             setDisplaBool_Breakfast(false)
                             setDisplaBool_Midmorning(false)
@@ -1294,164 +821,78 @@ export const DailySchedule = (props) => {
                             setDisplaBool_BeforeBed(false)
                         }}
                         style={{
-                            backgroundColor: displaBool_Lunch? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
-                            width: '90%',
-                            // padding: HeightRatio(15),
-                            margin: HeightRatio(4),
-                            borderRadius: HeightRatio(10),
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between", // changed to 'space-between'
-                            alignSelf: 'center',
-                            flexDirection: 'row'
+                            ...styles.scheduleButton,
+                            backgroundColor: displaBool_Lunch ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
                         }}
                     >
                         <Image
                             source={require('../../../assets/pattern_0.png')}
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                opacity: 0.05,
-                                borderRadius: HeightRatio(10),
-                                position: 'absolute'
-                            }}
+                            style={styles.scheduleButton_Pattern_0}
                         />
                         <Text
                             style={{
-                                color: displaBool_Lunch? 'black' : 'white',
-                                fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                marginRight: HeightRatio(10),
-                                margin: HeightRatio(15)
+                                ...styles.scheduleButton_Text,
+                                color: displaBool_Lunch ? 'black' : 'white',
                             }}
                         >
                             Lunch
                         </Text>
                         <View style={{ flex: 1 }} />
                         <View
-                            style={{
-                                backgroundColor: 'rgba(0,0,0, 0.2)',
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                height: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_Calorie_Container}
                         >
                             <Text
                                 style={{
-                                    color: displaBool_Lunch? 'black' : 'white',
-                                    fontSize: HeightRatio(25),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    ...styles.scheduleButton_Calorie_Container_Text,
+                                    color: displaBool_Lunch ? 'black' : 'white',
                                 }}
                             >
                                 {lunchCalTotal} Cal
                             </Text>
                         </View>
                         <View
-                            style={{
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                height: HeightRatio(40),
-                                width: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_faBars}
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{
-                                    color: 'black',
-                                }}
+                                style={{ color: 'black' }}
                                 size={20}
                             />
                         </View>
                     </TouchableOpacity>
                     {lunchData.map((data, index) => (
                         <View
-                            style={{
-                                // backgroundColor: '#a39bc9',
-                                // borderRadius: HeightRatio(10),
-                                borderBottomWidth: 1,
-                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
-                                margin: HeightRatio(10),
-                                width: windowWidth - HeightRatio(80),
-                                alignSelf: 'center'
-                            }}
+                            style={styles.scheduleButton_subContent}
                             key={index}
                         >
-                            <View
-                                style={{
-                                    width: windowWidth - HeightRatio(120),
-                                    alignSelf: 'center'
-                                }}
-                            >
+                            <View style={styles.scheduleButton_subContent_Container}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         setDisplayLunchNutrients(current => displayLunchNutrientsForIndex == index ? !current : true);
                                         setDisplayLunchNutrientsForIndex(index)
                                     }}
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between", // changed to 'space-between'
-                                        flexDirection: 'row',
-                                        padding: HeightRatio(5),
-                                        paddingTop: HeightRatio(10)
-                                    }}
+                                    style={styles.scheduleButton_subContent_Container_Button}
                                 >
                                     <View
-                                        style={{flexDirection: 'column'}}
+                                        style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold"
-                                                }}
-                                            >
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.item}
                                             </Text>
                                         </View>
-                                        <View
-                                            style={{
-                                                margin: HeightRatio(5),
-                                                padding: HeightRatio(4),
-                                                paddingLeft: HeightRatio(20),
-                                                paddingRight: HeightRatio(20),
-                                                borderRadius: HeightRatio(10)
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(20),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                        <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.amount}
                                             </Text>
                                         </View>
                                     </View>
                                     <View
-                                        style={{
-                                            padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(10),
-                                            height: HeightRatio(40),
-                                            width: HeightRatio(40),
-                                            display: 'flex',
-                                            alignItems: "flex-end",
-                                            justifyContent: "center",
-                                        }}
+                                        style={styles.scheduleButton_faBars}
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{
-                                                color: 'white',
-                                            }}
+                                            style={{ color: 'white' }}
                                             size={20}
                                         />
                                     </View>
@@ -1461,70 +902,27 @@ export const DailySchedule = (props) => {
                             </View>
                             {displayLunchNutrients && displayLunchNutrientsForIndex == index &&
                                 <>
-                                    <View
-                                        style={{
-                                            width: windowWidth - HeightRatio(120),
-                                            alignSelf: 'center',
-                                            padding: HeightRatio(5)
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 1,
-                                                borderBottomColor: 'white'
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    // marginTop: HeightRatio(5),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
+                                        <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
+                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
                                                 Nutrition Details
                                             </Text>
                                         </View>
                                     </View>
-                                    <View style={{
-                                        padding: 10,
-                                        marginBottom: HeightRatio(4),
-                                        alignSelf: 'center'
-                                    }}>
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Container_0}>
                                         {Object.keys(data.nutrients).map((key) => (
                                             <View
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    flexDirection: 'row',
-                                                    justifyContent: 'space-between',
-                                                    marginBottom: 5,
-                                                    width: windowWidth - HeightRatio(130),
-                                                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                                                    margin: HeightRatio(2),
-                                                    padding: HeightRatio(10),
-                                                    borderRadius: HeightRatio(4)
-                                                }}
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}
                                                 key={key}
                                             >
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'left',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {key.replace('_', ' ')}
                                                 </Text>
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'right',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {data.nutrients[key].amount} {data.nutrients[key].unit}
@@ -1533,26 +931,10 @@ export const DailySchedule = (props) => {
                                         ))}
                                     </View>
                                     <TouchableOpacity
-                                        onPress={() => {setModalVisible(true); setDeleteID(data.id)}}
-                                        style={{
-                                            backgroundColor: 'rgba(255, 0, 75, 0.90)',
-                                            margin: HeightRatio(10),
-                                            padding: HeightRatio(10),
-                                            paddingLeft: HeightRatio(20),
-                                            paddingRight: HeightRatio(20),
-                                            borderRadius: HeightRatio(10),
-                                            width: '80%',
-                                            alignSelf: 'center'
-                                        }}
+                                        onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
+                                        style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: HeightRatio(25),
-                                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                textAlign: 'center'
-                                            }}
-                                        >
+                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -1564,11 +946,10 @@ export const DailySchedule = (props) => {
 
                     ))}
 
-                    {/* MIDAFTER-NOON */}
+                    {/* AFTERNOON */}
                     <TouchableOpacity
-                        // onPress={() => displayScheduleData("Afternoon")}
                         onPress={() => {
-                            displayScheduleData(!displaBool_Afternoon ? "Afternoon" : null); 
+                            displayScheduleData(!displaBool_Afternoon ? "Afternoon" : null);
                             setDisplaBool_FirstThing(false)
                             setDisplaBool_Breakfast(false)
                             setDisplaBool_Midmorning(false)
@@ -1578,164 +959,78 @@ export const DailySchedule = (props) => {
                             setDisplaBool_BeforeBed(false)
                         }}
                         style={{
-                            backgroundColor: displaBool_Afternoon? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
-                            width: '90%',
-                            // padding: HeightRatio(15),
-                            margin: HeightRatio(4),
-                            borderRadius: HeightRatio(10),
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between", // changed to 'space-between'
-                            alignSelf: 'center',
-                            flexDirection: 'row'
+                            ...styles.scheduleButton,
+                            backgroundColor: displaBool_Afternoon ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
                         }}
                     >
                         <Image
                             source={require('../../../assets/pattern_0.png')}
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                opacity: 0.05,
-                                borderRadius: HeightRatio(10),
-                                position: 'absolute'
-                            }}
+                            style={styles.scheduleButton_Pattern_0}
                         />
                         <Text
                             style={{
-                                color: displaBool_Afternoon? 'black' : 'white',
-                                fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                marginRight: HeightRatio(10),
-                                margin: HeightRatio(15)
+                                ...styles.scheduleButton_Text,
+                                color: displaBool_Afternoon ? 'black' : 'white',
                             }}
                         >
-                            Midafter-noon
+                            Afternoon
                         </Text>
                         <View style={{ flex: 1 }} />
                         <View
-                            style={{
-                                backgroundColor: 'rgba(0,0,0, 0.2)',
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                height: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_Calorie_Container}
                         >
                             <Text
                                 style={{
-                                    color: displaBool_Afternoon? 'black' : 'white',
-                                    fontSize: HeightRatio(25),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    ...styles.scheduleButton_Calorie_Container_Text,
+                                    color: displaBool_Afternoon ? 'black' : 'white',
                                 }}
                             >
                                 {afternoonCalTotal} Cal
                             </Text>
                         </View>
                         <View
-                            style={{
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                height: HeightRatio(40),
-                                width: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_faBars}
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{
-                                    color: 'black',
-                                }}
+                                style={{ color: 'black' }}
                                 size={20}
                             />
                         </View>
                     </TouchableOpacity>
                     {afternoonData.map((data, index) => (
                         <View
-                            style={{
-                                // backgroundColor: '#a39bc9',
-                                // borderRadius: HeightRatio(10),
-                                borderBottomWidth: 1,
-                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
-                                margin: HeightRatio(10),
-                                width: windowWidth - HeightRatio(80),
-                                alignSelf: 'center'
-                            }}
+                            style={styles.scheduleButton_subContent}
                             key={index}
                         >
-                            <View
-                                style={{
-                                    width: windowWidth - HeightRatio(120),
-                                    alignSelf: 'center'
-                                }}
-                            >
+                            <View style={styles.scheduleButton_subContent_Container}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         setDisplayAfternoonNutrients(current => displayAfternoonNutrientsForIndex == index ? !current : true);
                                         setDisplayAfternoonNutrientsForIndex(index)
                                     }}
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between", // changed to 'space-between'
-                                        flexDirection: 'row',
-                                        padding: HeightRatio(5),
-                                        paddingTop: HeightRatio(10)
-                                    }}
+                                    style={styles.scheduleButton_subContent_Container_Button}
                                 >
                                     <View
-                                        style={{flexDirection: 'column'}}
+                                        style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold"
-                                                }}
-                                            >
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.item}
                                             </Text>
                                         </View>
-                                        <View
-                                            style={{
-                                                margin: HeightRatio(5),
-                                                padding: HeightRatio(4),
-                                                paddingLeft: HeightRatio(20),
-                                                paddingRight: HeightRatio(20),
-                                                borderRadius: HeightRatio(10)
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(20),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                        <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.amount}
                                             </Text>
                                         </View>
                                     </View>
                                     <View
-                                        style={{
-                                            padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(10),
-                                            height: HeightRatio(40),
-                                            width: HeightRatio(40),
-                                            display: 'flex',
-                                            alignItems: "flex-end",
-                                            justifyContent: "center",
-                                        }}
+                                        style={styles.scheduleButton_faBars}
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{
-                                                color: 'white',
-                                            }}
+                                            style={{ color: 'white' }}
                                             size={20}
                                         />
                                     </View>
@@ -1745,70 +1040,27 @@ export const DailySchedule = (props) => {
                             </View>
                             {displayAfternoonNutrients && displayAfternoonNutrientsForIndex == index &&
                                 <>
-                                    <View
-                                        style={{
-                                            width: windowWidth - HeightRatio(120),
-                                            alignSelf: 'center',
-                                            padding: HeightRatio(5)
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 1,
-                                                borderBottomColor: 'white'
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    // marginTop: HeightRatio(5),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
+                                        <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
+                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
                                                 Nutrition Details
                                             </Text>
                                         </View>
                                     </View>
-                                    <View style={{
-                                        padding: 10,
-                                        marginBottom: HeightRatio(4),
-                                        alignSelf: 'center'
-                                    }}>
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Container_0}>
                                         {Object.keys(data.nutrients).map((key) => (
                                             <View
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    flexDirection: 'row',
-                                                    justifyContent: 'space-between',
-                                                    marginBottom: 5,
-                                                    width: windowWidth - HeightRatio(130),
-                                                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                                                    margin: HeightRatio(2),
-                                                    padding: HeightRatio(10),
-                                                    borderRadius: HeightRatio(4)
-                                                }}
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}
                                                 key={key}
                                             >
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'left',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {key.replace('_', ' ')}
                                                 </Text>
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'right',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {data.nutrients[key].amount} {data.nutrients[key].unit}
@@ -1817,26 +1069,10 @@ export const DailySchedule = (props) => {
                                         ))}
                                     </View>
                                     <TouchableOpacity
-                                        onPress={() => {setModalVisible(true); setDeleteID(data.id)}}
-                                        style={{
-                                            backgroundColor: 'rgba(255, 0, 75, 0.90)',
-                                            margin: HeightRatio(10),
-                                            padding: HeightRatio(10),
-                                            paddingLeft: HeightRatio(20),
-                                            paddingRight: HeightRatio(20),
-                                            borderRadius: HeightRatio(10),
-                                            width: '80%',
-                                            alignSelf: 'center'
-                                        }}
+                                        onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
+                                        style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: HeightRatio(25),
-                                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                textAlign: 'center'
-                                            }}
-                                        >
+                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -1851,9 +1087,8 @@ export const DailySchedule = (props) => {
 
                     {/* DINNER */}
                     <TouchableOpacity
-                        // onPress={() => displayScheduleData("Dinner")}
                         onPress={() => {
-                            displayScheduleData(!displaBool_Dinner ? "Dinner" : null); 
+                            displayScheduleData(!displaBool_Dinner ? "Dinner" : null);
                             setDisplaBool_FirstThing(false)
                             setDisplaBool_Breakfast(false)
                             setDisplaBool_Midmorning(false)
@@ -1863,164 +1098,78 @@ export const DailySchedule = (props) => {
                             setDisplaBool_BeforeBed(false)
                         }}
                         style={{
-                            backgroundColor: displaBool_Dinner? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
-                            width: '90%',
-                            // padding: HeightRatio(15),
-                            margin: HeightRatio(4),
-                            borderRadius: HeightRatio(10),
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between", // changed to 'space-between'
-                            alignSelf: 'center',
-                            flexDirection: 'row'
+                            ...styles.scheduleButton,
+                            backgroundColor: displaBool_Dinner ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
                         }}
                     >
                         <Image
                             source={require('../../../assets/pattern_0.png')}
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                opacity: 0.05,
-                                borderRadius: HeightRatio(10),
-                                position: 'absolute'
-                            }}
+                            style={styles.scheduleButton_Pattern_0}
                         />
                         <Text
                             style={{
-                                color: displaBool_Dinner? 'black' : 'white',
-                                fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                marginRight: HeightRatio(10),
-                                margin: HeightRatio(15)
+                                ...styles.scheduleButton_Text,
+                                color: displaBool_Dinner ? 'black' : 'white',
                             }}
                         >
                             Dinner
                         </Text>
                         <View style={{ flex: 1 }} />
                         <View
-                            style={{
-                                backgroundColor: 'rgba(0,0,0, 0.2)',
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                height: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_Calorie_Container}
                         >
                             <Text
                                 style={{
-                                    color: displaBool_Dinner? 'black' : 'white',
-                                    fontSize: HeightRatio(25),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    ...styles.scheduleButton_Calorie_Container_Text,
+                                    color: displaBool_Dinner ? 'black' : 'white',
                                 }}
                             >
                                 {dinnerCalTotal} Cal
                             </Text>
                         </View>
                         <View
-                            style={{
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                height: HeightRatio(40),
-                                width: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_faBars}
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{
-                                    color: 'black',
-                                }}
+                                style={{ color: 'black' }}
                                 size={20}
                             />
                         </View>
                     </TouchableOpacity>
                     {dinnerData.map((data, index) => (
                         <View
-                            style={{
-                                // backgroundColor: '#a39bc9',
-                                // borderRadius: HeightRatio(10),
-                                borderBottomWidth: 1,
-                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
-                                margin: HeightRatio(10),
-                                width: windowWidth - HeightRatio(80),
-                                alignSelf: 'center'
-                            }}
+                            style={styles.scheduleButton_subContent}
                             key={index}
                         >
-                            <View
-                                style={{
-                                    width: windowWidth - HeightRatio(120),
-                                    alignSelf: 'center'
-                                }}
-                            >
+                            <View style={styles.scheduleButton_subContent_Container}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         setDisplayDinnerNutrients(current => displayDinnerNutrientsForIndex == index ? !current : true);
                                         setDisplayDinnerNutrientsForIndex(index)
                                     }}
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between", // changed to 'space-between'
-                                        flexDirection: 'row',
-                                        padding: HeightRatio(5),
-                                        paddingTop: HeightRatio(10)
-                                    }}
+                                    style={styles.scheduleButton_subContent_Container_Button}
                                 >
                                     <View
-                                        style={{flexDirection: 'column'}}
+                                        style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold"
-                                                }}
-                                            >
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.item}
                                             </Text>
                                         </View>
-                                        <View
-                                            style={{
-                                                margin: HeightRatio(5),
-                                                padding: HeightRatio(4),
-                                                paddingLeft: HeightRatio(20),
-                                                paddingRight: HeightRatio(20),
-                                                borderRadius: HeightRatio(10)
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(20),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                        <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.amount}
                                             </Text>
                                         </View>
                                     </View>
                                     <View
-                                        style={{
-                                            padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(10),
-                                            height: HeightRatio(40),
-                                            width: HeightRatio(40),
-                                            display: 'flex',
-                                            alignItems: "flex-end",
-                                            justifyContent: "center",
-                                        }}
+                                        style={styles.scheduleButton_faBars}
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{
-                                                color: 'white',
-                                            }}
+                                            style={{ color: 'white' }}
                                             size={20}
                                         />
                                     </View>
@@ -2030,70 +1179,27 @@ export const DailySchedule = (props) => {
                             </View>
                             {displayDinnerNutrients && displayDinnerNutrientsForIndex == index &&
                                 <>
-                                    <View
-                                        style={{
-                                            width: windowWidth - HeightRatio(120),
-                                            alignSelf: 'center',
-                                            padding: HeightRatio(5)
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 1,
-                                                borderBottomColor: 'white'
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    // marginTop: HeightRatio(5),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
+                                        <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
+                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
                                                 Nutrition Details
                                             </Text>
                                         </View>
                                     </View>
-                                    <View style={{
-                                        padding: 10,
-                                        marginBottom: HeightRatio(4),
-                                        alignSelf: 'center'
-                                    }}>
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Container_0}>
                                         {Object.keys(data.nutrients).map((key) => (
                                             <View
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    flexDirection: 'row',
-                                                    justifyContent: 'space-between',
-                                                    marginBottom: 5,
-                                                    width: windowWidth - HeightRatio(130),
-                                                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                                                    margin: HeightRatio(2),
-                                                    padding: HeightRatio(10),
-                                                    borderRadius: HeightRatio(4)
-                                                }}
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}
                                                 key={key}
                                             >
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'left',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {key.replace('_', ' ')}
                                                 </Text>
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'right',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {data.nutrients[key].amount} {data.nutrients[key].unit}
@@ -2102,26 +1208,10 @@ export const DailySchedule = (props) => {
                                         ))}
                                     </View>
                                     <TouchableOpacity
-                                        onPress={() => {setModalVisible(true); setDeleteID(data.id)}}
-                                        style={{
-                                            backgroundColor: 'rgba(255, 0, 75, 0.90)',
-                                            margin: HeightRatio(10),
-                                            padding: HeightRatio(10),
-                                            paddingLeft: HeightRatio(20),
-                                            paddingRight: HeightRatio(20),
-                                            borderRadius: HeightRatio(10),
-                                            width: '80%',
-                                            alignSelf: 'center'
-                                        }}
+                                        onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
+                                        style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: HeightRatio(25),
-                                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                textAlign: 'center'
-                                            }}
-                                        >
+                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -2137,7 +1227,7 @@ export const DailySchedule = (props) => {
                     {/* BEFORE BED */}
                     <TouchableOpacity
                         onPress={() => {
-                            displayScheduleData(!displaBool_BeforeBed ? "Before Bed" : null); 
+                            displayScheduleData(!displaBool_BeforeBed ? "Before Bed" : null);
                             setDisplaBool_FirstThing(false)
                             setDisplaBool_Breakfast(false)
                             setDisplaBool_Midmorning(false)
@@ -2147,164 +1237,78 @@ export const DailySchedule = (props) => {
                             setDisplaBool_BeforeBed(current => !current)
                         }}
                         style={{
-                            backgroundColor: displaBool_BeforeBed? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)",
-                            width: '90%',
-                            // padding: HeightRatio(15),
-                            margin: HeightRatio(4),
-                            borderRadius: HeightRatio(10),
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between", // changed to 'space-between'
-                            alignSelf: 'center',
-                            flexDirection: 'row'
+                            ...styles.scheduleButton,
+                            backgroundColor: displaBool_BeforeBed ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
                         }}
                     >
                         <Image
                             source={require('../../../assets/pattern_0.png')}
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                opacity: 0.05,
-                                borderRadius: HeightRatio(10),
-                                position: 'absolute'
-                            }}
+                            style={styles.scheduleButton_Pattern_0}
                         />
                         <Text
                             style={{
-                                color: displaBool_BeforeBed? 'black' : 'white',
-                                fontSize: HeightRatio(30),
-                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                marginRight: HeightRatio(10),
-                                margin: HeightRatio(15)
+                                ...styles.scheduleButton_Text,
+                                color: displaBool_BeforeBed ? 'black' : 'white',
                             }}
                         >
                             Before Bed
                         </Text>
                         <View style={{ flex: 1 }} />
                         <View
-                            style={{
-                                backgroundColor: 'rgba(0,0,0, 0.2)',
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                height: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_Calorie_Container}
                         >
                             <Text
                                 style={{
-                                    color: displaBool_BeforeBed? 'black' : 'white',
-                                    fontSize: HeightRatio(25),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    ...styles.scheduleButton_Calorie_Container_Text,
+                                    color: displaBool_BeforeBed ? 'black' : 'white',
                                 }}
                             >
                                 {beforeBedCalTotal} Cal
                             </Text>
                         </View>
                         <View
-                            style={{
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                height: HeightRatio(40),
-                                width: HeightRatio(40),
-                                display: 'flex',
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
+                            style={styles.scheduleButton_faBars}
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{
-                                    color: 'black',
-                                }}
+                                style={{ color: 'black' }}
                                 size={20}
                             />
                         </View>
                     </TouchableOpacity>
                     {beforeBedData.map((data, index) => (
                         <View
-                            style={{
-                                // backgroundColor: '#a39bc9',
-                                // borderRadius: HeightRatio(10),
-                                borderBottomWidth: 1,
-                                borderBottomColor: 'rgba(247, 255, 108, 0.50)',
-                                margin: HeightRatio(10),
-                                width: windowWidth - HeightRatio(80),
-                                alignSelf: 'center'
-                            }}
+                            style={styles.scheduleButton_subContent}
                             key={index}
                         >
-                            <View
-                                style={{
-                                    width: windowWidth - HeightRatio(120),
-                                    alignSelf: 'center'
-                                }}
-                            >
+                            <View style={styles.scheduleButton_subContent_Container}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         setDisplayBeforeBedNutrients(current => displayBeforeBedNutrientsForIndex == index ? !current : true);
                                         setDisplayBeforeBedNutrientsForIndex(index)
                                     }}
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between", // changed to 'space-between'
-                                        flexDirection: 'row',
-                                        padding: HeightRatio(5),
-                                        paddingTop: HeightRatio(10)
-                                    }}
+                                    style={styles.scheduleButton_subContent_Container_Button}
                                 >
                                     <View
-                                        style={{flexDirection: 'column'}}
+                                        style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold"
-                                                }}
-                                            >
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.item}
                                             </Text>
                                         </View>
-                                        <View
-                                            style={{
-                                                margin: HeightRatio(5),
-                                                padding: HeightRatio(4),
-                                                paddingLeft: HeightRatio(20),
-                                                paddingRight: HeightRatio(20),
-                                                borderRadius: HeightRatio(10)
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(20),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                        <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
+                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
                                                 {data.amount}
                                             </Text>
                                         </View>
                                     </View>
                                     <View
-                                        style={{
-                                            padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(10),
-                                            height: HeightRatio(40),
-                                            width: HeightRatio(40),
-                                            display: 'flex',
-                                            alignItems: "flex-end",
-                                            justifyContent: "center",
-                                        }}
+                                        style={styles.scheduleButton_faBars}
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{
-                                                color: 'white',
-                                            }}
+                                            style={{ color: 'white' }}
                                             size={20}
                                         />
                                     </View>
@@ -2314,70 +1318,27 @@ export const DailySchedule = (props) => {
                             </View>
                             {displayBeforeBedNutrients && displayBeforeBedNutrientsForIndex == index &&
                                 <>
-                                    <View
-                                        style={{
-                                            width: windowWidth - HeightRatio(120),
-                                            alignSelf: 'center',
-                                            padding: HeightRatio(5)
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                borderBottomWidth: 1,
-                                                borderBottomColor: 'white'
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: HeightRatio(25),
-                                                    // marginTop: HeightRatio(5),
-                                                    fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                }}
-                                            >
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
+                                        <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
+                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
                                                 Nutrition Details
                                             </Text>
                                         </View>
                                     </View>
-                                    <View style={{
-                                        padding: 10,
-                                        marginBottom: HeightRatio(4),
-                                        alignSelf: 'center'
-                                    }}>
+                                    <View style={styles.scheduleButton_subContent_NutritionDetails_Container_0}>
                                         {Object.keys(data.nutrients).map((key) => (
                                             <View
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    flexDirection: 'row',
-                                                    justifyContent: 'space-between',
-                                                    marginBottom: 5,
-                                                    width: windowWidth - HeightRatio(130),
-                                                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                                                    margin: HeightRatio(2),
-                                                    padding: HeightRatio(10),
-                                                    borderRadius: HeightRatio(4)
-                                                }}
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}
                                                 key={key}
                                             >
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'left',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular"
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {key.replace('_', ' ')}
                                                 </Text>
                                                 <Text
-                                                    style={{
-                                                        flex: 1,
-                                                        textAlign: 'right',
-                                                        fontSize: HeightRatio(20),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                    }}
+                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                                                     allowFontScaling={false}
                                                 >
                                                     {data.nutrients[key].amount} {data.nutrients[key].unit}
@@ -2386,26 +1347,10 @@ export const DailySchedule = (props) => {
                                         ))}
                                     </View>
                                     <TouchableOpacity
-                                        onPress={() => {setModalVisible(true); setDeleteID(data.id)}}
-                                        style={{
-                                            backgroundColor: 'rgba(255, 0, 75, 0.90)',
-                                            margin: HeightRatio(10),
-                                            padding: HeightRatio(10),
-                                            paddingLeft: HeightRatio(20),
-                                            paddingRight: HeightRatio(20),
-                                            borderRadius: HeightRatio(10),
-                                            width: '80%',
-                                            alignSelf: 'center'
-                                        }}
+                                        onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
+                                        style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: HeightRatio(25),
-                                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                textAlign: 'center'
-                                            }}
-                                        >
+                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -2416,7 +1361,7 @@ export const DailySchedule = (props) => {
                         </View>
 
                     ))}
-                    <View style={{height: HeightRatio(40)}} />
+                    <View style={{ height: HeightRatio(40) }} />
 
                 </ScrollView>
             </SafeAreaView>
@@ -2426,95 +1371,34 @@ export const DailySchedule = (props) => {
                 animationType="slide"
                 transparent={true}
             >
-                <View
-                    style={{
-                        flex: 1,
-                        backgroundColor: 'rgba(0, 0, 0, 0.75)'
-                    }}
-                >
-                    <View
-                        style={{
-                            // flex: 1,
-                            backgroundColor: "#2f2c4f",
-                            margin: 20,
-                            zIndex: 999,
-                            borderRadius: 10,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
-                        }}
-                    >
-                        <View
-                            style={{
-                                margin: HeightRatio(20),
-                                alignSelf: 'center'
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    color: 'white',
-                                    fontSize: HeightRatio(30),
-                                    width: (windowWidth - WidthRatio(100)),
-                                }}
-                            >
+                <View style={styles.modalContainer_0}>
+                    <View style={styles.modalContainer_1}>
+                        <View style={styles.modalContainer_1_A}>
+                            <Text style={styles.modalContainer_1_A_Text}>
                                 Are you sure that you want to delete this entry?
                             </Text>
                         </View>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignSelf: 'center'
-                            }}
-                        >
+                        <View style={styles.modalContainer_1_B}>
                             <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                <View style={{
-                                    backgroundColor: 'rgba(26, 105, 125, 0.50)',
-                                    display: 'flex',
-                                    justifyContent: 'flex-start',
-                                    padding: HeightRatio(10),
-                                    borderRadius: HeightRatio(10),
-                                    alignSelf: 'center',
-                                    width: (windowWidth - WidthRatio(100)) / 2,
-                                    margin: HeightRatio(10)
-                                }}>
+                                <View style={{ ...styles.modalButton, backgroundColor: 'rgba(26, 105, 125, 0.50)' }}>
                                     <Text
-                                        style={{
-                                            color: 'white',
-                                            fontSize: HeightRatio(25),
-                                            alignSelf: 'center',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                        }}
+                                        style={styles.modalButton_Text}
                                         allowFontScaling={false}
                                     >
                                         Close
                                     </Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity 
+                            <TouchableOpacity
                                 onPress={() => {
                                     setModalVisible(false);
                                     handleDeleteEntry()
-                                    
+
                                 }}
                             >
-                                <View style={{
-                                    backgroundColor: 'rgba(255, 0, 75, 0.50)',
-                                    display: 'flex',
-                                    justifyContent: 'flex-start',
-                                    padding: HeightRatio(10),
-                                    borderRadius: HeightRatio(10),
-                                    alignSelf: 'center',
-                                    width: (windowWidth - WidthRatio(100)) / 2,
-                                    margin: HeightRatio(10)
-                                }}>
+                                <View style={{ ...styles.modalButton, backgroundColor: 'rgba(255, 0, 75, 0.50)' }}>
                                     <Text
-                                        style={{
-                                            color: 'white',
-                                            fontSize: HeightRatio(25),
-                                            alignSelf: 'center',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                        }}
+                                        style={styles.modalButton_Text}
                                         allowFontScaling={false}
                                     >
                                         Delete
@@ -2532,11 +1416,9 @@ export const DailySchedule = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        //   flex: 1,
         marginTop: HeightRatio(20),
         height: HeightRatio(560),
         // backgroundColor: 'red'
-
     },
     scrollView: {
         backgroundColor: '#282830',
@@ -2544,4 +1426,178 @@ const styles = StyleSheet.create({
         padding: HeightRatio(10),
         borderRadius: HeightRatio(10)
     },
+    scheduleButton: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        alignSelf: 'center',
+        flexDirection: 'row',
+        width: '90%',
+        margin: HeightRatio(4),
+        borderRadius: HeightRatio(10),
+    },
+    scheduleButton_Pattern_0: {
+        width: '100%',
+        height: '100%',
+        opacity: 0.05,
+        borderRadius: HeightRatio(10),
+        position: 'absolute'
+    },
+    scheduleButton_Text: {
+        fontSize: HeightRatio(30),
+        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+        marginRight: HeightRatio(10),
+        margin: HeightRatio(15)
+    },
+    scheduleButton_Calorie_Container: {
+        backgroundColor: 'rgba(0,0,0, 0.2)',
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(10),
+        height: HeightRatio(40),
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    scheduleButton_Calorie_Container_Text: {
+        fontSize: HeightRatio(25),
+        fontFamily: 'SofiaSansSemiCondensed-Regular',
+    },
+    scheduleButton_faBars: {
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(10),
+        height: HeightRatio(40),
+        width: HeightRatio(40),
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    scheduleButton_subContent: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(247, 255, 108, 0.50)',
+        margin: HeightRatio(10),
+        width: windowWidth - HeightRatio(80),
+        alignSelf: 'center'
+    },
+    scheduleButton_subContent_Container: {
+        width: windowWidth - HeightRatio(120),
+        alignSelf: 'center',
+    },
+    scheduleButton_subContent_Container_Button: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexDirection: 'row',
+        padding: HeightRatio(5),
+        paddingTop: HeightRatio(10)
+    },
+    scheduleButton_subContent_Container_Button_Text: {
+        color: 'white',
+        fontSize: HeightRatio(20),
+        fontFamily: "SofiaSansSemiCondensed-Regular"
+    },
+    scheduleButton_subContent_Container_Button_DataAmount_Container: {
+        margin: HeightRatio(5),
+        padding: HeightRatio(4),
+        paddingLeft: HeightRatio(20),
+        paddingRight: HeightRatio(20),
+        borderRadius: HeightRatio(10)
+    },
+    scheduleButton_subContent_NutritionDetails_Title_Container_0: {
+        width: windowWidth - HeightRatio(120),
+        alignSelf: 'center',
+        padding: HeightRatio(5)
+    },
+    scheduleButton_subContent_NutritionDetails_Title_Container_1: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'white'
+    },
+    scheduleButton_subContent_NutritionDetails_Title_Container_1_Text: {
+        color: 'white',
+        fontSize: HeightRatio(25),
+        fontFamily: "SofiaSansSemiCondensed-Regular"
+    },
+    scheduleButton_subContent_NutritionDetails_Container_0: {
+        padding: 10,
+        marginBottom: HeightRatio(4),
+        alignSelf: 'center'
+    },
+    scheduleButton_subContent_NutritionDetails_Remove_Button: {
+        backgroundColor: 'rgba(255, 0, 75, 0.90)',
+        margin: HeightRatio(10),
+        padding: HeightRatio(10),
+        paddingLeft: HeightRatio(20),
+        paddingRight: HeightRatio(20),
+        borderRadius: HeightRatio(10),
+        width: '80%',
+        alignSelf: 'center'
+    },
+    scheduleButton_subContent_NutritionDetails_Remove_Button_Text: {
+        color: 'white',
+        fontSize: HeightRatio(25),
+        fontFamily: "SofiaSansSemiCondensed-Regular",
+        textAlign: 'center'
+    },
+    scheduleButton_subContent_NutritionDetails_Map_Container: {
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 5,
+        width: windowWidth - HeightRatio(130),
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        margin: HeightRatio(2),
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(4)
+    },
+    scheduleButton_subContent_NutritionDetails_Map_Container_Text: {
+        flex: 1,
+        textAlign: 'left',
+        fontSize: HeightRatio(20),
+        fontFamily: "SofiaSansSemiCondensed-Regular"
+    },
+    modalContainer_0: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.75)'
+    },
+    modalContainer_1: {
+        backgroundColor: "#2f2c4f",
+        margin: 20,
+        zIndex: 999,
+        borderRadius: 10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: HeightRatio(30),
+        left: 0,
+        right: 0
+    },
+    modalContainer_1_A: {
+        margin: HeightRatio(20),
+        alignSelf: 'center'
+    },
+    modalContainer_1_A_Text: {
+        color: 'white',
+        fontSize: HeightRatio(30),
+        width: (windowWidth - WidthRatio(100)),
+    },
+    modalContainer_1_B: {
+        flexDirection: 'row',
+        alignSelf: 'center'
+    },
+    modalButton: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(10),
+        alignSelf: 'center',
+        width: (windowWidth - WidthRatio(100)) / 2,
+        margin: HeightRatio(10)
+    },
+    modalButton_Text: {
+        color: 'white',
+        fontSize: HeightRatio(25),
+        alignSelf: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
+    }
 });

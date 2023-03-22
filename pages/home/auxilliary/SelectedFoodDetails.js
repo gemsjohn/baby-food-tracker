@@ -40,7 +40,7 @@ export const SelectedFoodDetails = (props) => {
 
 
     useEffect(() => {
-        console.log("# - home/auxilliary/SelectedFoodDetails - Primary useEffect")
+        console.log("# - Set initial selectedFood _Quantity, _Measurement, _Schedule")
         setMainState({
             selectedFood_Quantity: props.textInputValue || null,
             selectedFood_Measurement: props.selectedItem || null,
@@ -49,7 +49,6 @@ export const SelectedFoodDetails = (props) => {
     }, [])
 
     const handleTextChange = (text) => {
-        console.log("# - home/auxilliary/SelectedFoodDetails - handleTextChange")
         // Only allow numbers, decimals, and fractions in the TextInput
         const numericValue = text.replace(/[^0-9./]/g, '');
         setTextInputValue(numericValue);

@@ -49,9 +49,6 @@ import { DailySchedule } from './auxilliary/DailySchedule';
 import { Loading } from '../../components/Loading';
 import { Calendar } from 'react-native-calendars';
 
-
-
-
 export const HomeScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
     const [loading, setLoading] = useState(false);
@@ -132,7 +129,7 @@ export const HomeScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
-        setNutritionFacts([])
+        // setNutritionFacts([])
         setLoading(true)
 
         setTimeout(() => {
@@ -213,7 +210,7 @@ export const HomeScreen = ({ navigation }) => {
 
     const getNutritionValue = async (input) => {
         setDisplayNutritionValueLoading(true)
-        setNutritionFacts([])
+        // setNutritionFacts([])
         setRefreshing_Nutrition(true)
         console.log('# - INPUT: ')
         console.log(input)
@@ -275,8 +272,8 @@ export const HomeScreen = ({ navigation }) => {
                         console.log(mainState.current.selectedFood_Measurement)
                         console.log(mainState.current.selectedFood_Schedule)
                         console.log("# --------------------------------------")
-                        setNutritionFacts({ food: input.description, nutrition: response.data.result, schedule: mainState.current.selectedFood_Schedule })
-                        Table(response.data.result)
+                        // setNutritionFacts({ food: input.description, nutrition: response.data.result, schedule: mainState.current.selectedFood_Schedule })
+                        // Table(response.data.result)
 
                         const nutrients_JSON = JSON.stringify(response.data.result);
                         console.log(nutrients_JSON)
@@ -371,48 +368,48 @@ export const HomeScreen = ({ navigation }) => {
 
     }
 
-    const Table = (data) => {
+    // const Table = (data) => {
 
-        setNutritionTable(
-            <View style={styles.table}>
-                {Object.keys(data).map((key) => (
-                    <View
-                        style={{
-                            ...styles.row,
-                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                            margin: HeightRatio(2),
-                            padding: HeightRatio(2),
-                            borderRadius: HeightRatio(4)
-                        }}
-                        key={key}
-                    >
-                        <Text
-                            style={{
-                                ...styles.cell,
-                                fontSize: HeightRatio(20),
-                                fontFamily: "SofiaSansSemiCondensed-Regular"
-                            }}
-                            allowFontScaling={false}
-                        >
-                            {key.replace('_', ' ')}
-                        </Text>
-                        <Text
-                            style={{
-                                ...styles.cell,
-                                fontSize: HeightRatio(20),
-                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                            }}
-                            allowFontScaling={false}
-                        >
-                            {data[key].amount} {data[key].unit}
-                        </Text>
-                    </View>
-                ))}
-            </View>
-        )
-        setDisplayNutritionValueLoading(false)
+    //     setNutritionTable(
+    //         <View style={styles.table}>
+    //             {Object.keys(data).map((key) => (
+    //                 <View
+    //                     style={{
+    //                         ...styles.row,
+    //                         backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    //                         margin: HeightRatio(2),
+    //                         padding: HeightRatio(2),
+    //                         borderRadius: HeightRatio(4)
+    //                     }}
+    //                     key={key}
+    //                 >
+    //                     <Text
+    //                         style={{
+    //                             ...styles.cell,
+    //                             fontSize: HeightRatio(20),
+    //                             fontFamily: "SofiaSansSemiCondensed-Regular"
+    //                         }}
+    //                         allowFontScaling={false}
+    //                     >
+    //                         {key.replace('_', ' ')}
+    //                     </Text>
+    //                     <Text
+    //                         style={{
+    //                             ...styles.cell,
+    //                             fontSize: HeightRatio(20),
+    //                             fontFamily: "SofiaSansSemiCondensed-Regular",
+    //                         }}
+    //                         allowFontScaling={false}
+    //                     >
+    //                         {data[key].amount} {data[key].unit}
+    //                     </Text>
+    //                 </View>
+    //             ))}
+    //         </View>
+    //     )
+    //     setDisplayNutritionValueLoading(false)
 
-    };
+    // };
 
 
     const renderItem = ({ item }) => {
