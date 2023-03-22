@@ -418,6 +418,7 @@ export const DailySchedule = (props) => {
                                 ...styles.scheduleButton_Text,
                                 color: displaBool_FirstThing ? 'black' : 'white',
                             }}
+                            allowFontScaling={false}
                         >
                             First Thing
                         </Text>
@@ -430,6 +431,7 @@ export const DailySchedule = (props) => {
                                     ...styles.scheduleButton_Calorie_Container_Text,
                                     color: displaBool_FirstThing ? 'black' : 'white',
                                 }}
+                                allowFontScaling={false}
                             >
                                 {firstThingCalTotal} Cal
                             </Text>
@@ -461,12 +463,18 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.item}
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.amount}
                                             </Text>
                                         </View>
@@ -488,7 +496,10 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 Nutrition Details
                                             </Text>
                                         </View>
@@ -518,7 +529,10 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
+                                        <Text 
+                                            style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
+                                            allowFontScaling={false}
+                                        >
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -556,6 +570,7 @@ export const DailySchedule = (props) => {
                                 ...styles.scheduleButton_Text,
                                 color: displaBool_Breakfast ? 'black' : 'white',
                             }}
+                            allowFontScaling={false}
                         >
                             Breakfast
                         </Text>
@@ -568,6 +583,7 @@ export const DailySchedule = (props) => {
                                     ...styles.scheduleButton_Calorie_Container_Text,
                                     color: displaBool_Breakfast ? 'black' : 'white',
                                 }}
+                                allowFontScaling={false}
                             >
                                 {breakfastCalTotal} Cal
                             </Text>
@@ -599,12 +615,18 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.item}
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.amount}
                                             </Text>
                                         </View>
@@ -626,7 +648,10 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 Nutrition Details
                                             </Text>
                                         </View>
@@ -656,7 +681,10 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
+                                        <Text 
+                                            style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
+                                            allowFontScaling={false}
+                                        >
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -696,6 +724,7 @@ export const DailySchedule = (props) => {
                                 ...styles.scheduleButton_Text,
                                 color: displaBool_Midmorning ? 'black' : 'white',
                             }}
+                            allowFontScaling={false}
                         >
                             Midmorning
                         </Text>
@@ -708,6 +737,7 @@ export const DailySchedule = (props) => {
                                     ...styles.scheduleButton_Calorie_Container_Text,
                                     color: displaBool_Midmorning ? 'black' : 'white',
                                 }}
+                                allowFontScaling={false}
                             >
                                 {midmorningCalTotal} Cal
                             </Text>
@@ -739,12 +769,18 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.item}
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.amount}
                                             </Text>
                                         </View>
@@ -766,7 +802,10 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 Nutrition Details
                                             </Text>
                                         </View>
@@ -796,7 +835,10 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
+                                        <Text 
+                                            style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
+                                            allowFontScaling={false}
+                                        >
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -834,6 +876,7 @@ export const DailySchedule = (props) => {
                                 ...styles.scheduleButton_Text,
                                 color: displaBool_Lunch ? 'black' : 'white',
                             }}
+                            allowFontScaling={false}
                         >
                             Lunch
                         </Text>
@@ -846,6 +889,7 @@ export const DailySchedule = (props) => {
                                     ...styles.scheduleButton_Calorie_Container_Text,
                                     color: displaBool_Lunch ? 'black' : 'white',
                                 }}
+                                allowFontScaling={false}
                             >
                                 {lunchCalTotal} Cal
                             </Text>
@@ -877,12 +921,18 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.item}
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.amount}
                                             </Text>
                                         </View>
@@ -904,7 +954,10 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 Nutrition Details
                                             </Text>
                                         </View>
@@ -934,7 +987,10 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
+                                        <Text 
+                                            style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
+                                            allowFontScaling={false}
+                                        >
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -972,6 +1028,7 @@ export const DailySchedule = (props) => {
                                 ...styles.scheduleButton_Text,
                                 color: displaBool_Afternoon ? 'black' : 'white',
                             }}
+                            allowFontScaling={false}
                         >
                             Afternoon
                         </Text>
@@ -984,6 +1041,7 @@ export const DailySchedule = (props) => {
                                     ...styles.scheduleButton_Calorie_Container_Text,
                                     color: displaBool_Afternoon ? 'black' : 'white',
                                 }}
+                                allowFontScaling={false}
                             >
                                 {afternoonCalTotal} Cal
                             </Text>
@@ -1015,12 +1073,18 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.item}
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.amount}
                                             </Text>
                                         </View>
@@ -1042,7 +1106,10 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 Nutrition Details
                                             </Text>
                                         </View>
@@ -1072,7 +1139,10 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
+                                        <Text 
+                                            style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
+                                            allowFontScaling={false}
+                                        >
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -1111,6 +1181,7 @@ export const DailySchedule = (props) => {
                                 ...styles.scheduleButton_Text,
                                 color: displaBool_Dinner ? 'black' : 'white',
                             }}
+                            allowFontScaling={false}
                         >
                             Dinner
                         </Text>
@@ -1123,6 +1194,7 @@ export const DailySchedule = (props) => {
                                     ...styles.scheduleButton_Calorie_Container_Text,
                                     color: displaBool_Dinner ? 'black' : 'white',
                                 }}
+                                allowFontScaling={false}
                             >
                                 {dinnerCalTotal} Cal
                             </Text>
@@ -1154,12 +1226,18 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.item}
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.amount}
                                             </Text>
                                         </View>
@@ -1181,7 +1259,10 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 Nutrition Details
                                             </Text>
                                         </View>
@@ -1211,7 +1292,10 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
+                                        <Text 
+                                            style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
+                                            allowFontScaling={false}
+                                        >
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -1250,6 +1334,7 @@ export const DailySchedule = (props) => {
                                 ...styles.scheduleButton_Text,
                                 color: displaBool_BeforeBed ? 'black' : 'white',
                             }}
+                            allowFontScaling={false}
                         >
                             Before Bed
                         </Text>
@@ -1262,6 +1347,7 @@ export const DailySchedule = (props) => {
                                     ...styles.scheduleButton_Calorie_Container_Text,
                                     color: displaBool_BeforeBed ? 'black' : 'white',
                                 }}
+                                allowFontScaling={false}
                             >
                                 {beforeBedCalTotal} Cal
                             </Text>
@@ -1293,12 +1379,18 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.item}
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text style={styles.scheduleButton_subContent_Container_Button_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_Container_Button_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 {data.amount}
                                             </Text>
                                         </View>
@@ -1320,7 +1412,10 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}>
+                                            <Text 
+                                                style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
+                                                allowFontScaling={false}
+                                            >
                                                 Nutrition Details
                                             </Text>
                                         </View>
@@ -1350,7 +1445,10 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}>
+                                        <Text 
+                                            style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
+                                            allowFontScaling={false}
+                                        >
                                             Remove
                                         </Text>
                                     </TouchableOpacity>
@@ -1374,7 +1472,10 @@ export const DailySchedule = (props) => {
                 <View style={styles.modalContainer_0}>
                     <View style={styles.modalContainer_1}>
                         <View style={styles.modalContainer_1_A}>
-                            <Text style={styles.modalContainer_1_A_Text}>
+                            <Text 
+                                style={styles.modalContainer_1_A_Text}
+                                allowFontScaling={false}
+                            >
                                 Are you sure that you want to delete this entry?
                             </Text>
                         </View>

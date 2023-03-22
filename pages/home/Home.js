@@ -47,6 +47,7 @@ import { GET_USER_BY_ID } from '../../utils/queries';
 import { DailySchedule } from './auxilliary/DailySchedule';
 import { Loading } from '../../components/Loading';
 import { Calendar } from 'react-native-calendars';
+import { usePullDailyContent } from './auxilliary/PullDailyContent';
 
 export const HomeScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
@@ -87,11 +88,17 @@ export const HomeScreen = ({ navigation }) => {
     //  # - Calendar
     const [calendarModalVisible, setCalendarModalVisible] = useState(false);
     const [selectedCalendarModalDate, setSelectedCalendarModalDate] = useState('');
+    const[selectedDateFromCalendar, setSelectedDateFromCalendar] = useState(null)
 
     const onDateSelect = (day) => {
+        const selectedDate = moment(day.dateString).format(formatString); // convert date to desired format
         setSelectedCalendarModalDate(day.dateString);
-        console.log(day.dateString);
+        setSelectedDateFromCalendar(selectedDate);
+        // setCurrentDate(selectedDate); // update current date with formatted date
     };
+
+    const { calendarModalCalorieTotal, calendarModalDate } = usePullDailyContent(`${convertDateFormat(selectedDateFromCalendar)}`);
+
 
     // # - ADD FOOD
     const [searchQuery, setSearchQuery] = useState('');
@@ -401,6 +408,7 @@ export const HomeScreen = ({ navigation }) => {
                         </View>
                     }
                     {modalVisible && <View style={styles.modalVisible_Blackout} />}
+                    {calendarModalVisible && <View style={styles.modalVisible_Blackout} />}
                     <View
                         style={styles.homePrimary_Container}
                         onLayout={onLayoutRootView}
@@ -415,7 +423,7 @@ export const HomeScreen = ({ navigation }) => {
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faArrowLeft}
-                                    style={{color: 'white'}}
+                                    style={{ color: 'white' }}
                                     size={25}
                                 />
                             </TouchableOpacity>
@@ -458,7 +466,7 @@ export const HomeScreen = ({ navigation }) => {
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faArrowRight}
-                                    style={{color: 'white'}}
+                                    style={{ color: 'white' }}
                                     size={25}
                                 />
                             </TouchableOpacity>
@@ -557,7 +565,7 @@ export const HomeScreen = ({ navigation }) => {
                                 disableFullscreenUI={true}
                                 allowFontScaling={false}
                             />
-                            <TouchableOpacity onPress={() => {handleSearch()}}>
+                            <TouchableOpacity onPress={() => { handleSearch() }}>
                                 <View style={styles.modalVisible_Search_Button}>
                                     <Text
                                         style={styles.modalVisible_Search_Button_Text}
@@ -610,7 +618,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                                     {data.item}
                                                                                 </Text>
                                                                             </View>
-                                                                            <View style={{ marginLeft: HeightRatio(5)}}>
+                                                                            <View style={{ marginLeft: HeightRatio(5) }}>
                                                                                 <Text style={styles.modalVisible_recentFoodData_Map_Text_Regular}>
                                                                                     {data.amount}
                                                                                 </Text>
@@ -650,7 +658,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                         >
                                                                             <FontAwesomeIcon
                                                                                 icon={faSolid, faX}
-                                                                                style={{color: 'white'}}
+                                                                                style={{ color: 'white' }}
                                                                                 size={20}
                                                                             />
                                                                         </TouchableOpacity>
@@ -686,7 +694,7 @@ export const HomeScreen = ({ navigation }) => {
                                                     >
                                                         <FontAwesomeIcon
                                                             icon={faSolid, faX}
-                                                            style={{color: 'white'}}
+                                                            style={{ color: 'white' }}
                                                             size={20}
                                                         />
                                                     </TouchableOpacity>
@@ -712,7 +720,7 @@ export const HomeScreen = ({ navigation }) => {
                                 {selectedFoodDataEntrered ?
                                     <>
                                         <TouchableOpacity onPress={() => { setModalVisible(false); }}>
-                                            <View style={{...styles.modalVisible_HalfButton, backgroundColor: 'rgba(255, 0, 75, 0.50)'}}>
+                                            <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: 'rgba(255, 0, 75, 0.50)' }}>
                                                 <Text
                                                     style={styles.modalVisible_Button_Text}
                                                     allowFontScaling={false}
@@ -727,7 +735,7 @@ export const HomeScreen = ({ navigation }) => {
                                                 setModalVisible(false);
                                             }}
                                         >
-                                            <View style={{...styles.modalVisible_HalfButton, backgroundColor: 'rgba(30, 228, 168, 0.5)'}}>
+                                            <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: 'rgba(30, 228, 168, 0.5)' }}>
                                                 <Text
                                                     style={styles.modalVisible_Button_Text}
                                                     allowFontScaling={false}
@@ -756,22 +764,121 @@ export const HomeScreen = ({ navigation }) => {
 
                     </Modal>
 
-                    <Modal visible={calendarModalVisible}>
-                        <View>
+                    <Modal
+                        visible={calendarModalVisible}
+                        animationType="slide"
+                        transparent={true}
+                        style={{
+                            width: windowWidth,
+                        }}
+                    >
+                        <View style={styles.modalVisible_Container}>
                             <Calendar
                                 onDayPress={(day) => onDateSelect(day)}
                                 markedDates={{ [selectedCalendarModalDate]: { selected: true } }}
                                 theme={{
+                                    calendarBackground: '#1f1f27',
                                     textMonthFontSize: 20,
-                                    monthTextColor: 'black',
-                                    arrowColor: 'black',
+                                    monthTextColor: 'white',
+                                    arrowColor: 'white',
+                                    selectedDayBackgroundColor: 'rgba(30, 228, 168, 1.0)',
+                                    selectedDayTextColor: 'black',
+                                    todayTextColor: 'rgba(30, 228, 168, 1.0)',
+                                    dayTextColor: 'rgba(30, 228, 168, 0.25)',
+                                    textDisabledColor: 'rgba(255, 255, 255, 0.25)',
+                                    textDayFontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    textDayFontSize: HeightRatio(15),
+
                                 }}
-                                style={{ height: 350 }}
+                                style={{
+                                    width: windowWidth - HeightRatio(40)
+                                }}
                             />
-                            <TouchableOpacity onPress={() => setCalendarModalVisible(false)}>
-                                <Text>Close</Text>
-                            </TouchableOpacity>
+                            {!selectedCalendarModalDate &&
+                                <TouchableOpacity 
+                                    onPress={() => {
+                                        setCalendarModalVisible(false);
+                                        setSelectedCalendarModalDate('')
+                                    }}
+                                >
+                                    <View style={styles.modalVisible_FullButton}>
+                                        <Text
+                                            style={styles.modalVisible_Button_Text}
+                                            allowFontScaling={false}
+                                        >
+                                            Close
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            }
                         </View>
+                        {selectedCalendarModalDate &&
+                            <View style={styles.modalVisible_Container}>
+                                <View
+                                    style={{
+                                        height: HeightRatio(200)
+                                    }}
+                                >
+                                    <View style={{flexDirection: 'row'}}>
+                                        <View style={styles.homePrimary_TotalCalories}>
+                                            <Text
+                                                style={{
+                                                    ...styles.homePrimary_TotalCalories_Text,
+                                                    fontSize: HeightRatio(20),
+                                                }}
+                                                allowFontScaling={false}
+                                            >
+                                                {calendarModalDate}
+                                            </Text>
+                                        </View>
+                                        <View style={{...styles.homePrimary_TotalCalories, backgroundColor: 'transparent',}}>
+                                            <Text 
+                                                style={{...styles.homePrimary_TotalCalories_Text, fontSize: HeightRatio(20), color: 'white'}}
+                                                allowFontScaling={false}
+                                            >
+                                                {calendarModalCalorieTotal} CALORIES
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                                </View>
+                                <View style={{flexDirection: 'row'}}>
+                                    <TouchableOpacity 
+                                        onPress={() => {
+                                            setCalendarModalVisible(false);
+                                            setSelectedCalendarModalDate('');
+                                            
+                                        }}
+                                    >
+                                        <View style={{...styles.modalVisible_HalfButton, backgroundColor: 'rgba(255, 0, 75, 0.50)'}}>
+                                            <Text
+                                                style={styles.modalVisible_Button_Text}
+                                                allowFontScaling={false}
+                                            >
+                                                Close
+                                            </Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity 
+                                        onPress={() => {
+                                            // setCurrentDate(selectedDateFromCalendar);
+                                            // setCalendarModalVisible(false);
+                                            // setSelectedCalendarModalDate('');
+                                            console.log("# - Home: " + calendarModalCalorieTotal)
+                                        }}
+                                    >
+                                        <View style={{...styles.modalVisible_HalfButton, backgroundColor: 'rgba(30, 228, 168, 0.50)'}}>
+                                            <Text
+                                                style={styles.modalVisible_Button_Text}
+                                                allowFontScaling={false}
+                                            >
+                                                Go
+                                            </Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        }
                     </Modal>
 
 
@@ -881,10 +988,10 @@ const styles = StyleSheet.create({
         marginTop: HeightRatio(10)
     },
     homePrimary_Container: {
-        flex: 1, 
-        backgroundColor: '#1f1f27', 
-        display: 'flex', 
-        alignItems: 'center', 
+        flex: 1,
+        backgroundColor: '#1f1f27',
+        display: 'flex',
+        alignItems: 'center',
         width: windowWidth
     },
     homePrimary_Date: {
@@ -918,7 +1025,7 @@ const styles = StyleSheet.create({
         fontSize: HeightRatio(30),
         fontFamily: 'GochiHand_400Regular',
         marginLeft: HeightRatio(10),
-        marginRight: HeightRatio(10) 
+        marginRight: HeightRatio(10)
     },
     homePrimary_Date_Return_Button: {
         backgroundColor: 'rgba(235, 35, 81, 1.00)',
@@ -979,8 +1086,8 @@ const styles = StyleSheet.create({
         fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
     },
     modalVisible_Blackout: {
-        backgroundColor: 'rgba(0, 0, 0, 0.9)', 
-        height: '100%', width: '100%', 
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        height: '100%', width: '100%',
         position: 'absolute', zIndex: 10
     },
     modalVisible_Container: {
