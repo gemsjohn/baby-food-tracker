@@ -576,6 +576,32 @@ export const HomeScreen = ({ navigation }) => {
                                 </View>
                             </TouchableOpacity>
                         </View>
+
+                        <View
+                            style={{
+                                ...styles.modalVisible_Container,
+                                backgroundColor: '#f7ff6c',
+                                margin: HeightRatio(20),
+                                width: windowWidth - HeightRatio(30),
+
+                            }}
+                        >
+                            <View
+                                style={{}}
+                            >
+                                <Text
+                                    style={{
+                                        ...styles.renderItem_Search_Result_Container_Text,
+                                        color: 'black',
+                                        fontSize: HeightRatio(30),
+                                        fontFamily: "SofiaSansSemiCondensed-Regular",
+                                    }}
+                                >
+                                    See Top 100 Foods!
+                                </Text>
+                            </View>
+                        </View>
+
                         <View
                             style={{
                                 ...styles.modalVisible_Container,
@@ -841,13 +867,13 @@ export const HomeScreen = ({ navigation }) => {
                                         </View>
                                     </View>
                                     {/* calendarModalFoods */}
-                                    <SafeAreaView 
+                                    <SafeAreaView
                                         style={{
                                             alignSelf: 'center',
                                             height: '80%',
                                         }}
                                     >
-                                        <ScrollView 
+                                        <ScrollView
                                             style={{
                                                 alignSelf: 'center',
                                             }}
@@ -879,6 +905,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                     ...styles.renderItem_Search_Result_Container_Text,
                                                                     color: 'black',
                                                                     fontSize: HeightRatio(18),
+                                                                    fontFamily: "GochiHand_400Regular",
                                                                 }}
                                                             >
                                                                 TOP 100
@@ -1149,7 +1176,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
-        margin: HeightRatio(10)
+        margin: HeightRatio(4)
     },
     modalVisible_TextInput: {
         ...Styling.textInputStyle,

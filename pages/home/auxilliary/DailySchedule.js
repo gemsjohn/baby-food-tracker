@@ -1560,7 +1560,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     scheduleButton_Calorie_Container_Text: {
-        fontSize: HeightRatio(25),
+        fontSize: HeightRatio(20),
         fontFamily: 'SofiaSansSemiCondensed-Regular',
     },
     scheduleButton_faBars: {
