@@ -7,6 +7,23 @@ import { CommonActions } from '@react-navigation/native';
 import moment from 'moment';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import {
+    THEME_COLOR_POSITIVE,
+    THEME_COLOR_POSITIVE_LOW_OPACITY,
+    THEME_COLOR_NEGATIVE,
+    THEME_COLOR_BACKDROP_DARK,
+    THEME_COLOR_BACKDROP_LIGHT,
+    THEME_COLOR_BLACK_LOW_OPACITY,
+    THEME_COLOR_BLACK_HIGH_OPACITY,
+    THEME_FONT_COLOR_WHITE,
+    THEME_FONT_COLOR_WHITE_LOW_OPACITY,
+    THEME_FONT_COLOR_BLACK,
+    THEME_COLOR_ATTENTION,
+    THEME_TRANSPARENT,
+    THEME_COLOR_PURPLE,
+    THEME_COLOR_PURPLE_LOW_OPACITY,
+    THEME_COLOR_BLACKOUT
+} from '../../COLOR';
 
 const resetActionHome = CommonActions.reset({
     index: 1,
@@ -244,7 +261,7 @@ export const KeyScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     keyContainer: {
         flex: 1,
-        backgroundColor: '#1f1f27',
+        backgroundColor: THEME_COLOR_BACKDROP_DARK,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -255,28 +272,28 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     title_Text: {
-        color: 'white',
+        color: THEME_FONT_COLOR_WHITE,
         textAlign: 'center',
         fontSize: HeightRatio(30),
         fontFamily: 'SofiaSansSemiCondensed-Regular',
         marginTop: HeightRatio(10)
     },
     key_Full: {
-        backgroundColor: '#fff1ff',
+        backgroundColor: THEME_FONT_COLOR_WHITE,
         height: HeightRatio(50),
         width: windowWidth / 8,
         margin: HeightRatio(5),
         borderRadius: HeightRatio(10)
     },
     key_Empty: {
-        backgroundColor: 'rgba(0, 0, 0, 0.25)',
+        backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
         height: HeightRatio(50),
         width: windowWidth / 8,
         margin: HeightRatio(5),
         borderRadius: HeightRatio(10)
     },
     button: {
-        backgroundColor: '#f7ff6c',
+        backgroundColor: THEME_COLOR_ATTENTION,
         height: HeightRatio(70),
         width: HeightRatio(70),
         borderRadius: HeightRatio(20),
@@ -292,7 +309,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     forgotKey_Button: {
-        backgroundColor: '#f7ff6c',
+        backgroundColor: THEME_COLOR_ATTENTION,
         display: 'flex',
         justifyContent: 'flex-start',
         padding: HeightRatio(20),
@@ -301,7 +318,7 @@ const styles = StyleSheet.create({
         width: windowWidth - WidthRatio(150)
     },
     forgotKey_Button_Text: {
-        color: 'black',
+        color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(30),
         alignSelf: 'center',
         fontFamily: 'SofiaSansSemiCondensed-Regular'

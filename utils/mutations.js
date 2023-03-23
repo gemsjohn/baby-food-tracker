@@ -18,6 +18,7 @@ export const LOGIN_USER = gql`
           schedule
           item
           amount
+          emotion
           nutrients
         }
       }
@@ -46,6 +47,7 @@ export const UPDATE_USER_PASSWORD = gql`
         schedule
         item
         amount
+        emotion
         nutrients
       }
     }
@@ -73,6 +75,7 @@ export const UPDATE_USER = gql`
         schedule
         item
         amount
+        emotion
         nutrients
       }
     }
@@ -100,6 +103,7 @@ export const REQUEST_RESET = gql`
         schedule
         item
         amount
+        emotion
         nutrients
       }
     }
@@ -127,6 +131,7 @@ export const RESET_PASSWORD = gql`
         schedule
         item
         amount
+        emotion
         nutrients
       }
     }
@@ -156,6 +161,7 @@ export const ADD_USER = gql`
           schedule
           item
           amount
+          emotion
           nutrients
         }
       }
@@ -176,13 +182,14 @@ export const DELETE_USER = gql`
 `;
 
 export const ADD_ENTRY = gql`
-mutation Mutation($date: String, $schedule: String, $item: String, $amount: String, $nutrients: String) {
-  addEntry(date: $date, schedule: $schedule, item: $item, amount: $amount, nutrients: $nutrients) {
+mutation Mutation($date: String, $schedule: String, $item: String, $amount: String, $emotion: String, $nutrients: String) {
+  addEntry(date: $date, schedule: $schedule, item: $item, amount: $amount, emotion: $emotion nutrients: $nutrients) {
     _id
     date
     schedule
     item
     amount
+    emotion
     nutrients
   }
 }
@@ -195,8 +202,8 @@ export const DELETE_ENTRY = gql`
 `;
 
 export const UPDATE_TOKEN_COUNT = gql`
-  mutation Mutation($userid: String, $remove: String, $add: String, $amount: String) {
-  updateTokenCount(userid: $userid, remove: $remove, add: $add, amount: $amount) {
+  mutation Mutation($userid: String, $remove: String, $add: String, $amount: String, $emotion: String) {
+  updateTokenCount(userid: $userid, remove: $remove, add: $add, amount: $amount, emotion: $emotion) {
     _id
     role
     username
@@ -210,6 +217,7 @@ export const UPDATE_TOKEN_COUNT = gql`
         schedule
         item
         amount
+        emotion
         nutrients
       }
     }

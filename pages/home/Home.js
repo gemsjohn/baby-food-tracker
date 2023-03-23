@@ -25,7 +25,8 @@ import {
     faArrowRight,
     faArrowLeft,
     faPlus,
-    faBars
+    faBars,
+    faCheck
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -49,6 +50,7 @@ import { Loading } from '../../components/Loading';
 import { Calendar } from 'react-native-calendars';
 import { usePullDailyContent } from './auxilliary/PullDailyContent';
 import { top_100 } from './auxilliary/TOP_100';
+import { useCheckUserTop100 } from './auxilliary/CheckUserTop100';
 import {
     THEME_COLOR_POSITIVE,
     THEME_COLOR_POSITIVE_LOW_OPACITY,
@@ -116,7 +118,8 @@ export const HomeScreen = ({ navigation }) => {
         // setCurrentDate(selectedDate); // update current date with formatted date
     };
 
-    const { calendarModalCalorieTotal, calendarModalDate, calendarModalFoods } = usePullDailyContent(`${convertDateFormat(selectedDateFromCalendar)}`);
+    const { calendarModalCalorieTotal, calendarModalDate, calendarModalFoods, calendarModalEmotion } = usePullDailyContent(`${convertDateFormat(selectedDateFromCalendar)}`);
+    const { top_100_Filtered } = useCheckUserTop100();
 
 
     // # - ADD FOOD
@@ -156,7 +159,7 @@ export const HomeScreen = ({ navigation }) => {
                 setRefreshing(false)
             }
 
-            if (mainState.current.selectedFood_Quantity != null && mainState.current.selectedFood_Measurement != null && mainState.current.selectedFood_Schedule != null) {
+            if (mainState.current.selectedFood_Quantity != null && mainState.current.selectedFood_Measurement != null && mainState.current.selectedFood_Schedule != null && mainState.current.selectedFood_Emotion != null) {
                 setSelectedFoodDataEntrered(true)
             } else {
                 setSelectedFoodDataEntrered(false)
@@ -170,12 +173,14 @@ export const HomeScreen = ({ navigation }) => {
         setCurrentDateReadable(convertDateFormat(currentDate));
     }, [currentDate])
 
-    const handleSearch = async () => {
+    const handleSearch = async (input) => {
         setClearSuggestions(true)
         console.log(`Searching for: ${searchQuery}`);
+        console.log(`Searching for: ${input}`);
+
         setDisplayLoading(true)
         const data = {
-            search: searchQuery
+            search: input ? input : searchQuery
         };
 
         const prompt = encodeURIComponent(JSON.stringify(data));
@@ -212,7 +217,8 @@ export const HomeScreen = ({ navigation }) => {
         const data = {
             search: input,
             quantity: mainState.current.selectedFood_Quantity,
-            measurement: mainState.current.selectedFood_Measurement
+            measurement: mainState.current.selectedFood_Measurement,
+            emotion: mainState.current.selectedFood_Emotion
         };
 
         if (recentFoodData != [] && selectRecentlyUsed != null && recentFoodData[selectRecentlyUsed].number == data.quantity && recentFoodData[selectRecentlyUsed].measurement == data.measurement) {
@@ -221,13 +227,13 @@ export const HomeScreen = ({ navigation }) => {
             console.log(input)
             console.log(data.search)
             const updateUserEntry = async () => {
-
                 await addEntry({
                     variables: {
                         date: `${currentDateReadable}`,
                         schedule: `${mainState.current.selectedFood_Schedule}`,
                         item: `${recentFoodData[selectRecentlyUsed].item}`,
                         amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
+                        emotion: `${mainState.current.selectedFood_Emotion}`,
                         nutrients: `${nutrients_JSON}`
                     }
                 });
@@ -257,6 +263,7 @@ export const HomeScreen = ({ navigation }) => {
                         console.log(mainState.current.selectedFood_Quantity)
                         console.log(mainState.current.selectedFood_Measurement)
                         console.log(mainState.current.selectedFood_Schedule)
+                        console.log(mainState.current.selectedFood_Emotion)
                         console.log("# --------------------------------------")
 
                         const nutrients_JSON = JSON.stringify(response.data.result);
@@ -274,6 +281,7 @@ export const HomeScreen = ({ navigation }) => {
                                     schedule: `${mainState.current.selectedFood_Schedule}`,
                                     item: `${itemData}`,
                                     amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
+                                    emotion: `${mainState.current.selectedFood_Emotion}`,
                                     nutrients: `${nutrients_JSON}`
                                 }
                             });
@@ -315,6 +323,19 @@ export const HomeScreen = ({ navigation }) => {
             item = removeQuotes(item);
             let amount = JSON.stringify(data_array[i].entry[0].amount);
             amount = removeQuotes(amount)
+            let emotion = JSON.stringify(data_array[i].entry[0].emotion);
+            emotion = removeQuotes(emotion)
+            // console.log(emotion)
+
+            const codePoints = emotion
+                .split('')
+                .map(char => char.charCodeAt(0).toString(16).padStart(4, '0'));
+            const unicodeEscape = '\\u' + codePoints.join('\\u');
+            // console.log(unicodeEscape); // should output '\uD83D\uDE00'
+
+
+
+
             let nutrients = JSON.stringify(data_array[i].entry[0].nutrients);
             nutrients = removeBackslashes(nutrients)
             nutrients = removeQuotes(nutrients)
@@ -337,7 +358,7 @@ export const HomeScreen = ({ navigation }) => {
 
             const result = separateMeasurement(amount);
 
-            let item_amount = { item: item, amount: amount, number: result.number, measurement: result.measurement, nutrients: nutrients, id: id }
+            let item_amount = { item: item, amount: amount, number: result.number, measurement: result.measurement, emotion: unicodeEscape, nutrients: nutrients, id: id }
             setRecentFoodData(prev => [...prev, item_amount])
         }
     }
@@ -497,9 +518,9 @@ export const HomeScreen = ({ navigation }) => {
                                     source={require('../../assets/pattern_1.png')}
                                     style={styles.homePrimary_Pattern_1}
                                 />
-                                <DailySchedule date={currentDateReadable} userID={mainState.current.userID} />
 
-                                <View style={{ flexDirection: 'row', marginTop: HeightRatio(10) }}>
+
+                                <View style={{ flexDirection: 'row', marginTop: HeightRatio(30) }}>
                                     <View style={styles.homePrimary_TotalCalories}>
                                         <Text style={styles.homePrimary_TotalCalories_Text}>
                                             {totalCalorieCount}
@@ -527,10 +548,15 @@ export const HomeScreen = ({ navigation }) => {
                                             setMainState({
                                                 selectedFood_Quantity: null,
                                                 selectedFood_Measurement: null,
-                                                selectedFood_Schedule: null
+                                                selectedFood_Schedule: null,
+                                                selectedFood_Emotion: null
                                             })
                                         }}
-                                        style={styles.homePrimary_Add_Button}
+                                        style={{
+                                            ...styles.homePrimary_Add_Button,
+                                            borderWidth: 3,
+                                            borderColor: '#a7ffff'
+                                        }}
                                     >
                                         <Text
                                             style={styles.homePrimary_Add_Button_Text}
@@ -540,6 +566,7 @@ export const HomeScreen = ({ navigation }) => {
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
+                                <DailySchedule date={currentDateReadable} userID={mainState.current.userID} />
                             </>
                             :
                             <View style={styles.updatingScreen_Container}>
@@ -562,6 +589,49 @@ export const HomeScreen = ({ navigation }) => {
                             width: windowWidth,
                         }}
                     >
+                        <TouchableOpacity
+                            onPress={() => {
+                                setDisplayTop100Foods(true);
+                            }}
+                        >
+                            <View
+                                style={{
+                                    ...styles.modalVisible_Container,
+                                    backgroundColor: THEME_COLOR_ATTENTION,
+                                    margin: HeightRatio(5),
+                                    width: windowWidth - HeightRatio(30),
+
+                                }}
+                            >
+                                <View
+                                    style={{}}
+                                >
+                                    {!displayTop100Foods ?
+                                        <Text
+                                            style={{
+                                                ...styles.renderItem_Search_Result_Container_Text,
+                                                color: THEME_FONT_COLOR_BLACK,
+                                                fontSize: HeightRatio(30),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                            }}
+                                        >
+                                            See Top 100 Foods!
+                                        </Text>
+                                        :
+                                        <Text
+                                            style={{
+                                                ...styles.renderItem_Search_Result_Container_Text,
+                                                color: THEME_FONT_COLOR_BLACK,
+                                                fontSize: HeightRatio(30),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                            }}
+                                        >
+                                            Top 100 Foods
+                                        </Text>
+                                    }
+                                </View>
+                            </View>
+                        </TouchableOpacity>
                         {!displayTop100Foods &&
                             <View style={styles.modalVisible_Container}>
                                 <Image
@@ -596,49 +666,14 @@ export const HomeScreen = ({ navigation }) => {
                                 </TouchableOpacity>
                             </View>
                         }
-                        <TouchableOpacity
-                            onPress={() => setDisplayTop100Foods(true)}
-                        >
+
+                        {displayTop100Foods &&
                             <View
                                 style={{
                                     ...styles.modalVisible_Container,
-                                    backgroundColor: THEME_COLOR_ATTENTION,
-                                    margin: HeightRatio(20),
-                                    width: windowWidth - HeightRatio(30),
-
+                                    height: windowHeight / 1.2
                                 }}
                             >
-                                <View
-                                    style={{}}
-                                >
-                                    {!displayTop100Foods ?
-                                        <Text
-                                            style={{
-                                                ...styles.renderItem_Search_Result_Container_Text,
-                                                color: THEME_FONT_COLOR_BLACK,
-                                                fontSize: HeightRatio(30),
-                                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                                            }}
-                                        >
-                                            See Top 100 Foods!
-                                        </Text>
-                                        :
-                                        <Text
-                                            style={{
-                                                ...styles.renderItem_Search_Result_Container_Text,
-                                                color: THEME_FONT_COLOR_BLACK,
-                                                fontSize: HeightRatio(30),
-                                                fontFamily: "SofiaSansSemiCondensed-Regular",
-                                            }}
-                                        >
-                                            Top 100 Foods
-                                        </Text>
-                                    }
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                        {displayTop100Foods &&
-                            <View style={styles.modalVisible_Container}>
                                 <Image
                                     source={require('../../assets/pattern_1.png')}
                                     style={{
@@ -659,7 +694,7 @@ export const HomeScreen = ({ navigation }) => {
                                         }}
                                     >
                                         <View>
-                                            {top_100.map((data, index) => (
+                                            {top_100_Filtered.map((data, index) => (
                                                 <View
                                                     style={{
                                                         ...styles.renderItem_Search_Results,
@@ -667,12 +702,32 @@ export const HomeScreen = ({ navigation }) => {
                                                     }}
                                                     key={index}
                                                 >
-                                                    <Text
-                                                        style={styles.renderItem_Search_Result_Container_Text}
-                                                    >{data.name}</Text>
+
+                                                    <View style={{ flexDirection: 'row' }}>
+                                                        <Text
+                                                            style={{
+                                                                ...styles.renderItem_Search_Result_Container_Text,
+                                                                color: data.tried ? THEME_FONT_COLOR_WHITE_LOW_OPACITY : THEME_FONT_COLOR_WHITE,
+                                                            }}
+                                                        >
+                                                            {data.name}
+
+                                                        </Text>
+                                                        {data.tried &&
+                                                            <FontAwesomeIcon
+                                                                icon={faSolid, faCheck}
+                                                                style={{ color: THEME_COLOR_POSITIVE, marginLeft: HeightRatio(10) }}
+                                                                size={20}
+                                                            />
+                                                        }
+                                                    </View>
                                                     <TouchableOpacity
                                                         // onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); }}
-                                                        onPress={() => console.log("ADD")}
+                                                        onPress={() => {
+                                                            setSearchQuery(data.name)
+                                                            setDisplayTop100Foods(false)
+                                                            handleSearch(data.name);
+                                                        }}
                                                         style={styles.modalVisible_recentFoodData_Map_Plus}
                                                     >
                                                         <Text style={styles.modalVisible_recentFoodData_Map_Plus_Text}>
@@ -686,7 +741,12 @@ export const HomeScreen = ({ navigation }) => {
                                     </ScrollView>
                                 </SafeAreaView>
                                 <TouchableOpacity onPress={() => setDisplayTop100Foods(false)}>
-                                    <View style={styles.modalVisible_FullButton}>
+                                    <View
+                                        style={{
+                                            ...styles.modalVisible_FullButton,
+                                            marginTop: HeightRatio(30)
+                                        }}
+                                    >
                                         <Text
                                             style={styles.modalVisible_Button_Text}
                                             allowFontScaling={false}
@@ -702,7 +762,7 @@ export const HomeScreen = ({ navigation }) => {
                             <View
                                 style={{
                                     ...styles.modalVisible_Container,
-                                    height: windowHeight / 1.8,
+                                    height: windowHeight / 1.7,
                                     margin: HeightRatio(0)
                                 }}
                             >
@@ -770,7 +830,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                                 >
                                                                                     {data.item}
                                                                                 </Text>
-                                                                                <SelectedFoodDetails textInputValue={`${data.number}`} selectedItem={`${data.measurement}`} />
+                                                                                <SelectedFoodDetails textInputValue={`${data.number}`} selectedItem={`${data.measurement}`} selectedEmotion={`${data.emotion}`} />
                                                                             </View>
                                                                             <TouchableOpacity
                                                                                 onPress={() => {
@@ -985,30 +1045,54 @@ export const HomeScreen = ({ navigation }) => {
                                                         }}
                                                         key={index}
                                                     >
-                                                        <Text
-                                                            style={styles.renderItem_Search_Result_Container_Text}
-                                                        >
-                                                            {data}
-                                                        </Text>
-
-                                                        <View
-                                                            style={{
-                                                                backgroundColor: THEME_COLOR_ATTENTION,
-                                                                borderRadius: HeightRatio(5),
-                                                                padding: HeightRatio(4)
-                                                            }}
-                                                        >
+                                                        <View style={{flexDirection: 'column'}}>
                                                             <Text
                                                                 style={{
                                                                     ...styles.renderItem_Search_Result_Container_Text,
-                                                                    color: THEME_FONT_COLOR_BLACK,
-                                                                    fontSize: HeightRatio(18),
-                                                                    fontFamily: "GochiHand_400Regular",
+                                                                    width: WidthRatio(200)
+                                                                }}
+                                                                allowFontScaling={false}
+                                                                
+                                                            >
+                                                                {data.name}
+                                                            </Text>
+                                                            <View style={{flexDirection: 'row'}}>
+                                                                {calendarModalEmotion.map((data_emotion, index) => (
+                                                                    <>
+                                                                        {data.name == data_emotion.item &&
+                                                                            <Text
+                                                                                style={{
+                                                                                    fontSize: HeightRatio(20)
+                                                                                }}
+                                                                                allowFontScaling={false}
+                                                                            >
+                                                                                {unescape(data_emotion != null ? data_emotion.emoji.replace(/\\u/g, '%u') : null)}
+                                                                            </Text>
+                                                                        }
+                                                                    </>
+                                                                ))}
+                                                            </View>
+                                                        </View>
+                                                        {data.tried &&
+                                                            <View
+                                                                style={{
+                                                                    backgroundColor: THEME_COLOR_ATTENTION,
+                                                                    borderRadius: HeightRatio(5),
+                                                                    padding: HeightRatio(4)
                                                                 }}
                                                             >
-                                                                TOP 100
-                                                            </Text>
-                                                        </View>
+                                                                <Text
+                                                                    style={{
+                                                                        ...styles.renderItem_Search_Result_Container_Text,
+                                                                        color: THEME_FONT_COLOR_BLACK,
+                                                                        fontSize: HeightRatio(18),
+                                                                        fontFamily: "GochiHand_400Regular",
+                                                                    }}
+                                                                >
+                                                                    TOP 100
+                                                                </Text>
+                                                            </View>
+                                                        }
                                                     </View>
                                                 ))}
                                             </View>
@@ -1274,7 +1358,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
-        margin: HeightRatio(4)
+        margin: HeightRatio(10)
     },
     modalVisible_TextInput: {
         ...Styling.textInputStyle,

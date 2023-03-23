@@ -35,7 +35,23 @@ import { useMutation, useQuery } from '@apollo/client';
 import { DELETE_ENTRY } from '../../../utils/mutations';
 import { GET_USER_BY_ID } from '../../../utils/queries';
 import { MainStateContext } from '../../../App';
-
+import {
+    THEME_COLOR_POSITIVE,
+    THEME_COLOR_POSITIVE_LOW_OPACITY,
+    THEME_COLOR_NEGATIVE,
+    THEME_COLOR_BACKDROP_DARK,
+    THEME_COLOR_BACKDROP_LIGHT,
+    THEME_COLOR_BLACK_LOW_OPACITY,
+    THEME_COLOR_BLACK_HIGH_OPACITY,
+    THEME_FONT_COLOR_WHITE,
+    THEME_FONT_COLOR_WHITE_LOW_OPACITY,
+    THEME_FONT_COLOR_BLACK,
+    THEME_COLOR_ATTENTION,
+    THEME_TRANSPARENT,
+    THEME_COLOR_PURPLE,
+    THEME_COLOR_PURPLE_LOW_OPACITY,
+    THEME_COLOR_BLACKOUT
+} from '../../../COLOR';
 
 
 export const DailySchedule = (props) => {
@@ -94,7 +110,7 @@ export const DailySchedule = (props) => {
 
     const [deleteID, setDeleteID] = useState(null)
     const [modalVisible, setModalVisible] = useState(false);
-
+    const [uniqueEmotionArray, setUniqueEmotionArray] = useState([])
 
     const [deleteEntry] = useMutation(DELETE_ENTRY)
     const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
@@ -292,7 +308,7 @@ export const DailySchedule = (props) => {
         storeTotalCalorieCount(total)
     }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, afternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
 
-
+    let emotionIndex = [];
 
     const displayScheduleData = (input) => {
         setFirstThingData([])
@@ -310,6 +326,9 @@ export const DailySchedule = (props) => {
 
             for (let i = 0; i < matchingDate.length; i++) {
                 const jsonString = JSON.stringify(matchingDate[i].entry[0].schedule);
+                let item = JSON.stringify(matchingDate[i].entry[0].item);
+                let emotion = JSON.stringify(matchingDate[i].entry[0].emotion);
+
 
                 function removeBackslashes(str) {
                     let pattern = /(?<!\\)\\(?!\\)/g;
@@ -322,6 +341,17 @@ export const DailySchedule = (props) => {
                 const removeQuotes = (str) => {
                     return str.replace(/^"(.*)"$/, '$1');
                 }
+
+                // EMOJI
+                emotion = removeQuotes(emotion)
+                const codePoints = emotion
+                    .split('')
+                    .map(char => char.charCodeAt(0).toString(16).padStart(4, '0'));
+                const unicodeEscape = '\\u' + codePoints.join('\\u');
+                item = removeBackslashes(item);
+                item = removeQuotes(item)
+
+                emotionIndex.push({ item: item, emoji: unicodeEscape })
 
 
                 let sample_v1 = removeBackslashes(`${jsonString}`);
@@ -364,6 +394,8 @@ export const DailySchedule = (props) => {
                     }
                 }
             }
+            console.log(emotionIndex)
+            setUniqueEmotionArray(emotionIndex)
         }
     }
 
@@ -406,7 +438,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_FirstThing ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_FirstThing ? THEME_COLOR_ATTENTION : THEME_COLOR_PURPLE
                         }}
                     >
                         <Image
@@ -416,7 +448,7 @@ export const DailySchedule = (props) => {
                         <Text
                             style={{
                                 ...styles.scheduleButton_Text,
-                                color: displaBool_FirstThing ? 'black' : 'white',
+                                color: displaBool_FirstThing ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                             }}
                             allowFontScaling={false}
                         >
@@ -429,7 +461,7 @@ export const DailySchedule = (props) => {
                             <Text
                                 style={{
                                     ...styles.scheduleButton_Calorie_Container_Text,
-                                    color: displaBool_FirstThing ? 'black' : 'white',
+                                    color: displaBool_FirstThing ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                                 }}
                                 allowFontScaling={false}
                             >
@@ -441,7 +473,7 @@ export const DailySchedule = (props) => {
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{ color: 'black' }}
+                                style={{ color: THEME_FONT_COLOR_BLACK }}
                                 size={20}
                             />
                         </View>
@@ -463,7 +495,7 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
@@ -471,12 +503,33 @@ export const DailySchedule = (props) => {
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
                                                 {data.amount}
                                             </Text>
+                                        </View>
+                                        <View 
+                                            style={{ 
+                                                ...styles.scheduleButton_subContent_Container_Button_DataAmount_Container,
+                                                flexDirection: 'row' 
+                                            }}
+                                        >
+                                            {uniqueEmotionArray.map((data_emotion, index) => (
+                                                <>
+                                                    {data.item == data_emotion.item &&
+                                                        <Text
+                                                            style={{
+                                                                fontSize: HeightRatio(20)
+                                                            }}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            {unescape(data_emotion != null ? data_emotion.emoji.replace(/\\u/g, '%u') : null)}
+                                                        </Text>
+                                                    }
+                                                </>
+                                            ))}
                                         </View>
                                     </View>
                                     <View
@@ -484,7 +537,7 @@ export const DailySchedule = (props) => {
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{ color: 'white' }}
+                                            style={{ color: THEME_FONT_COLOR_WHITE }}
                                             size={20}
                                         />
                                     </View>
@@ -496,7 +549,7 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
                                                 allowFontScaling={false}
                                             >
@@ -529,7 +582,7 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text 
+                                        <Text
                                             style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
                                             allowFontScaling={false}
                                         >
@@ -558,7 +611,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_Breakfast ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_Breakfast ? THEME_COLOR_ATTENTION : THEME_COLOR_PURPLE
                         }}
                     >
                         <Image
@@ -568,7 +621,7 @@ export const DailySchedule = (props) => {
                         <Text
                             style={{
                                 ...styles.scheduleButton_Text,
-                                color: displaBool_Breakfast ? 'black' : 'white',
+                                color: displaBool_Breakfast ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                             }}
                             allowFontScaling={false}
                         >
@@ -581,7 +634,7 @@ export const DailySchedule = (props) => {
                             <Text
                                 style={{
                                     ...styles.scheduleButton_Calorie_Container_Text,
-                                    color: displaBool_Breakfast ? 'black' : 'white',
+                                    color: displaBool_Breakfast ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                                 }}
                                 allowFontScaling={false}
                             >
@@ -593,7 +646,7 @@ export const DailySchedule = (props) => {
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{ color: 'black' }}
+                                style={{ color: THEME_FONT_COLOR_BLACK }}
                                 size={20}
                             />
                         </View>
@@ -615,7 +668,7 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
@@ -623,12 +676,33 @@ export const DailySchedule = (props) => {
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
                                                 {data.amount}
                                             </Text>
+                                        </View>
+                                        <View 
+                                            style={{ 
+                                                ...styles.scheduleButton_subContent_Container_Button_DataAmount_Container,
+                                                flexDirection: 'row' 
+                                            }}
+                                        >
+                                            {uniqueEmotionArray.map((data_emotion, index) => (
+                                                <>
+                                                    {data.item == data_emotion.item &&
+                                                        <Text
+                                                            style={{
+                                                                fontSize: HeightRatio(20)
+                                                            }}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            {unescape(data_emotion != null ? data_emotion.emoji.replace(/\\u/g, '%u') : null)}
+                                                        </Text>
+                                                    }
+                                                </>
+                                            ))}
                                         </View>
                                     </View>
                                     <View
@@ -636,7 +710,7 @@ export const DailySchedule = (props) => {
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{ color: 'white' }}
+                                            style={{ color: THEME_FONT_COLOR_WHITE }}
                                             size={20}
                                         />
                                     </View>
@@ -648,7 +722,7 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
                                                 allowFontScaling={false}
                                             >
@@ -681,7 +755,7 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text 
+                                        <Text
                                             style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
                                             allowFontScaling={false}
                                         >
@@ -712,7 +786,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_Midmorning ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_Midmorning ? THEME_COLOR_ATTENTION : THEME_COLOR_PURPLE
                         }}
                     >
                         <Image
@@ -722,7 +796,7 @@ export const DailySchedule = (props) => {
                         <Text
                             style={{
                                 ...styles.scheduleButton_Text,
-                                color: displaBool_Midmorning ? 'black' : 'white',
+                                color: displaBool_Midmorning ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                             }}
                             allowFontScaling={false}
                         >
@@ -735,7 +809,7 @@ export const DailySchedule = (props) => {
                             <Text
                                 style={{
                                     ...styles.scheduleButton_Calorie_Container_Text,
-                                    color: displaBool_Midmorning ? 'black' : 'white',
+                                    color: displaBool_Midmorning ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                                 }}
                                 allowFontScaling={false}
                             >
@@ -747,7 +821,7 @@ export const DailySchedule = (props) => {
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{ color: 'black' }}
+                                style={{ color: THEME_FONT_COLOR_BLACK }}
                                 size={20}
                             />
                         </View>
@@ -769,7 +843,7 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
@@ -777,12 +851,33 @@ export const DailySchedule = (props) => {
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
                                                 {data.amount}
                                             </Text>
+                                        </View>
+                                        <View 
+                                            style={{ 
+                                                ...styles.scheduleButton_subContent_Container_Button_DataAmount_Container,
+                                                flexDirection: 'row' 
+                                            }}
+                                        >
+                                            {uniqueEmotionArray.map((data_emotion, index) => (
+                                                <>
+                                                    {data.item == data_emotion.item &&
+                                                        <Text
+                                                            style={{
+                                                                fontSize: HeightRatio(20)
+                                                            }}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            {unescape(data_emotion != null ? data_emotion.emoji.replace(/\\u/g, '%u') : null)}
+                                                        </Text>
+                                                    }
+                                                </>
+                                            ))}
                                         </View>
                                     </View>
                                     <View
@@ -790,7 +885,7 @@ export const DailySchedule = (props) => {
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{ color: 'white' }}
+                                            style={{ color: THEME_FONT_COLOR_WHITE }}
                                             size={20}
                                         />
                                     </View>
@@ -802,7 +897,7 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
                                                 allowFontScaling={false}
                                             >
@@ -835,7 +930,7 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text 
+                                        <Text
                                             style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
                                             allowFontScaling={false}
                                         >
@@ -864,7 +959,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_Lunch ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_Lunch ? THEME_COLOR_ATTENTION : THEME_COLOR_PURPLE
                         }}
                     >
                         <Image
@@ -874,7 +969,7 @@ export const DailySchedule = (props) => {
                         <Text
                             style={{
                                 ...styles.scheduleButton_Text,
-                                color: displaBool_Lunch ? 'black' : 'white',
+                                color: displaBool_Lunch ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                             }}
                             allowFontScaling={false}
                         >
@@ -887,7 +982,7 @@ export const DailySchedule = (props) => {
                             <Text
                                 style={{
                                     ...styles.scheduleButton_Calorie_Container_Text,
-                                    color: displaBool_Lunch ? 'black' : 'white',
+                                    color: displaBool_Lunch ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                                 }}
                                 allowFontScaling={false}
                             >
@@ -899,7 +994,7 @@ export const DailySchedule = (props) => {
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{ color: 'black' }}
+                                style={{ color: THEME_FONT_COLOR_BLACK }}
                                 size={20}
                             />
                         </View>
@@ -921,7 +1016,7 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
@@ -929,12 +1024,33 @@ export const DailySchedule = (props) => {
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
                                                 {data.amount}
                                             </Text>
+                                        </View>
+                                        <View 
+                                            style={{ 
+                                                ...styles.scheduleButton_subContent_Container_Button_DataAmount_Container,
+                                                flexDirection: 'row' 
+                                            }}
+                                        >
+                                            {uniqueEmotionArray.map((data_emotion, index) => (
+                                                <>
+                                                    {data.item == data_emotion.item &&
+                                                        <Text
+                                                            style={{
+                                                                fontSize: HeightRatio(20)
+                                                            }}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            {unescape(data_emotion != null ? data_emotion.emoji.replace(/\\u/g, '%u') : null)}
+                                                        </Text>
+                                                    }
+                                                </>
+                                            ))}
                                         </View>
                                     </View>
                                     <View
@@ -942,7 +1058,7 @@ export const DailySchedule = (props) => {
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{ color: 'white' }}
+                                            style={{ color: THEME_FONT_COLOR_WHITE }}
                                             size={20}
                                         />
                                     </View>
@@ -954,7 +1070,7 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
                                                 allowFontScaling={false}
                                             >
@@ -987,7 +1103,7 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text 
+                                        <Text
                                             style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
                                             allowFontScaling={false}
                                         >
@@ -1016,7 +1132,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_Afternoon ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_Afternoon ? THEME_COLOR_ATTENTION : THEME_COLOR_PURPLE
                         }}
                     >
                         <Image
@@ -1026,7 +1142,7 @@ export const DailySchedule = (props) => {
                         <Text
                             style={{
                                 ...styles.scheduleButton_Text,
-                                color: displaBool_Afternoon ? 'black' : 'white',
+                                color: displaBool_Afternoon ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                             }}
                             allowFontScaling={false}
                         >
@@ -1039,7 +1155,7 @@ export const DailySchedule = (props) => {
                             <Text
                                 style={{
                                     ...styles.scheduleButton_Calorie_Container_Text,
-                                    color: displaBool_Afternoon ? 'black' : 'white',
+                                    color: displaBool_Afternoon ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                                 }}
                                 allowFontScaling={false}
                             >
@@ -1051,7 +1167,7 @@ export const DailySchedule = (props) => {
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{ color: 'black' }}
+                                style={{ color: THEME_FONT_COLOR_BLACK }}
                                 size={20}
                             />
                         </View>
@@ -1073,7 +1189,7 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
@@ -1081,12 +1197,33 @@ export const DailySchedule = (props) => {
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
                                                 {data.amount}
                                             </Text>
+                                        </View>
+                                        <View 
+                                            style={{ 
+                                                ...styles.scheduleButton_subContent_Container_Button_DataAmount_Container,
+                                                flexDirection: 'row' 
+                                            }}
+                                        >
+                                            {uniqueEmotionArray.map((data_emotion, index) => (
+                                                <>
+                                                    {data.item == data_emotion.item &&
+                                                        <Text
+                                                            style={{
+                                                                fontSize: HeightRatio(20)
+                                                            }}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            {unescape(data_emotion != null ? data_emotion.emoji.replace(/\\u/g, '%u') : null)}
+                                                        </Text>
+                                                    }
+                                                </>
+                                            ))}
                                         </View>
                                     </View>
                                     <View
@@ -1094,7 +1231,7 @@ export const DailySchedule = (props) => {
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{ color: 'white' }}
+                                            style={{ color: THEME_FONT_COLOR_WHITE }}
                                             size={20}
                                         />
                                     </View>
@@ -1106,7 +1243,7 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
                                                 allowFontScaling={false}
                                             >
@@ -1139,7 +1276,7 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text 
+                                        <Text
                                             style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
                                             allowFontScaling={false}
                                         >
@@ -1169,7 +1306,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_Dinner ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_Dinner ? THEME_COLOR_ATTENTION : THEME_COLOR_PURPLE
                         }}
                     >
                         <Image
@@ -1179,7 +1316,7 @@ export const DailySchedule = (props) => {
                         <Text
                             style={{
                                 ...styles.scheduleButton_Text,
-                                color: displaBool_Dinner ? 'black' : 'white',
+                                color: displaBool_Dinner ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                             }}
                             allowFontScaling={false}
                         >
@@ -1192,7 +1329,7 @@ export const DailySchedule = (props) => {
                             <Text
                                 style={{
                                     ...styles.scheduleButton_Calorie_Container_Text,
-                                    color: displaBool_Dinner ? 'black' : 'white',
+                                    color: displaBool_Dinner ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                                 }}
                                 allowFontScaling={false}
                             >
@@ -1204,7 +1341,7 @@ export const DailySchedule = (props) => {
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{ color: 'black' }}
+                                style={{ color: THEME_FONT_COLOR_BLACK }}
                                 size={20}
                             />
                         </View>
@@ -1226,7 +1363,7 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
@@ -1234,12 +1371,33 @@ export const DailySchedule = (props) => {
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
                                                 {data.amount}
                                             </Text>
+                                        </View>
+                                        <View 
+                                            style={{ 
+                                                ...styles.scheduleButton_subContent_Container_Button_DataAmount_Container,
+                                                flexDirection: 'row' 
+                                            }}
+                                        >
+                                            {uniqueEmotionArray.map((data_emotion, index) => (
+                                                <>
+                                                    {data.item == data_emotion.item &&
+                                                        <Text
+                                                            style={{
+                                                                fontSize: HeightRatio(20)
+                                                            }}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            {unescape(data_emotion != null ? data_emotion.emoji.replace(/\\u/g, '%u') : null)}
+                                                        </Text>
+                                                    }
+                                                </>
+                                            ))}
                                         </View>
                                     </View>
                                     <View
@@ -1247,7 +1405,7 @@ export const DailySchedule = (props) => {
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{ color: 'white' }}
+                                            style={{ color: THEME_FONT_COLOR_WHITE }}
                                             size={20}
                                         />
                                     </View>
@@ -1259,7 +1417,7 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
                                                 allowFontScaling={false}
                                             >
@@ -1292,7 +1450,7 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text 
+                                        <Text
                                             style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
                                             allowFontScaling={false}
                                         >
@@ -1322,7 +1480,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_BeforeBed ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_BeforeBed ? THEME_COLOR_ATTENTION : THEME_COLOR_PURPLE
                         }}
                     >
                         <Image
@@ -1332,7 +1490,7 @@ export const DailySchedule = (props) => {
                         <Text
                             style={{
                                 ...styles.scheduleButton_Text,
-                                color: displaBool_BeforeBed ? 'black' : 'white',
+                                color: displaBool_BeforeBed ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                             }}
                             allowFontScaling={false}
                         >
@@ -1345,7 +1503,7 @@ export const DailySchedule = (props) => {
                             <Text
                                 style={{
                                     ...styles.scheduleButton_Calorie_Container_Text,
-                                    color: displaBool_BeforeBed ? 'black' : 'white',
+                                    color: displaBool_BeforeBed ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                                 }}
                                 allowFontScaling={false}
                             >
@@ -1357,7 +1515,7 @@ export const DailySchedule = (props) => {
                         >
                             <FontAwesomeIcon
                                 icon={faSolid, faBars}
-                                style={{ color: 'black' }}
+                                style={{ color: THEME_FONT_COLOR_BLACK }}
                                 size={20}
                             />
                         </View>
@@ -1379,7 +1537,7 @@ export const DailySchedule = (props) => {
                                         style={{ flexDirection: 'column' }}
                                     >
                                         <View>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
@@ -1387,12 +1545,33 @@ export const DailySchedule = (props) => {
                                             </Text>
                                         </View>
                                         <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_Container_Button_Text}
                                                 allowFontScaling={false}
                                             >
                                                 {data.amount}
                                             </Text>
+                                        </View>
+                                        <View 
+                                            style={{ 
+                                                ...styles.scheduleButton_subContent_Container_Button_DataAmount_Container,
+                                                flexDirection: 'row' 
+                                            }}
+                                        >
+                                            {uniqueEmotionArray.map((data_emotion, index) => (
+                                                <>
+                                                    {data.item == data_emotion.item &&
+                                                        <Text
+                                                            style={{
+                                                                fontSize: HeightRatio(20)
+                                                            }}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            {unescape(data_emotion != null ? data_emotion.emoji.replace(/\\u/g, '%u') : null)}
+                                                        </Text>
+                                                    }
+                                                </>
+                                            ))}
                                         </View>
                                     </View>
                                     <View
@@ -1400,7 +1579,7 @@ export const DailySchedule = (props) => {
                                     >
                                         <FontAwesomeIcon
                                             icon={faSolid, faBars}
-                                            style={{ color: 'white' }}
+                                            style={{ color: THEME_FONT_COLOR_WHITE }}
                                             size={20}
                                         />
                                     </View>
@@ -1412,7 +1591,7 @@ export const DailySchedule = (props) => {
                                 <>
                                     <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_0}>
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1}>
-                                            <Text 
+                                            <Text
                                                 style={styles.scheduleButton_subContent_NutritionDetails_Title_Container_1_Text}
                                                 allowFontScaling={false}
                                             >
@@ -1445,7 +1624,7 @@ export const DailySchedule = (props) => {
                                         onPress={() => { setModalVisible(true); setDeleteID(data.id) }}
                                         style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button}
                                     >
-                                        <Text 
+                                        <Text
                                             style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
                                             allowFontScaling={false}
                                         >
@@ -1472,7 +1651,7 @@ export const DailySchedule = (props) => {
                 <View style={styles.modalContainer_0}>
                     <View style={styles.modalContainer_1}>
                         <View style={styles.modalContainer_1_A}>
-                            <Text 
+                            <Text
                                 style={styles.modalContainer_1_A_Text}
                                 allowFontScaling={false}
                             >
@@ -1481,7 +1660,7 @@ export const DailySchedule = (props) => {
                         </View>
                         <View style={styles.modalContainer_1_B}>
                             <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                <View style={{ ...styles.modalButton, backgroundColor: 'rgba(26, 105, 125, 0.50)' }}>
+                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
                                     <Text
                                         style={styles.modalButton_Text}
                                         allowFontScaling={false}
@@ -1497,7 +1676,7 @@ export const DailySchedule = (props) => {
 
                                 }}
                             >
-                                <View style={{ ...styles.modalButton, backgroundColor: 'rgba(255, 0, 75, 0.50)' }}>
+                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
                                     <Text
                                         style={styles.modalButton_Text}
                                         allowFontScaling={false}
@@ -1517,12 +1696,12 @@ export const DailySchedule = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: HeightRatio(20),
+        marginTop: HeightRatio(10),
         height: HeightRatio(560),
         // backgroundColor: 'red'
     },
     scrollView: {
-        backgroundColor: '#282830',
+        backgroundColor: THEME_COLOR_BACKDROP_DARK,
         width: windowWidth - HeightRatio(20),
         padding: HeightRatio(10),
         borderRadius: HeightRatio(10)
@@ -1551,7 +1730,7 @@ const styles = StyleSheet.create({
         margin: HeightRatio(15)
     },
     scheduleButton_Calorie_Container: {
-        backgroundColor: 'rgba(0,0,0, 0.2)',
+        backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
         padding: HeightRatio(10),
         borderRadius: HeightRatio(10),
         height: HeightRatio(40),
@@ -1574,7 +1753,7 @@ const styles = StyleSheet.create({
     },
     scheduleButton_subContent: {
         borderBottomWidth: 1,
-        borderBottomColor: 'rgba(247, 255, 108, 0.50)',
+        borderBottomColor: THEME_COLOR_ATTENTION,
         margin: HeightRatio(10),
         width: windowWidth - HeightRatio(80),
         alignSelf: 'center'
@@ -1592,7 +1771,7 @@ const styles = StyleSheet.create({
         paddingTop: HeightRatio(10)
     },
     scheduleButton_subContent_Container_Button_Text: {
-        color: 'white',
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(20),
         fontFamily: "SofiaSansSemiCondensed-Regular"
     },
@@ -1610,10 +1789,10 @@ const styles = StyleSheet.create({
     },
     scheduleButton_subContent_NutritionDetails_Title_Container_1: {
         borderBottomWidth: 1,
-        borderBottomColor: 'white'
+        borderBottomColor: THEME_FONT_COLOR_WHITE
     },
     scheduleButton_subContent_NutritionDetails_Title_Container_1_Text: {
-        color: 'white',
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(25),
         fontFamily: "SofiaSansSemiCondensed-Regular"
     },
@@ -1623,7 +1802,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     scheduleButton_subContent_NutritionDetails_Remove_Button: {
-        backgroundColor: 'rgba(255, 0, 75, 0.90)',
+        backgroundColor: THEME_COLOR_NEGATIVE,
         margin: HeightRatio(10),
         padding: HeightRatio(10),
         paddingLeft: HeightRatio(20),
@@ -1633,7 +1812,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     scheduleButton_subContent_NutritionDetails_Remove_Button_Text: {
-        color: 'white',
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(25),
         fontFamily: "SofiaSansSemiCondensed-Regular",
         textAlign: 'center'
@@ -1645,7 +1824,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 5,
         width: windowWidth - HeightRatio(130),
-        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        backgroundColor: THEME_FONT_COLOR_WHITE_LOW_OPACITY,
         margin: HeightRatio(2),
         padding: HeightRatio(10),
         borderRadius: HeightRatio(4)
@@ -1658,10 +1837,10 @@ const styles = StyleSheet.create({
     },
     modalContainer_0: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.75)'
+        backgroundColor: THEME_COLOR_BLACKOUT
     },
     modalContainer_1: {
-        backgroundColor: "#2f2c4f",
+        backgroundColor: THEME_COLOR_BACKDROP_DARK,
         margin: 20,
         zIndex: 999,
         borderRadius: 10,
@@ -1678,7 +1857,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     modalContainer_1_A_Text: {
-        color: 'white',
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(30),
         width: (windowWidth - WidthRatio(100)),
     },
@@ -1696,7 +1875,7 @@ const styles = StyleSheet.create({
         margin: HeightRatio(10)
     },
     modalButton_Text: {
-        color: 'white',
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(25),
         alignSelf: 'center',
         fontFamily: 'SofiaSansSemiCondensed-Regular'

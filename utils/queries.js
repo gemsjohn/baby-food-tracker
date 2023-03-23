@@ -18,6 +18,7 @@ export const GET_ME = gql`
         schedule
         item
         amount
+        emotion
         nutrients
       }
     }
@@ -45,6 +46,7 @@ export const GET_USER_BY_ID = gql`
         schedule
         item
         amount
+        emotion
         nutrients
       }
     }
@@ -72,6 +74,7 @@ export const GET_USERS = gql`
         schedule
         item
         amount
+        emotion
         nutrients
       }
     }
@@ -94,6 +97,7 @@ export const TRACKERS = gql`
       schedule
       item
       amount
+      emotion
       nutrients
     }
   }
