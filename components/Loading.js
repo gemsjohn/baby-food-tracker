@@ -15,10 +15,29 @@ import {
 import { Styling, HeightRatio, WidthRatio, windowHeight, windowWidth } from '../Styling';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import {
+    THEME_COLOR_POSITIVE,
+    THEME_COLOR_POSITIVE_LOW_OPACITY,
+    THEME_COLOR_NEGATIVE,
+    THEME_COLOR_BACKDROP_DARK,
+    THEME_COLOR_BACKDROP_LIGHT,
+    THEME_COLOR_BLACK_LOW_OPACITY,
+    THEME_COLOR_BLACK_HIGH_OPACITY,
+    THEME_FONT_COLOR_WHITE,
+    THEME_FONT_COLOR_WHITE_LOW_OPACITY,
+    THEME_FONT_COLOR_BLACK,
+    THEME_COLOR_ATTENTION,
+    THEME_TRANSPARENT,
+    THEME_COLOR_PURPLE,
+    THEME_COLOR_PURPLE_LOW_OPACITY,
+    THEME_COLOR_BLACKOUT
+} from '../COLOR';
 
 export const Loading = () => {
     const [fontsLoaded] = useFonts({
         'GochiHand_400Regular': require('../assets/fonts/GochiHand-Regular.ttf'),
+        'SofiaSansSemiCondensed-Regular': require('../assets/fonts/SofiaSansSemiCondensed-Regular.ttf'),
+        'SofiaSansSemiCondensed-ExtraBold': require('../assets/fonts/SofiaSansSemiCondensed-ExtraBold.ttf')
     });
 
     const onLayoutRootView = useCallback(async () => {
@@ -43,10 +62,9 @@ export const Loading = () => {
             />
             <Text
                 style={{
-                    fontFamily: 'GochiHand_400Regular',
-                    color: 'white',
+                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                    color: THEME_FONT_COLOR_WHITE,
                     fontSize: HeightRatio(50),
-                    // fontWeight: 'bold',
                     top: HeightRatio(20),
                     textAlign: 'center',
                     width: WidthRatio(200)
@@ -55,10 +73,9 @@ export const Loading = () => {
             >Baby Food Tracker</Text>
             <Text
                 style={{
-                    fontFamily: 'GochiHand_400Regular',
-                    color: '#ffff00',
+                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                    color: THEME_COLOR_ATTENTION,
                     fontSize: HeightRatio(30),
-                    // fontWeight: 'bold',
                     top: HeightRatio(20),
                     alignSelf: 'center'
                 }}

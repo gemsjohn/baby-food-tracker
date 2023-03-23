@@ -15,6 +15,23 @@ import * as SecureStore from 'expo-secure-store';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { GLOBAL_GRAPHQL_API_URL } from '../../App';
+import {
+  THEME_COLOR_POSITIVE,
+  THEME_COLOR_POSITIVE_LOW_OPACITY,
+  THEME_COLOR_NEGATIVE,
+  THEME_COLOR_BACKDROP_DARK,
+  THEME_COLOR_BACKDROP_LIGHT,
+  THEME_COLOR_BLACK_LOW_OPACITY,
+  THEME_COLOR_BLACK_HIGH_OPACITY,
+  THEME_FONT_COLOR_WHITE,
+  THEME_FONT_COLOR_WHITE_LOW_OPACITY,
+  THEME_FONT_COLOR_BLACK,
+  THEME_COLOR_ATTENTION,
+  THEME_TRANSPARENT,
+  THEME_COLOR_PURPLE,
+  THEME_COLOR_PURPLE_LOW_OPACITY,
+  THEME_COLOR_BLACKOUT
+} from '../../COLOR';
 
 const resetActionProfile = CommonActions.reset({
   index: 1,
@@ -314,7 +331,7 @@ export const Auth = ({ navigation }) => {
       {!navigateToProfile && !loading ?
         <>
           <View
-            style={{ ...Styling.container, backgroundColor: 'rgba(71, 66, 106, 1.00)' }}
+            style={{ ...Styling.container, backgroundColor: THEME_COLOR_BACKDROP_DARK }}
             onLayout={onLayoutRootView}
           >
             <SafeAreaView style={{ height: '90%', marginBottom: 32, marginTop: 32 }}>
@@ -326,11 +343,11 @@ export const Auth = ({ navigation }) => {
                       <>
                         <Text
                           style={{
-                            color: 'white',
+                            color: THEME_FONT_COLOR_WHITE,
                             alignSelf: 'center',
                             fontSize: HeightRatio(100),
                             marginTop: HeightRatio(40),
-                            fontFamily: 'GochiHand_400Regular',
+                            fontFamily: 'SofiaSansSemiCondensed-Regular',
                           }}
                           allowFontScaling={false}
                         >
@@ -349,11 +366,11 @@ export const Auth = ({ navigation }) => {
                               >
                                 <FontAwesomeIcon
                                   icon={faSolid, faCheck}
-                                  style={{ color: '#70e000', margin: HeightRatio(14), alignSelf: 'center' }}
+                                  style={{ color: THEME_COLOR_POSITIVE, margin: HeightRatio(14), alignSelf: 'center' }}
                                 />
                                 <Text
                                   style={{
-                                    color: 'white',
+                                    color: THEME_FONT_COLOR_WHITE,
                                     fontSize: HeightRatio(20),
                                     textAlign: 'center',
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
@@ -371,11 +388,11 @@ export const Auth = ({ navigation }) => {
                               >
                                 <FontAwesomeIcon
                                   icon={faSolid, faEnvelope}
-                                  style={{ color: 'white', margin: HeightRatio(14), alignSelf: 'center' }}
+                                  style={{ color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(14), alignSelf: 'center' }}
                                 />
                                 <Text
                                   style={{
-                                    color: 'white',
+                                    color: THEME_FONT_COLOR_WHITE,
                                     fontSize: HeightRatio(20),
                                     textAlign: 'center',
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
@@ -394,11 +411,11 @@ export const Auth = ({ navigation }) => {
                               >
                                 <FontAwesomeIcon
                                   icon={faSolid, faCheck}
-                                  style={{ color: '#70e000', margin: HeightRatio(14), alignSelf: 'center' }}
+                                  style={{ color: THEME_COLOR_POSITIVE, margin: HeightRatio(14), alignSelf: 'center' }}
                                 />
                                 <Text
                                   style={{
-                                    color: 'white',
+                                    color: THEME_FONT_COLOR_WHITE,
                                     fontSize: HeightRatio(20),
                                     textAlign: 'center',
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
@@ -416,11 +433,11 @@ export const Auth = ({ navigation }) => {
                               >
                                 <FontAwesomeIcon
                                   icon={faSolid, faUser}
-                                  style={{ color: 'white', margin: HeightRatio(14), alignSelf: 'center' }}
+                                  style={{ color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(14), alignSelf: 'center' }}
                                 />
                                 <Text
                                   style={{
-                                    color: 'white',
+                                    color: THEME_FONT_COLOR_WHITE,
                                     fontSize: HeightRatio(20),
                                     textAlign: 'center',
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
@@ -439,11 +456,11 @@ export const Auth = ({ navigation }) => {
                               >
                                 <FontAwesomeIcon
                                   icon={faSolid, faCheck}
-                                  style={{ color: '#70e000', margin: HeightRatio(14), alignSelf: 'center' }}
+                                  style={{ color: THEME_COLOR_POSITIVE, margin: HeightRatio(14), alignSelf: 'center' }}
                                 />
                                 <Text
                                   style={{
-                                    color: 'white',
+                                    color: THEME_FONT_COLOR_WHITE,
                                     fontSize: HeightRatio(20),
                                     textAlign: 'center',
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
@@ -461,11 +478,11 @@ export const Auth = ({ navigation }) => {
                               >
                                 <FontAwesomeIcon
                                   icon={faSolid, faLock}
-                                  style={{ color: 'white', margin: HeightRatio(14), alignSelf: 'center' }}
+                                  style={{ color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(14), alignSelf: 'center' }}
                                 />
                                 <Text
                                   style={{
-                                    color: 'white',
+                                    color: THEME_FONT_COLOR_WHITE,
                                     fontSize: HeightRatio(20),
                                     textAlign: 'center',
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
@@ -524,7 +541,7 @@ export const Auth = ({ navigation }) => {
 
                             >
                               <View style={{
-                                backgroundColor: 'rgba(30, 228, 168, 0.50)',
+                                backgroundColor: THEME_COLOR_POSITIVE,
                                 display: 'flex',
                                 justifyContent: 'flex-start',
                                 padding: HeightRatio(20),
@@ -535,7 +552,7 @@ export const Auth = ({ navigation }) => {
                               }}>
                                 <Text
                                   style={{
-                                    color: 'white',
+                                    color: THEME_FONT_COLOR_BLACK,
                                     fontSize: HeightRatio(30),
                                     // fontWeight: 'bold',
                                     alignSelf: 'center',
@@ -553,7 +570,7 @@ export const Auth = ({ navigation }) => {
                               disabled={true}
                             >
                               <View style={{
-                                backgroundColor: 'rgba(30, 228, 168, 0.50)',
+                                backgroundColor: THEME_COLOR_POSITIVE,
                                 display: 'flex',
                                 justifyContent: 'flex-start',
                                 padding: HeightRatio(20),
@@ -564,7 +581,7 @@ export const Auth = ({ navigation }) => {
                               }}>
                                 <Text
                                   style={{
-                                    color: 'white',
+                                    color: THEME_FONT_COLOR_BLACK,
                                     fontSize: HeightRatio(30),
                                     // fontWeight: 'bold',
                                     alignSelf: 'center',
@@ -579,7 +596,7 @@ export const Auth = ({ navigation }) => {
                         }
                         <Text
                           style={{
-                            color: 'white',
+                            color: THEME_FONT_COLOR_WHITE,
                             alignSelf: 'center',
                             fontSize: HeightRatio(30),
                             margin: HeightRatio(15),
@@ -598,7 +615,7 @@ export const Auth = ({ navigation }) => {
                           }}
                         >
                           <View style={{
-                            backgroundColor: 'rgba(255, 0, 118, 0.50)',
+                            backgroundColor: THEME_COLOR_NEGATIVE,
                             display: 'flex',
                             justifyContent: 'flex-start',
                             padding: HeightRatio(20),
@@ -608,7 +625,7 @@ export const Auth = ({ navigation }) => {
                           }}>
                             <Text
                               style={{
-                                color: 'white',
+                                color: THEME_FONT_COLOR_WHITE,
                                 fontSize: HeightRatio(30),
                                 // fontWeight: 'bold',
                                 alignSelf: 'center',
@@ -630,11 +647,11 @@ export const Auth = ({ navigation }) => {
                           <View>
                             <Text
                               style={{
-                                color: 'white',
+                                color: THEME_FONT_COLOR_WHITE,
                                 alignSelf: 'center',
                                 fontSize: HeightRatio(100),
                                 margin: 20,
-                                fontFamily: 'GochiHand_400Regular',
+                                fontFamily: 'SofiaSansSemiCondensed-Regular',
                               }}
                               allowFontScaling={false}
                             >
@@ -677,7 +694,7 @@ export const Auth = ({ navigation }) => {
                               promptInput_1 != "" ?
                               <TouchableOpacity onPress={() => { handleLogin(); setDisplayLoading(true); }}>
                                 <View style={{
-                                  backgroundColor: 'rgba(30, 228, 168, 0.50)',
+                                  backgroundColor: THEME_COLOR_POSITIVE,
                                   display: 'flex',
                                   justifyContent: 'flex-start',
                                   padding: HeightRatio(20),
@@ -688,7 +705,7 @@ export const Auth = ({ navigation }) => {
                                 }}>
                                   <Text
                                     style={{
-                                      color: 'white',
+                                      color: THEME_FONT_COLOR_BLACK,
                                       fontSize: HeightRatio(30),
                                       // fontWeight: 'bold',
                                       alignSelf: 'center',
@@ -706,7 +723,7 @@ export const Auth = ({ navigation }) => {
                                 disabled={true}
                               >
                                 <View style={{
-                                  backgroundColor: 'rgba(30, 228, 168, 0.50)',
+                                  backgroundColor: THEME_COLOR_POSITIVE,
                                   display: 'flex',
                                   justifyContent: 'flex-start',
                                   padding: HeightRatio(20),
@@ -717,7 +734,7 @@ export const Auth = ({ navigation }) => {
                                 }}>
                                   <Text
                                     style={{
-                                      color: 'white',
+                                      color: THEME_FONT_COLOR_BLACK,
                                       fontSize: HeightRatio(30),
                                       // fontWeight: 'bold',
                                       alignSelf: 'center',
@@ -741,7 +758,7 @@ export const Auth = ({ navigation }) => {
                               <TouchableOpacity
                                 onPress={() => setDisplayForgotPasswordContent(current => !current)}>
                                 <View style={{
-                                  backgroundColor: 'rgba(255, 255, 255, 0.50)',
+                                  backgroundColor: THEME_COLOR_ATTENTION,
                                   display: 'flex',
                                   justifyContent: 'flex-start',
                                   padding: HeightRatio(20),
@@ -752,7 +769,7 @@ export const Auth = ({ navigation }) => {
                                 }}>
                                   <Text
                                     style={{
-                                      color: 'white',
+                                      color: THEME_FONT_COLOR_BLACK,
                                       fontSize: HeightRatio(30),
                                       // fontWeight: 'bold',
                                       alignSelf: 'center',
@@ -790,7 +807,7 @@ export const Auth = ({ navigation }) => {
 
                                     <TouchableOpacity onPress={() => handleRequestReset()}>
                                       <View style={{
-                                        backgroundColor: 'rgba(30, 228, 168, 0.50)',
+                                        backgroundColor: THEME_COLOR_POSITIVE,
                                         display: 'flex',
                                         justifyContent: 'flex-start',
                                         padding: HeightRatio(20),
@@ -801,7 +818,7 @@ export const Auth = ({ navigation }) => {
                                       }}>
                                         <Text
                                           style={{
-                                            color: 'white',
+                                            color: THEME_FONT_COLOR_BLACK,
                                             fontSize: HeightRatio(30),
                                             // fontWeight: 'bold',
                                             alignSelf: 'center',
@@ -818,7 +835,7 @@ export const Auth = ({ navigation }) => {
                                     <View style={{ width: windowWidth, alignSelf: 'center' }}>
                                       <Text
                                         style={{
-                                          color: 'red',
+                                          color: THEME_COLOR_NEGATIVE,
                                           alignSelf: 'center',
                                           fontSize: HeightRatio(30),
                                           // margin: HeightRatio(10),
@@ -831,7 +848,7 @@ export const Auth = ({ navigation }) => {
 
                                   <TouchableOpacity onPress={() => setDisplayForgotPasswordForm(true)}>
                                     <View style={{
-                                      backgroundColor: 'rgba(255, 255, 255, 0.50)',
+                                      backgroundColor: THEME_FONT_COLOR_WHITE_LOW_OPACITY,
                                       display: 'flex',
                                       justifyContent: 'flex-start',
                                       padding: HeightRatio(20),
@@ -842,7 +859,7 @@ export const Auth = ({ navigation }) => {
                                     }}>
                                       <Text
                                         style={{
-                                          color: 'white',
+                                          color: THEME_FONT_COLOR_WHITE,
                                           fontSize: HeightRatio(30),
                                           // fontWeight: 'bold',
                                           alignSelf: 'center',
@@ -899,7 +916,7 @@ export const Auth = ({ navigation }) => {
                                         />
                                         {promptResetPassword_0 == promptResetPassword_1 && promptResetPassword_0 != '' && promptResetPassword_1 != '' &&
                                           <View style={{ alignSelf: 'center' }}>
-                                            <Text style={{ color: 'white', fontSize: HeightRatio(25), fontStyle: 'SofiaSansSemiCondensed-Regular' }}
+                                            <Text style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(25), fontStyle: 'SofiaSansSemiCondensed-Regular' }}
                                               allowFontScaling={false}>
                                               Passwords match!
                                             </Text>
@@ -907,7 +924,7 @@ export const Auth = ({ navigation }) => {
                                         }
                                         {promptResetPassword_0 != promptResetPassword_1 && promptResetPassword_0 != '' && promptResetPassword_1 != '' &&
                                           <View style={{ alignSelf: 'center' }}>
-                                            <Text style={{ color: 'white', fontSize: HeightRatio(25), fontStyle: 'SofiaSansSemiCondensed-Regular' }}
+                                            <Text style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(25), fontStyle: 'SofiaSansSemiCondensed-Regular' }}
                                               allowFontScaling={false}>
                                               Passwords do not match!
                                             </Text>
@@ -916,7 +933,7 @@ export const Auth = ({ navigation }) => {
                                         {/* [[[SUBMIT BUTTON]]] */}
                                         <TouchableOpacity onPress={() => handleResetPassword()}>
                                           <View style={{
-                                            backgroundColor: 'rgba(30, 228, 168, 0.50)',
+                                            backgroundColor: THEME_COLOR_POSITIVE,
                                             display: 'flex',
                                             justifyContent: 'flex-start',
                                             padding: HeightRatio(20),
@@ -927,7 +944,7 @@ export const Auth = ({ navigation }) => {
                                           }}>
                                             <Text
                                               style={{
-                                                color: 'white',
+                                                color: THEME_FONT_COLOR_BLACK,
                                                 fontSize: HeightRatio(30),
                                                 // fontWeight: 'bold',
                                                 alignSelf: 'center',
@@ -959,7 +976,7 @@ export const Auth = ({ navigation }) => {
                                           {/* TOP ROW */}
                                           <View
                                             style={{
-                                              backgroundColor: 'rgba(255, 0, 0, 1)',
+                                              backgroundColor: THEME_COLOR_NEGATIVE,
                                               alignSelf: 'center',
                                               borderRadius: HeightRatio(16),
                                               position: 'absolute',
@@ -979,7 +996,7 @@ export const Auth = ({ navigation }) => {
                                               <FontAwesomeIcon
                                                 icon={faSolid, faX}
                                                 style={{
-                                                  color: 'black',
+                                                  color: THEME_FONT_COLOR_BLACK,
                                                   justifyContent: 'center',
                                                   alignSelf: 'center',
                                                   marginTop: HeightRatio(30)
@@ -1010,7 +1027,7 @@ export const Auth = ({ navigation }) => {
                                 <>
                                   <Text
                                     style={{
-                                      color: 'white',
+                                      color: THEME_FONT_COLOR_WHITE,
                                       alignSelf: 'center',
                                       fontSize: HeightRatio(30),
                                       margin: HeightRatio(20),
@@ -1022,7 +1039,7 @@ export const Auth = ({ navigation }) => {
                                   </Text>
                                   <TouchableOpacity onPress={() => { setNewUser(true) }}>
                                     <View style={{
-                                      backgroundColor: 'rgba(255, 0, 118, 0.50)',
+                                      backgroundColor: THEME_COLOR_NEGATIVE,
                                       display: 'flex',
                                       justifyContent: 'flex-start',
                                       padding: HeightRatio(20),
@@ -1032,7 +1049,7 @@ export const Auth = ({ navigation }) => {
                                     }}>
                                       <Text
                                         style={{
-                                          color: 'white',
+                                          color: THEME_FONT_COLOR_WHITE,
                                           fontSize: HeightRatio(30),
                                           // fontWeight: 'bold',
                                           alignSelf: 'center',
@@ -1063,7 +1080,7 @@ export const Auth = ({ navigation }) => {
 
         :
         <View
-          style={{ ...Styling.container, backgroundColor: 'rgba(71, 66, 106, 1.00)' }}
+          style={{ ...Styling.container, backgroundColor: THEME_COLOR_PURPLE }}
         />
       }
       {displayNavbar &&
@@ -1091,12 +1108,12 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: "#edf2f4",
+    backgroundColor: THEME_FONT_COLOR_WHITE,
     borderRadius: 10,
     borderWidth: 3,
     padding: 35,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: THEME_FONT_COLOR_BLACK,
     shadowOffset: {
       width: 0,
       height: 2

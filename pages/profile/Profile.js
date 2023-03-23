@@ -16,6 +16,23 @@ import { Loading } from '../../components/Loading';
 // import { Tokens } from '../purchase/Tokens';
 // import { GoogleProducts } from '../purchase/GoogProducts';
 // import { PurchaseFilter } from '../purchase/PurchaseFilter';
+import {
+    THEME_COLOR_POSITIVE,
+    THEME_COLOR_POSITIVE_LOW_OPACITY,
+    THEME_COLOR_NEGATIVE,
+    THEME_COLOR_BACKDROP_DARK,
+    THEME_COLOR_BACKDROP_LIGHT,
+    THEME_COLOR_BLACK_LOW_OPACITY,
+    THEME_COLOR_BLACK_HIGH_OPACITY,
+    THEME_FONT_COLOR_WHITE,
+    THEME_FONT_COLOR_WHITE_LOW_OPACITY,
+    THEME_FONT_COLOR_BLACK,
+    THEME_COLOR_ATTENTION,
+    THEME_TRANSPARENT,
+    THEME_COLOR_PURPLE,
+    THEME_COLOR_PURPLE_LOW_OPACITY,
+    THEME_COLOR_BLACKOUT
+} from '../../COLOR';
 
 import {
     Text,
@@ -143,13 +160,13 @@ export const ProfileScreen = ({ navigation }) => {
                 <>
 
                     <View
-                        style={{ ...Styling.container, backgroundColor: '#1f1f27' }}
+                        style={{ ...Styling.container, backgroundColor: THEME_COLOR_BACKDROP_DARK }}
                         onLayout={onLayoutRootView}
                     >
 
                         <SafeAreaView style={{}}>
                             <ScrollView
-                                style={{ backgroundColor: '#1f1f27' }}
+                                style={{ backgroundColor: THEME_COLOR_BACKDROP_DARK }}
                                 refreshControl={
                                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                                 }
@@ -298,7 +315,7 @@ export const ProfileScreen = ({ navigation }) => {
                                                     }}
                                                     style={Styling.modalWordButton}>
                                                     <View style={{
-                                                        backgroundColor: 'rgba(255, 0, 118, 0.50)',
+                                                        backgroundColor: THEME_COLOR_NEGATIVE,
                                                         display: 'flex',
                                                         justifyContent: 'flex-start',
                                                         padding: HeightRatio(20),
@@ -308,9 +325,8 @@ export const ProfileScreen = ({ navigation }) => {
                                                     }}>
                                                         <Text
                                                             style={{
-                                                                color: 'white',
+                                                                color: THEME_FONT_COLOR_WHITE,
                                                                 fontSize: HeightRatio(30),
-                                                                // fontWeight: 'bold',
                                                                 alignSelf: 'center',
                                                                 fontFamily: 'SofiaSansSemiCondensed-Regular'
                                                             }}
@@ -335,7 +351,7 @@ export const ProfileScreen = ({ navigation }) => {
                                                     style={{ ...Styling.modalWordButton, marginTop: 0 }}
                                                 >
                                                     <View style={{
-                                                        backgroundColor: 'rgba(255, 0, 118, 0.50)',
+                                                        backgroundColor: THEME_COLOR_NEGATIVE,
                                                         display: 'flex',
                                                         justifyContent: 'flex-start',
                                                         padding: HeightRatio(20),
@@ -345,7 +361,7 @@ export const ProfileScreen = ({ navigation }) => {
                                                     }}>
                                                         <Text
                                                             style={{
-                                                                color: 'white',
+                                                                color: THEME_FONT_COLOR_WHITE,
                                                                 fontSize: HeightRatio(30),
                                                                 // fontWeight: 'bold',
                                                                 alignSelf: 'center',
@@ -378,7 +394,7 @@ export const ProfileScreen = ({ navigation }) => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         height: HeightRatio(505),
-                        backgroundColor: 'rgba(71, 66, 106, 1.00)'
+                        backgroundColor: THEME_COLOR_PURPLE
                     }}
                 >
                     <Loading />
@@ -398,7 +414,7 @@ export const ProfileScreen = ({ navigation }) => {
                             }}
                             style={{
                                 borderWidth: 3,
-                                borderColor: '#ff0076',
+                                borderColor: THEME_COLOR_NEGATIVE,
                                 borderRadius: 100,
                                 height: HeightRatio(60),
                                 width: HeightRatio(60),
@@ -410,7 +426,7 @@ export const ProfileScreen = ({ navigation }) => {
                             <FontAwesomeIcon
                                 icon={faSolid, faX}
                                 style={{
-                                    color: '#ff0076',
+                                    color: THEME_COLOR_NEGATIVE,
                                 }}
                             />
                         </TouchableOpacity>
@@ -426,7 +442,7 @@ export const ProfileScreen = ({ navigation }) => {
                     setDisplaySetUpCosmicKeyModal(!displaySetUpCosmicKeyModal);
                 }}
             >
-                <View style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#1f1f27' }}>
+                <View style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: THEME_COLOR_BACKDROP_DARK }}>
                     <View style={{ padding: HeightRatio(20) }}>
                         <View style={{ flexDirection: 'column' }}>
 
@@ -436,7 +452,7 @@ export const ProfileScreen = ({ navigation }) => {
                                 onPress={() => setDisplaySetUpCosmicKeyModal(!displaySetUpCosmicKeyModal)}
                                 style={Styling.modalWordButton}>
                                 <View style={{
-                                    backgroundColor: '#f7ff6c',
+                                    backgroundColor: THEME_COLOR_ATTENTION,
                                     display: 'flex',
                                     justifyContent: 'flex-start',
                                     padding: HeightRatio(20),
@@ -446,7 +462,7 @@ export const ProfileScreen = ({ navigation }) => {
                                 }}>
                                     <Text
                                         style={{
-                                            color: 'black',
+                                            color: THEME_FONT_COLOR_BLACK,
                                             fontSize: HeightRatio(30),
                                             alignSelf: 'center',
                                             fontFamily: 'SofiaSansSemiCondensed-Regular'

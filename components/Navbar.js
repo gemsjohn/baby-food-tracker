@@ -8,6 +8,23 @@ import { MainStateContext } from '../App';
 import moment from 'moment';
 import { Styling, windowHeight, windowWidth, HeightRatio, WidthRatio } from '../Styling';
 import { GLOBAL_GRAPHQL_API_URL } from '../App';
+import { 
+    THEME_COLOR_POSITIVE,
+    THEME_COLOR_POSITIVE_LOW_OPACITY,
+    THEME_COLOR_NEGATIVE,
+    THEME_COLOR_BACKDROP_DARK,
+    THEME_COLOR_BACKDROP_LIGHT,
+    THEME_COLOR_BLACK_LOW_OPACITY,
+    THEME_COLOR_BLACK_HIGH_OPACITY,
+    THEME_FONT_COLOR_WHITE,
+    THEME_FONT_COLOR_WHITE_LOW_OPACITY,
+    THEME_FONT_COLOR_BLACK,
+    THEME_COLOR_ATTENTION,
+    THEME_TRANSPARENT,
+    THEME_COLOR_PURPLE,
+    THEME_COLOR_PURPLE_LOW_OPACITY,
+    THEME_COLOR_BLACKOUT
+} from '../COLOR';
 
 export const Navbar = (props) => {
     const { mainState, setMainState } = useContext(MainStateContext);
@@ -150,18 +167,16 @@ export const Navbar = (props) => {
                             flexDirection: 'row',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            backgroundColor: 'rgba(235, 35, 81, 1.00)',
+                            backgroundColor: THEME_COLOR_NEGATIVE,
                             padding: HeightRatio(10),
                             borderRadius: HeightRatio(10)
 
                         }}>
                             <Text style={{
                                 fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                color: 'white',
+                                color: THEME_FONT_COLOR_WHITE,
                                 fontSize: HeightRatio(20),
                                 alignSelf: 'center',
-                                // borderBottomWidth: 2,
-                                // borderColor: 'red'
                             }}
                                 allowFontScaling={false}
                                 ellipsizeMode='tail'
@@ -178,7 +193,7 @@ export const Navbar = (props) => {
                         onPress={() => {
                             isTokenValid ? props.nav.dispatch(resetActionHome) : setDisplaySignUpModal(true);
                         }}
-                        style={{ backgroundColor: fromHome ? '#85c36d' : 'black', borderTopLeftRadius: HeightRatio(30) }}
+                        style={{ backgroundColor: fromHome ? THEME_COLOR_POSITIVE : THEME_FONT_COLOR_BLACK, borderTopLeftRadius: HeightRatio(30) }}
                     >
                         <View
                             style={{
@@ -195,7 +210,7 @@ export const Navbar = (props) => {
                         >
                             <Text
                                 style={{
-                                    color: fromHome ? 'black' : 'white',
+                                    color: fromHome ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                                     fontSize: HeightRatio(20),
                                     alignSelf: 'center',
                                     fontFamily: 'SofiaSansSemiCondensed-Regular'
@@ -218,7 +233,7 @@ export const Navbar = (props) => {
                                     isGameInProgress: false
                                 })
                             }}
-                            style={{ backgroundColor: fromProfile ? '#85c36d' : 'black', borderTopRightRadius: HeightRatio(30) }}
+                            style={{ backgroundColor: fromProfile ? THEME_COLOR_POSITIVE : THEME_FONT_COLOR_BLACK, borderTopRightRadius: HeightRatio(30) }}
                         >
                             <View
                                 style={{
@@ -235,7 +250,7 @@ export const Navbar = (props) => {
                             >
                                 <Text
                                     style={{
-                                        color: fromProfile ? 'black' : 'white',
+                                        color: fromProfile ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                                         fontSize: HeightRatio(20),
                                         alignSelf: 'center',
                                         fontFamily: 'SofiaSansSemiCondensed-Regular'
@@ -249,7 +264,7 @@ export const Navbar = (props) => {
                         :
                         <TouchableOpacity
                             onPress={() => { props.nav.dispatch(resetActionAuth); }}
-                            style={{ backgroundColor: fromProfile ? '#85c36d' : 'black', borderTopRightRadius: HeightRatio(30) }}
+                            style={{ backgroundColor: fromProfile ? THEME_COLOR_POSITIVE : THEME_FONT_COLOR_BLACK, borderTopRightRadius: HeightRatio(30) }}
                         >
                             <View
                                 style={{
@@ -266,7 +281,7 @@ export const Navbar = (props) => {
                             >
                                 <Text
                                     style={{
-                                        color: fromProfile ? 'black' : 'white',
+                                        color: fromProfile ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                                         fontSize: HeightRatio(20),
                                         alignSelf: 'center',
                                         fontFamily: 'SofiaSansSemiCondensed-Regular'
@@ -301,7 +316,7 @@ export const Navbar = (props) => {
                     <View
                         style={{
                             // flex: 1,
-                            backgroundColor: "#2f2c4f",
+                            backgroundColor: THEME_COLOR_PURPLE,
                             margin: 20,
                             zIndex: 999,
                             borderRadius: 10,
@@ -327,7 +342,7 @@ export const Navbar = (props) => {
                             />
                             <Text
                                 style={{
-                                    color: 'white',
+                                    color: THEME_FONT_COLOR_WHITE,
                                     fontSize: HeightRatio(30),
                                     // width: (windowWidth - WidthRatio(100)),
                                     alignSelf: 'center'
@@ -337,7 +352,7 @@ export const Navbar = (props) => {
                             </Text>
                             <Text
                                 style={{
-                                    color: 'white',
+                                    color: THEME_FONT_COLOR_WHITE,
                                     textAlign: 'center',
                                     fontSize: HeightRatio(20),
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
@@ -357,7 +372,7 @@ export const Navbar = (props) => {
                                     })
                                 }}
                                 style={{
-                                    backgroundColor: 'rgba(255, 0, 75, 0.50)',
+                                    backgroundColor: THEME_COLOR_NEGATIVE,
                                     display: 'flex',
                                     justifyContent: 'flex-start',
                                     padding: HeightRatio(10),
@@ -368,7 +383,7 @@ export const Navbar = (props) => {
                                 }}>
                                     <Text
                                         style={{
-                                            color: 'white',
+                                            color: THEME_FONT_COLOR_WHITE,
                                             fontSize: HeightRatio(25),
                                             alignSelf: 'center',
                                             fontFamily: 'SofiaSansSemiCondensed-Regular'

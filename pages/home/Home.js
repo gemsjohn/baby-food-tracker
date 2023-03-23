@@ -49,6 +49,23 @@ import { Loading } from '../../components/Loading';
 import { Calendar } from 'react-native-calendars';
 import { usePullDailyContent } from './auxilliary/PullDailyContent';
 import { top_100 } from './auxilliary/TOP_100';
+import {
+    THEME_COLOR_POSITIVE,
+    THEME_COLOR_POSITIVE_LOW_OPACITY,
+    THEME_COLOR_NEGATIVE,
+    THEME_COLOR_BACKDROP_DARK,
+    THEME_COLOR_BACKDROP_LIGHT,
+    THEME_COLOR_BLACK_LOW_OPACITY,
+    THEME_COLOR_BLACK_HIGH_OPACITY,
+    THEME_FONT_COLOR_WHITE,
+    THEME_FONT_COLOR_WHITE_LOW_OPACITY,
+    THEME_FONT_COLOR_BLACK,
+    THEME_COLOR_ATTENTION,
+    THEME_TRANSPARENT,
+    THEME_COLOR_PURPLE,
+    THEME_COLOR_PURPLE_LOW_OPACITY,
+    THEME_COLOR_BLACKOUT
+} from '../../COLOR.js';
 
 export const HomeScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
@@ -425,7 +442,7 @@ export const HomeScreen = ({ navigation }) => {
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faArrowLeft}
-                                    style={{ color: 'white' }}
+                                    style={{ color: THEME_FONT_COLOR_WHITE }}
                                     size={25}
                                 />
                             </TouchableOpacity>
@@ -468,7 +485,7 @@ export const HomeScreen = ({ navigation }) => {
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faArrowRight}
-                                    style={{ color: 'white' }}
+                                    style={{ color: THEME_FONT_COLOR_WHITE }}
                                     size={25}
                                 />
                             </TouchableOpacity>
@@ -585,7 +602,7 @@ export const HomeScreen = ({ navigation }) => {
                             <View
                                 style={{
                                     ...styles.modalVisible_Container,
-                                    backgroundColor: '#f7ff6c',
+                                    backgroundColor: THEME_COLOR_ATTENTION,
                                     margin: HeightRatio(20),
                                     width: windowWidth - HeightRatio(30),
 
@@ -598,7 +615,7 @@ export const HomeScreen = ({ navigation }) => {
                                         <Text
                                             style={{
                                                 ...styles.renderItem_Search_Result_Container_Text,
-                                                color: 'black',
+                                                color: THEME_FONT_COLOR_BLACK,
                                                 fontSize: HeightRatio(30),
                                                 fontFamily: "SofiaSansSemiCondensed-Regular",
                                             }}
@@ -609,7 +626,7 @@ export const HomeScreen = ({ navigation }) => {
                                         <Text
                                             style={{
                                                 ...styles.renderItem_Search_Result_Container_Text,
-                                                color: 'black',
+                                                color: THEME_FONT_COLOR_BLACK,
                                                 fontSize: HeightRatio(30),
                                                 fontFamily: "SofiaSansSemiCondensed-Regular",
                                             }}
@@ -685,7 +702,7 @@ export const HomeScreen = ({ navigation }) => {
                             <View
                                 style={{
                                     ...styles.modalVisible_Container,
-                                    height: windowHeight / 1.9,
+                                    height: windowHeight / 1.8,
                                     margin: HeightRatio(0)
                                 }}
                             >
@@ -764,7 +781,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                             >
                                                                                 <FontAwesomeIcon
                                                                                     icon={faSolid, faX}
-                                                                                    style={{ color: 'white' }}
+                                                                                    style={{ color: THEME_FONT_COLOR_WHITE }}
                                                                                     size={20}
                                                                                 />
                                                                             </TouchableOpacity>
@@ -800,7 +817,7 @@ export const HomeScreen = ({ navigation }) => {
                                                         >
                                                             <FontAwesomeIcon
                                                                 icon={faSolid, faX}
-                                                                style={{ color: 'white' }}
+                                                                style={{ color: THEME_FONT_COLOR_WHITE }}
                                                                 size={20}
                                                             />
                                                         </TouchableOpacity>
@@ -826,7 +843,7 @@ export const HomeScreen = ({ navigation }) => {
                                     {selectedFoodDataEntrered ?
                                         <>
                                             <TouchableOpacity onPress={() => { setModalVisible(false); }}>
-                                                <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: '#f11c66' }}>
+                                                <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
                                                     <Text
                                                         style={styles.modalVisible_Button_Text}
                                                         allowFontScaling={false}
@@ -841,7 +858,7 @@ export const HomeScreen = ({ navigation }) => {
                                                     setModalVisible(false);
                                                 }}
                                             >
-                                                <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: '#85c36d' }}>
+                                                <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: THEME_COLOR_POSITIVE }}>
                                                     <Text
                                                         style={styles.modalVisible_Button_Text}
                                                         allowFontScaling={false}
@@ -884,15 +901,15 @@ export const HomeScreen = ({ navigation }) => {
                                 onDayPress={(day) => onDateSelect(day)}
                                 markedDates={{ [selectedCalendarModalDate]: { selected: true } }}
                                 theme={{
-                                    calendarBackground: '#12a2c0',
-                                    textMonthFontSize: 20,
-                                    monthTextColor: 'white',
-                                    arrowColor: 'white',
-                                    selectedDayBackgroundColor: 'rgba(30, 228, 168, 1.0)',
-                                    selectedDayTextColor: 'black',
-                                    todayTextColor: 'rgba(30, 228, 168, 1.0)',
-                                    dayTextColor: 'rgba(30, 228, 168, 0.25)',
-                                    textDisabledColor: 'rgba(255, 255, 255, 0.25)',
+                                    calendarBackground: THEME_COLOR_BACKDROP_DARK,
+                                    textMonthFontSize: HeightRatio(20),
+                                    monthTextColor: THEME_FONT_COLOR_WHITE,
+                                    arrowColor: THEME_FONT_COLOR_WHITE,
+                                    selectedDayBackgroundColor: THEME_COLOR_POSITIVE,
+                                    selectedDayTextColor: THEME_FONT_COLOR_BLACK,
+                                    todayTextColor: THEME_COLOR_POSITIVE,
+                                    dayTextColor: THEME_COLOR_POSITIVE_LOW_OPACITY,
+                                    textDisabledColor: THEME_FONT_COLOR_WHITE_LOW_OPACITY,
                                     textDayFontFamily: 'SofiaSansSemiCondensed-Regular',
                                     textDayFontSize: HeightRatio(15),
 
@@ -938,9 +955,9 @@ export const HomeScreen = ({ navigation }) => {
                                                 {calendarModalDate}
                                             </Text>
                                         </View>
-                                        <View style={{ ...styles.homePrimary_TotalCalories, backgroundColor: 'transparent', }}>
+                                        <View style={{ ...styles.homePrimary_TotalCalories, backgroundColor: THEME_TRANSPARENT, }}>
                                             <Text
-                                                style={{ ...styles.homePrimary_TotalCalories_Text, fontSize: HeightRatio(20), color: 'white' }}
+                                                style={{ ...styles.homePrimary_TotalCalories_Text, fontSize: HeightRatio(20), color: THEME_FONT_COLOR_WHITE }}
                                                 allowFontScaling={false}
                                             >
                                                 {calendarModalCalorieTotal} CALORIES
@@ -976,7 +993,7 @@ export const HomeScreen = ({ navigation }) => {
 
                                                         <View
                                                             style={{
-                                                                backgroundColor: '#f99034',
+                                                                backgroundColor: THEME_COLOR_ATTENTION,
                                                                 borderRadius: HeightRatio(5),
                                                                 padding: HeightRatio(4)
                                                             }}
@@ -984,7 +1001,7 @@ export const HomeScreen = ({ navigation }) => {
                                                             <Text
                                                                 style={{
                                                                     ...styles.renderItem_Search_Result_Container_Text,
-                                                                    color: 'black',
+                                                                    color: THEME_FONT_COLOR_BLACK,
                                                                     fontSize: HeightRatio(18),
                                                                     fontFamily: "GochiHand_400Regular",
                                                                 }}
@@ -1008,7 +1025,7 @@ export const HomeScreen = ({ navigation }) => {
 
                                         }}
                                     >
-                                        <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: '#f11c66' }}>
+                                        <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
                                             <Text
                                                 style={styles.modalVisible_Button_Text}
                                                 allowFontScaling={false}
@@ -1024,7 +1041,7 @@ export const HomeScreen = ({ navigation }) => {
                                             setSelectedCalendarModalDate('');
                                         }}
                                     >
-                                        <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: '#85c36d' }}>
+                                        <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: THEME_COLOR_POSITIVE }}>
                                             <Text
                                                 style={styles.modalVisible_Button_Text}
                                                 allowFontScaling={false}
@@ -1087,7 +1104,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     renderItem_Search_Results: {
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
         borderRadius: HeightRatio(10),
         margin: HeightRatio(4),
         width: windowWidth - HeightRatio(80),
@@ -1107,14 +1124,14 @@ const styles = StyleSheet.create({
         width: windowWidth - HeightRatio(140),
     },
     renderItem_Search_Result_Container_Text: {
-        color: "white",
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(25),
         fontFamily: "SofiaSansSemiCondensed-Regular",
         display: 'flex',
         flexWrap: 'wrap',
     },
     renderItem_Search_Result_Container_Plus: {
-        backgroundColor: 'rgba(247, 255, 108, 1.00)',
+        backgroundColor: THEME_COLOR_ATTENTION,
         borderRadius: HeightRatio(10),
         height: HeightRatio(40),
         width: HeightRatio(40),
@@ -1123,12 +1140,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     renderItem_Search_Result_Container_Plus_Text: {
-        color: 'black',
+        color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(30),
         fontFamily: "SofiaSansSemiCondensed-ExtraBold"
     },
     updatingScreen_Container: {
-        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backgroundColor: THEME_COLOR_BLACK_HIGH_OPACITY,
         position: 'absolute',
         zIndex: 100,
         height: windowHeight,
@@ -1138,15 +1155,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     updatingScreen_Container_Text: {
-        color: '#ffff00',
+        color: THEME_COLOR_ATTENTION,
         textAlign: 'center',
-        fontSize: HeightRatio(30),
-        fontFamily: 'GochiHand_400Regular',
+        fontSize: HeightRatio(50),
+        fontFamily: "SofiaSansSemiCondensed-ExtraBold",
         marginTop: HeightRatio(10)
     },
     homePrimary_Container: {
         flex: 1,
-        backgroundColor: '#12a2c0',
+        backgroundColor: THEME_COLOR_BACKDROP_DARK,
         display: 'flex',
         alignItems: 'center',
         width: windowWidth
@@ -1166,7 +1183,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: windowWidth * 0.2,
-        backgroundColor: 'rgba(71, 66, 106, 0.25)',
+        backgroundColor: THEME_COLOR_PURPLE_LOW_OPACITY,
     },
     homePrimary_Date_Current: {
         flexDirection: 'column',
@@ -1175,7 +1192,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         height: '100%',
         width: windowWidth / 1.5,
-        backgroundColor: 'rgba(71, 66, 106, 0.25)',
+        backgroundColor: THEME_COLOR_PURPLE_LOW_OPACITY,
     },
     homePrimary_Date_Current_Text: {
         color: 'white',
@@ -1185,7 +1202,7 @@ const styles = StyleSheet.create({
         marginRight: HeightRatio(10)
     },
     homePrimary_Date_Return_Button: {
-        backgroundColor: 'rgba(235, 35, 81, 1.00)',
+        backgroundColor: THEME_COLOR_NEGATIVE,
         borderRadius: HeightRatio(10),
         position: 'absolute',
         alignSelf: 'center',
@@ -1198,7 +1215,7 @@ const styles = StyleSheet.create({
         paddingRight: HeightRatio(10)
     },
     homePrimary_Date_Return_Button_Text: {
-        color: 'white',
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(20),
         fontFamily: 'SofiaSansSemiCondensed-Regular',
     },
@@ -1211,7 +1228,7 @@ const styles = StyleSheet.create({
     },
     homePrimary_TotalCalories: {
         alignSelf: 'center',
-        backgroundColor: '#b64292',
+        backgroundColor: THEME_COLOR_ATTENTION,
         margin: HeightRatio(5),
         borderRadius: 10,
         padding: HeightRatio(10),
@@ -1221,13 +1238,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     homePrimary_TotalCalories_Text: {
-        color: 'white',
+        color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(60),
         textAlign: 'center',
         fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
     },
     homePrimary_Add_Button: {
-        backgroundColor: '#85c36d',
+        backgroundColor: THEME_COLOR_POSITIVE,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -1237,18 +1254,18 @@ const styles = StyleSheet.create({
         margin: HeightRatio(4)
     },
     homePrimary_Add_Button_Text: {
-        color: 'white',
+        color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(30),
         textAlign: 'center',
         fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
     },
     modalVisible_Blackout: {
-        backgroundColor: 'rgba(0, 71, 98, 0.90)',
+        backgroundColor: THEME_COLOR_BLACKOUT,
         height: '100%', width: '100%',
         position: 'absolute', zIndex: 10
     },
     modalVisible_Container: {
-        backgroundColor: "#12a2c0",
+        backgroundColor: THEME_COLOR_BACKDROP_DARK,
         zIndex: 999,
         width: windowWidth - HeightRatio(10),
         padding: HeightRatio(20),
@@ -1267,7 +1284,7 @@ const styles = StyleSheet.create({
         fontFamily: 'SofiaSansSemiCondensed-Regular'
     },
     modalVisible_Search_Button: {
-        backgroundColor: '#85c36d',
+        backgroundColor: THEME_COLOR_POSITIVE,
         display: 'flex',
         justifyContent: 'flex-start',
         padding: HeightRatio(10),
@@ -1277,7 +1294,7 @@ const styles = StyleSheet.create({
         margin: HeightRatio(10)
     },
     modalVisible_Search_Button_Text: {
-        color: 'white',
+        color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(25),
         alignSelf: 'center',
         fontFamily: 'SofiaSansSemiCondensed-Regular'
@@ -1291,13 +1308,13 @@ const styles = StyleSheet.create({
         marginTop: HeightRatio(10),
     },
     modalVisible_Title_Container_Text: {
-        color: 'white',
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(30),
         alignSelf: 'center',
-        fontFamily: 'GochiHand_400Regular'
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
     },
     modalVisible_recentFoodData_Map_Container_0: {
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
         borderRadius: HeightRatio(10),
         margin: HeightRatio(4),
         width: windowWidth - HeightRatio(80),
@@ -1318,17 +1335,17 @@ const styles = StyleSheet.create({
         padding: HeightRatio(8),
     },
     modalVisible_recentFoodData_Map_Text_Bold: {
-        color: 'white',
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(25),
         fontFamily: "SofiaSansSemiCondensed-ExtraBold"
     },
     modalVisible_recentFoodData_Map_Text_Regular: {
-        color: 'white',
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(20),
         fontFamily: "SofiaSansSemiCondensed-Regular"
     },
     modalVisible_recentFoodData_Map_Plus: {
-        backgroundColor: 'rgba(247, 255, 108, 1.00)',
+        backgroundColor: THEME_COLOR_ATTENTION,
         borderRadius: HeightRatio(10),
         height: HeightRatio(40),
         width: HeightRatio(40),
@@ -1337,12 +1354,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     modalVisible_recentFoodData_Map_Plus_Text: {
-        color: 'black',
+        color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(30),
         fontFamily: "SofiaSansSemiCondensed-ExtraBold"
     },
     modalVisible_recentFoodData_Map_Container_0_RecentlyUsed_Text: {
-        color: "white",
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(25),
         fontFamily: "SofiaSansSemiCondensed-Regular",
         textAlign: 'center',
@@ -1361,17 +1378,17 @@ const styles = StyleSheet.create({
         top: HeightRatio(5),
         right: HeightRatio(5),
         borderRadius: HeightRatio(10),
-        backgroundColor: 'red'
+        backgroundColor: THEME_COLOR_NEGATIVE
     },
     modalVisible_FullButton: {
-        backgroundColor: '#f11c66',
+        backgroundColor: THEME_COLOR_NEGATIVE,
         display: 'flex',
         justifyContent: 'flex-start',
         padding: HeightRatio(10),
         borderRadius: HeightRatio(10),
         alignSelf: 'center',
         width: (windowWidth - WidthRatio(100)),
-        margin: HeightRatio(10)
+        // marginBottom: HeightRatio(10)
     },
     modalVisible_HalfButton: {
         display: 'flex',
@@ -1383,7 +1400,7 @@ const styles = StyleSheet.create({
         margin: HeightRatio(10)
     },
     modalVisible_Button_Text: {
-        color: 'white',
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(25),
         alignSelf: 'center',
         fontFamily: 'SofiaSansSemiCondensed-Regular'
@@ -1393,6 +1410,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         height: HeightRatio(505),
-        backgroundColor: 'rgba(71, 66, 106, 1.00)'
+        backgroundColor: THEME_COLOR_PURPLE
     }
 });

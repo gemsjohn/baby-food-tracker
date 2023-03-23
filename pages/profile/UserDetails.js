@@ -21,6 +21,23 @@ import {
     UPDATE_USER_PASSWORD,
     DELETE_USER
 } from '../../utils/mutations';
+import {
+    THEME_COLOR_POSITIVE,
+    THEME_COLOR_POSITIVE_LOW_OPACITY,
+    THEME_COLOR_NEGATIVE,
+    THEME_COLOR_BACKDROP_DARK,
+    THEME_COLOR_BACKDROP_LIGHT,
+    THEME_COLOR_BLACK_LOW_OPACITY,
+    THEME_COLOR_BLACK_HIGH_OPACITY,
+    THEME_FONT_COLOR_WHITE,
+    THEME_FONT_COLOR_WHITE_LOW_OPACITY,
+    THEME_FONT_COLOR_BLACK,
+    THEME_COLOR_ATTENTION,
+    THEME_TRANSPARENT,
+    THEME_COLOR_PURPLE,
+    THEME_COLOR_PURPLE_LOW_OPACITY,
+    THEME_COLOR_BLACKOUT
+} from '../../COLOR';
 
 async function deleteKey(key) {
     await SecureStore.deleteItemAsync(key);
@@ -210,7 +227,7 @@ export const UserDetails = (props) => {
                             flexDirection: 'column',
                             margin: HeightRatio(5),
                             alignSelf: 'center',
-                            backgroundColor: 'rgba(0, 0, 0, 0.2)'
+                            backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY
                         }}
 
                     >
@@ -218,9 +235,9 @@ export const UserDetails = (props) => {
                         <View style={{ flexDirection: 'column', }}>
                             <Text 
                                 style={{
-                                    color: 'white',
+                                    color: THEME_FONT_COLOR_WHITE,
                                     fontSize: HeightRatio(28),
-                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
                                     margin: HeightRatio(5)
                                 }} 
                                 allowFontScaling={false}
@@ -228,8 +245,7 @@ export const UserDetails = (props) => {
 
                             <Text
                                 style={{
-                                    color: '#ffff00',
-                                    // alignSelf: 'center', 
+                                    color: THEME_COLOR_ATTENTION,
                                     fontSize: HeightRatio(20),
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                     margin: HeightRatio(10),
@@ -256,13 +272,13 @@ export const UserDetails = (props) => {
                                         padding: HeightRatio(12),
                                         borderRadius: HeightRatio(10),
                                         flexDirection: 'row',
-                                        backgroundColor: 'rgba(53, 250, 169, 0.50)',
+                                        backgroundColor: THEME_COLOR_POSITIVE,
                                     }}
                                 >
                                     <Text
                                         style={{
-                                            color: 'black',
-                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                            color: THEME_FONT_COLOR_BLACK,
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
                                             fontSize: HeightRatio(23),
                                             alignSelf: 'flex-end'
                                         }}
@@ -285,7 +301,7 @@ export const UserDetails = (props) => {
                                                             <TouchableOpacity onPress={() => copyToClipboard()} style={{}}>
                                                                 
                                                                 <View style={{
-                                                                    backgroundColor: 'rgba(0, 118, 255, 0.10)',
+                                                                    backgroundColor: THEME_COLOR_POSITIVE,
                                                                     display: 'flex',
                                                                     justifyContent: 'flex-start',
                                                                     padding: HeightRatio(20),
@@ -295,7 +311,7 @@ export const UserDetails = (props) => {
                                                                 }}>
                                                                     <Text
                                                                         style={{
-                                                                            color: 'white',
+                                                                            color: THEME_FONT_COLOR_BLACK,
                                                                             fontSize: HeightRatio(16),
                                                                             fontFamily: 'SofiaSansSemiCondensed-Regular',
                                                                             alignSelf: 'center',
@@ -311,7 +327,7 @@ export const UserDetails = (props) => {
                                                     <View style={{ flexDirection: 'column', alignSelf: 'center', margin: 10 }}>
                                                         <Text 
                                                             style={{
-                                                                color: 'white',
+                                                                color: THEME_FONT_COLOR_WHITE,
                                                                 fontSize: HeightRatio(20),
                                                                 fontFamily: 'SofiaSansSemiCondensed-Regular',
                                                                 margin: HeightRatio(10),
@@ -334,12 +350,12 @@ export const UserDetails = (props) => {
                                                                 numberOfLines={1}
                                                                 allowFontScaling={false}
                                                                 style={{
-                                                                    backgroundColor: 'rgba(0, 0, 0, 0.25)',
-                                                                    color: 'white',
+                                                                    backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
+                                                                    color: THEME_FONT_COLOR_WHITE,
                                                                     display: 'flex',
                                                                     justifyContent: 'flex-start',
                                                                     padding: 20,
-                                                                    borderColor: 'white',
+                                                                    borderColor: THEME_FONT_COLOR_WHITE,
                                                                     borderWidth: 2,
                                                                     alignSelf: 'center',
                                                                     borderRadius: HeightRatio(20),
@@ -357,7 +373,7 @@ export const UserDetails = (props) => {
                                                                     setShowEditableFieldDelete(false);
                                                                 }}
                                                                 style={{
-                                                                    backgroundColor: 'rgba(30, 228, 168, 0.25)',
+                                                                    backgroundColor: THEME_COLOR_POSITIVE,
                                                                     padding: 10,
                                                                     justifyContent: 'center',
                                                                     margin: HeightRatio(10),
@@ -367,9 +383,9 @@ export const UserDetails = (props) => {
                                                             >
                                                                 <Text
                                                                     style={{
-                                                                        color: 'white',
+                                                                        color: THEME_FONT_COLOR_BLACK,
                                                                         fontSize: HeightRatio(20),
-                                                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
                                                                     }}
                                                                     allowFontScaling={false}
                                                                 >SUBMIT &nbsp;</Text>
@@ -384,7 +400,7 @@ export const UserDetails = (props) => {
                                                 <>
                                                     <Text 
                                                         style={{
-                                                            color: 'white',
+                                                            color: THEME_FONT_COLOR_WHITE,
                                                             fontSize: HeightRatio(20),
                                                             fontFamily: 'SofiaSansSemiCondensed-Regular',
                                                             margin: HeightRatio(20)
@@ -404,12 +420,12 @@ export const UserDetails = (props) => {
                                                             secureTextEntry={true}
                                                             allowFontScaling={false}
                                                             style={{
-                                                                backgroundColor: 'rgba(0, 0, 0, 0.25)',
-                                                                color: 'white',
+                                                                backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY ,
+                                                                color: THEME_FONT_COLOR_WHITE,
                                                                 display: 'flex',
                                                                 justifyContent: 'flex-start',
                                                                 padding: 20,
-                                                                borderColor: 'white',
+                                                                borderColor: THEME_FONT_COLOR_WHITE,
                                                                 borderWidth: 2,
                                                                 // alignSelf: 'center',
                                                                 borderRadius: HeightRatio(20),
@@ -428,12 +444,12 @@ export const UserDetails = (props) => {
                                                             secureTextEntry={true}
                                                             allowFontScaling={false}
                                                             style={{
-                                                                backgroundColor: 'rgba(0, 0, 0, 0.25)',
-                                                                color: 'white',
+                                                                backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
+                                                                color: THEME_FONT_COLOR_WHITE,
                                                                 display: 'flex',
                                                                 justifyContent: 'flex-start',
                                                                 padding: 20,
-                                                                borderColor: 'white',
+                                                                borderColor: THEME_FONT_COLOR_WHITE,
                                                                 borderWidth: 2,
                                                                 alignSelf: 'center',
                                                                 borderRadius: HeightRatio(20),
@@ -451,7 +467,7 @@ export const UserDetails = (props) => {
                                                                 setShowEditableFieldDelete(false);
                                                             }}
                                                             style={{
-                                                                backgroundColor: 'rgba(30, 228, 168, 0.25)',
+                                                                backgroundColor: THEME_COLOR_POSITIVE,
                                                                 padding: 10,
                                                                 justifyContent: 'center',
                                                                 margin: HeightRatio(10),
@@ -461,9 +477,9 @@ export const UserDetails = (props) => {
                                                         >
                                                             <Text
                                                                 style={{
-                                                                    color: 'white',
+                                                                    color: THEME_FONT_COLOR_BLACK,
                                                                     fontSize: HeightRatio(20),
-                                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
                                                                 }}
                                                                 allowFontScaling={false}
                                                             >SUBMIT &nbsp;</Text>
@@ -476,7 +492,7 @@ export const UserDetails = (props) => {
                                             {promptPasswordInput1 != '' && promptPasswordInput2 != '' && promptPasswordInput1 == promptPasswordInput2 &&
                                                 <View style={{ flexDirection: 'row', margin: HeightRatio(20) }}>
                                                     <Text 
-                                                        style={{ color: 'white', fontSize: HeightRatio(40) }}
+                                                        style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(40) }}
                                                         allowFontScaling={false}
                                                     >
                                                         Passwords match!
@@ -486,7 +502,7 @@ export const UserDetails = (props) => {
                                             {promptPasswordInput1 != '' && promptPasswordInput2 != '' && promptPasswordInput1 != promptPasswordInput2 &&
                                                 <View style={{ flexDirection: 'row', margin: HeightRatio(20) }}>
                                                     <Text 
-                                                        style={{ color: 'red', fontSize: HeightRatio(40) }}
+                                                        style={{ color: THEME_COLOR_NEGATIVE, fontSize: HeightRatio(40) }}
                                                         allowFontScaling={false}
                                                     >
                                                         Passwords do not match!
@@ -524,7 +540,7 @@ export const UserDetails = (props) => {
                         {/* TOP ROW */}
                         <View
                             style={{
-                                backgroundColor: 'rgba(255, 0, 0, 1)',
+                                backgroundColor: THEME_COLOR_NEGATIVE,
                                 alignSelf: 'center',
                                 borderRadius: 8,
                                 position: 'absolute',
@@ -544,7 +560,7 @@ export const UserDetails = (props) => {
                                 <FontAwesomeIcon
                                     icon={faSolid, faX}
                                     style={{
-                                        color: 'black',
+                                        color: THEME_FONT_COLOR_BLACK,
                                         justifyContent: 'center',
                                         alignSelf: 'center',
                                         marginTop: 17
@@ -583,12 +599,12 @@ const styles = StyleSheet.create({
     },
     modalView: {
         margin: 20,
-        backgroundColor: "#edf2f4",
+        backgroundColor: THEME_FONT_COLOR_WHITE,
         borderRadius: 10,
         borderWidth: 3,
         padding: 35,
         alignItems: "center",
-        shadowColor: "#000",
+        shadowColor: THEME_FONT_COLOR_BLACK,
         shadowOffset: {
             width: 0,
             height: 2
@@ -602,18 +618,18 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 10,
         elevation: 2,
-        backgroundColor: '#d90429'
+        backgroundColor: THEME_COLOR_NEGATIVE
     },
-    buttonOpen: {
-        backgroundColor: "#F194FF",
-    },
+    // buttonOpen: {
+    //     backgroundColor: "#F194FF",
+    // },
     buttonClose: {
-        backgroundColor: "#4361ee",
+        backgroundColor: THEME_COLOR_POSITIVE,
         borderRadius: 10,
         padding: 20
     },
     textStyle: {
-        color: "white",
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(25),
         fontWeight: "bold",
         textAlign: "center"
@@ -621,7 +637,7 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center",
-        color: 'black',
+        color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(30),
         fontWeight: 'bold'
     }
