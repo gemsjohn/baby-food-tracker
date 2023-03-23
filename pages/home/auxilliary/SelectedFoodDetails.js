@@ -165,7 +165,7 @@ export const SelectedFoodDetails = (props) => {
                 <View style={{ marginTop: HeightRatio(10) }}>
                     {selectedTime != null ?
                         <View style={{ flexDirection: 'row' }}>
-                            <View style={styles.itemButton}>
+                            <View style={styles.itemButton_AltColor}>
                                 <Text
                                     style={styles.itemButton_Text}
                                     allowFontScaling={false}
@@ -199,7 +199,7 @@ export const SelectedFoodDetails = (props) => {
                                             selectedFood_Schedule: option
                                         })
                                     }}
-                                    style={styles.itemButton}
+                                    style={styles.itemButton_AltColor}
                                     key={option}
                                 >
                                     <Text
@@ -251,7 +251,18 @@ const styles = StyleSheet.create({
         margin: HeightRatio(4),
         width: WidthRatio(140),
         borderRadius: HeightRatio(10),
-        backgroundColor: 'rgba(30, 228, 168, 1.0)',
+        backgroundColor: '#85c36d',
+    },
+    itemButton_AltColor: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        padding: HeightRatio(10),
+        margin: HeightRatio(4),
+        width: WidthRatio(140),
+        borderRadius: HeightRatio(10),
+        backgroundColor: 'rgba(251, 156, 89, 1.00)',
     },
     itemButton_Text: {
         color: 'black',

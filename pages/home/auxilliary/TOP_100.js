@@ -1,5 +1,5 @@
-{
-    "foods": [
+
+    export const top_100 = [
       {"name": "avocado"},
       {"name": "banana"},
       {"name": "sweet potato"},
@@ -102,5 +102,4 @@
       {"name": "lamb"},
       {"name": "venison"}
     ]
-}
   

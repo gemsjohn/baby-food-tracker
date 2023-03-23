@@ -406,7 +406,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_FirstThing ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_FirstThing ? '#3ed29b' : "#371b50"
                         }}
                     >
                         <Image
@@ -558,7 +558,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_Breakfast ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_Breakfast ? '#3ed29b' : "#371b50"
                         }}
                     >
                         <Image
@@ -712,7 +712,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_Midmorning ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_Midmorning ? '#3ed29b' : "#371b50"
                         }}
                     >
                         <Image
@@ -864,7 +864,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_Lunch ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_Lunch ? '#3ed29b' : "#371b50"
                         }}
                     >
                         <Image
@@ -1016,7 +1016,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_Afternoon ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_Afternoon ? '#3ed29b' : "#371b50"
                         }}
                     >
                         <Image
@@ -1169,7 +1169,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_Dinner ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_Dinner ? '#3ed29b' : "#371b50"
                         }}
                     >
                         <Image
@@ -1322,7 +1322,7 @@ export const DailySchedule = (props) => {
                         }}
                         style={{
                             ...styles.scheduleButton,
-                            backgroundColor: displaBool_BeforeBed ? 'rgba(247, 255, 108, 1.00)' : "rgba(71, 66, 106, 1.00)"
+                            backgroundColor: displaBool_BeforeBed ? '#3ed29b' : "#371b50"
                         }}
                     >
                         <Image
@@ -1522,7 +1522,7 @@ const styles = StyleSheet.create({
         // backgroundColor: 'red'
     },
     scrollView: {
-        backgroundColor: '#282830',
+        backgroundColor: '#5cd6e3',
         width: windowWidth - HeightRatio(20),
         padding: HeightRatio(10),
         borderRadius: HeightRatio(10)

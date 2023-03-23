@@ -48,6 +48,7 @@ import { DailySchedule } from './auxilliary/DailySchedule';
 import { Loading } from '../../components/Loading';
 import { Calendar } from 'react-native-calendars';
 import { usePullDailyContent } from './auxilliary/PullDailyContent';
+import { top_100 } from './auxilliary/TOP_100';
 
 export const HomeScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
@@ -63,6 +64,7 @@ export const HomeScreen = ({ navigation }) => {
     const [totalCalorieCount, setTotalCalorieCount] = useState(null)
     const [selectRecentlyUsedData, setSelectRecentlyUsedData] = useState(null)
     const [selectedFoodDataEntrered, setSelectedFoodDataEntrered] = useState(false);
+    const [displayTop100Foods, setDisplayTop100Foods] = useState(false)
 
     const onRefresh = useCallback(() => {
         setLoading(true)
@@ -543,210 +545,315 @@ export const HomeScreen = ({ navigation }) => {
                             width: windowWidth,
                         }}
                     >
-
-                        <View style={styles.modalVisible_Container}>
-                            <Image
-                                source={require('../../assets/pattern_1.png')}
-                                style={{
-                                    ...styles.homePrimary_Pattern_1,
-                                    margin: HeightRatio(20),
-                                    borderRadius: HeightRatio(10)
-                                }}
-                            />
-                            <TextInput
-                                type="text"
-                                name="search"
-                                placeholder="Search for food"
-                                placeholderTextColor="white"
-                                value={searchQuery}
-                                onChangeText={setSearchQuery}
-                                onSubmitEditing={handleSearch}
-                                style={styles.modalVisible_TextInput}
-                                disableFullscreenUI={true}
-                                allowFontScaling={false}
-                            />
-                            <TouchableOpacity onPress={() => { handleSearch() }}>
-                                <View style={styles.modalVisible_Search_Button}>
-                                    <Text
-                                        style={styles.modalVisible_Search_Button_Text}
-                                        allowFontScaling={false}
-                                    >
-                                        Search
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View
-                            style={{
-                                ...styles.modalVisible_Container,
-                                backgroundColor: '#f7ff6c',
-                                margin: HeightRatio(20),
-                                width: windowWidth - HeightRatio(30),
-
-                            }}
-                        >
-                            <View
-                                style={{}}
-                            >
-                                <Text
+                        {!displayTop100Foods &&
+                            <View style={styles.modalVisible_Container}>
+                                <Image
+                                    source={require('../../assets/pattern_1.png')}
                                     style={{
-                                        ...styles.renderItem_Search_Result_Container_Text,
-                                        color: 'black',
-                                        fontSize: HeightRatio(30),
-                                        fontFamily: "SofiaSansSemiCondensed-Regular",
+                                        ...styles.homePrimary_Pattern_1,
+                                        margin: HeightRatio(20),
+                                        borderRadius: HeightRatio(10)
                                     }}
-                                >
-                                    See Top 100 Foods!
-                                </Text>
-                            </View>
-                        </View>
-
-                        <View
-                            style={{
-                                ...styles.modalVisible_Container,
-                                height: windowHeight / 1.9,
-                                margin: HeightRatio(0)
-                            }}
-                        >
-                            <Image
-                                source={require('../../assets/pattern_1.png')}
-                                style={{
-                                    ...styles.homePrimary_Pattern_1,
-                                    margin: HeightRatio(20),
-                                    alignSelf: 'center'
-                                }}
-                            />
-
-                            {!clearSuggestions && !searchQuery &&
-                                <>
-                                    <View style={styles.modalVisible_Title_Container}>
+                                />
+                                <TextInput
+                                    type="text"
+                                    name="search"
+                                    placeholder="Search for food"
+                                    placeholderTextColor="white"
+                                    value={searchQuery}
+                                    onChangeText={setSearchQuery}
+                                    onSubmitEditing={handleSearch}
+                                    style={styles.modalVisible_TextInput}
+                                    disableFullscreenUI={true}
+                                    allowFontScaling={false}
+                                />
+                                <TouchableOpacity onPress={() => { handleSearch() }}>
+                                    <View style={styles.modalVisible_Search_Button}>
                                         <Text
-                                            style={styles.modalVisible_Title_Container_Text}
+                                            style={styles.modalVisible_Search_Button_Text}
                                             allowFontScaling={false}
                                         >
-                                            Recently Used
+                                            Search
                                         </Text>
                                     </View>
-                                    <SafeAreaView style={styles.container}>
-                                        <ScrollView style={styles.scrollView}>
-                                            <View>
-                                                {recentFoodData.map((data, index) => (
-                                                    <View key={index}>
-                                                        {selectRecentlyUsed == null ?
-
-                                                            <View style={styles.modalVisible_recentFoodData_Map_Container_0}>
-                                                                <View style={styles.modalVisible_recentFoodData_Map_Container_1}>
-                                                                    <View style={styles.modalVisible_recentFoodData_Map_Container_2}>
-                                                                        <View style={{ flexDirection: 'column' }}>
-                                                                            <View>
-                                                                                <Text style={styles.modalVisible_recentFoodData_Map_Text_Bold}>
-                                                                                    {data.item}
-                                                                                </Text>
-                                                                            </View>
-                                                                            <View style={{ marginLeft: HeightRatio(5) }}>
-                                                                                <Text style={styles.modalVisible_recentFoodData_Map_Text_Regular}>
-                                                                                    {data.amount}
-                                                                                </Text>
-                                                                            </View>
-                                                                        </View>
-                                                                        <TouchableOpacity
-                                                                            onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); }}
-                                                                            style={styles.modalVisible_recentFoodData_Map_Plus}
-                                                                        >
-                                                                            <Text style={styles.modalVisible_recentFoodData_Map_Plus_Text}>
-                                                                                +
-                                                                            </Text>
-                                                                        </TouchableOpacity>
-                                                                    </View>
-
-                                                                </View>
-                                                            </View>
-                                                            :
-                                                            <>
-                                                                {selectRecentlyUsed == index &&
-                                                                    <>
-                                                                        <View style={styles.modalVisible_recentFoodData_Map_Container_0}>
-                                                                            <Text
-                                                                                style={styles.modalVisible_recentFoodData_Map_Container_0_RecentlyUsed_Text}
-                                                                                allowFontScaling={false}
-                                                                            >
-                                                                                {data.item}
-                                                                            </Text>
-                                                                            <SelectedFoodDetails textInputValue={`${data.number}`} selectedItem={`${data.measurement}`} />
-                                                                        </View>
-                                                                        <TouchableOpacity
-                                                                            onPress={() => {
-                                                                                setSelectRecentlyUsed(null)
-                                                                                setSelectRecentlyUsedData(null)
-                                                                            }}
-                                                                            style={styles.modalVisible_faX}
-                                                                        >
-                                                                            <FontAwesomeIcon
-                                                                                icon={faSolid, faX}
-                                                                                style={{ color: 'white' }}
-                                                                                size={20}
-                                                                            />
-                                                                        </TouchableOpacity>
-                                                                    </>
-                                                                }
-                                                            </>
-                                                        }
-                                                    </View>
-                                                ))}
-                                            </View>
-                                        </ScrollView>
-                                    </SafeAreaView>
-                                </>
-                            }
-
-                            {foodData != [] &&
-                                <View style={{ flex: 1 }}>
-                                    {displayLoading ?
-                                        <ActivityIndicator />
-                                        :
-                                        <>
-                                            {displayDetails &&
-                                                <>
-                                                    <TouchableOpacity
-                                                        onPress={() => {
-                                                            setSelectedItem(null);
-                                                            setDisplayDetails(false)
-                                                        }}
-                                                        style={{
-                                                            ...styles.modalVisible_faX,
-                                                            right: HeightRatio(-25),
-                                                        }}
-                                                    >
-                                                        <FontAwesomeIcon
-                                                            icon={faSolid, faX}
-                                                            style={{ color: 'white' }}
-                                                            size={20}
-                                                        />
-                                                    </TouchableOpacity>
-                                                </>
-                                            }
-
-                                            <FlatList
-                                                data={selectedItem ? [selectedItem] : foodData}
-                                                renderItem={renderItem}
-                                                keyExtractor={(item) => item.fdcId.toString()}
-                                            />
-                                        </>
-                                    }
-                                </View>
-                            }
-
+                                </TouchableOpacity>
+                            </View>
+                        }
+                        <TouchableOpacity
+                            onPress={() => setDisplayTop100Foods(true)}
+                        >
                             <View
                                 style={{
-                                    flexDirection: 'row',
-                                    alignSelf: 'center'
+                                    ...styles.modalVisible_Container,
+                                    backgroundColor: '#f7ff6c',
+                                    margin: HeightRatio(20),
+                                    width: windowWidth - HeightRatio(30),
+
                                 }}
                             >
-                                {selectedFoodDataEntrered ?
+                                <View
+                                    style={{}}
+                                >
+                                    {!displayTop100Foods ?
+                                        <Text
+                                            style={{
+                                                ...styles.renderItem_Search_Result_Container_Text,
+                                                color: 'black',
+                                                fontSize: HeightRatio(30),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                            }}
+                                        >
+                                            See Top 100 Foods!
+                                        </Text>
+                                        :
+                                        <Text
+                                            style={{
+                                                ...styles.renderItem_Search_Result_Container_Text,
+                                                color: 'black',
+                                                fontSize: HeightRatio(30),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                            }}
+                                        >
+                                            Top 100 Foods
+                                        </Text>
+                                    }
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                        {displayTop100Foods &&
+                            <View style={styles.modalVisible_Container}>
+                                <Image
+                                    source={require('../../assets/pattern_1.png')}
+                                    style={{
+                                        ...styles.homePrimary_Pattern_1,
+                                        margin: HeightRatio(20),
+                                        alignSelf: 'center'
+                                    }}
+                                />
+                                <SafeAreaView
+                                    style={{
+                                        alignSelf: 'center',
+                                        height: '80%',
+                                    }}
+                                >
+                                    <ScrollView
+                                        style={{
+                                            alignSelf: 'center',
+                                        }}
+                                    >
+                                        <View>
+                                            {top_100.map((data, index) => (
+                                                <View
+                                                    style={{
+                                                        ...styles.renderItem_Search_Results,
+                                                        justifyContent: 'space-between',
+                                                    }}
+                                                    key={index}
+                                                >
+                                                    <Text
+                                                        style={styles.renderItem_Search_Result_Container_Text}
+                                                    >{data.name}</Text>
+                                                    <TouchableOpacity
+                                                        // onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); }}
+                                                        onPress={() => console.log("ADD")}
+                                                        style={styles.modalVisible_recentFoodData_Map_Plus}
+                                                    >
+                                                        <Text style={styles.modalVisible_recentFoodData_Map_Plus_Text}>
+                                                            +
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            ))}
+
+                                        </View>
+                                    </ScrollView>
+                                </SafeAreaView>
+                                <TouchableOpacity onPress={() => setDisplayTop100Foods(false)}>
+                                    <View style={styles.modalVisible_FullButton}>
+                                        <Text
+                                            style={styles.modalVisible_Button_Text}
+                                            allowFontScaling={false}
+                                        >
+                                            Back
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        }
+
+                        {!displayTop100Foods &&
+                            <View
+                                style={{
+                                    ...styles.modalVisible_Container,
+                                    height: windowHeight / 1.9,
+                                    margin: HeightRatio(0)
+                                }}
+                            >
+                                <Image
+                                    source={require('../../assets/pattern_1.png')}
+                                    style={{
+                                        ...styles.homePrimary_Pattern_1,
+                                        margin: HeightRatio(20),
+                                        alignSelf: 'center'
+                                    }}
+                                />
+
+                                {!clearSuggestions && !searchQuery &&
                                     <>
-                                        <TouchableOpacity onPress={() => { setModalVisible(false); }}>
-                                            <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: 'rgba(255, 0, 75, 0.50)' }}>
+                                        <View style={styles.modalVisible_Title_Container}>
+                                            <Text
+                                                style={styles.modalVisible_Title_Container_Text}
+                                                allowFontScaling={false}
+                                            >
+                                                Recently Used
+                                            </Text>
+                                        </View>
+                                        <SafeAreaView style={styles.container}>
+                                            <ScrollView style={styles.scrollView}>
+                                                <View>
+                                                    {recentFoodData.map((data, index) => (
+                                                        <View key={index}>
+                                                            {selectRecentlyUsed == null ?
+
+                                                                <View style={styles.modalVisible_recentFoodData_Map_Container_0}>
+                                                                    <View style={styles.modalVisible_recentFoodData_Map_Container_1}>
+                                                                        <View style={styles.modalVisible_recentFoodData_Map_Container_2}>
+                                                                            <View style={{ flexDirection: 'column' }}>
+                                                                                <View>
+                                                                                    <Text style={styles.modalVisible_recentFoodData_Map_Text_Bold}>
+                                                                                        {data.item}
+                                                                                    </Text>
+                                                                                </View>
+                                                                                <View style={{ marginLeft: HeightRatio(5) }}>
+                                                                                    <Text style={styles.modalVisible_recentFoodData_Map_Text_Regular}>
+                                                                                        {data.amount}
+                                                                                    </Text>
+                                                                                </View>
+                                                                            </View>
+                                                                            <TouchableOpacity
+                                                                                onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); }}
+                                                                                style={styles.modalVisible_recentFoodData_Map_Plus}
+                                                                            >
+                                                                                <Text style={styles.modalVisible_recentFoodData_Map_Plus_Text}>
+                                                                                    +
+                                                                                </Text>
+                                                                            </TouchableOpacity>
+                                                                        </View>
+
+                                                                    </View>
+                                                                </View>
+                                                                :
+                                                                <>
+                                                                    {selectRecentlyUsed == index &&
+                                                                        <>
+                                                                            <View style={styles.modalVisible_recentFoodData_Map_Container_0}>
+                                                                                <Text
+                                                                                    style={styles.modalVisible_recentFoodData_Map_Container_0_RecentlyUsed_Text}
+                                                                                    allowFontScaling={false}
+                                                                                >
+                                                                                    {data.item}
+                                                                                </Text>
+                                                                                <SelectedFoodDetails textInputValue={`${data.number}`} selectedItem={`${data.measurement}`} />
+                                                                            </View>
+                                                                            <TouchableOpacity
+                                                                                onPress={() => {
+                                                                                    setSelectRecentlyUsed(null)
+                                                                                    setSelectRecentlyUsedData(null)
+                                                                                }}
+                                                                                style={styles.modalVisible_faX}
+                                                                            >
+                                                                                <FontAwesomeIcon
+                                                                                    icon={faSolid, faX}
+                                                                                    style={{ color: 'white' }}
+                                                                                    size={20}
+                                                                                />
+                                                                            </TouchableOpacity>
+                                                                        </>
+                                                                    }
+                                                                </>
+                                                            }
+                                                        </View>
+                                                    ))}
+                                                </View>
+                                            </ScrollView>
+                                        </SafeAreaView>
+                                    </>
+                                }
+
+                                {foodData != [] &&
+                                    <View style={{ flex: 1 }}>
+                                        {displayLoading ?
+                                            <ActivityIndicator size={200} />
+                                            :
+                                            <>
+                                                {displayDetails &&
+                                                    <>
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                setSelectedItem(null);
+                                                                setDisplayDetails(false)
+                                                            }}
+                                                            style={{
+                                                                ...styles.modalVisible_faX,
+                                                                right: HeightRatio(-25),
+                                                            }}
+                                                        >
+                                                            <FontAwesomeIcon
+                                                                icon={faSolid, faX}
+                                                                style={{ color: 'white' }}
+                                                                size={20}
+                                                            />
+                                                        </TouchableOpacity>
+                                                    </>
+                                                }
+
+                                                <FlatList
+                                                    data={selectedItem ? [selectedItem] : foodData}
+                                                    renderItem={renderItem}
+                                                    keyExtractor={(item) => item.fdcId.toString()}
+                                                />
+                                            </>
+                                        }
+                                    </View>
+                                }
+
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignSelf: 'center'
+                                    }}
+                                >
+                                    {selectedFoodDataEntrered ?
+                                        <>
+                                            <TouchableOpacity onPress={() => { setModalVisible(false); }}>
+                                                <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: '#f11c66' }}>
+                                                    <Text
+                                                        style={styles.modalVisible_Button_Text}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        Close
+                                                    </Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    getNutritionValue(selectedItem == null && selectRecentlyUsedData.item != null ? selectRecentlyUsedData.item : selectedItem); // selectedItem == null && recentFoodData.item != null ? recentFoodData.item : selectedItem
+                                                    setModalVisible(false);
+                                                }}
+                                            >
+                                                <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: '#85c36d' }}>
+                                                    <Text
+                                                        style={styles.modalVisible_Button_Text}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        Save
+                                                    </Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        </>
+                                        :
+                                        <TouchableOpacity onPress={() => setModalVisible(false)}>
+                                            <View style={styles.modalVisible_FullButton}>
                                                 <Text
                                                     style={styles.modalVisible_Button_Text}
                                                     allowFontScaling={false}
@@ -755,38 +862,12 @@ export const HomeScreen = ({ navigation }) => {
                                                 </Text>
                                             </View>
                                         </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                getNutritionValue(selectedItem == null && selectRecentlyUsedData.item != null ? selectRecentlyUsedData.item : selectedItem); // selectedItem == null && recentFoodData.item != null ? recentFoodData.item : selectedItem
-                                                setModalVisible(false);
-                                            }}
-                                        >
-                                            <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: 'rgba(30, 228, 168, 0.5)' }}>
-                                                <Text
-                                                    style={styles.modalVisible_Button_Text}
-                                                    allowFontScaling={false}
-                                                >
-                                                    Save
-                                                </Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                    </>
-                                    :
-                                    <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                        <View style={styles.modalVisible_FullButton}>
-                                            <Text
-                                                style={styles.modalVisible_Button_Text}
-                                                allowFontScaling={false}
-                                            >
-                                                Close
-                                            </Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                }
+                                    }
+
+                                </View>
 
                             </View>
-
-                        </View>
+                        }
 
                     </Modal>
 
@@ -803,7 +884,7 @@ export const HomeScreen = ({ navigation }) => {
                                 onDayPress={(day) => onDateSelect(day)}
                                 markedDates={{ [selectedCalendarModalDate]: { selected: true } }}
                                 theme={{
-                                    calendarBackground: '#1f1f27',
+                                    calendarBackground: '#12a2c0',
                                     textMonthFontSize: 20,
                                     monthTextColor: 'white',
                                     arrowColor: 'white',
@@ -927,7 +1008,7 @@ export const HomeScreen = ({ navigation }) => {
 
                                         }}
                                     >
-                                        <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: 'rgba(255, 0, 75, 0.50)' }}>
+                                        <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: '#f11c66' }}>
                                             <Text
                                                 style={styles.modalVisible_Button_Text}
                                                 allowFontScaling={false}
@@ -943,7 +1024,7 @@ export const HomeScreen = ({ navigation }) => {
                                             setSelectedCalendarModalDate('');
                                         }}
                                     >
-                                        <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: 'rgba(30, 228, 168, 0.50)' }}>
+                                        <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: '#85c36d' }}>
                                             <Text
                                                 style={styles.modalVisible_Button_Text}
                                                 allowFontScaling={false}
@@ -1065,7 +1146,7 @@ const styles = StyleSheet.create({
     },
     homePrimary_Container: {
         flex: 1,
-        backgroundColor: '#1f1f27',
+        backgroundColor: '#12a2c0',
         display: 'flex',
         alignItems: 'center',
         width: windowWidth
@@ -1130,7 +1211,7 @@ const styles = StyleSheet.create({
     },
     homePrimary_TotalCalories: {
         alignSelf: 'center',
-        backgroundColor: ' rgba(247, 255, 108, 1.00)',
+        backgroundColor: '#b64292',
         margin: HeightRatio(5),
         borderRadius: 10,
         padding: HeightRatio(10),
@@ -1140,13 +1221,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     homePrimary_TotalCalories_Text: {
-        color: 'black',
+        color: 'white',
         fontSize: HeightRatio(60),
         textAlign: 'center',
         fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
     },
     homePrimary_Add_Button: {
-        backgroundColor: 'rgba(30, 228, 168, 1.0)',
+        backgroundColor: '#85c36d',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -1156,18 +1237,18 @@ const styles = StyleSheet.create({
         margin: HeightRatio(4)
     },
     homePrimary_Add_Button_Text: {
-        color: 'black',
+        color: 'white',
         fontSize: HeightRatio(30),
         textAlign: 'center',
         fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
     },
     modalVisible_Blackout: {
-        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        backgroundColor: 'rgba(0, 71, 98, 0.90)',
         height: '100%', width: '100%',
         position: 'absolute', zIndex: 10
     },
     modalVisible_Container: {
-        backgroundColor: "#1f1f27",
+        backgroundColor: "#12a2c0",
         zIndex: 999,
         width: windowWidth - HeightRatio(10),
         padding: HeightRatio(20),
@@ -1186,7 +1267,7 @@ const styles = StyleSheet.create({
         fontFamily: 'SofiaSansSemiCondensed-Regular'
     },
     modalVisible_Search_Button: {
-        backgroundColor: 'rgba(30, 228, 168, 0.50)',
+        backgroundColor: '#85c36d',
         display: 'flex',
         justifyContent: 'flex-start',
         padding: HeightRatio(10),
@@ -1283,7 +1364,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'red'
     },
     modalVisible_FullButton: {
-        backgroundColor: 'rgba(255, 0, 75, 0.50)',
+        backgroundColor: '#f11c66',
         display: 'flex',
         justifyContent: 'flex-start',
         padding: HeightRatio(10),

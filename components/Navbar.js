@@ -178,7 +178,7 @@ export const Navbar = (props) => {
                         onPress={() => {
                             isTokenValid ? props.nav.dispatch(resetActionHome) : setDisplaySignUpModal(true);
                         }}
-                        style={{ backgroundColor: fromHome ? 'rgba(30, 228, 168, 1.0)' : 'black', borderTopLeftRadius: HeightRatio(30) }}
+                        style={{ backgroundColor: fromHome ? '#85c36d' : 'black', borderTopLeftRadius: HeightRatio(30) }}
                     >
                         <View
                             style={{
@@ -218,7 +218,7 @@ export const Navbar = (props) => {
                                     isGameInProgress: false
                                 })
                             }}
-                            style={{ backgroundColor: fromProfile ? 'rgba(30, 228, 168, 1.0)' : 'black', borderTopRightRadius: HeightRatio(30) }}
+                            style={{ backgroundColor: fromProfile ? '#85c36d' : 'black', borderTopRightRadius: HeightRatio(30) }}
                         >
                             <View
                                 style={{
@@ -249,7 +249,7 @@ export const Navbar = (props) => {
                         :
                         <TouchableOpacity
                             onPress={() => { props.nav.dispatch(resetActionAuth); }}
-                            style={{ backgroundColor: fromProfile ? 'rgba(30, 228, 168, 1.0)' : 'black', borderTopRightRadius: HeightRatio(30) }}
+                            style={{ backgroundColor: fromProfile ? '#85c36d' : 'black', borderTopRightRadius: HeightRatio(30) }}
                         >
                             <View
                                 style={{
