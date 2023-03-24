@@ -151,7 +151,7 @@ export const usePullDailyContent = (input) => {
             item = removeBackslashes(item);
             item = removeQuotes(item)
 
-            emotionIndex.push({item: item, emoji: unicodeEscape})
+            emotionIndex.push({item: item, emoji: unicodeEscape, schedule: removeQuotes(sampleSchedule_v1)})
 
 
             if (sampleSchedule_v2 == "First Thing") {
@@ -175,6 +175,7 @@ export const usePullDailyContent = (input) => {
             if (sampleSchedule_v2 == "Before Bed") {
                 setBeforeBed(prev => [...prev, sample_v2])
             }
+
         }
 
         array_1 = itemsArray.filter((item, index) => itemsArray.indexOf(item) === index);
@@ -203,8 +204,9 @@ export const usePullDailyContent = (input) => {
         // remove duplicates from the itemsArray using the filter method
         setUniqueItemsArray(commonIndex_Updated);
         setUniqueEmotionArray(emotionIndex)
-        console.log(emotionIndex)
+        // console.log(emotionIndex)
     }
+    
 
     // UPDATE SCHEDULE SECTION TOTAL CAL's
     useEffect(() => {
@@ -280,7 +282,6 @@ export const usePullDailyContent = (input) => {
     // TOTAL ALL SCHEDULE SECTIONS
     useEffect(() => {
         let total = firstThingCalTotal + breakfastCalTotal + midmorningCalTotal + lunchCalTotal + afternoonCalTotal + dinnerCalTotal + beforeBedCalTotal;
-        
         setTotalCalorieCount(total)
     }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, afternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
 

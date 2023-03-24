@@ -50,7 +50,8 @@ import {
     THEME_TRANSPARENT,
     THEME_COLOR_PURPLE,
     THEME_COLOR_PURPLE_LOW_OPACITY,
-    THEME_COLOR_BLACKOUT
+    THEME_COLOR_BLACKOUT,
+    THEME_FONT_GREY
 } from '../../../COLOR';
 import { usePullDailyContent } from './PullDailyContent';
 import { convertDateFormat } from './ConvertDateFormat';
@@ -116,6 +117,7 @@ export const DailyScheduleSimplified = (props) => {
     const [deleteID, setDeleteID] = useState(null)
     const [modalVisible, setModalVisible] = useState(false);
     const [uniqueEmotionArray, setUniqueEmotionArray] = useState([])
+    const [dailyEntries, setDailyEntries] = useState([])
 
     const [deleteEntry] = useMutation(DELETE_ENTRY)
     const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
@@ -313,171 +315,30 @@ export const DailyScheduleSimplified = (props) => {
         storeTotalCalorieCount(total)
     }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, afternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
 
-    let emotionIndex = [];
-
-    const displayScheduleData = (input) => {
-        setFirstThingData([])
-        setBreakfastData([])
-        setMidmorningData([])
-        setLunchData([])
-        setAfternoonData([])
-        setDinnerData([])
-        setBeforeBedData([])
-
-        setDeleteID(null)
-
-        if (input != null) {
-            console.log("# - Display schedule data for: " + input)
-
-            for (let i = 0; i < matchingDate.length; i++) {
-                const jsonString = JSON.stringify(matchingDate[i].entry[0].schedule);
-                let item = JSON.stringify(matchingDate[i].entry[0].item);
-                let emotion = JSON.stringify(matchingDate[i].entry[0].emotion);
 
 
-                function removeBackslashes(str) {
-                    let pattern = /(?<!\\)\\(?!\\)/g;
-                    let replacement = '';
-                    let updatedStr = str.replace(pattern, replacement);
+    const displaySimplifiedEntries = (data, emotions) => {
+        const options_time = [
+            "First Thing",
+            "Breakfast",
+            "Midmorning",
+            "Lunch",
+            "Afternoon",
+            "Dinner",
+            "Before Bed"
+        ];
 
-                    return updatedStr;
-                }
+        const textComponents = [];
+        const textComponentsBySchedule = {};
 
-                const removeQuotes = (str) => {
-                    return str.replace(/^"(.*)"$/, '$1');
-                }
-
-                // EMOJI
-                emotion = removeQuotes(emotion)
-                const codePoints = emotion
-                    .split('')
-                    .map(char => char.charCodeAt(0).toString(16).padStart(4, '0'));
-                const unicodeEscape = '\\u' + codePoints.join('\\u');
-                item = removeBackslashes(item);
-                item = removeQuotes(item)
-
-                emotionIndex.push({ item: item, emoji: unicodeEscape })
-
-
-                let sample_v1 = removeBackslashes(`${jsonString}`);
-                let sample_v2 = removeQuotes(sample_v1)
-
-
-                if (sample_v2 == input) {
-                    let item = JSON.stringify(matchingDate[i].entry[0].item);
-                    item = removeQuotes(item);
-                    let amount = JSON.stringify(matchingDate[i].entry[0].amount);
-                    amount = removeQuotes(amount)
-                    let nutrients = JSON.stringify(matchingDate[i].entry[0].nutrients);
-                    nutrients = removeBackslashes(nutrients)
-                    nutrients = removeQuotes(nutrients)
-                    nutrients = JSON.parse(nutrients)
-                    let id = matchingDate[i]._id;
-
-                    let item_amount = { item: item, amount: amount, nutrients: nutrients, id: id }
-
-                    if (sample_v2 == "First Thing") {
-                        setFirstThingData(prev => [...prev, item_amount])
-                    }
-                    if (sample_v2 == "Breakfast") {
-                        setBreakfastData(prev => [...prev, item_amount])
-                    }
-                    if (sample_v2 == "Midmorning") {
-                        setMidmorningData(prev => [...prev, item_amount])
-                    }
-                    if (sample_v2 == "Lunch") {
-                        setLunchData(prev => [...prev, item_amount])
-                    }
-                    if (sample_v2 == "Afternoon") {
-                        setAfternoonData(prev => [...prev, item_amount])
-                    }
-                    if (sample_v2 == "Dinner") {
-                        setDinnerData(prev => [...prev, item_amount])
-                    }
-                    if (sample_v2 == "Before Bed") {
-                        setBeforeBedData(prev => [...prev, item_amount])
-                    }
-                }
-            }
-            console.log(emotionIndex)
-            setUniqueEmotionArray(emotionIndex)
-        }
-    }
-
-    const handleDeleteEntry = async () => {
-        setMainState({
-            triggerRefresh: true
-        })
-        await deleteEntry({
-            variables: {
-                deleteEntryId: deleteID
-            }
-        })
-        refetch()
-        setTimeout(() => {
-            setMainState({
-                triggerRefresh: false
-            })
-        }, 100)
-    }
-
-
-    return (
-        <>
-            {/* <TouchableOpacity
-                onPress={() => {
-                    setDisplayTop100Foods(true);
-                }}
-            >
-                <View
-                    style={{
-                        ...styles.modalVisible_Container,
-                        backgroundColor: THEME_COLOR_ATTENTION,
-                        margin: HeightRatio(5),
-                        width: windowWidth - HeightRatio(30),
-
-                    }}
-                >
-                    <View
-                        style={{}}
-                    >
-                        {!displayTop100Foods ?
-                            <Text
-                                style={{
-                                    ...styles.renderItem_Search_Result_Container_Text,
-                                    color: THEME_FONT_COLOR_BLACK,
-                                    fontSize: HeightRatio(30),
-                                    fontFamily: "SofiaSansSemiCondensed-Regular",
-                                }}
-                            >
-                                See Top 100 Foods!
-                            </Text>
-                            :
-                            <Text
-                                style={{
-                                    ...styles.renderItem_Search_Result_Container_Text,
-                                    color: THEME_FONT_COLOR_BLACK,
-                                    fontSize: HeightRatio(30),
-                                    fontFamily: "SofiaSansSemiCondensed-Regular",
-                                }}
-                            >
-                                Top 100 Foods
-                            </Text>
-                        }
-                    </View>
-                </View>
-            </TouchableOpacity> */}
-            {calendarModalFoods &&
-                <SafeAreaView
-                    style={{
-                        ...styles.container,
-                    }}
-                >
-                    <ScrollView
-                        style={styles.scrollView}
-                    >
-                        <View style={{}}>
-                            {calendarModalFoods.map((data, index) => (
+        for (let i = 0; i < data.length; i++) {
+            for (let j = 0; j < emotions.length; j++) {
+                if (data[i].name == emotions[j].item) {
+                    const schedule = emotions[j].schedule;
+                    const index = options_time.indexOf(schedule);
+                    if (index !== -1) {
+                        const textComponent = (
+                            <>
                                 <View
                                     style={{
                                         ...styles.renderItem_Search_Results,
@@ -485,54 +346,130 @@ export const DailyScheduleSimplified = (props) => {
                                     }}
                                     key={index}
                                 >
-                                    <View style={{ flexDirection: 'column' }}>
+                                    <View
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexDirection: 'row'
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontSize: HeightRatio(20),
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            {unescape(emotions[j] != null ? emotions[j].emoji.replace(/\\u/g, '%u') : null)}
+                                        </Text>
                                         <Text
                                             style={{
                                                 ...styles.renderItem_Search_Result_Container_Text,
-                                                width: WidthRatio(200)
+                                                width: WidthRatio(160),
+                                                // backgroundColor: 'red'
                                             }}
-                                            allowFontScaling={false}
+                                            numberOfLines={1}
+                                            ellipsizeMode="tail"
 
                                         >
-                                            {data.name}
+                                            {data[i].name}
                                         </Text>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            {calendarModalEmotion.map((data_emotion, index) => (
-                                                <>
-                                                    {data.name == data_emotion.item &&
-                                                        <Text
-                                                            style={{
-                                                                fontSize: HeightRatio(20)
-                                                            }}
-                                                            allowFontScaling={false}
-                                                        >
-                                                            {unescape(data_emotion != null ? data_emotion.emoji.replace(/\\u/g, '%u') : null)}
-                                                        </Text>
-                                                    }
-                                                </>
-                                            ))}
-                                        </View>
                                     </View>
-                                    {data.tried &&
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            // backgroundColor: 'red', 
+                                            width: WidthRatio(120),
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'flex-end'
+                                        }}
+                                    >
                                         <View
                                             style={{
-                                                backgroundColor: THEME_COLOR_ATTENTION,
-                                                borderRadius: HeightRatio(5),
-                                                padding: HeightRatio(4)
+                                                marginRight: HeightRatio(10)
                                             }}
                                         >
                                             <Text
+                                                key={`${schedule}_${i}_${j}`}
                                                 style={{
-                                                    ...styles.renderItem_Search_Result_Container_Text,
-                                                    color: THEME_FONT_COLOR_BLACK,
-                                                    fontSize: HeightRatio(18),
-                                                    fontFamily: "GochiHand_400Regular",
+                                                    fontSize: HeightRatio(14),
+                                                    color: THEME_FONT_COLOR_WHITE,
                                                 }}
+                                                allowFontScaling={false}
                                             >
-                                                TOP 100
+                                                {schedule}
                                             </Text>
                                         </View>
-                                    }
+                                        {data[i].tried &&
+                                            <View
+                                                style={{
+                                                    backgroundColor: THEME_COLOR_ATTENTION,
+                                                    borderRadius: HeightRatio(5),
+                                                    padding: HeightRatio(4)
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        ...styles.renderItem_Search_Result_Container_Text,
+                                                        color: THEME_FONT_COLOR_BLACK,
+                                                        fontSize: HeightRatio(18),
+                                                        fontFamily: "GochiHand_400Regular",
+                                                    }}
+                                                >
+                                                    TOP 100
+                                                </Text>
+                                            </View>
+                                        }
+                                    </View>
+                                </View>
+                                
+                            </>
+                        );
+                        if (!textComponentsBySchedule[schedule]) {
+                            textComponentsBySchedule[schedule] = [];
+                        }
+                        textComponentsBySchedule[schedule].push(textComponent);
+                    }
+                }
+            }
+        }
+
+        for (let i = 0; i < options_time.length; i++) {
+            const schedule = options_time[i];
+            if (textComponentsBySchedule[schedule]) {
+                textComponents.push(...textComponentsBySchedule[schedule]);
+            }
+        }
+
+        // console.log(textComponents);
+        setDailyEntries(textComponents)
+    }
+
+
+    useEffect(() => {
+        if (calendarModalFoods && calendarModalEmotion) {
+            displaySimplifiedEntries(calendarModalFoods, calendarModalEmotion)
+        }
+    }, [calendarModalFoods, calendarModalEmotion])
+
+    return (
+        <>
+
+            {calendarModalFoods &&
+                <SafeAreaView
+                    style={{
+                        ...styles.container,
+                        // backgroundColor: 'red'
+                    }}
+                >
+                    <ScrollView
+                        style={styles.scrollView}
+                    >
+                        <View style={{}}>
+                            {dailyEntries.map((data, index) => (
+                                <View key={index}>
+                                    { data }
                                 </View>
                             ))}
                         </View>
@@ -540,53 +477,7 @@ export const DailyScheduleSimplified = (props) => {
                 </SafeAreaView>
             }
 
-            <Modal
-                visible={modalVisible}
-                animationType="slide"
-                transparent={true}
-            >
-                <View style={styles.modalContainer_0}>
-                    <View style={styles.modalContainer_1}>
-                        <View style={styles.modalContainer_1_A}>
-                            <Text
-                                style={styles.modalContainer_1_A_Text}
-                                allowFontScaling={false}
-                            >
-                                Are you sure that you want to delete this entry?
-                            </Text>
-                        </View>
-                        <View style={styles.modalContainer_1_B}>
-                            <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
-                                    <Text
-                                        style={styles.modalButton_Text}
-                                        allowFontScaling={false}
-                                    >
-                                        Close
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setModalVisible(false);
-                                    handleDeleteEntry()
 
-                                }}
-                            >
-                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
-                                    <Text
-                                        style={styles.modalButton_Text}
-                                        allowFontScaling={false}
-                                    >
-                                        Delete
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-
-            </Modal>
         </>
     )
 }
@@ -594,11 +485,11 @@ export const DailyScheduleSimplified = (props) => {
 const styles = StyleSheet.create({
     container: {
         marginTop: HeightRatio(10),
-        height: HeightRatio(320),
-        backgroundColor: THEME_COLOR_POSITIVE
+        height: HeightRatio(450),
+        // backgroundColor: THEME_COLOR_POSITIVE
     },
     scrollView: {
-        backgroundColor: THEME_COLOR_BACKDROP_DARK,
+        // backgroundColor: THEME_COLOR_BACKDROP_DARK,
         width: windowWidth - HeightRatio(20),
         padding: HeightRatio(10),
         borderRadius: HeightRatio(10)
@@ -791,9 +682,9 @@ const styles = StyleSheet.create({
     },
     renderItem_Search_Results: {
         backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
-        borderRadius: HeightRatio(10),
+        borderRadius: HeightRatio(50),
         margin: HeightRatio(4),
-        width: windowWidth - HeightRatio(80),
+        width: windowWidth - HeightRatio(50),
         alignSelf: 'center',
         display: 'flex',
         alignItems: "center",
@@ -802,8 +693,8 @@ const styles = StyleSheet.create({
         padding: HeightRatio(10)
     },
     renderItem_Search_Result_Container_Text: {
-        color: THEME_FONT_COLOR_WHITE,
-        fontSize: HeightRatio(25),
+        color: THEME_FONT_GREY,
+        fontSize: HeightRatio(20),
         fontFamily: "SofiaSansSemiCondensed-Regular",
         display: 'flex',
         flexWrap: 'wrap',

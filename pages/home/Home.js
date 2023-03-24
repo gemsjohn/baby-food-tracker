@@ -26,7 +26,9 @@ import {
     faArrowLeft,
     faPlus,
     faBars,
-    faCheck
+    faCheck,
+    faChartSimple,
+    faStar
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -66,7 +68,8 @@ import {
     THEME_TRANSPARENT,
     THEME_COLOR_PURPLE,
     THEME_COLOR_PURPLE_LOW_OPACITY,
-    THEME_COLOR_BLACKOUT
+    THEME_COLOR_BLACKOUT,
+    THEME_FONT_GREY
 } from '../../COLOR.js';
 import { DailyScheduleSimplified } from './auxilliary/DailyScheduleSimplified';
 
@@ -85,6 +88,7 @@ export const HomeScreen = ({ navigation }) => {
     const [selectRecentlyUsedData, setSelectRecentlyUsedData] = useState(null)
     const [selectedFoodDataEntrered, setSelectedFoodDataEntrered] = useState(false);
     const [displayTop100Foods, setDisplayTop100Foods] = useState(false)
+    const [metricsModalVisible, setMetricsModalVisible] = useState(false)
 
     const onRefresh = useCallback(() => {
         setLoading(true)
@@ -450,6 +454,7 @@ export const HomeScreen = ({ navigation }) => {
                     }
                     {modalVisible && <View style={styles.modalVisible_Blackout} />}
                     {calendarModalVisible && <View style={styles.modalVisible_Blackout} />}
+                    {metricsModalVisible && <View style={styles.modalVisible_Blackout} />}
                     <View
                         style={styles.homePrimary_Container}
                         onLayout={onLayoutRootView}
@@ -464,7 +469,7 @@ export const HomeScreen = ({ navigation }) => {
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faArrowLeft}
-                                    style={{ color: THEME_FONT_COLOR_WHITE }}
+                                    style={{ color: THEME_FONT_GREY }}
                                     size={25}
                                 />
                             </TouchableOpacity>
@@ -507,7 +512,7 @@ export const HomeScreen = ({ navigation }) => {
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faArrowRight}
-                                    style={{ color: THEME_FONT_COLOR_WHITE }}
+                                    style={{ color: THEME_FONT_GREY }}
                                     size={25}
                                 />
                             </TouchableOpacity>
@@ -522,20 +527,113 @@ export const HomeScreen = ({ navigation }) => {
 
 
                                 <View style={{ flexDirection: 'row', marginTop: HeightRatio(30) }}>
-                                    <View style={styles.homePrimary_TotalCalories}>
+                                    <View 
+                                        style={{
+                                            ...styles.homePrimary_TotalCalories,
+                                            width: windowWidth/5,
+                                            height: windowWidth/5,
+                                            flexDirection: 'column'
+                                        }}
+                                    >
                                         <Text style={styles.homePrimary_TotalCalories_Text}>
                                             {totalCalorieCount}
                                         </Text>
                                         <Text
                                             style={{
                                                 ...styles.homePrimary_TotalCalories_Text,
-                                                fontSize: HeightRatio(20),
+                                                fontSize: HeightRatio(15),
                                             }}
+                                            allowFontScaling={false}
                                         >
                                             CALORIES
                                         </Text>
                                     </View>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setMetricsModalVisible(true);
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                ...styles.homePrimary_Add_Button,
+                                                width: windowWidth/5,
+                                                height: windowWidth/5
 
+                                            }}
+                                        >
+                                            <View
+                                                style={{flexDirection: 'column'}}
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faSolid, faChartSimple}
+                                                    style={{ color: THEME_FONT_COLOR_BLACK, alignSelf: 'center' }}
+                                                    size={25}
+                                                />
+                                                <Text
+                                                    style={{
+                                                        ...styles.renderItem_Search_Result_Container_Text,
+                                                        color: THEME_FONT_COLOR_BLACK,
+                                                        fontSize: HeightRatio(20),
+                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                        marginTop: HeightRatio(10)
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    Metrics
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setDisplayTop100Foods(true);
+                                            setClearSuggestions(false)
+                                            RecentFood()
+                                            setModalVisible(true);
+                                            setSearchQuery('');
+                                            setSelectedItem(null);
+                                            setDisplayDetails(false);
+                                            setFoodData([]);
+                                            setMainState({
+                                                selectedFood_Quantity: null,
+                                                selectedFood_Measurement: null,
+                                                selectedFood_Schedule: null,
+                                                selectedFood_Emotion: null
+                                            })
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                ...styles.homePrimary_Add_Button,
+                                                width: windowWidth/5,
+                                                height: windowWidth/5
+
+                                            }}
+                                        >
+                                            <View
+                                                style={{flexDirection: 'column'}}
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faSolid, faStar}
+                                                    style={{ color: THEME_FONT_COLOR_BLACK, alignSelf: 'center' }}
+                                                    size={25}
+                                                />
+                                                <Text
+                                                    style={{
+                                                        ...styles.renderItem_Search_Result_Container_Text,
+                                                        color: THEME_FONT_COLOR_BLACK,
+                                                        fontSize: HeightRatio(20),
+                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                        textAlign: 'center',
+                                                        marginTop: HeightRatio(10)
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    Top 100
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
                                     {/* Add Button */}
                                     <TouchableOpacity
                                         onPress={() => {
@@ -555,23 +653,39 @@ export const HomeScreen = ({ navigation }) => {
                                         }}
                                         style={{
                                             ...styles.homePrimary_Add_Button,
-                                            borderWidth: 3,
-                                            borderColor: '#a7ffff'
+                                            width: windowWidth/5,
+                                            height: windowWidth/5
                                         }}
                                     >
-                                        <Text
-                                            style={styles.homePrimary_Add_Button_Text}
-                                            allowFontScaling={false}
+                                        <View
+                                            style={{flexDirection: 'column'}}
                                         >
-                                            ADD
-                                        </Text>
+                                            <FontAwesomeIcon
+                                                icon={faSolid, faPlus}
+                                                style={{ color: THEME_FONT_COLOR_BLACK, alignSelf: 'center' }}
+                                                size={25}
+                                            />
+                                            <Text
+                                                style={{
+                                                    ...styles.homePrimary_Add_Button_Text,
+                                                    marginTop: HeightRatio(10)
+                                                }}
+                                                allowFontScaling={false}
+                                            >
+                                                ADD
+                                            </Text>
+                                        </View>
                                     </TouchableOpacity>
                                 </View>
                                 {/* <DailySchedule date={currentDateReadable} userID={mainState.current.userID} /> */}
-                                <DailyScheduleSimplified 
-                                    date={currentDateReadable} 
-                                    userID={mainState.current.userID} 
+                                <DailyScheduleSimplified
+                                    date={currentDateReadable}
+                                    userID={mainState.current.userID}
                                 />
+                                <View style={{ flexDirection: 'row' }}>
+                                    
+                                    
+                                </View>
 
                             </>
                             :
@@ -1031,79 +1145,10 @@ export const HomeScreen = ({ navigation }) => {
                                         </View>
                                     </View>
                                     {/* calendarModalFoods */}
-                                    <SafeAreaView
-                                        style={{
-                                            alignSelf: 'center',
-                                            height: '80%',
-                                        }}
-                                    >
-                                        <ScrollView
-                                            style={{
-                                                alignSelf: 'center',
-                                            }}
-                                        >
-                                            <View style={{}}>
-                                                {calendarModalFoods.map((data, index) => (
-                                                    <View
-                                                        style={{
-                                                            ...styles.renderItem_Search_Results,
-                                                            justifyContent: 'space-between',
-                                                        }}
-                                                        key={index}
-                                                    >
-                                                        <View style={{flexDirection: 'column'}}>
-                                                            <Text
-                                                                style={{
-                                                                    ...styles.renderItem_Search_Result_Container_Text,
-                                                                    width: WidthRatio(200)
-                                                                }}
-                                                                allowFontScaling={false}
-                                                                
-                                                            >
-                                                                {data.name}
-                                                            </Text>
-                                                            <View style={{flexDirection: 'row'}}>
-                                                                {calendarModalEmotion.map((data_emotion, index) => (
-                                                                    <>
-                                                                        {data.name == data_emotion.item &&
-                                                                            <Text
-                                                                                style={{
-                                                                                    fontSize: HeightRatio(20)
-                                                                                }}
-                                                                                allowFontScaling={false}
-                                                                            >
-                                                                                {unescape(data_emotion != null ? data_emotion.emoji.replace(/\\u/g, '%u') : null)}
-                                                                            </Text>
-                                                                        }
-                                                                    </>
-                                                                ))}
-                                                            </View>
-                                                        </View>
-                                                        {data.tried &&
-                                                            <View
-                                                                style={{
-                                                                    backgroundColor: THEME_COLOR_ATTENTION,
-                                                                    borderRadius: HeightRatio(5),
-                                                                    padding: HeightRatio(4)
-                                                                }}
-                                                            >
-                                                                <Text
-                                                                    style={{
-                                                                        ...styles.renderItem_Search_Result_Container_Text,
-                                                                        color: THEME_FONT_COLOR_BLACK,
-                                                                        fontSize: HeightRatio(18),
-                                                                        fontFamily: "GochiHand_400Regular",
-                                                                    }}
-                                                                >
-                                                                    TOP 100
-                                                                </Text>
-                                                            </View>
-                                                        }
-                                                    </View>
-                                                ))}
-                                            </View>
-                                        </ScrollView>
-                                    </SafeAreaView>
+                                    <DailyScheduleSimplified
+                                        date={calendarModalDate}
+                                        userID={mainState.current.userID}
+                                    />
 
 
                                 </View>
@@ -1143,6 +1188,33 @@ export const HomeScreen = ({ navigation }) => {
                                 </View>
                             </View>
                         }
+                    </Modal>
+
+                    <Modal
+                        visible={metricsModalVisible}
+                        animationType="slide"
+                        transparent={true}
+                        style={{
+                            width: windowWidth,
+                        }}
+                    >
+                        <View style={styles.modalVisible_Container}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setMetricsModalVisible(false);
+                                }}
+                            >
+                                <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
+                                    <Text
+                                        style={styles.modalVisible_Button_Text}
+                                        allowFontScaling={false}
+                                    >
+                                        Close
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+
+                        </View>
                     </Modal>
 
 
@@ -1273,7 +1345,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: windowWidth * 0.2,
-        backgroundColor: THEME_COLOR_PURPLE_LOW_OPACITY,
+        // backgroundColor: THEME_COLOR_PURPLE_LOW_OPACITY,
     },
     homePrimary_Date_Current: {
         flexDirection: 'column',
@@ -1282,10 +1354,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         height: '100%',
         width: windowWidth / 1.5,
-        backgroundColor: THEME_COLOR_PURPLE_LOW_OPACITY,
+        // backgroundColor: THEME_COLOR_PURPLE_LOW_OPACITY,
     },
     homePrimary_Date_Current_Text: {
-        color: 'white',
+        color: THEME_FONT_GREY,
         fontSize: HeightRatio(30),
         fontFamily: 'GochiHand_400Regular',
         marginLeft: HeightRatio(10),
@@ -1329,7 +1401,7 @@ const styles = StyleSheet.create({
     },
     homePrimary_TotalCalories_Text: {
         color: THEME_FONT_COLOR_BLACK,
-        fontSize: HeightRatio(60),
+        fontSize: HeightRatio(30),
         textAlign: 'center',
         fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
     },
@@ -1338,16 +1410,16 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: HeightRatio(20),
+        // padding: HeightRatio(20),
         borderRadius: HeightRatio(10),
         alignSelf: 'center',
         margin: HeightRatio(4)
     },
     homePrimary_Add_Button_Text: {
         color: THEME_FONT_COLOR_BLACK,
-        fontSize: HeightRatio(30),
+        fontSize: HeightRatio(20),
         textAlign: 'center',
-        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+        fontFamily: 'SofiaSansSemiCondensed-Regular',
     },
     modalVisible_Blackout: {
         backgroundColor: THEME_COLOR_BLACKOUT,
