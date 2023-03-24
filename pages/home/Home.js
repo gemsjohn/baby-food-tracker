@@ -394,7 +394,7 @@ export const HomeScreen = ({ navigation }) => {
                                         setSelectedItem(item);
                                         setDisplayDetails(true)
                                     }}
-                                    style={styles.renderItem_Search_Result_Container_Plus}
+                                    style={{...styles.renderItem_Search_Result_Container_Plus, ...styles.button_Drop_Shadow}}
                                 >
                                     <Text style={styles.renderItem_Search_Result_Container_Plus_Text}>
                                         +
@@ -490,7 +490,10 @@ export const HomeScreen = ({ navigation }) => {
                                             setCurrentDate(moment().format(formatString));
                                             setLoading(true)
                                         }}
-                                        style={styles.homePrimary_Date_Return_Button}
+                                        style={{
+                                            ...styles.homePrimary_Date_Return_Button,
+                                            ...styles.button_Drop_Shadow
+                                        }}
                                     >
                                         <Text
                                             style={styles.homePrimary_Date_Return_Button_Text}
@@ -556,6 +559,7 @@ export const HomeScreen = ({ navigation }) => {
                                         <View
                                             style={{
                                                 ...styles.homePrimary_Add_Button,
+                                                ...styles.button_Drop_Shadow,
                                                 width: windowWidth/5,
                                                 height: windowWidth/5
 
@@ -605,6 +609,7 @@ export const HomeScreen = ({ navigation }) => {
                                         <View
                                             style={{
                                                 ...styles.homePrimary_Add_Button,
+                                                ...styles.button_Drop_Shadow,
                                                 width: windowWidth/5,
                                                 height: windowWidth/5
 
@@ -653,6 +658,7 @@ export const HomeScreen = ({ navigation }) => {
                                         }}
                                         style={{
                                             ...styles.homePrimary_Add_Button,
+                                            ...styles.button_Drop_Shadow,
                                             width: windowWidth/5,
                                             height: windowWidth/5
                                         }}
@@ -681,6 +687,8 @@ export const HomeScreen = ({ navigation }) => {
                                 <DailyScheduleSimplified
                                     date={currentDateReadable}
                                     userID={mainState.current.userID}
+                                    containerHeight={HeightRatio(450)}
+                                    from={"main"}
                                 />
                                 <View style={{ flexDirection: 'row' }}>
                                     
@@ -717,6 +725,7 @@ export const HomeScreen = ({ navigation }) => {
                             <View
                                 style={{
                                     ...styles.modalVisible_Container,
+                                    ...styles.button_Drop_Shadow,
                                     backgroundColor: THEME_COLOR_ATTENTION,
                                     margin: HeightRatio(5),
                                     width: windowWidth - HeightRatio(30),
@@ -775,7 +784,7 @@ export const HomeScreen = ({ navigation }) => {
                                     allowFontScaling={false}
                                 />
                                 <TouchableOpacity onPress={() => { handleSearch() }}>
-                                    <View style={styles.modalVisible_Search_Button}>
+                                    <View style={{...styles.modalVisible_Search_Button, ...styles.button_Drop_Shadow}}>
                                         <Text
                                             style={styles.modalVisible_Search_Button_Text}
                                             allowFontScaling={false}
@@ -848,7 +857,7 @@ export const HomeScreen = ({ navigation }) => {
                                                             setDisplayTop100Foods(false)
                                                             handleSearch(data.name);
                                                         }}
-                                                        style={styles.modalVisible_recentFoodData_Map_Plus}
+                                                        style={{...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow}}
                                                     >
                                                         <Text style={styles.modalVisible_recentFoodData_Map_Plus_Text}>
                                                             +
@@ -864,11 +873,12 @@ export const HomeScreen = ({ navigation }) => {
                                     <View
                                         style={{
                                             ...styles.modalVisible_FullButton,
+                                            ...styles.button_Drop_Shadow,
                                             marginTop: HeightRatio(30)
                                         }}
                                     >
                                         <Text
-                                            style={styles.modalVisible_Button_Text}
+                                            style={{...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE}}
                                             allowFontScaling={false}
                                         >
                                             Back
@@ -929,7 +939,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                             </View>
                                                                             <TouchableOpacity
                                                                                 onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); }}
-                                                                                style={styles.modalVisible_recentFoodData_Map_Plus}
+                                                                                style={{...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow}}
                                                                             >
                                                                                 <Text style={styles.modalVisible_recentFoodData_Map_Plus_Text}>
                                                                                     +
@@ -957,7 +967,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                                     setSelectRecentlyUsed(null)
                                                                                     setSelectRecentlyUsedData(null)
                                                                                 }}
-                                                                                style={styles.modalVisible_faX}
+                                                                                style={{...styles.modalVisible_faX, ...styles.button_Drop_Shadow}}
                                                                             >
                                                                                 <FontAwesomeIcon
                                                                                     icon={faSolid, faX}
@@ -992,6 +1002,7 @@ export const HomeScreen = ({ navigation }) => {
                                                             }}
                                                             style={{
                                                                 ...styles.modalVisible_faX,
+                                                                ...styles.button_Drop_Shadow,
                                                                 right: HeightRatio(-25),
                                                             }}
                                                         >
@@ -1023,9 +1034,15 @@ export const HomeScreen = ({ navigation }) => {
                                     {selectedFoodDataEntrered ?
                                         <>
                                             <TouchableOpacity onPress={() => { setModalVisible(false); }}>
-                                                <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
+                                                <View 
+                                                    style={{ 
+                                                        ...styles.modalVisible_HalfButton, 
+                                                        ...styles.button_Drop_Shadow,
+                                                        backgroundColor: THEME_COLOR_NEGATIVE 
+                                                    }}
+                                                >
                                                     <Text
-                                                        style={styles.modalVisible_Button_Text}
+                                                        style={{...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE}}
                                                         allowFontScaling={false}
                                                     >
                                                         Close
@@ -1038,7 +1055,13 @@ export const HomeScreen = ({ navigation }) => {
                                                     setModalVisible(false);
                                                 }}
                                             >
-                                                <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: THEME_COLOR_POSITIVE }}>
+                                                <View 
+                                                    style={{ 
+                                                        ...styles.modalVisible_HalfButton,
+                                                        ...styles.button_Drop_Shadow,
+                                                        backgroundColor: THEME_COLOR_POSITIVE 
+                                                    }}
+                                                >
                                                     <Text
                                                         style={styles.modalVisible_Button_Text}
                                                         allowFontScaling={false}
@@ -1050,9 +1073,9 @@ export const HomeScreen = ({ navigation }) => {
                                         </>
                                         :
                                         <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                            <View style={styles.modalVisible_FullButton}>
+                                            <View style={{...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow}}>
                                                 <Text
-                                                    style={styles.modalVisible_Button_Text}
+                                                    style={{...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE}}
                                                     allowFontScaling={false}
                                                 >
                                                     Close
@@ -1081,7 +1104,7 @@ export const HomeScreen = ({ navigation }) => {
                                 onDayPress={(day) => onDateSelect(day)}
                                 markedDates={{ [selectedCalendarModalDate]: { selected: true } }}
                                 theme={{
-                                    calendarBackground: THEME_COLOR_BACKDROP_DARK,
+                                    calendarBackground: 'rgba(31, 31, 39, 1.00)',
                                     textMonthFontSize: HeightRatio(20),
                                     monthTextColor: THEME_FONT_COLOR_WHITE,
                                     arrowColor: THEME_FONT_COLOR_WHITE,
@@ -1105,9 +1128,9 @@ export const HomeScreen = ({ navigation }) => {
                                         setSelectedCalendarModalDate('')
                                     }}
                                 >
-                                    <View style={styles.modalVisible_FullButton}>
+                                    <View style={{...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow}}>
                                         <Text
-                                            style={styles.modalVisible_Button_Text}
+                                            style={{...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE}}
                                             allowFontScaling={false}
                                         >
                                             Close
@@ -1148,6 +1171,7 @@ export const HomeScreen = ({ navigation }) => {
                                     <DailyScheduleSimplified
                                         date={calendarModalDate}
                                         userID={mainState.current.userID}
+                                        from={"modal"}
                                     />
 
 
@@ -1157,12 +1181,15 @@ export const HomeScreen = ({ navigation }) => {
                                         onPress={() => {
                                             setCalendarModalVisible(false);
                                             setSelectedCalendarModalDate('');
-
+                                            setLoading(true)
+                                            setTimeout(() => {
+                                                setLoading(false)
+                                            }, 500)
                                         }}
                                     >
-                                        <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
+                                        <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE }}>
                                             <Text
-                                                style={styles.modalVisible_Button_Text}
+                                                style={{...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE}}
                                                 allowFontScaling={false}
                                             >
                                                 Close
@@ -1176,7 +1203,7 @@ export const HomeScreen = ({ navigation }) => {
                                             setSelectedCalendarModalDate('');
                                         }}
                                     >
-                                        <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: THEME_COLOR_POSITIVE }}>
+                                        <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_POSITIVE }}>
                                             <Text
                                                 style={styles.modalVisible_Button_Text}
                                                 allowFontScaling={false}
@@ -1204,9 +1231,9 @@ export const HomeScreen = ({ navigation }) => {
                                     setMetricsModalVisible(false);
                                 }}
                             >
-                                <View style={{ ...styles.modalVisible_HalfButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
+                                <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE }}>
                                     <Text
-                                        style={styles.modalVisible_Button_Text}
+                                        style={{...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE}}
                                         allowFontScaling={false}
                                     >
                                         Close
@@ -1295,8 +1322,8 @@ const styles = StyleSheet.create({
     renderItem_Search_Result_Container_Plus: {
         backgroundColor: THEME_COLOR_ATTENTION,
         borderRadius: HeightRatio(10),
-        height: HeightRatio(40),
-        width: HeightRatio(40),
+        // height: HeightRatio(40),
+        // width: HeightRatio(40),
         display: 'flex',
         alignItems: "center",
         justifyContent: "center",
@@ -1427,7 +1454,7 @@ const styles = StyleSheet.create({
         position: 'absolute', zIndex: 10
     },
     modalVisible_Container: {
-        backgroundColor: THEME_COLOR_BACKDROP_DARK,
+        backgroundColor: 'rgba(31, 31, 39, 1.00)',
         zIndex: 999,
         width: windowWidth - HeightRatio(10),
         padding: HeightRatio(20),
@@ -1509,8 +1536,8 @@ const styles = StyleSheet.create({
     modalVisible_recentFoodData_Map_Plus: {
         backgroundColor: THEME_COLOR_ATTENTION,
         borderRadius: HeightRatio(10),
-        height: HeightRatio(40),
-        width: HeightRatio(40),
+        // height: HeightRatio(40),
+        // width: HeightRatio(40),
         display: 'flex',
         alignItems: "center",
         justifyContent: "center",
@@ -1562,7 +1589,7 @@ const styles = StyleSheet.create({
         margin: HeightRatio(10)
     },
     modalVisible_Button_Text: {
-        color: THEME_FONT_COLOR_WHITE,
+        color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(25),
         alignSelf: 'center',
         fontFamily: 'SofiaSansSemiCondensed-Regular'
@@ -1573,5 +1600,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         height: HeightRatio(505),
         backgroundColor: THEME_COLOR_PURPLE
+    },
+    button_Drop_Shadow: {
+        padding: 10,
+        borderRadius: 5,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.3,
+                shadowRadius: 2,
+            },
+            android: {
+                elevation: 5,
+            },
+        }),
     }
 });

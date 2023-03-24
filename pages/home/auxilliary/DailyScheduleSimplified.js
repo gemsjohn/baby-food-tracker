@@ -57,13 +57,17 @@ import {
 import { usePullDailyContent } from './PullDailyContent';
 import { convertDateFormat } from './ConvertDateFormat';
 
+let localContainerHeight;
 
 export const DailyScheduleSimplified = (props) => {
+
     const { mainState, setMainState } = useContext(MainStateContext);
     const [matchingDate, setMatchingDate] = useState([]);
     const { calendarModalCalorieTotal, calendarModalDate, calendarModalFoods, calendarModalEmotion } = usePullDailyContent(props.date);
     const [displayTop100Foods, setDisplayTop100Foods] = useState(false)
 
+    localContainerHeight = props.containerHeight;
+    console.log(localContainerHeight)
 
     // Schedule Arrays
     const [firstThing, setFirstThing] = useState([]);
@@ -322,6 +326,31 @@ export const DailyScheduleSimplified = (props) => {
 
     }, [displayLunchNutrients])
 
+    const bg_color = [
+        "#ffab81",
+        "#dde9ba",
+        "#c1fec3",
+        "#febbbc",
+        "#9bd4cc",
+        "#e9ad50",
+        "#d5b280",
+        "#fc8383",
+        "#bfa9ef",
+        "#84f0aa",
+        "#8fdfec",
+        "#ffab81",
+        "#dde9ba",
+        "#c1fec3",
+        "#febbbc",
+        "#9bd4cc",
+        "#e9ad50",
+        "#d5b280",
+        "#fc8383",
+        "#bfa9ef",
+        "#84f0aa",
+        "#8fdfec",
+    ]
+
 
     const displaySimplifiedEntries = (data, emotions) => {
         const options_time = [
@@ -333,6 +362,8 @@ export const DailyScheduleSimplified = (props) => {
             "Dinner",
             "Before Bed"
         ];
+
+
 
         const textComponents = [];
         const textComponentsBySchedule = {};
@@ -352,7 +383,10 @@ export const DailyScheduleSimplified = (props) => {
                                     }}
                                     style={{
                                         ...styles.renderItem_Search_Results,
+                                        ...styles.button_Drop_Shadow,
                                         justifyContent: 'space-between',
+                                        backgroundColor: `${bg_color[i]}`,
+
                                     }}
                                     key={index}
                                 >
@@ -404,7 +438,7 @@ export const DailyScheduleSimplified = (props) => {
                                                 key={`${schedule}_${i}_${j}`}
                                                 style={{
                                                     fontSize: HeightRatio(14),
-                                                    color: THEME_FONT_COLOR_WHITE,
+                                                    color: THEME_FONT_COLOR_BLACK,
                                                 }}
                                                 allowFontScaling={false}
                                             >
@@ -434,8 +468,8 @@ export const DailyScheduleSimplified = (props) => {
                                     </View>
                                 </TouchableOpacity>
                                 {displayLunchNutrients && entryKey.index == index && entryKey.name == data[i].name &&
-                                    <View style={{flexDirection: 'row', alignSelf: 'center'}}>
-                                        
+                                    <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Container_0}>
                                             <View style={{ backgroundColor: THEME_LIGHT_GREEN, height: '100%', width: WidthRatio(140), position: 'absolute', zIndex: -10, borderTopLeftRadius: HeightRatio(10), borderBottomLeftRadius: HeightRatio(10) }} />
                                             <View style={{ backgroundColor: '#ffcc42', height: '100%', width: WidthRatio(80), position: 'absolute', left: WidthRatio(140), zIndex: -10, borderTopRightRadius: HeightRatio(10), borderBottomRightRadius: HeightRatio(10) }} />
@@ -470,9 +504,9 @@ export const DailyScheduleSimplified = (props) => {
                                                 </View>
                                             ))}
                                         </View>
-                                        <View 
+                                        <View
                                             style={{
-                                                flexDirection: 'column', 
+                                                flexDirection: 'column',
                                                 display: 'flex',
                                                 // alignItems: 'center',
                                                 // justifyContent: 'center'
@@ -492,10 +526,13 @@ export const DailyScheduleSimplified = (props) => {
                                                 onPress={() => { setModalVisible(true); setDeleteID(emotions[j].id) }}
                                                 style={{
                                                     ...styles.scheduleButton_subContent_NutritionDetails_Remove_Button,
+                                                    ...styles.button_Drop_Shadow
                                                 }}
                                             >
                                                 <Text
-                                                    style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
+                                                    style={{
+                                                        ...styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text,
+                                                    }}
                                                     allowFontScaling={false}
                                                 >
                                                     Remove
@@ -558,23 +595,110 @@ export const DailyScheduleSimplified = (props) => {
             <SafeAreaView
                 style={{
                     ...styles.container,
-                    // backgroundColor: 'red'
+                    // backgroundColor: '#ddeafc',
+                    height: props.from === "main" ? HeightRatio(450) : HeightRatio(250)
                 }}
             >
                 <ScrollView
                     style={styles.scrollView}
                 >
-                    <View style={{}}>
-                        {dailyEntries.map((data, index) => (
-                            <View key={index}>
-                                {data}
+                    {dailyEntries.length > 0 ?
+                        <>
+                            <View style={{}}>
+                                {dailyEntries.map((data, index) => (
+                                    <View key={index}>
+                                        {data}
+                                    </View>
+                                ))}
                             </View>
-                        ))}
-                    </View>
-                    <View style={{ height: HeightRatio(50) }} />
+                            <View style={{ height: HeightRatio(50) }} />
+                        </>
+                        :
+                        <>
+                            {/* {bg_color.map((data, index) => (
+                                <View
+                                    style={{
+                                        ...styles.renderItem_Search_Results,
+                                        ...styles.button_Drop_Shadow,
+                                        justifyContent: 'space-between',
+                                        backgroundColor: data,
+
+                                    }}
+                                    key={index}
+                                >
+                                    <View
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexDirection: 'row'
+                                        }}
+                                    >
+                                        <View style={{ height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(50), backgroundColor: 'rgba(0, 0, 0, 0.1)' }} />
+                                        <Text
+                                            style={{
+                                                ...styles.renderItem_Search_Result_Container_Text,
+                                                width: WidthRatio(160),
+                                            }}
+
+                                        >
+                                        </Text>
+                                    </View>
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            width: WidthRatio(120),
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'flex-end'
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                marginRight: HeightRatio(10)
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: HeightRatio(14),
+                                                    color: THEME_FONT_COLOR_BLACK,
+                                                }}
+                                                allowFontScaling={false}
+                                            >
+                                            </Text>
+                                        </View>
+
+                                    </View>
+                                </View>
+
+                            ))} */}
+                        </>
+
+                    }
                 </ScrollView>
             </SafeAreaView>
-            {/* } */}
+            {props.from === "main" &&
+                <View
+                    style={{
+                        ...styles.renderItem_Search_Results,
+                        ...styles.button_Drop_Shadow,
+                        backgroundColor: '#feda9a',
+                        width: null
+
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontSize: HeightRatio(14),
+                            color: THEME_FONT_COLOR_BLACK,
+                        }}
+                        allowFontScaling={false}
+                    >
+                        Premium
+                    </Text>
+                </View>
+
+            }
 
             <Modal
                 visible={modalVisible}
@@ -631,8 +755,12 @@ export const DailyScheduleSimplified = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: HeightRatio(10),
+        // marginTop: HeightRatio(10),
         height: HeightRatio(450),
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
         // backgroundColor: THEME_COLOR_POSITIVE
     },
     scrollView: {
@@ -846,10 +974,25 @@ const styles = StyleSheet.create({
         padding: HeightRatio(10)
     },
     renderItem_Search_Result_Container_Text: {
-        color: THEME_FONT_GREY,
+        color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(20),
         fontFamily: "SofiaSansSemiCondensed-Regular",
         display: 'flex',
         flexWrap: 'wrap',
     },
+    button_Drop_Shadow: {
+        padding: 10,
+        borderRadius: 5,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.3,
+                shadowRadius: 2,
+            },
+            android: {
+                elevation: 5,
+            },
+        }),
+    }
 });
