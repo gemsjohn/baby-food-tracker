@@ -68,6 +68,7 @@ import {
     THEME_COLOR_PURPLE_LOW_OPACITY,
     THEME_COLOR_BLACKOUT
 } from '../../COLOR.js';
+import { DailyScheduleSimplified } from './auxilliary/DailyScheduleSimplified';
 
 export const HomeScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
@@ -566,7 +567,12 @@ export const HomeScreen = ({ navigation }) => {
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
-                                <DailySchedule date={currentDateReadable} userID={mainState.current.userID} />
+                                {/* <DailySchedule date={currentDateReadable} userID={mainState.current.userID} /> */}
+                                <DailyScheduleSimplified 
+                                    date={currentDateReadable} 
+                                    userID={mainState.current.userID} 
+                                />
+
                             </>
                             :
                             <View style={styles.updatingScreen_Container}>

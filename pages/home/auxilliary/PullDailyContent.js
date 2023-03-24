@@ -89,6 +89,7 @@ export const usePullDailyContent = (input) => {
     
 
     useEffect(() => {
+        console.log(input)
         getTrackerEntryByDate(input)
     }, [input])
 
