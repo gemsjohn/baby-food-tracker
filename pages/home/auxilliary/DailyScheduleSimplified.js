@@ -615,6 +615,36 @@ export const DailyScheduleSimplified = (props) => {
                         </>
                         :
                         <>
+                            <Image
+                                source={require('../../../assets/favicon_0.png')}
+                                style={{
+                                    height: HeightRatio(200),
+                                    width: HeightRatio(200),
+                                    alignSelf: 'center'
+                                }}
+                            />
+                            <Text
+                                style={{
+                                    fontSize: HeightRatio(50),
+                                    color: THEME_FONT_COLOR_BLACK,
+                                    fontFamily: "GochiHand_400Regular",
+                                    textAlign: 'center'
+                                }}
+                                allowFontScaling={false}
+                            >
+                                Welcome!
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: HeightRatio(30),
+                                    color: THEME_FONT_COLOR_BLACK,
+                                    fontFamily: "SofiaSansSemiCondensed-Regular",
+                                    textAlign: 'center'
+                                }}
+                                allowFontScaling={false}
+                            >
+                                Select `ADD` to get started.
+                            </Text>
                             {/* {bg_color.map((data, index) => (
                                 <View
                                     style={{
@@ -719,7 +749,7 @@ export const DailyScheduleSimplified = (props) => {
                             <TouchableOpacity onPress={() => setModalVisible(false)}>
                                 <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
                                     <Text
-                                        style={styles.modalButton_Text}
+                                        style={{...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK}}
                                         allowFontScaling={false}
                                     >
                                         Close
@@ -909,7 +939,7 @@ const styles = StyleSheet.create({
         backgroundColor: THEME_COLOR_BLACKOUT
     },
     modalContainer_1: {
-        backgroundColor: THEME_COLOR_BACKDROP_DARK,
+        backgroundColor: 'rgba(31, 31, 39, 1.00)',
         margin: 20,
         zIndex: 999,
         borderRadius: 10,
