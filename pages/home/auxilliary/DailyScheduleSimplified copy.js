@@ -51,8 +51,7 @@ import {
     THEME_COLOR_PURPLE,
     THEME_COLOR_PURPLE_LOW_OPACITY,
     THEME_COLOR_BLACKOUT,
-    THEME_FONT_GREY,
-    THEME_LIGHT_GREEN
+    THEME_FONT_GREY
 } from '../../../COLOR';
 import { usePullDailyContent } from './PullDailyContent';
 import { convertDateFormat } from './ConvertDateFormat';
@@ -119,7 +118,6 @@ export const DailyScheduleSimplified = (props) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [uniqueEmotionArray, setUniqueEmotionArray] = useState([])
     const [dailyEntries, setDailyEntries] = useState([])
-    const [entryKey, setEntryKey] = useState(null)
 
     const [deleteEntry] = useMutation(DELETE_ENTRY)
     const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
@@ -317,10 +315,6 @@ export const DailyScheduleSimplified = (props) => {
         storeTotalCalorieCount(total)
     }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, afternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
 
-    useEffect(() => {
-        console.log(displayLunchNutrients)
-
-    }, [displayLunchNutrients])
 
 
     const displaySimplifiedEntries = (data, emotions) => {
@@ -345,11 +339,7 @@ export const DailyScheduleSimplified = (props) => {
                     if (index !== -1) {
                         const textComponent = (
                             <>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setDisplayLunchNutrients(current => !current);
-                                        setEntryKey({ index: index, name: data[i].name })
-                                    }}
+                                <View
                                     style={{
                                         ...styles.renderItem_Search_Results,
                                         justifyContent: 'space-between',
@@ -432,79 +422,8 @@ export const DailyScheduleSimplified = (props) => {
                                             </View>
                                         }
                                     </View>
-                                </TouchableOpacity>
-                                {displayLunchNutrients && entryKey.index == index && entryKey.name == data[i].name &&
-                                    <View style={{flexDirection: 'row', alignSelf: 'center'}}>
-                                        
-                                        <View style={styles.scheduleButton_subContent_NutritionDetails_Container_0}>
-                                            <View style={{ backgroundColor: THEME_LIGHT_GREEN, height: '100%', width: WidthRatio(140), position: 'absolute', zIndex: -10, borderTopLeftRadius: HeightRatio(10), borderBottomLeftRadius: HeightRatio(10) }} />
-                                            <View style={{ backgroundColor: '#ffcc42', height: '100%', width: WidthRatio(80), position: 'absolute', left: WidthRatio(140), zIndex: -10, borderTopRightRadius: HeightRatio(10), borderBottomRightRadius: HeightRatio(10) }} />
-                                            {Object.keys(emotions[j].nutrients).map((key) => (
-                                                <View
-                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}
-                                                    key={key}
-                                                >
-                                                    <View
-                                                        style={{
-                                                            width: WidthRatio(140),
-                                                        }}
-                                                    >
-                                                        <Text
-                                                            style={{
-                                                                ...styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text,
-                                                                width: WidthRatio(120),
-                                                            }}
-                                                            allowFontScaling={false}
-                                                            numberOfLines={1}
-                                                            ellipsizeMode="tail"
-                                                        >
-                                                            {key.replace('_', ' ')}
-                                                        </Text>
-                                                    </View>
-                                                    <Text
-                                                        style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
-                                                        allowFontScaling={false}
-                                                    >
-                                                        {emotions[j].nutrients[key].amount} {emotions[j].nutrients[key].unit}
-                                                    </Text>
-                                                </View>
-                                            ))}
-                                        </View>
-                                        <View 
-                                            style={{
-                                                flexDirection: 'column', 
-                                                display: 'flex',
-                                                // alignItems: 'center',
-                                                // justifyContent: 'center'
-                                            }}
-                                        >
-                                            <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
-                                                <Text
-                                                    style={{
-                                                        ...styles.scheduleButton_subContent_Container_Button_Text,
-                                                    }}
-                                                    allowFontScaling={false}
-                                                >
-                                                    {emotions[i].measurement}
-                                                </Text>
-                                            </View>
-                                            <TouchableOpacity
-                                                onPress={() => { setModalVisible(true); setDeleteID(emotions[j].id) }}
-                                                style={{
-                                                    ...styles.scheduleButton_subContent_NutritionDetails_Remove_Button,
-                                                }}
-                                            >
-                                                <Text
-                                                    style={styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text}
-                                                    allowFontScaling={false}
-                                                >
-                                                    Remove
-                                                </Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                }
-
+                                </View>
+                                
                             </>
                         );
                         if (!textComponentsBySchedule[schedule]) {
@@ -532,97 +451,31 @@ export const DailyScheduleSimplified = (props) => {
         if (calendarModalFoods && calendarModalEmotion) {
             displaySimplifiedEntries(calendarModalFoods, calendarModalEmotion)
         }
-    }, [calendarModalFoods, calendarModalEmotion, displayLunchNutrients])
-
-    const handleDeleteEntry = async () => {
-        setMainState({
-            triggerRefresh: true
-        })
-        await deleteEntry({
-            variables: {
-                deleteEntryId: deleteID
-            }
-        })
-        refetch()
-        setTimeout(() => {
-            setMainState({
-                triggerRefresh: false
-            })
-        }, 100)
-    }
+    }, [calendarModalFoods, calendarModalEmotion])
 
     return (
         <>
 
-            {/* {calendarModalFoods && */}
-            <SafeAreaView
-                style={{
-                    ...styles.container,
-                    // backgroundColor: 'red'
-                }}
-            >
-                <ScrollView
-                    style={styles.scrollView}
+            {calendarModalFoods &&
+                <SafeAreaView
+                    style={{
+                        ...styles.container,
+                        // backgroundColor: 'red'
+                    }}
                 >
-                    <View style={{}}>
-                        {dailyEntries.map((data, index) => (
-                            <View key={index}>
-                                {data}
-                            </View>
-                        ))}
-                    </View>
-                    <View style={{ height: HeightRatio(50) }} />
-                </ScrollView>
-            </SafeAreaView>
-            {/* } */}
-
-            <Modal
-                visible={modalVisible}
-                animationType="slide"
-                transparent={true}
-            >
-                <View style={styles.modalContainer_0}>
-                    <View style={styles.modalContainer_1}>
-                        <View style={styles.modalContainer_1_A}>
-                            <Text
-                                style={styles.modalContainer_1_A_Text}
-                                allowFontScaling={false}
-                            >
-                                Are you sure that you want to delete this entry?
-                            </Text>
-                        </View>
-                        <View style={styles.modalContainer_1_B}>
-                            <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
-                                    <Text
-                                        style={styles.modalButton_Text}
-                                        allowFontScaling={false}
-                                    >
-                                        Close
-                                    </Text>
+                    <ScrollView
+                        style={styles.scrollView}
+                    >
+                        <View style={{}}>
+                            {dailyEntries.map((data, index) => (
+                                <View key={index}>
+                                    { data }
                                 </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setModalVisible(false);
-                                    handleDeleteEntry()
-
-                                }}
-                            >
-                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
-                                    <Text
-                                        style={styles.modalButton_Text}
-                                        allowFontScaling={false}
-                                    >
-                                        Delete
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
+                            ))}
                         </View>
-                    </View>
-                </View>
-
-            </Modal>
+                    </ScrollView>
+                </SafeAreaView>
+            }
 
 
         </>
@@ -707,20 +560,15 @@ const styles = StyleSheet.create({
     },
     scheduleButton_subContent_Container_Button_Text: {
         color: THEME_FONT_COLOR_WHITE,
-        fontSize: HeightRatio(16),
-        fontFamily: "SofiaSansSemiCondensed-Regular",
-        textAlign: 'center'
+        fontSize: HeightRatio(20),
+        fontFamily: "SofiaSansSemiCondensed-Regular"
     },
     scheduleButton_subContent_Container_Button_DataAmount_Container: {
         margin: HeightRatio(5),
-        // marginLeft: HeightRatio(10),
-        padding: HeightRatio(5),
-        borderRadius: HeightRatio(10),
-        backgroundColor: '#b894e9',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: WidthRatio(90)
+        padding: HeightRatio(4),
+        paddingLeft: HeightRatio(20),
+        paddingRight: HeightRatio(20),
+        borderRadius: HeightRatio(10)
     },
     scheduleButton_subContent_NutritionDetails_Title_Container_0: {
         width: windowWidth - HeightRatio(120),
@@ -737,24 +585,23 @@ const styles = StyleSheet.create({
         fontFamily: "SofiaSansSemiCondensed-Regular"
     },
     scheduleButton_subContent_NutritionDetails_Container_0: {
-        // padding: 10,
-        marginTop: HeightRatio(4),
+        padding: 10,
         marginBottom: HeightRatio(4),
-        alignSelf: 'center',
-        backgroundColor: THEME_TRANSPARENT,
-        borderRadius: HeightRatio(10)
-
+        alignSelf: 'center'
     },
     scheduleButton_subContent_NutritionDetails_Remove_Button: {
         backgroundColor: THEME_COLOR_NEGATIVE,
-        margin: HeightRatio(5),
+        margin: HeightRatio(10),
         padding: HeightRatio(10),
+        paddingLeft: HeightRatio(20),
+        paddingRight: HeightRatio(20),
         borderRadius: HeightRatio(10),
-        // width: '80%',
+        width: '80%',
+        alignSelf: 'center'
     },
     scheduleButton_subContent_NutritionDetails_Remove_Button_Text: {
         color: THEME_FONT_COLOR_WHITE,
-        fontSize: HeightRatio(20),
+        fontSize: HeightRatio(25),
         fontFamily: "SofiaSansSemiCondensed-Regular",
         textAlign: 'center'
     },
@@ -764,11 +611,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 5,
-        width: windowWidth - HeightRatio(160),
-        // backgroundColor: 'red',
+        width: windowWidth - HeightRatio(130),
+        backgroundColor: THEME_FONT_COLOR_WHITE_LOW_OPACITY,
         margin: HeightRatio(2),
         padding: HeightRatio(10),
-        borderRadius: HeightRatio(50)
+        borderRadius: HeightRatio(4)
     },
     scheduleButton_subContent_NutritionDetails_Map_Container_Text: {
         flex: 1,

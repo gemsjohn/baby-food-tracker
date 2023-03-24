@@ -110,8 +110,10 @@ export const usePullDailyContent = (input) => {
         let itemsArray = []; // create an empty array to store food items
 
         for (let i = 0; i < input.length; i++) {
+            let ID = JSON.stringify(input[i]._id);
             const schedule = JSON.stringify(input[i].entry[0].schedule);
             const jsonString = JSON.stringify(input[i].entry[0].nutrients);
+            let amount = JSON.stringify(input[i].entry[0].amount);
             let item = JSON.stringify(input[i].entry[0].item);
             let emotion = JSON.stringify(input[i].entry[0].emotion);
 
@@ -140,6 +142,7 @@ export const usePullDailyContent = (input) => {
             sample_v2 = removeBackslashes(sample_v2)
             sample_v2 = removeQuotes(sample_v2)
             sample_v2 = JSON.parse(sample_v2)
+            let sample_v3 = sample_v2;
             sample_v2 = sample_v2.calories.amount
 
             // EMOJI
@@ -151,7 +154,10 @@ export const usePullDailyContent = (input) => {
             item = removeBackslashes(item);
             item = removeQuotes(item)
 
-            emotionIndex.push({item: item, emoji: unicodeEscape, schedule: removeQuotes(sampleSchedule_v1)})
+            ID = removeBackslashes(ID)
+            amount = removeBackslashes(amount);
+
+            emotionIndex.push({item: item, emoji: unicodeEscape, schedule: removeQuotes(sampleSchedule_v1), nutrients: sample_v3, measurement: removeQuotes(amount), id: removeQuotes(ID)})
 
 
             if (sampleSchedule_v2 == "First Thing") {

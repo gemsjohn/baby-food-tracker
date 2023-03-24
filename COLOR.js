@@ -13,7 +13,8 @@ export const THEME_TRANSPARENT = 'transparent';
 export const THEME_COLOR_PURPLE = 'rgba(71, 66, 106, 1.00)';
 export const THEME_COLOR_PURPLE_LOW_OPACITY = 'rgba(71, 66, 106, 0.25)';
 export const THEME_COLOR_BLACKOUT = 'rgba(0, 71, 98, 0.90)';
-export const THEME_FONT_GREY = 'rgba(255, 255, 255, 1.0)'
+export const THEME_FONT_GREY = 'rgba(255, 255, 255, 1.0)';
+export const THEME_LIGHT_GREEN = 'rgba(128, 245, 171, 1.00)';
 
 
 
