@@ -26,7 +26,8 @@ import {
     faArrowRight,
     faArrowLeft,
     faPlus,
-    faBars
+    faBars,
+    faGlasses
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -56,6 +57,7 @@ import {
 } from '../../../COLOR';
 import { usePullDailyContent } from './PullDailyContent';
 import { convertDateFormat } from './ConvertDateFormat';
+import { LinearGradient } from 'expo-linear-gradient';
 
 let localContainerHeight;
 
@@ -67,7 +69,6 @@ export const DailyScheduleSimplified = (props) => {
     const [displayTop100Foods, setDisplayTop100Foods] = useState(false)
 
     localContainerHeight = props.containerHeight;
-    console.log(localContainerHeight)
 
     // Schedule Arrays
     const [firstThing, setFirstThing] = useState([]);
@@ -519,7 +520,7 @@ export const DailyScheduleSimplified = (props) => {
                                                     }}
                                                     allowFontScaling={false}
                                                 >
-                                                    {emotions[i].measurement}
+                                                    {emotions[j].measurement}
                                                 </Text>
                                             </View>
                                             <TouchableOpacity
@@ -707,25 +708,56 @@ export const DailyScheduleSimplified = (props) => {
                     }
                 </ScrollView>
             </SafeAreaView>
-            {props.from === "main" &&
-                <View
-                    style={{
-                        ...styles.renderItem_Search_Results,
-                        ...styles.button_Drop_Shadow,
-                        backgroundColor: '#feda9a',
-                        width: null
 
-                    }}
-                >
-                    <Text
-                        style={{
-                            fontSize: HeightRatio(14),
-                            color: THEME_FONT_COLOR_BLACK,
-                        }}
-                        allowFontScaling={false}
+            {props.from === "main" &&
+                <View style={{ width: windowWidth, height: HeightRatio(140) }}>
+                    <TouchableOpacity
+                        onPress={() => console.log('PREMIUM SERVICE')}
                     >
-                        Premium
-                    </Text>
+                        <LinearGradient
+                            colors={['#ec546d', '#d05bb6']}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            style={{
+                                ...styles.renderItem_Search_Results,
+                                ...styles.button_Drop_Shadow,
+                                borderRadius: HeightRatio(50),
+                                backgroundColor: '#feda9a',
+                                width: WidthRatio(300),
+                                padding: HeightRatio(15)
+
+                            }}
+                        >
+                            <View
+                                style={{
+                                    height: HeightRatio(50),
+                                    width: HeightRatio(50),
+                                    borderRadius: HeightRatio(100),
+                                    borderWidth: 3,
+                                    borderColor: 'white',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faSolid, faGlasses}
+                                    style={{ color: THEME_FONT_COLOR_WHITE }}
+                                    size={25}
+                                />
+                            </View>
+                            <Text
+                                style={{
+                                    fontSize: HeightRatio(22),
+                                    color: THEME_FONT_COLOR_WHITE,
+                                    marginLeft: HeightRatio(20)
+                                }}
+                                allowFontScaling={false}
+                            >
+                                Premium Service
+                            </Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
                 </View>
 
             }
@@ -749,7 +781,7 @@ export const DailyScheduleSimplified = (props) => {
                             <TouchableOpacity onPress={() => setModalVisible(false)}>
                                 <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
                                     <Text
-                                        style={{...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK}}
+                                        style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
                                         allowFontScaling={false}
                                     >
                                         Close
@@ -1006,7 +1038,7 @@ const styles = StyleSheet.create({
     renderItem_Search_Result_Container_Text: {
         color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(20),
-        fontFamily: "SofiaSansSemiCondensed-Regular",
+        fontFamily: "SofiaSansSemiCondensed-ExtraBold",
         display: 'flex',
         flexWrap: 'wrap',
     },

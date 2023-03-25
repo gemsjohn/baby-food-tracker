@@ -176,51 +176,51 @@ export const KeyScreen = ({ navigation }) => {
                     </View>
                     <View style={{ marginTop: 10, marginBottom: 10 }}>
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <TouchableOpacity style={styles.button} onPress={() => handleKeyPress('1')}>
+                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('1')}>
                                 <Text style={styles.button_Text} allowFontScaling={false} >
                                     1
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} onPress={() => handleKeyPress('2')}>
+                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('2')}>
                                 <Text style={styles.button_Text} allowFontScaling={false}>
                                     2
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} onPress={() => handleKeyPress('3')}>
+                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('3')}>
                                 <Text style={styles.button_Text} allowFontScaling={false}>
                                     3
                                 </Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <TouchableOpacity style={styles.button} onPress={() => handleKeyPress('4')}>
+                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('4')}>
                                 <Text style={styles.button_Text} allowFontScaling={false}>
                                     4
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} onPress={() => handleKeyPress('5')}>
+                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('5')}>
                                 <Text style={styles.button_Text} allowFontScaling={false}>
                                     5
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} onPress={() => handleKeyPress('6')}>
+                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('6')}>
                                 <Text style={styles.button_Text} allowFontScaling={false}>
                                     6
                                 </Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <TouchableOpacity style={styles.button} onPress={() => handleKeyPress('7')}>
+                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('7')}>
                                 <Text style={styles.button_Text} allowFontScaling={false}>
                                     7
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} onPress={() => handleKeyPress('8')}>
+                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('8')}>
                                 <Text style={styles.button_Text} allowFontScaling={false}>
                                     8
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} onPress={() => handleKeyPress('9')}>
+                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('9')}>
                                 <Text style={styles.button_Text} allowFontScaling={false}>
                                     9
                                 </Text>
@@ -228,7 +228,7 @@ export const KeyScreen = ({ navigation }) => {
                         </View>
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
 
-                            <TouchableOpacity style={styles.button} onPress={() => handleKeyPress('0')}>
+                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('0')}>
                                 <Text style={styles.button_Text} allowFontScaling={false}>
                                     0
                                 </Text>
@@ -243,7 +243,7 @@ export const KeyScreen = ({ navigation }) => {
                                 navigation.dispatch(resetActionHome);
                             }}
                             style={Styling.modalWordButton}>
-                            <View style={styles.forgotKey_Button}>
+                            <View style={{...styles.forgotKey_Button, ...styles.button_Drop_Shadow}}>
                                 <Text style={styles.forgotKey_Button_Text} allowFontScaling={false}>
                                     Forgot Key?
                                 </Text>
@@ -322,5 +322,20 @@ const styles = StyleSheet.create({
         fontSize: HeightRatio(30),
         alignSelf: 'center',
         fontFamily: 'SofiaSansSemiCondensed-Regular'
+    },
+    button_Drop_Shadow: {
+        padding: 10,
+        borderRadius: 5,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.3,
+                shadowRadius: 2,
+            },
+            android: {
+                elevation: 5,
+            },
+        }),
     }
 });

@@ -498,7 +498,7 @@ export const Auth = ({ navigation }) => {
                           type="text"
                           name="email"
                           placeholder="Email"
-                          placeholderTextColor="white"
+                          placeholderTextColor="black"
                           value={promptEmailInput}
                           onChangeText={setPromptEmailInput}
                           style={Styling.textInputStyle}
@@ -509,7 +509,7 @@ export const Auth = ({ navigation }) => {
                           type="text"
                           name="username"
                           placeholder="Username"
-                          placeholderTextColor="white"
+                          placeholderTextColor="black"
                           value={promptUsernameInput}
                           onChangeText={setPromptUsernameInput}
                           style={Styling.textInputStyle}
@@ -520,7 +520,7 @@ export const Auth = ({ navigation }) => {
                           type="password"
                           name="password"
                           placeholder="Password"
-                          placeholderTextColor="white"
+                          placeholderTextColor="black"
                           value={promptPasswordInput}
                           onChangeText={setPromptPasswordInput}
                           secureTextEntry={true}
@@ -542,6 +542,7 @@ export const Auth = ({ navigation }) => {
                             >
                               <View style={{
                                 backgroundColor: THEME_COLOR_POSITIVE,
+                                ...styles.button_Drop_Shadow,
                                 display: 'flex',
                                 justifyContent: 'flex-start',
                                 padding: HeightRatio(20),
@@ -571,6 +572,7 @@ export const Auth = ({ navigation }) => {
                             >
                               <View style={{
                                 backgroundColor: THEME_COLOR_POSITIVE,
+                                ...styles.button_Drop_Shadow,
                                 display: 'flex',
                                 justifyContent: 'flex-start',
                                 padding: HeightRatio(20),
@@ -596,7 +598,7 @@ export const Auth = ({ navigation }) => {
                         }
                         <Text
                           style={{
-                            color: THEME_FONT_COLOR_WHITE,
+                            color: THEME_FONT_COLOR_BLACK,
                             alignSelf: 'center',
                             fontSize: HeightRatio(30),
                             margin: HeightRatio(15),
@@ -616,6 +618,7 @@ export const Auth = ({ navigation }) => {
                         >
                           <View style={{
                             backgroundColor: THEME_COLOR_NEGATIVE,
+                            ...styles.button_Drop_Shadow,
                             display: 'flex',
                             justifyContent: 'flex-start',
                             padding: HeightRatio(20),
@@ -661,7 +664,7 @@ export const Auth = ({ navigation }) => {
                               type="text"
                               name="username"
                               placeholder="Username"
-                              placeholderTextColor="white"
+                              placeholderTextColor="black"
                               value={promptInput_0}
                               onChangeText={setPromptInput_0}
                               style={Styling.textInputStyle}
@@ -672,7 +675,7 @@ export const Auth = ({ navigation }) => {
                               type="password"
                               name="password"
                               placeholder="Password"
-                              placeholderTextColor="white"
+                              placeholderTextColor="black"
                               value={promptInput_1}
                               onChangeText={setPromptInput_1}
                               secureTextEntry={true}
@@ -695,6 +698,7 @@ export const Auth = ({ navigation }) => {
                               <TouchableOpacity onPress={() => { handleLogin(); setDisplayLoading(true); }}>
                                 <View style={{
                                   backgroundColor: THEME_COLOR_POSITIVE,
+                                  ...styles.button_Drop_Shadow,
                                   display: 'flex',
                                   justifyContent: 'flex-start',
                                   padding: HeightRatio(20),
@@ -724,6 +728,7 @@ export const Auth = ({ navigation }) => {
                               >
                                 <View style={{
                                   backgroundColor: THEME_COLOR_POSITIVE,
+                                  ...styles.button_Drop_Shadow,
                                   display: 'flex',
                                   justifyContent: 'flex-start',
                                   padding: HeightRatio(20),
@@ -759,6 +764,7 @@ export const Auth = ({ navigation }) => {
                                 onPress={() => setDisplayForgotPasswordContent(current => !current)}>
                                 <View style={{
                                   backgroundColor: THEME_COLOR_ATTENTION,
+                                  ...styles.button_Drop_Shadow,
                                   display: 'flex',
                                   justifyContent: 'flex-start',
                                   padding: HeightRatio(20),
@@ -808,6 +814,7 @@ export const Auth = ({ navigation }) => {
                                     <TouchableOpacity onPress={() => handleRequestReset()}>
                                       <View style={{
                                         backgroundColor: THEME_COLOR_POSITIVE,
+                                        ...styles.button_Drop_Shadow,
                                         display: 'flex',
                                         justifyContent: 'flex-start',
                                         padding: HeightRatio(20),
@@ -848,7 +855,8 @@ export const Auth = ({ navigation }) => {
 
                                   <TouchableOpacity onPress={() => setDisplayForgotPasswordForm(true)}>
                                     <View style={{
-                                      backgroundColor: THEME_FONT_COLOR_WHITE_LOW_OPACITY,
+                                      backgroundColor: 'white',
+                                      ...styles.button_Drop_Shadow,
                                       display: 'flex',
                                       justifyContent: 'flex-start',
                                       padding: HeightRatio(20),
@@ -859,7 +867,7 @@ export const Auth = ({ navigation }) => {
                                     }}>
                                       <Text
                                         style={{
-                                          color: THEME_FONT_COLOR_WHITE,
+                                          color: THEME_FONT_COLOR_BLACK,
                                           fontSize: HeightRatio(30),
                                           // fontWeight: 'bold',
                                           alignSelf: 'center',
@@ -877,7 +885,7 @@ export const Auth = ({ navigation }) => {
                                         type="text"
                                         name="resetoken"
                                         placeholder="Enter Reset Token"
-                                        placeholderTextColor="white"
+                                        placeholderTextColor="black"
                                         value={promptResetToken}
                                         onChangeText={setPromptResetToken}
                                         style={Styling.textInputStyle}
@@ -934,6 +942,7 @@ export const Auth = ({ navigation }) => {
                                         <TouchableOpacity onPress={() => handleResetPassword()}>
                                           <View style={{
                                             backgroundColor: THEME_COLOR_POSITIVE,
+                                            ...styles.button_Drop_Shadow,
                                             display: 'flex',
                                             justifyContent: 'flex-start',
                                             padding: HeightRatio(20),
@@ -990,7 +999,8 @@ export const Auth = ({ navigation }) => {
                                               style={{
                                                 borderRadius: HeightRatio(20),
                                                 height: HeightRatio(100),
-                                                width: HeightRatio(100)
+                                                width: HeightRatio(100),
+                                                ...styles.button_Drop_Shadow,
                                               }}
                                             >
                                               <FontAwesomeIcon
@@ -1010,7 +1020,7 @@ export const Auth = ({ navigation }) => {
                                             fontFamily: 'SofiaSansSemiCondensed-Regular'
                                           }}>Reset successful, try to Login!</Text>
                                           <TouchableOpacity
-                                            style={[Styling.button, Styling.buttonClose]}
+                                            style={[Styling.button, Styling.buttonClose], {...styles.button_Drop_Shadow,}}
                                             onPress={() => { setDisplayResetSuccessModal(!displayResetSuccessModal); setDisplayForgotPasswordContent(false); }}
                                           >
                                             <Text
@@ -1027,7 +1037,7 @@ export const Auth = ({ navigation }) => {
                                 <>
                                   <Text
                                     style={{
-                                      color: THEME_FONT_COLOR_WHITE,
+                                      color: THEME_FONT_COLOR_BLACK,
                                       alignSelf: 'center',
                                       fontSize: HeightRatio(30),
                                       margin: HeightRatio(20),
@@ -1040,6 +1050,7 @@ export const Auth = ({ navigation }) => {
                                   <TouchableOpacity onPress={() => { setNewUser(true) }}>
                                     <View style={{
                                       backgroundColor: THEME_COLOR_NEGATIVE,
+                                      ...styles.button_Drop_Shadow,
                                       display: 'flex',
                                       justifyContent: 'flex-start',
                                       padding: HeightRatio(20),
@@ -1080,7 +1091,7 @@ export const Auth = ({ navigation }) => {
 
         :
         <View
-          style={{ ...Styling.container, backgroundColor: THEME_COLOR_PURPLE }}
+          style={{ ...Styling.container, backgroundColor: THEME_COLOR_BACKDROP_DARK }}
         />
       }
       {displayNavbar &&
@@ -1122,5 +1133,20 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: WidthRatio(300)
-  }
+  },
+  button_Drop_Shadow: {
+    padding: 10,
+    borderRadius: 5,
+    ...Platform.select({
+        ios: {
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.3,
+            shadowRadius: 2,
+        },
+        android: {
+            elevation: 5,
+        },
+    }),
+}
 });

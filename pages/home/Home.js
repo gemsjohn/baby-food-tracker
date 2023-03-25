@@ -28,7 +28,8 @@ import {
     faBars,
     faCheck,
     faChartSimple,
-    faStar
+    faStar,
+    faTriangleExclamation
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -394,7 +395,7 @@ export const HomeScreen = ({ navigation }) => {
                                         setSelectedItem(item);
                                         setDisplayDetails(true)
                                     }}
-                                    style={{...styles.renderItem_Search_Result_Container_Plus, ...styles.button_Drop_Shadow}}
+                                    style={{ ...styles.renderItem_Search_Result_Container_Plus, ...styles.button_Drop_Shadow }}
                                 >
                                     <Text style={styles.renderItem_Search_Result_Container_Plus_Text}>
                                         +
@@ -469,7 +470,7 @@ export const HomeScreen = ({ navigation }) => {
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faArrowLeft}
-                                    style={{ color: THEME_FONT_GREY }}
+                                    style={{ color: THEME_FONT_COLOR_BLACK }}
                                     size={25}
                                 />
                             </TouchableOpacity>
@@ -515,7 +516,7 @@ export const HomeScreen = ({ navigation }) => {
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faArrowRight}
-                                    style={{ color: THEME_FONT_GREY }}
+                                    style={{ color: THEME_FONT_COLOR_BLACK }}
                                     size={25}
                                 />
                             </TouchableOpacity>
@@ -530,11 +531,11 @@ export const HomeScreen = ({ navigation }) => {
 
 
                                 <View style={{ flexDirection: 'row', marginTop: HeightRatio(30) }}>
-                                    <View 
+                                    <View
                                         style={{
                                             ...styles.homePrimary_TotalCalories,
-                                            width: windowWidth/5,
-                                            height: windowWidth/5,
+                                            width: windowWidth / 5,
+                                            height: windowWidth / 5,
                                             flexDirection: 'column'
                                         }}
                                     >
@@ -560,13 +561,13 @@ export const HomeScreen = ({ navigation }) => {
                                             style={{
                                                 ...styles.homePrimary_Add_Button,
                                                 ...styles.button_Drop_Shadow,
-                                                width: windowWidth/5,
-                                                height: windowWidth/5
+                                                width: windowWidth / 5,
+                                                height: windowWidth / 5
 
                                             }}
                                         >
                                             <View
-                                                style={{flexDirection: 'column'}}
+                                                style={{ flexDirection: 'column' }}
                                             >
                                                 <FontAwesomeIcon
                                                     icon={faSolid, faChartSimple}
@@ -610,13 +611,13 @@ export const HomeScreen = ({ navigation }) => {
                                             style={{
                                                 ...styles.homePrimary_Add_Button,
                                                 ...styles.button_Drop_Shadow,
-                                                width: windowWidth/5,
-                                                height: windowWidth/5
+                                                width: windowWidth / 5,
+                                                height: windowWidth / 5
 
                                             }}
                                         >
                                             <View
-                                                style={{flexDirection: 'column'}}
+                                                style={{ flexDirection: 'column' }}
                                             >
                                                 <FontAwesomeIcon
                                                     icon={faSolid, faStar}
@@ -659,12 +660,12 @@ export const HomeScreen = ({ navigation }) => {
                                         style={{
                                             ...styles.homePrimary_Add_Button,
                                             ...styles.button_Drop_Shadow,
-                                            width: windowWidth/5,
-                                            height: windowWidth/5
+                                            width: windowWidth / 5,
+                                            height: windowWidth / 5
                                         }}
                                     >
                                         <View
-                                            style={{flexDirection: 'column'}}
+                                            style={{ flexDirection: 'column' }}
                                         >
                                             <FontAwesomeIcon
                                                 icon={faSolid, faPlus}
@@ -691,8 +692,8 @@ export const HomeScreen = ({ navigation }) => {
                                     from={"main"}
                                 />
                                 <View style={{ flexDirection: 'row' }}>
-                                    
-                                    
+
+
                                 </View>
 
                             </>
@@ -784,7 +785,7 @@ export const HomeScreen = ({ navigation }) => {
                                     allowFontScaling={false}
                                 />
                                 <TouchableOpacity onPress={() => { handleSearch() }}>
-                                    <View style={{...styles.modalVisible_Search_Button, ...styles.button_Drop_Shadow}}>
+                                    <View style={{ ...styles.modalVisible_Search_Button, ...styles.button_Drop_Shadow }}>
                                         <Text
                                             style={styles.modalVisible_Search_Button_Text}
                                             allowFontScaling={false}
@@ -857,7 +858,7 @@ export const HomeScreen = ({ navigation }) => {
                                                             setDisplayTop100Foods(false)
                                                             handleSearch(data.name);
                                                         }}
-                                                        style={{...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow}}
+                                                        style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow }}
                                                     >
                                                         <Text style={styles.modalVisible_recentFoodData_Map_Plus_Text}>
                                                             +
@@ -878,7 +879,7 @@ export const HomeScreen = ({ navigation }) => {
                                         }}
                                     >
                                         <Text
-                                            style={{...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE}}
+                                            style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
                                             allowFontScaling={false}
                                         >
                                             Back
@@ -939,7 +940,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                             </View>
                                                                             <TouchableOpacity
                                                                                 onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); }}
-                                                                                style={{...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow}}
+                                                                                style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow }}
                                                                             >
                                                                                 <Text style={styles.modalVisible_recentFoodData_Map_Plus_Text}>
                                                                                     +
@@ -967,7 +968,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                                     setSelectRecentlyUsed(null)
                                                                                     setSelectRecentlyUsedData(null)
                                                                                 }}
-                                                                                style={{...styles.modalVisible_faX, ...styles.button_Drop_Shadow}}
+                                                                                style={{ ...styles.modalVisible_faX, ...styles.button_Drop_Shadow }}
                                                                             >
                                                                                 <FontAwesomeIcon
                                                                                     icon={faSolid, faX}
@@ -1034,15 +1035,15 @@ export const HomeScreen = ({ navigation }) => {
                                     {selectedFoodDataEntrered ?
                                         <>
                                             <TouchableOpacity onPress={() => { setModalVisible(false); }}>
-                                                <View 
-                                                    style={{ 
-                                                        ...styles.modalVisible_HalfButton, 
+                                                <View
+                                                    style={{
+                                                        ...styles.modalVisible_HalfButton,
                                                         ...styles.button_Drop_Shadow,
-                                                        backgroundColor: THEME_COLOR_NEGATIVE 
+                                                        backgroundColor: THEME_COLOR_NEGATIVE
                                                     }}
                                                 >
                                                     <Text
-                                                        style={{...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE}}
+                                                        style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
                                                         allowFontScaling={false}
                                                     >
                                                         Close
@@ -1055,11 +1056,11 @@ export const HomeScreen = ({ navigation }) => {
                                                     setModalVisible(false);
                                                 }}
                                             >
-                                                <View 
-                                                    style={{ 
+                                                <View
+                                                    style={{
                                                         ...styles.modalVisible_HalfButton,
                                                         ...styles.button_Drop_Shadow,
-                                                        backgroundColor: THEME_COLOR_POSITIVE 
+                                                        backgroundColor: THEME_COLOR_POSITIVE
                                                     }}
                                                 >
                                                     <Text
@@ -1073,9 +1074,9 @@ export const HomeScreen = ({ navigation }) => {
                                         </>
                                         :
                                         <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                            <View style={{...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow}}>
+                                            <View style={{ ...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow }}>
                                                 <Text
-                                                    style={{...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE}}
+                                                    style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
                                                     allowFontScaling={false}
                                                 >
                                                     Close
@@ -1128,9 +1129,9 @@ export const HomeScreen = ({ navigation }) => {
                                         setSelectedCalendarModalDate('')
                                     }}
                                 >
-                                    <View style={{...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow}}>
+                                    <View style={{ ...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow }}>
                                         <Text
-                                            style={{...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE}}
+                                            style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
                                             allowFontScaling={false}
                                         >
                                             Close
@@ -1189,7 +1190,7 @@ export const HomeScreen = ({ navigation }) => {
                                     >
                                         <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE }}>
                                             <Text
-                                                style={{...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE}}
+                                                style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
                                                 allowFontScaling={false}
                                             >
                                                 Close
@@ -1226,6 +1227,31 @@ export const HomeScreen = ({ navigation }) => {
                         }}
                     >
                         <View style={styles.modalVisible_Container}>
+                            <View 
+                                style={{
+                                    flexDirection: 'row',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faSolid, faTriangleExclamation}
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        justifyContent: 'center',
+                                        alignSelf: 'center',
+                                        marginRight: HeightRatio(20)
+                                    }}
+                                    size={30}
+                                />
+                                <Text
+                                    style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
+                                    allowFontScaling={false}
+                                >
+                                    Metrics: Under Construction
+                                </Text>
+                            </View>
                             <TouchableOpacity
                                 onPress={() => {
                                     setMetricsModalVisible(false);
@@ -1233,7 +1259,7 @@ export const HomeScreen = ({ navigation }) => {
                             >
                                 <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE }}>
                                     <Text
-                                        style={{...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE}}
+                                        style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
                                         allowFontScaling={false}
                                     >
                                         Close
@@ -1384,9 +1410,9 @@ const styles = StyleSheet.create({
         // backgroundColor: THEME_COLOR_PURPLE_LOW_OPACITY,
     },
     homePrimary_Date_Current_Text: {
-        color: THEME_FONT_GREY,
+        color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(30),
-        fontFamily: 'GochiHand_400Regular',
+        fontFamily: 'SofiaSansSemiCondensed-Regular',
         marginLeft: HeightRatio(10),
         marginRight: HeightRatio(10)
     },
@@ -1599,7 +1625,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         height: HeightRatio(505),
-        backgroundColor: THEME_COLOR_PURPLE
+        backgroundColor: THEME_COLOR_BACKDROP_DARK
     },
     button_Drop_Shadow: {
         padding: 10,

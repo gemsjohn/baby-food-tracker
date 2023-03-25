@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef, useCallback } from 'react';
-import { Button, View, TouchableOpacity, Text, TextInput, StyleSheet, Modal, PixelRatio } from "react-native";
+import { Button, View, TouchableOpacity, Text, TextInput, StyleSheet, Modal, PixelRatio, Image } from "react-native";
 import { Dimensions } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faSolid, faAddressCard, faEnvelope, faSackDollar, faStar, faX, faPenToSquare, faCopy } from '@fortawesome/free-solid-svg-icons'
@@ -38,6 +38,8 @@ import {
     THEME_COLOR_PURPLE_LOW_OPACITY,
     THEME_COLOR_BLACKOUT
 } from '../../COLOR';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 async function deleteKey(key) {
     await SecureStore.deleteItemAsync(key);
@@ -110,7 +112,8 @@ export const UserDetails = (props) => {
             edit: showEditableFieldUsername,
             setedit: setShowEditableFieldUsername,
             prompt: promptUsernameInput,
-            setprompt: setPromptUsernameInput
+            setprompt: setPromptUsernameInput,
+            image: require('../../assets/grape_img.png')
         },
         {
             title: 'Email',
@@ -118,7 +121,8 @@ export const UserDetails = (props) => {
             edit: showEditableFieldEmail,
             setedit: setShowEditableFieldEmail,
             prompt: promptEmailInput,
-            setprompt: setPromptEmailInput
+            setprompt: setPromptEmailInput,
+            image: require('../../assets/strawberry_img.png')
         },
         {
             title: 'Password',
@@ -126,7 +130,8 @@ export const UserDetails = (props) => {
             edit: showEditableFieldPassword,
             setedit: setShowEditableFieldPassword,
             prompt: promptPasswordInput1,
-            setprompt: setPromptPasswordInput1
+            setprompt: setPromptPasswordInput1,
+            image: require('../../assets/orange_img.png')
         },
         {
             title: 'Delete Account',
@@ -134,7 +139,8 @@ export const UserDetails = (props) => {
             edit: showEditableFieldDelete,
             setedit: setShowEditableFieldDelete,
             prompt: promptDeleteInput,
-            setprompt: setPromptDeleteInput
+            setprompt: setPromptDeleteInput,
+            image: require('../../assets/cherry_img.png')
         }
     ]
 
@@ -219,36 +225,47 @@ export const UserDetails = (props) => {
                         setPromptDeleteInput("");
                     }}
                 >
-                    <View
-                        style={{
-                            borderRadius: HeightRatio(20),
-                            padding: HeightRatio(15),
-                            width: windowWidth - WidthRatio(50),
-                            flexDirection: 'column',
-                            margin: HeightRatio(5),
-                            alignSelf: 'center',
-                            backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY
-                        }}
-
-                    >
+                    <LinearGradient
+                            colors={['#3b8ba6', '#2991ea']}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            style={{
+                                borderRadius: HeightRatio(20),
+                                padding: HeightRatio(15),
+                                width: windowWidth - WidthRatio(50),
+                                flexDirection: 'column',
+                                margin: HeightRatio(5),
+                                alignSelf: 'center',
+                                backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY
+                            }}
+                        >
                         
                         <View style={{ flexDirection: 'column', }}>
-                            <Text 
-                                style={{
-                                    color: THEME_FONT_COLOR_WHITE,
-                                    fontSize: HeightRatio(28),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                    margin: HeightRatio(5)
-                                }} 
-                                allowFontScaling={false}
-                            >{EditableFields[i].title}</Text>
+                            <View style={{flexDirection: 'row'}}>
+                                <Image
+                                    source={EditableFields[i].image}
+                                    style={{
+                                        height: HeightRatio(25),
+                                        width: HeightRatio(25)
+                                    }}
+                                />
+                                <Text 
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        fontSize: HeightRatio(25),
+                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        margin: HeightRatio(5)
+                                    }} 
+                                    allowFontScaling={false}
+                                >{EditableFields[i].title}</Text>
+                            </View>
 
                             <Text
                                 style={{
                                     color: THEME_COLOR_ATTENTION,
                                     fontSize: HeightRatio(20),
                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                    margin: HeightRatio(10),
+                                    margin: HeightRatio(2),
                                     marginLeft: HeightRatio(20),
                                     width: WidthRatio(150)
                                 }}
@@ -273,6 +290,7 @@ export const UserDetails = (props) => {
                                         borderRadius: HeightRatio(10),
                                         flexDirection: 'row',
                                         backgroundColor: THEME_COLOR_POSITIVE,
+                                        ...styles.button_Drop_Shadow
                                     }}
                                 >
                                     <Text
@@ -378,7 +396,8 @@ export const UserDetails = (props) => {
                                                                     justifyContent: 'center',
                                                                     margin: HeightRatio(10),
                                                                     borderTopRightRadius: HeightRatio(20),
-                                                                    borderBottomRightRadius: HeightRatio(20)
+                                                                    borderBottomRightRadius: HeightRatio(20),
+                                                                    ...styles.button_Drop_Shadow
                                                                 }}
                                                             >
                                                                 <Text
@@ -472,7 +491,8 @@ export const UserDetails = (props) => {
                                                                 justifyContent: 'center',
                                                                 margin: HeightRatio(10),
                                                                 borderTopRightRadius: HeightRatio(20),
-                                                                borderBottomRightRadius: HeightRatio(20)
+                                                                borderBottomRightRadius: HeightRatio(20),
+                                                                ...styles.button_Drop_Shadow
                                                             }}
                                                         >
                                                             <Text
@@ -516,7 +536,7 @@ export const UserDetails = (props) => {
                             :
                             null
                         }
-                    </View>
+                    </LinearGradient>
                 </TouchableOpacity>
             </View>
 
@@ -640,5 +660,20 @@ const styles = StyleSheet.create({
         color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(30),
         fontWeight: 'bold'
+    },
+    button_Drop_Shadow: {
+        padding: 10,
+        borderRadius: 5,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.3,
+                shadowRadius: 2,
+            },
+            android: {
+                elevation: 5,
+            },
+        }),
     }
 });

@@ -269,19 +269,19 @@ export const SecureStorage = () => {
 
             <View style={{ marginTop: 10, marginBottom: 10 }}>
               <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                <TouchableOpacity style={{ backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('1')}>
+                <TouchableOpacity style={{ ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('1')}>
                   <Text
                     style={{ color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center' }}
                     allowFontScaling={false}
                   >1</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('2')}>
+                <TouchableOpacity style={{ ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('2')}>
                   <Text
                     style={{ color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                     allowFontScaling={false}
                   >2</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('3')}>
+                <TouchableOpacity style={{ ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('3')}>
                   <Text
                     style={{ color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                     allowFontScaling={false}
@@ -289,19 +289,19 @@ export const SecureStorage = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                <TouchableOpacity style={{ backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('4')}>
+                <TouchableOpacity style={{ ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('4')}>
                   <Text
                     style={{ color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                     allowFontScaling={false}
                   >4</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('5')}>
+                <TouchableOpacity style={{ ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('5')}>
                   <Text
                     style={{ color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                     allowFontScaling={false}
                   >5</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('6')}>
+                <TouchableOpacity style={{ ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('6')}>
                   <Text
                     style={{ color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                     allowFontScaling={false}
@@ -309,19 +309,19 @@ export const SecureStorage = () => {
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                <TouchableOpacity style={{ backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('7')}>
+                <TouchableOpacity style={{ ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('7')}>
                   <Text
                     style={{ color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                     allowFontScaling={false}
                   >7</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('8')}>
+                <TouchableOpacity style={{ ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('8')}>
                   <Text
                     style={{ color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                     allowFontScaling={false}
                   >8</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('9')}>
+                <TouchableOpacity style={{ ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('9')}>
                   <Text
                     style={{ color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                     allowFontScaling={false}
@@ -330,20 +330,20 @@ export const SecureStorage = () => {
               </View>
               <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                 <TouchableOpacity
-                  style={{ backgroundColor: THEME_COLOR_NEGATIVE, height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  style={{ ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE, height: HeightRatio(70), width: HeightRatio(70), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   onPress={() => clearKeyCode()}>
                   <Text style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(20), alignSelf: 'center', fontFamily: 'SofiaSansSemiCondensed-ExtraBold' }}
                     allowFontScaling={false}
                   >Clear</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('0')}>
+                <TouchableOpacity style={{ ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_ATTENTION, height: HeightRatio(70), width: HeightRatio(70), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }} onPress={() => handleKeyPress('0')}>
                   <Text
                     style={{ color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(40), fontFamily: 'SofiaSansSemiCondensed-Regular', alignSelf: 'center', }}
                     allowFontScaling={false}
                   >0</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={{ backgroundColor: THEME_COLOR_POSITIVE, height: HeightRatio(70), width: HeightRatio(70), borderRadius: HeightRatio(20), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  style={{ ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_POSITIVE, height: HeightRatio(70), width: HeightRatio(70), margin: HeightRatio(10), display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   onPress={() => setKeyCode()}>
                   <Text style={{ color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(20), alignSelf: 'center', fontFamily: 'SofiaSansSemiCondensed-ExtraBold' }}
                     allowFontScaling={false}
@@ -368,3 +368,21 @@ export const SecureStorage = () => {
 
   );
 }
+
+const styles = StyleSheet.create({
+  button_Drop_Shadow: {
+      padding: 10,
+      borderRadius: 5,
+      ...Platform.select({
+          ios: {
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.3,
+              shadowRadius: 2,
+          },
+          android: {
+              elevation: 5,
+          },
+      }),
+  }
+});

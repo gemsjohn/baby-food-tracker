@@ -156,6 +156,7 @@ export const usePullDailyContent = (input) => {
 
             ID = removeBackslashes(ID)
             amount = removeBackslashes(amount);
+            console.log(amount)
 
             emotionIndex.push({item: item, emoji: unicodeEscape, schedule: removeQuotes(sampleSchedule_v1), nutrients: sample_v3, measurement: removeQuotes(amount), id: removeQuotes(ID)})
 

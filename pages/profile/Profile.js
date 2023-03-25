@@ -45,16 +45,22 @@ import {
     ImageBackground,
     Image,
     RefreshControl,
-    Keyboard
+    Keyboard,
+    StyleSheet
 } from 'react-native';
 import {
     faSolid,
     faFlagCheckered,
     faSliders,
     faGamepad,
-    faX
+    faX,
+    faToggleOn,
+    faToggleOff,
+    faCircleMinus
 } from '@fortawesome/free-solid-svg-icons'
 import { SecureStorage } from './SecureStorage';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -185,11 +191,12 @@ export const ProfileScreen = ({ navigation }) => {
                                                 }}
                                             />
                                             <View style={{}}>
-                                                <View style={{ flexDirection: 'column', marginTop: HeightRatio(40), alignSelf: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <View style={{ flexDirection: 'column', marginTop: HeightRatio(20), alignSelf: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                                     <Text
                                                         style={{
                                                             ...Styling.modalScoringVarText,
                                                             fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                            color: THEME_FONT_COLOR_BLACK
                                                         }}
                                                         allowFontScaling={false}>
                                                         User Details
@@ -305,74 +312,111 @@ export const ProfileScreen = ({ navigation }) => {
 
 
                                                 </View>
-
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        deleteKey('cosmicKey');
-                                                        setTimeout(() => {
-                                                            setDisplaySetUpCosmicKeyModal(true)
-                                                        }, 500)
-                                                    }}
-                                                    style={Styling.modalWordButton}>
-                                                    <View style={{
-                                                        backgroundColor: THEME_COLOR_NEGATIVE,
+                                                <LinearGradient
+                                                    colors={['#f64f69', '#b81aeb']}
+                                                    start={{ x: 0, y: 0 }}
+                                                    end={{ x: 1, y: 1 }}
+                                                    style={{
+                                                        ...styles.button_Drop_Shadow,
                                                         display: 'flex',
                                                         justifyContent: 'flex-start',
-                                                        padding: HeightRatio(20),
-                                                        borderRadius: HeightRatio(10),
+                                                        padding: HeightRatio(5),
+                                                        borderRadius: HeightRatio(100),
                                                         alignSelf: 'center',
-                                                        width: windowWidth - WidthRatio(50)
-                                                    }}>
-                                                        <Text
-                                                            style={{
-                                                                color: THEME_FONT_COLOR_WHITE,
-                                                                fontSize: HeightRatio(30),
-                                                                alignSelf: 'center',
-                                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                            }}
-                                                            allowFontScaling={false}
-                                                        >
-                                                            Remove/Reset Keycode
-                                                        </Text>
-                                                    </View>
-                                                </TouchableOpacity>
-
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        deleteKey('cosmicKey');
-
-                                                        setMainState({
-                                                            bearerToken: null,
-                                                            userID: null,
-                                                            authState: false
-                                                        })
-                                                        navigation.dispatch(resetActionAuth)
+                                                        width: windowWidth - WidthRatio(50),
+                                                        margin: HeightRatio(10)
                                                     }}
-                                                    style={{ ...Styling.modalWordButton, marginTop: 0 }}
                                                 >
-                                                    <View style={{
-                                                        backgroundColor: THEME_COLOR_NEGATIVE,
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            deleteKey('cosmicKey');
+                                                            setTimeout(() => {
+                                                                setDisplaySetUpCosmicKeyModal(true)
+                                                            }, 500)
+                                                        }}
+                                                        style={Styling.modalWordButton}>
+                                                        <View
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                flexDirection: 'row'
+                                                            }}
+                                                        >
+                                                            <FontAwesomeIcon
+                                                                icon={faSolid, faCircleMinus}
+                                                                style={{ color: THEME_FONT_COLOR_WHITE, marginRight: HeightRatio(20) }}
+                                                                size={40}
+                                                            />
+                                                            <Text
+                                                                style={{
+                                                                    color: THEME_FONT_COLOR_WHITE,
+                                                                    fontSize: HeightRatio(24),
+                                                                    alignSelf: 'center',
+                                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold'
+                                                                }}
+                                                                allowFontScaling={false}
+                                                            >
+                                                                Remove/Reset Keycode
+                                                            </Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                </LinearGradient>
+                                                <LinearGradient
+                                                    colors={['#2990ef', '#b81aeb']}
+                                                    start={{ x: 0, y: 0 }}
+                                                    end={{ x: 1, y: 1 }}
+                                                    style={{
+                                                        ...styles.button_Drop_Shadow,
                                                         display: 'flex',
                                                         justifyContent: 'flex-start',
-                                                        padding: HeightRatio(20),
-                                                        borderRadius: HeightRatio(10),
+                                                        padding: HeightRatio(5),
+                                                        borderRadius: HeightRatio(100),
                                                         alignSelf: 'center',
-                                                        width: windowWidth - WidthRatio(50)
-                                                    }}>
+                                                        width: windowWidth - WidthRatio(50),
+                                                        margin: HeightRatio(10)
+                                                    }}
+                                                >
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            deleteKey('cosmicKey');
+
+                                                            setMainState({
+                                                                bearerToken: null,
+                                                                userID: null,
+                                                                authState: false
+                                                            })
+                                                            navigation.dispatch(resetActionAuth)
+                                                        }}
+                                                        style={{
+                                                            ...Styling.modalWordButton,
+                                                            marginTop: 0,
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center'
+                                                        }}
+                                                    >
+
+                                                        <FontAwesomeIcon
+                                                            icon={faSolid, faToggleOff}
+                                                            style={{ color: THEME_FONT_COLOR_WHITE, marginRight: HeightRatio(20) }}
+                                                            size={40}
+                                                        />
                                                         <Text
                                                             style={{
                                                                 color: THEME_FONT_COLOR_WHITE,
-                                                                fontSize: HeightRatio(30),
+                                                                fontSize: HeightRatio(24),
                                                                 // fontWeight: 'bold',
                                                                 alignSelf: 'center',
-                                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold'
                                                             }}
                                                             allowFontScaling={false}
                                                         >
                                                             Switch User
                                                         </Text>
-                                                    </View>
-                                                </TouchableOpacity>
+                                                    </TouchableOpacity>
+                                                </LinearGradient>
+
 
                                             </View>
 
@@ -394,7 +438,7 @@ export const ProfileScreen = ({ navigation }) => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         height: HeightRatio(505),
-                        backgroundColor: THEME_COLOR_PURPLE
+                        backgroundColor: THEME_COLOR_BACKDROP_DARK
                     }}
                 >
                     <Loading />
@@ -458,7 +502,8 @@ export const ProfileScreen = ({ navigation }) => {
                                     padding: HeightRatio(20),
                                     borderRadius: HeightRatio(10),
                                     alignSelf: 'center',
-                                    width: windowWidth - WidthRatio(150)
+                                    width: windowWidth - WidthRatio(150),
+                                    ...styles.button_Drop_Shadow,
                                 }}>
                                     <Text
                                         style={{
@@ -502,3 +547,21 @@ export const ProfileScreen = ({ navigation }) => {
         </>
     )
 }
+
+const styles = StyleSheet.create({
+    button_Drop_Shadow: {
+        padding: 10,
+        borderRadius: 5,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.3,
+                shadowRadius: 2,
+            },
+            android: {
+                elevation: 5,
+            },
+        }),
+    }
+});

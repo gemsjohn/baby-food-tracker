@@ -35,12 +35,11 @@ import {
 export const SelectedFoodDetails = (props) => {
     const { mainState, setMainState } = useContext(MainStateContext);
     const options = [
-        "Cups",
-        "Milligrams",
-        "Millileters",
-        "Servings",
+        "Milliliters",
+        "Ounces",
+        "Teaspoons",
         "Tablespoons",
-        "Teaspoons"
+        "Cups",
     ]
     const options_time = [
         "First Thing",

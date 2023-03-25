@@ -63,7 +63,7 @@ export const Loading = () => {
             <Text
                 style={{
                     fontFamily: 'SofiaSansSemiCondensed-Regular',
-                    color: THEME_FONT_COLOR_WHITE,
+                    color: THEME_FONT_COLOR_BLACK,
                     fontSize: HeightRatio(50),
                     top: HeightRatio(20),
                     textAlign: 'center',

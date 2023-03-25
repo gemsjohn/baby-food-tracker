@@ -205,7 +205,7 @@ export const Styling = StyleSheet.create({
         color: 'rgba(0, 0, 0, 0.85)',
       },
       textInputStyle: {
-        backgroundColor: 'transparent',
+        backgroundColor: 'rgba(0, 0, 0, 0.25)',
         color: 'white',
         display: 'flex',
         justifyContent: 'flex-start',
