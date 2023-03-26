@@ -90,7 +90,7 @@ export const HomeScreen = ({ navigation }) => {
     const [selectedFoodDataEntrered, setSelectedFoodDataEntrered] = useState(false);
     const [displayTop100Foods, setDisplayTop100Foods] = useState(false)
     const [metricsModalVisible, setMetricsModalVisible] = useState(false)
-
+    const [displayChooseAnotherOptionModal, setDisplayChooseAnotherOptionModal] = useState(false)
     const onRefresh = useCallback(() => {
         setLoading(true)
         refetch();
@@ -265,6 +265,9 @@ export const HomeScreen = ({ navigation }) => {
                     if (response.data.result[0] === "ERROR") {
                         console.log("ERROR")
                     } else {
+                        const removeQuotes = (str) => {
+                            return str.replace(/^"(.*)"$/, '$1');
+                        }
                         console.log("# - getNutritionvalue:")
                         console.log(mainState.current.selectedFood_Quantity)
                         console.log(mainState.current.selectedFood_Measurement)
@@ -272,28 +275,38 @@ export const HomeScreen = ({ navigation }) => {
                         console.log(mainState.current.selectedFood_Emotion)
                         console.log("# --------------------------------------")
 
-                        const nutrients_JSON = JSON.stringify(response.data.result);
-                        const updateUserEntry = async () => {
-
-                            let itemData = input.description;
-
-                            if (input.description == undefined && recentFoodData[selectRecentlyUsed].item != '') {
-                                itemData = recentFoodData[selectRecentlyUsed].item;
-                            }
-
-                            await addEntry({
-                                variables: {
-                                    date: `${currentDateReadable}`,
-                                    schedule: `${mainState.current.selectedFood_Schedule}`,
-                                    item: `${itemData}`,
-                                    amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
-                                    emotion: `${mainState.current.selectedFood_Emotion}`,
-                                    nutrients: `${nutrients_JSON}`
-                                }
-                            });
+                        let nutrients_JSON = JSON.stringify(response.data.result);
+                        console.log(nutrients_JSON)
+                        
+                        nutrients_JSON = removeQuotes(nutrients_JSON)
+                        if (nutrients_JSON == "not found") {
+                            setDisplayChooseAnotherOptionModal(true)
+                            console.log("Choose Another Option!!")
                             onRefresh();
+                        } else {
+                            const updateUserEntry = async () => {
+
+                                let itemData = input.description;
+    
+                                if (input.description == undefined && recentFoodData[selectRecentlyUsed].item != '') {
+                                    itemData = recentFoodData[selectRecentlyUsed].item;
+                                }
+    
+                                await addEntry({
+                                    variables: {
+                                        date: `${currentDateReadable}`,
+                                        schedule: `${mainState.current.selectedFood_Schedule}`,
+                                        item: `${itemData}`,
+                                        amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
+                                        emotion: `${mainState.current.selectedFood_Emotion}`,
+                                        nutrients: `${nutrients_JSON}`
+                                    }
+                                });
+                                onRefresh();
+                            }
+                            updateUserEntry();
                         }
-                        updateUserEntry();
+                        
                     }
                 })
                 .catch((error) => {
@@ -1255,6 +1268,60 @@ export const HomeScreen = ({ navigation }) => {
                             <TouchableOpacity
                                 onPress={() => {
                                     setMetricsModalVisible(false);
+                                }}
+                            >
+                                <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE }}>
+                                    <Text
+                                        style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
+                                        allowFontScaling={false}
+                                    >
+                                        Close
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+
+                        </View>
+                    </Modal>
+
+                    {/* displayChooseAnotherOptionModal */}
+
+                    <Modal
+                        visible={displayChooseAnotherOptionModal}
+                        animationType="slide"
+                        transparent={true}
+                        style={{
+                            width: windowWidth,
+                        }}
+                    >
+                        <View style={styles.modalVisible_Container}>
+                            <View 
+                                style={{
+                                    flexDirection: 'column',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faSolid, faTriangleExclamation}
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        justifyContent: 'center',
+                                        alignSelf: 'center',
+                                        marginRight: HeightRatio(20)
+                                    }}
+                                    size={30}
+                                />
+                                <Text
+                                    style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(20) }}
+                                    allowFontScaling={false}
+                                >
+                                    Nutritional details for that item cannot be found. Choose another similar option.
+                                </Text>
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setDisplayChooseAnotherOptionModal(false);
                                 }}
                             >
                                 <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE }}>
