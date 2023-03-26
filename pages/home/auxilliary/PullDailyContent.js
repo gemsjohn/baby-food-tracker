@@ -116,6 +116,8 @@ export const usePullDailyContent = (input) => {
             let amount = JSON.stringify(input[i].entry[0].amount);
             let item = JSON.stringify(input[i].entry[0].item);
             let emotion = JSON.stringify(input[i].entry[0].emotion);
+            let foodGroup = JSON.stringify(input[i].entry[0].foodGroup);
+
 
             function removeBackslashes(str) {
                 let pattern = /(?<!\\)\\(?!\\)/g;
@@ -156,9 +158,12 @@ export const usePullDailyContent = (input) => {
 
             ID = removeBackslashes(ID)
             amount = removeBackslashes(amount);
+            foodGroup = removeBackslashes(foodGroup);
+            foodGroup = removeQuotes(foodGroup);
+            foodGroup = removeQuotes(foodGroup);
             console.log(amount)
 
-            emotionIndex.push({item: item, emoji: unicodeEscape, schedule: removeQuotes(sampleSchedule_v1), nutrients: sample_v3, measurement: removeQuotes(amount), id: removeQuotes(ID)})
+            emotionIndex.push({item: item, emoji: unicodeEscape, schedule: removeQuotes(sampleSchedule_v1), nutrients: sample_v3, measurement: removeQuotes(amount), id: removeQuotes(ID), foodGroup: foodGroup})
 
 
             if (sampleSchedule_v2 == "First Thing") {

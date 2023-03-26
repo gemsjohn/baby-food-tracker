@@ -20,6 +20,7 @@ export const GET_ME = gql`
         amount
         emotion
         nutrients
+        foodGroup
       }
     }
     resetToken
@@ -48,6 +49,7 @@ export const GET_USER_BY_ID = gql`
         amount
         emotion
         nutrients
+        foodGroup
       }
     }
     resetToken
@@ -76,6 +78,7 @@ export const GET_USERS = gql`
         amount
         emotion
         nutrients
+        foodGroup
       }
     }
     resetToken
@@ -99,6 +102,7 @@ export const TRACKERS = gql`
       amount
       emotion
       nutrients
+      foodGroup
     }
   }
 }
@@ -110,6 +114,7 @@ export const FOOD = gql`
       _id
       item
       nutrients
+      foodGroup
     }
   }
 `;

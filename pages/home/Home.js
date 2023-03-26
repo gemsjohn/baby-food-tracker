@@ -206,6 +206,7 @@ export const HomeScreen = ({ navigation }) => {
                     console.log("ERROR")
                 } else {
                     setFoodData(response.data.result);
+                    console.log(response.data.result)
                     setDisplayLoading(false)
                 }
             })
@@ -230,6 +231,8 @@ export const HomeScreen = ({ navigation }) => {
         if (recentFoodData != [] && selectRecentlyUsed != null && recentFoodData[selectRecentlyUsed].number == data.quantity && recentFoodData[selectRecentlyUsed].measurement == data.measurement) {
             console.log("# - getNutritionValue / recentFoodData[selectRecentlyUsed]")
             const nutrients_JSON = JSON.stringify(recentFoodData[selectRecentlyUsed].nutrients);
+            const foodGroup_JSON = JSON.stringify(recentFoodData[selectRecentlyUsed].foodGroup);
+
             console.log(input)
             console.log(data.search)
             const updateUserEntry = async () => {
@@ -240,7 +243,8 @@ export const HomeScreen = ({ navigation }) => {
                         item: `${recentFoodData[selectRecentlyUsed].item}`,
                         amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
                         emotion: `${mainState.current.selectedFood_Emotion}`,
-                        nutrients: `${nutrients_JSON}`
+                        nutrients: `${nutrients_JSON}`,
+                        foodGroup: `${foodGroup_JSON}`
                     }
                 });
                 onRefresh();
@@ -275,8 +279,13 @@ export const HomeScreen = ({ navigation }) => {
                         console.log(mainState.current.selectedFood_Emotion)
                         console.log("# --------------------------------------")
 
-                        let nutrients_JSON = JSON.stringify(response.data.result);
+                        let nutrients_JSON = JSON.stringify(response.data.result.conversion);
                         console.log(nutrients_JSON)
+                        let foodGroup_JSON = JSON.stringify(response.data.result.foodGroup.group);
+                        foodGroup_JSON = removeQuotes(foodGroup_JSON);
+                        foodGroup_JSON = foodGroup_JSON.toLowerCase();
+                        console.log("# - foodGroup:")
+                        console.log(foodGroup_JSON)
                         
                         nutrients_JSON = removeQuotes(nutrients_JSON)
                         if (nutrients_JSON == "not found") {
@@ -299,7 +308,8 @@ export const HomeScreen = ({ navigation }) => {
                                         item: `${itemData}`,
                                         amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
                                         emotion: `${mainState.current.selectedFood_Emotion}`,
-                                        nutrients: `${nutrients_JSON}`
+                                        nutrients: `${nutrients_JSON}`,
+                                        foodGroup: `${foodGroup_JSON}`
                                     }
                                 });
                                 onRefresh();
@@ -344,6 +354,12 @@ export const HomeScreen = ({ navigation }) => {
             amount = removeQuotes(amount)
             let emotion = JSON.stringify(data_array[i].entry[0].emotion);
             emotion = removeQuotes(emotion)
+            let foodGroup = JSON.stringify(data_array[i].entry[0].foodGroup);
+            foodGroup = removeBackslashes(foodGroup);
+            foodGroup = removeQuotes(foodGroup);
+            foodGroup = removeQuotes(foodGroup);
+
+            console.log("# - FOOD: " + foodGroup)
             // console.log(emotion)
 
             const codePoints = emotion
@@ -377,7 +393,7 @@ export const HomeScreen = ({ navigation }) => {
 
             const result = separateMeasurement(amount);
 
-            let item_amount = { item: item, amount: amount, number: result.number, measurement: result.measurement, emotion: unicodeEscape, nutrients: nutrients, id: id }
+            let item_amount = { item: item, amount: amount, number: result.number, measurement: result.measurement, emotion: unicodeEscape, nutrients: nutrients, id: id, foodGroup: foodGroup }
             setRecentFoodData(prev => [...prev, item_amount])
         }
     }
@@ -952,7 +968,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                                 </View>
                                                                             </View>
                                                                             <TouchableOpacity
-                                                                                onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); }}
+                                                                                onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data);  console.log(data) }}
                                                                                 style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow }}
                                                                             >
                                                                                 <Text style={styles.modalVisible_recentFoodData_Map_Plus_Text}>
@@ -974,7 +990,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                                 >
                                                                                     {data.item}
                                                                                 </Text>
-                                                                                <SelectedFoodDetails textInputValue={`${data.number}`} selectedItem={`${data.measurement}`} selectedEmotion={`${data.emotion}`} />
+                                                                                <SelectedFoodDetails textInputValue={`${data.number}`} selectedItem={`${data.measurement}`} />
                                                                             </View>
                                                                             <TouchableOpacity
                                                                                 onPress={() => {
@@ -1047,7 +1063,7 @@ export const HomeScreen = ({ navigation }) => {
                                 >
                                     {selectedFoodDataEntrered ?
                                         <>
-                                            <TouchableOpacity onPress={() => { setModalVisible(false); }}>
+                                            <TouchableOpacity onPress={() => { setModalVisible(false); setDisplayLoading(false);}}>
                                                 <View
                                                     style={{
                                                         ...styles.modalVisible_HalfButton,
@@ -1086,7 +1102,7 @@ export const HomeScreen = ({ navigation }) => {
                                             </TouchableOpacity>
                                         </>
                                         :
-                                        <TouchableOpacity onPress={() => setModalVisible(false)}>
+                                        <TouchableOpacity onPress={() => {setModalVisible(false); setDisplayLoading(false);}}>
                                             <View style={{ ...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow }}>
                                                 <Text
                                                     style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}

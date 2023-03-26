@@ -354,6 +354,7 @@ export const DailyScheduleSimplified = (props) => {
 
 
     const displaySimplifiedEntries = (data, emotions) => {
+        console.log(emotions)
         const options_time = [
             "First Thing",
             "Breakfast",
@@ -472,8 +473,8 @@ export const DailyScheduleSimplified = (props) => {
                                     <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
 
                                         <View style={styles.scheduleButton_subContent_NutritionDetails_Container_0}>
-                                            <View style={{ backgroundColor: THEME_LIGHT_GREEN, height: '100%', width: WidthRatio(140), position: 'absolute', zIndex: -10, borderTopLeftRadius: HeightRatio(10), borderBottomLeftRadius: HeightRatio(10) }} />
-                                            <View style={{ backgroundColor: '#ffcc42', height: '100%', width: WidthRatio(80), position: 'absolute', left: WidthRatio(140), zIndex: -10, borderTopRightRadius: HeightRatio(10), borderBottomRightRadius: HeightRatio(10) }} />
+                                            <View style={{ backgroundColor: THEME_LIGHT_GREEN, height: '100%', width: WidthRatio(140), position: 'absolute', zIndex: -10, borderTopLeftRadius: HeightRatio(4), borderBottomLeftRadius: HeightRatio(4) }} />
+                                            <View style={{ backgroundColor: '#ffcc42', height: '100%', width: WidthRatio(80), position: 'absolute', left: WidthRatio(140), zIndex: -10, borderTopRightRadius: HeightRatio(4), borderBottomRightRadius: HeightRatio(4) }} />
                                             {Object.keys(emotions[j].nutrients).map((key) => (
                                                 <View
                                                     style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}
@@ -513,7 +514,18 @@ export const DailyScheduleSimplified = (props) => {
                                                 // justifyContent: 'center'
                                             }}
                                         >
-                                            <View style={styles.scheduleButton_subContent_Container_Button_DataAmount_Container}>
+                                            {/* '#ec546d', '#d05bb6' */}
+                                            <View style={{...styles.scheduleButton_subContent_Container_Button_DataAmount_Container, backgroundColor: '#102f52'}}>
+                                                <Text
+                                                    style={{
+                                                        ...styles.scheduleButton_subContent_Container_Button_Text,
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    {emotions[j].foodGroup.toUpperCase()}
+                                                </Text>
+                                            </View>
+                                            <View style={{...styles.scheduleButton_subContent_Container_Button_DataAmount_Container}}>
                                                 <Text
                                                     style={{
                                                         ...styles.scheduleButton_subContent_Container_Button_Text,
@@ -905,7 +917,7 @@ const styles = StyleSheet.create({
         margin: HeightRatio(5),
         // marginLeft: HeightRatio(10),
         padding: HeightRatio(5),
-        borderRadius: HeightRatio(10),
+        borderRadius: HeightRatio(4),
         backgroundColor: '#b894e9',
         display: 'flex',
         alignItems: 'center',

@@ -58,7 +58,7 @@ export const SelectedFoodDetails = (props) => {
     const [textInputValue, setTextInputValue] = useState(props.textInputValue || null);
     const [selectedItem, setSelectedItem] = useState(props.selectedItem || null);
     const [selectedTime, setSelectedTime] = useState(null);
-    const [selectedEmotion, setSelectedEmotion] = useState(props.selectedEmotion || null);
+    const [selectedEmotion, setSelectedEmotion] = useState(null);
 
     // console.log(selectedEmotion)
     // console.log(options_emotion[0])
@@ -74,7 +74,7 @@ export const SelectedFoodDetails = (props) => {
             selectedFood_Quantity: props.textInputValue || null,
             selectedFood_Measurement: props.selectedItem || null,
             selectedFood_Schedule: null,
-            selectedFood_Emotion: props.selectedEmotion || null
+            selectedFood_Emotion: null
 
         })
     }, [])

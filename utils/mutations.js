@@ -20,6 +20,7 @@ export const LOGIN_USER = gql`
           amount
           emotion
           nutrients
+          foodGroup
         }
       }
       resetToken
@@ -49,6 +50,7 @@ export const UPDATE_USER_PASSWORD = gql`
         amount
         emotion
         nutrients
+        foodGroup
       }
     }
     resetToken
@@ -77,6 +79,7 @@ export const UPDATE_USER = gql`
         amount
         emotion
         nutrients
+        foodGroup
       }
     }
     resetToken
@@ -105,6 +108,7 @@ export const REQUEST_RESET = gql`
         amount
         emotion
         nutrients
+        foodGroup
       }
     }
     resetToken
@@ -133,6 +137,7 @@ export const RESET_PASSWORD = gql`
         amount
         emotion
         nutrients
+        foodGroup
       }
     }
     resetToken
@@ -163,6 +168,7 @@ export const ADD_USER = gql`
           amount
           emotion
           nutrients
+          foodGroup
         }
       }
       resetToken
@@ -182,8 +188,8 @@ export const DELETE_USER = gql`
 `;
 
 export const ADD_ENTRY = gql`
-mutation Mutation($date: String, $schedule: String, $item: String, $amount: String, $emotion: String, $nutrients: String) {
-  addEntry(date: $date, schedule: $schedule, item: $item, amount: $amount, emotion: $emotion nutrients: $nutrients) {
+mutation Mutation($date: String, $schedule: String, $item: String, $amount: String, $emotion: String, $nutrients: String, $foodGroup: String) {
+  addEntry(date: $date, schedule: $schedule, item: $item, amount: $amount, emotion: $emotion nutrients: $nutrients, foodGroup: $foodGroup) {
     _id
     date
     schedule
@@ -191,6 +197,7 @@ mutation Mutation($date: String, $schedule: String, $item: String, $amount: Stri
     amount
     emotion
     nutrients
+    foodGroup
   }
 }
 `;
@@ -219,6 +226,7 @@ export const UPDATE_TOKEN_COUNT = gql`
         amount
         emotion
         nutrients
+        foodGroup
       }
     }
     resetToken
