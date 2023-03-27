@@ -75,6 +75,7 @@ import {
 import { DailyScheduleSimplified } from './auxilliary/DailyScheduleSimplified';
 import { FoodGroupMetrics } from './auxilliary/metrics/FoodGroupMetrics';
 import { AllergyTracking } from './auxilliary/metrics/AllergyTracking';
+import { SwipeableViews } from './auxilliary/metrics';
 
 export const HomeScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
@@ -1433,38 +1434,16 @@ export const HomeScreen = ({ navigation }) => {
                         }}
                     >
                         <View style={styles.modalVisible_Container}>
-                            <View
-                                style={{
-                                    flexDirection: 'column',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}
-                            >
-                                <FontAwesomeIcon
-                                    icon={faSolid, faTriangleExclamation}
-                                    style={{
-                                        color: THEME_FONT_COLOR_WHITE,
-                                        justifyContent: 'center',
-                                        alignSelf: 'center',
-                                        marginRight: HeightRatio(20)
-                                    }}
-                                    size={30}
-                                />
-                                <Text
-                                    style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
-                                    allowFontScaling={false}
-                                >
-                                    Metrics: Under Construction
-                                </Text>
-                            </View>
                             <FoodGroupMetrics
                                 date={currentDateReadable}
                                 userID={mainState.current.userID}
                             />
                         </View>
                         <View style={styles.modalVisible_Container}>
-                            <AllergyTracking />
+                            {/* <AllergyTracking /> */}
+                            <SwipeableViews />
+                        </View>
+                        <View style={styles.modalVisible_Container}>
                             <TouchableOpacity
                                 onPress={() => {
                                     setMetricsModalVisible(false);

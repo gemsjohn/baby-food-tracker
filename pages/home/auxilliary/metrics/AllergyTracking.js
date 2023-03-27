@@ -174,7 +174,7 @@ export const AllergyTracking = () => {
             <Text
                 style={{
                     color: THEME_FONT_COLOR_WHITE,
-                    fontSize: HeightRatio(40),
+                    fontSize: HeightRatio(30),
                     fontFamily: "SofiaSansSemiCondensed-Regular",
                     textAlign: 'left',
                     margin: HeightRatio(10),

@@ -59,8 +59,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 8,
         color: THEME_FONT_COLOR_WHITE,
-        fontSize: HeightRatio(20),
-        fontFamily: "SofiaSansSemiCondensed-Regular",
+        fontSize: HeightRatio(30),
+        alignSelf: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
     },
 });
 
