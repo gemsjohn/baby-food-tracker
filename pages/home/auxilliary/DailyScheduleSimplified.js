@@ -125,6 +125,14 @@ export const DailyScheduleSimplified = (props) => {
     const [uniqueEmotionArray, setUniqueEmotionArray] = useState([])
     const [dailyEntries, setDailyEntries] = useState([])
     const [entryKey, setEntryKey] = useState(null)
+    const [refreshing, setRefreshing] = useState(false);
+    const [premiumServiceModalVisible, setPremiumServiceModalVisible] = useState(false)
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+          setRefreshing(false);
+        }, 2000);
+    }, []);
 
     const [deleteEntry] = useMutation(DELETE_ENTRY)
     const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
@@ -320,10 +328,14 @@ export const DailyScheduleSimplified = (props) => {
             }
         }
         storeTotalCalorieCount(total)
+
+        // setMainState({
+            
+        // })
     }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, afternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
 
     useEffect(() => {
-        console.log(displayLunchNutrients)
+        // console.log(displayLunchNutrients)
 
     }, [displayLunchNutrients])
 
@@ -354,7 +366,7 @@ export const DailyScheduleSimplified = (props) => {
 
 
     const displaySimplifiedEntries = (data, emotions) => {
-        console.log(emotions)
+        // console.log(emotions)
         const options_time = [
             "First Thing",
             "Breakfast",
@@ -611,9 +623,13 @@ export const DailyScheduleSimplified = (props) => {
                     // backgroundColor: '#ddeafc',
                     height: props.from === "main" ? HeightRatio(450) : HeightRatio(250)
                 }}
+                
             >
                 <ScrollView
                     style={styles.scrollView}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
                 >
                     {dailyEntries.length > 0 ?
                         <>
@@ -724,7 +740,7 @@ export const DailyScheduleSimplified = (props) => {
             {props.from === "main" &&
                 <View style={{ width: windowWidth, height: HeightRatio(140) }}>
                     <TouchableOpacity
-                        onPress={() => console.log('PREMIUM SERVICE')}
+                        onPress={() => setPremiumServiceModalVisible(true)}
                     >
                         <LinearGradient
                             colors={['#ec546d', '#d05bb6']}
@@ -821,6 +837,100 @@ export const DailyScheduleSimplified = (props) => {
                 </View>
 
             </Modal>
+            
+            <Modal
+                visible={premiumServiceModalVisible}
+                animationType="slide"
+                transparent={true}
+            >
+                <View style={styles.modalContainer_0}>
+                    <View style={styles.modalContainer_1}>
+                        <View style={styles.modalContainer_1_A}>
+                            <Text
+                                style={{
+                                    ...styles.modalContainer_1_A_Text,
+                                    textAlign: 'left'
+                                }}
+                                allowFontScaling={false}
+                            >
+                                Premium Service
+                            </Text>
+                            <View 
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        ...styles.modalContainer_1_A_Text,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(15)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    - Daily nutrition metrics (e.g. food group ratios)
+                                </Text>
+                                <Text
+                                    style={{
+                                        ...styles.modalContainer_1_A_Text,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(15)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    - Feeding schedule reminders
+                                </Text>
+                                <Text
+                                    style={{
+                                        ...styles.modalContainer_1_A_Text,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(15)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    - Allergy tracking
+                                </Text>
+                                <Text
+                                    style={{
+                                        ...styles.modalContainer_1_A_Text,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(15)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    - Personalized insights and recommendations
+                                </Text>
+                                <Text
+                                    style={{
+                                        ...styles.modalContainer_1_A_Text,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(15)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    - Export data via PDF
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={styles.modalContainer_1_B}>
+                            <TouchableOpacity onPress={() => setPremiumServiceModalVisible(false)}>
+                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
+                                    <Text
+                                        style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
+                                        allowFontScaling={false}
+                                    >
+                                        Close
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+            </Modal>
+            
 
 
         </>

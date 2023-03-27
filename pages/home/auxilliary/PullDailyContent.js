@@ -89,7 +89,7 @@ export const usePullDailyContent = (input) => {
     
 
     useEffect(() => {
-        console.log(input)
+        // console.log(input)
         getTrackerEntryByDate(input)
     }, [input])
 
@@ -161,7 +161,7 @@ export const usePullDailyContent = (input) => {
             foodGroup = removeBackslashes(foodGroup);
             foodGroup = removeQuotes(foodGroup);
             foodGroup = removeQuotes(foodGroup);
-            console.log(amount)
+            // console.log(amount)
 
             emotionIndex.push({item: item, emoji: unicodeEscape, schedule: removeQuotes(sampleSchedule_v1), nutrients: sample_v3, measurement: removeQuotes(amount), id: removeQuotes(ID), foodGroup: foodGroup})
 

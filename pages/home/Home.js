@@ -73,6 +73,7 @@ import {
     THEME_FONT_GREY
 } from '../../COLOR.js';
 import { DailyScheduleSimplified } from './auxilliary/DailyScheduleSimplified';
+import { FoodGroupMetrics } from './auxilliary/metrics/FoodGroupMetrics';
 
 export const HomeScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
@@ -272,6 +273,13 @@ export const HomeScreen = ({ navigation }) => {
                         const removeQuotes = (str) => {
                             return str.replace(/^"(.*)"$/, '$1');
                         }
+                        function removeBackslashes(str) {
+                            let pattern = /(?<!\\)\\(?!\\)/g;
+                            let replacement = '';
+                            let updatedStr = str.replace(pattern, replacement);
+            
+                            return updatedStr;
+                        }
                         console.log("# - getNutritionvalue:")
                         console.log(mainState.current.selectedFood_Quantity)
                         console.log(mainState.current.selectedFood_Measurement)
@@ -281,11 +289,21 @@ export const HomeScreen = ({ navigation }) => {
 
                         let nutrients_JSON = JSON.stringify(response.data.result.conversion);
                         console.log(nutrients_JSON)
-                        let foodGroup_JSON = JSON.stringify(response.data.result.foodGroup.group);
-                        foodGroup_JSON = removeQuotes(foodGroup_JSON);
-                        foodGroup_JSON = foodGroup_JSON.toLowerCase();
+                        console.log(response.data.result.foodGroup)
+                        let foodGroup_JSON = JSON.stringify(response.data.result.foodGroup);
                         console.log("# - foodGroup:")
                         console.log(foodGroup_JSON)
+                        if (foodGroup_JSON) {
+                            console.log("# - foodGroup Defined")
+                            foodGroup_JSON = removeBackslashes(foodGroup_JSON);
+                            foodGroup_JSON = removeQuotes(foodGroup_JSON);
+                            foodGroup_JSON = foodGroup_JSON.toLowerCase();
+                        }  else {
+                            console.log("# - foodGroup Undefined")
+                            foodGroup_JSON = '?';
+                        }
+                        
+                        
                         
                         nutrients_JSON = removeQuotes(nutrients_JSON)
                         if (nutrients_JSON == "not found") {
@@ -359,7 +377,7 @@ export const HomeScreen = ({ navigation }) => {
             foodGroup = removeQuotes(foodGroup);
             foodGroup = removeQuotes(foodGroup);
 
-            console.log("# - FOOD: " + foodGroup)
+            // console.log("# - FOOD: " + foodGroup)
             // console.log(emotion)
 
             const codePoints = emotion
@@ -957,12 +975,18 @@ export const HomeScreen = ({ navigation }) => {
                                                                         <View style={styles.modalVisible_recentFoodData_Map_Container_2}>
                                                                             <View style={{ flexDirection: 'column' }}>
                                                                                 <View>
-                                                                                    <Text style={styles.modalVisible_recentFoodData_Map_Text_Bold}>
+                                                                                    <Text 
+                                                                                        style={styles.modalVisible_recentFoodData_Map_Text_Bold}
+                                                                                        allowFontScaling={false}
+                                                                                    >
                                                                                         {data.item}
                                                                                     </Text>
                                                                                 </View>
                                                                                 <View style={{ marginLeft: HeightRatio(5) }}>
-                                                                                    <Text style={styles.modalVisible_recentFoodData_Map_Text_Regular}>
+                                                                                    <Text 
+                                                                                        style={styles.modalVisible_recentFoodData_Map_Text_Regular}
+                                                                                        allowFontScaling={false}
+                                                                                    >
                                                                                         {data.amount}
                                                                                     </Text>
                                                                                 </View>
@@ -971,7 +995,10 @@ export const HomeScreen = ({ navigation }) => {
                                                                                 onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data);  console.log(data) }}
                                                                                 style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow }}
                                                                             >
-                                                                                <Text style={styles.modalVisible_recentFoodData_Map_Plus_Text}>
+                                                                                <Text 
+                                                                                    style={styles.modalVisible_recentFoodData_Map_Plus_Text}
+                                                                                    allowFontScaling={false}
+                                                                                >
                                                                                     +
                                                                                 </Text>
                                                                             </TouchableOpacity>
@@ -1258,7 +1285,7 @@ export const HomeScreen = ({ navigation }) => {
                         <View style={styles.modalVisible_Container}>
                             <View 
                                 style={{
-                                    flexDirection: 'row',
+                                    flexDirection: 'column',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center'
@@ -1281,6 +1308,10 @@ export const HomeScreen = ({ navigation }) => {
                                     Metrics: Under Construction
                                 </Text>
                             </View>
+                            <FoodGroupMetrics 
+                                date={currentDateReadable}
+                                userID={mainState.current.userID}
+                            />
                             <TouchableOpacity
                                 onPress={() => {
                                     setMetricsModalVisible(false);
@@ -1635,7 +1666,8 @@ const styles = StyleSheet.create({
     modalVisible_recentFoodData_Map_Text_Bold: {
         color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(25),
-        fontFamily: "SofiaSansSemiCondensed-ExtraBold"
+        fontFamily: "SofiaSansSemiCondensed-ExtraBold",
+        width: WidthRatio(200)
     },
     modalVisible_recentFoodData_Map_Text_Regular: {
         color: THEME_FONT_COLOR_WHITE,

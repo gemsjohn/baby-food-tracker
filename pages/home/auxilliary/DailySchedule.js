@@ -394,7 +394,7 @@ export const DailySchedule = (props) => {
                     }
                 }
             }
-            console.log(emotionIndex)
+            // console.log(emotionIndex)
             setUniqueEmotionArray(emotionIndex)
         }
     }

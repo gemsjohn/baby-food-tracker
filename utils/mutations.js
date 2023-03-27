@@ -188,18 +188,18 @@ export const DELETE_USER = gql`
 `;
 
 export const ADD_ENTRY = gql`
-mutation Mutation($date: String, $schedule: String, $item: String, $amount: String, $emotion: String, $nutrients: String, $foodGroup: String) {
-  addEntry(date: $date, schedule: $schedule, item: $item, amount: $amount, emotion: $emotion nutrients: $nutrients, foodGroup: $foodGroup) {
-    _id
-    date
-    schedule
-    item
-    amount
-    emotion
-    nutrients
-    foodGroup
+  mutation Mutation($date: String, $schedule: String, $item: String, $amount: String, $nutrients: String, $emotion: String, $foodGroup: String) {
+    addEntry(date: $date, schedule: $schedule, item: $item, amount: $amount, nutrients: $nutrients, emotion: $emotion, foodGroup: $foodGroup) {
+      _id
+      date
+      schedule
+      item
+      amount
+      nutrients
+      foodGroup
+      emotion
+    }
   }
-}
 `;
 
 export const DELETE_ENTRY = gql`
