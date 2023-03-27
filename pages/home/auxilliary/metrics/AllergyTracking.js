@@ -176,7 +176,7 @@ export const AllergyTracking = () => {
                     color: THEME_FONT_COLOR_WHITE,
                     fontSize: HeightRatio(30),
                     fontFamily: "SofiaSansSemiCondensed-Regular",
-                    textAlign: 'left',
+                    textAlign: 'center',
                     margin: HeightRatio(10),
                     marginLeft: 0
                 }}
