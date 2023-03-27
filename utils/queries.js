@@ -21,12 +21,14 @@ export const GET_ME = gql`
         emotion
         nutrients
         foodGroup
+        allergy
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
     tokens
+    allergy
   }
 }
 `;
@@ -50,12 +52,14 @@ export const GET_USER_BY_ID = gql`
         emotion
         nutrients
         foodGroup
+        allergy
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
     tokens
+    allergy
   }
 }
 `;
@@ -79,12 +83,14 @@ export const GET_USERS = gql`
         emotion
         nutrients
         foodGroup
+        allergy
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
     tokens
+    allergy
   }
 }
 `;
@@ -103,6 +109,7 @@ export const TRACKERS = gql`
       emotion
       nutrients
       foodGroup
+      allergy
     }
   }
 }

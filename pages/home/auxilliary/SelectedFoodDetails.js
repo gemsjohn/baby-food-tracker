@@ -50,6 +50,11 @@ export const SelectedFoodDetails = (props) => {
         "Dinner",
         "Before Bed"
     ]
+    const options_allergy = [
+        "None",
+        "Mild",
+        "Strong"
+    ]
     const options_emotion = [
         '\uD83D\uDE00',
         '\uD83D\uDE10',
@@ -59,6 +64,7 @@ export const SelectedFoodDetails = (props) => {
     const [selectedItem, setSelectedItem] = useState(props.selectedItem || null);
     const [selectedTime, setSelectedTime] = useState(null);
     const [selectedEmotion, setSelectedEmotion] = useState(null);
+    const [selectedReaction, setSelectedReaction] = useState(null)
 
     // console.log(selectedEmotion)
     // console.log(options_emotion[0])
@@ -74,7 +80,8 @@ export const SelectedFoodDetails = (props) => {
             selectedFood_Quantity: props.textInputValue || null,
             selectedFood_Measurement: props.selectedItem || null,
             selectedFood_Schedule: null,
-            selectedFood_Emotion: null
+            selectedFood_Emotion: null,
+            selectedFood_Allergy: null
 
         })
     }, [])
@@ -228,6 +235,65 @@ export const SelectedFoodDetails = (props) => {
                                         setSelectedTime(option);
                                         setMainState({
                                             selectedFood_Schedule: option
+                                        })
+                                    }}
+                                    style={styles.itemButton_AltColor}
+                                    key={option}
+                                >
+                                    <Text
+                                        style={styles.itemButton_Text}
+                                        allowFontScaling={false}
+                                    >
+                                        {option}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </>
+                    }
+                </View>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+                <Text
+                    style={styles.header}
+                    allowFontScaling={false}
+                >
+                    Allergic Reaction?
+                </Text>
+                <View style={{ marginTop: HeightRatio(10) }}>
+                    {selectedReaction != null ?
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={styles.itemButton_AltColor}>
+                                <Text
+                                    style={styles.itemButton_Text}
+                                    allowFontScaling={false}
+                                >
+                                    {selectedReaction}
+                                </Text>
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setSelectedReaction(null);
+                                    setMainState({
+                                        selectedFood_Allergy: null
+                                    })
+                                }}
+                                style={styles.itemButton_faX}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faSolid, faX}
+                                    style={{color: 'red'}}
+                                    size={20}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        :
+                        <>
+                            {options_allergy.map((option) => (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setSelectedReaction(option);
+                                        setMainState({
+                                            selectedFood_Allergy: option
                                         })
                                     }}
                                     style={styles.itemButton_AltColor}

@@ -21,12 +21,14 @@ export const LOGIN_USER = gql`
           emotion
           nutrients
           foodGroup
+          allergy
         }
       }
       resetToken
       resetTokenExpiry
       currentVersion
       tokens
+      allergy
     }
   }
 }
@@ -51,12 +53,14 @@ export const UPDATE_USER_PASSWORD = gql`
         emotion
         nutrients
         foodGroup
+        allergy
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
     tokens
+    allergy
   }
 }
 `;
@@ -80,12 +84,14 @@ export const UPDATE_USER = gql`
         emotion
         nutrients
         foodGroup
+        allergy
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
     tokens
+    allergy
   }
 }
 `;
@@ -109,12 +115,14 @@ export const REQUEST_RESET = gql`
         emotion
         nutrients
         foodGroup
+        allergy
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
     tokens
+    allergy
   }
 }
 `;
@@ -138,19 +146,21 @@ export const RESET_PASSWORD = gql`
         emotion
         nutrients
         foodGroup
+        allergy
       }
     }
     resetToken
     resetTokenExpiry
     currentVersion
     tokens
+    allergy
   }
 }
 `;
 
 export const ADD_USER = gql`
-  mutation Mutation($username: String!, $email: String!, $password: String!, $role: [String!], $tracker: String, $tokens: String) {
-  addUser(username: $username, email: $email, password: $password, role: $role, tracker: $tracker, tokens: $tokens) {
+  mutation Mutation($username: String!, $email: String!, $password: String!, $role: [String!], $tracker: String, $tokens: String, $allergy: String) {
+  addUser(username: $username, email: $email, password: $password, role: $role, tracker: $tracker, tokens: $tokens, allergy: $allergy) {
     token
     user {
       _id
@@ -169,12 +179,14 @@ export const ADD_USER = gql`
           emotion
           nutrients
           foodGroup
+          allergy
         }
       }
       resetToken
       resetTokenExpiry
       currentVersion
       tokens
+      allergy
     }
   }
 }
@@ -188,8 +200,8 @@ export const DELETE_USER = gql`
 `;
 
 export const ADD_ENTRY = gql`
-  mutation Mutation($date: String, $schedule: String, $item: String, $amount: String, $nutrients: String, $emotion: String, $foodGroup: String) {
-    addEntry(date: $date, schedule: $schedule, item: $item, amount: $amount, nutrients: $nutrients, emotion: $emotion, foodGroup: $foodGroup) {
+  mutation Mutation($date: String, $schedule: String, $item: String, $amount: String, $nutrients: String, $emotion: String, $foodGroup: String, $allergy: String) {
+    addEntry(date: $date, schedule: $schedule, item: $item, amount: $amount, nutrients: $nutrients, emotion: $emotion, foodGroup: $foodGroup, allergy: $allergy) {
       _id
       date
       schedule
@@ -198,6 +210,7 @@ export const ADD_ENTRY = gql`
       nutrients
       foodGroup
       emotion
+      allergy
     }
   }
 `;
@@ -227,8 +240,41 @@ export const UPDATE_TOKEN_COUNT = gql`
         emotion
         nutrients
         foodGroup
+        allergy
       }
     }
+    resetToken
+    resetTokenExpiry
+    currentVersion
+    tokens
+    allergy
+  }
+}
+`;
+
+export const UPDATE_USER_ALLERGIES = gql`
+mutation Mutation($item: String) {
+  updateUserAllergies(item: $item) {
+    _id
+    role
+    username
+    email
+    tracker {
+      _id
+      date
+      entry {
+        _id
+        date
+        schedule
+        item
+        amount
+        emotion
+        nutrients
+        foodGroup
+        allergy
+      }
+    }
+    allergy
     resetToken
     resetTokenExpiry
     currentVersion

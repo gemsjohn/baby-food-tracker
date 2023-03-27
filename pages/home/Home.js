@@ -74,6 +74,7 @@ import {
 } from '../../COLOR.js';
 import { DailyScheduleSimplified } from './auxilliary/DailyScheduleSimplified';
 import { FoodGroupMetrics } from './auxilliary/metrics/FoodGroupMetrics';
+import { AllergyTracking } from './auxilliary/metrics/AllergyTracking';
 
 export const HomeScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
@@ -166,7 +167,7 @@ export const HomeScreen = ({ navigation }) => {
                 setRefreshing(false)
             }
 
-            if (mainState.current.selectedFood_Quantity != null && mainState.current.selectedFood_Measurement != null && mainState.current.selectedFood_Schedule != null && mainState.current.selectedFood_Emotion != null) {
+            if (mainState.current.selectedFood_Quantity != null && mainState.current.selectedFood_Measurement != null && mainState.current.selectedFood_Schedule != null && mainState.current.selectedFood_Emotion != null && mainState.current.selectedFood_Allergy != null) {
                 setSelectedFoodDataEntrered(true)
             } else {
                 setSelectedFoodDataEntrered(false)
@@ -245,7 +246,8 @@ export const HomeScreen = ({ navigation }) => {
                         amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
                         emotion: `${mainState.current.selectedFood_Emotion}`,
                         nutrients: `${nutrients_JSON}`,
-                        foodGroup: `${foodGroup_JSON}`
+                        foodGroup: `${foodGroup_JSON}`,
+                        allergy: `${mainState.current.selectedFood_Allergy}`
                     }
                 });
                 onRefresh();
@@ -327,7 +329,8 @@ export const HomeScreen = ({ navigation }) => {
                                         amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
                                         emotion: `${mainState.current.selectedFood_Emotion}`,
                                         nutrients: `${nutrients_JSON}`,
-                                        foodGroup: `${foodGroup_JSON}`
+                                        foodGroup: `${foodGroup_JSON}`,
+                                        allergy: `${mainState.current.selectedFood_Allergy}`
                                     }
                                 });
                                 onRefresh();
@@ -1459,6 +1462,9 @@ export const HomeScreen = ({ navigation }) => {
                                 date={currentDateReadable}
                                 userID={mainState.current.userID}
                             />
+                        </View>
+                        <View style={styles.modalVisible_Container}>
+                            <AllergyTracking />
                             <TouchableOpacity
                                 onPress={() => {
                                     setMetricsModalVisible(false);
@@ -1473,7 +1479,6 @@ export const HomeScreen = ({ navigation }) => {
                                     </Text>
                                 </View>
                             </TouchableOpacity>
-
                         </View>
                     </Modal>
 
