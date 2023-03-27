@@ -277,7 +277,7 @@ export const HomeScreen = ({ navigation }) => {
                             let pattern = /(?<!\\)\\(?!\\)/g;
                             let replacement = '';
                             let updatedStr = str.replace(pattern, replacement);
-            
+
                             return updatedStr;
                         }
                         console.log("# - getNutritionvalue:")
@@ -298,13 +298,13 @@ export const HomeScreen = ({ navigation }) => {
                             foodGroup_JSON = removeBackslashes(foodGroup_JSON);
                             foodGroup_JSON = removeQuotes(foodGroup_JSON);
                             foodGroup_JSON = foodGroup_JSON.toLowerCase();
-                        }  else {
+                        } else {
                             console.log("# - foodGroup Undefined")
                             foodGroup_JSON = '?';
                         }
-                        
-                        
-                        
+
+
+
                         nutrients_JSON = removeQuotes(nutrients_JSON)
                         if (nutrients_JSON == "not found") {
                             setDisplayChooseAnotherOptionModal(true)
@@ -314,11 +314,11 @@ export const HomeScreen = ({ navigation }) => {
                             const updateUserEntry = async () => {
 
                                 let itemData = input.description;
-    
+
                                 if (input.description == undefined && recentFoodData[selectRecentlyUsed].item != '') {
                                     itemData = recentFoodData[selectRecentlyUsed].item;
                                 }
-    
+
                                 await addEntry({
                                     variables: {
                                         date: `${currentDateReadable}`,
@@ -334,7 +334,7 @@ export const HomeScreen = ({ navigation }) => {
                             }
                             updateUserEntry();
                         }
-                        
+
                     }
                 })
                 .catch((error) => {
@@ -426,7 +426,17 @@ export const HomeScreen = ({ navigation }) => {
                         key={item.fdcId}
                     >
                         {displayDetails ?
-                            <SelectedFoodDetails />
+                            <>
+                                <View style={{ flexDirection: 'column' }}>
+                                    <Text
+                                        style={{ ...styles.modalVisible_recentFoodData_Map_Container_0_RecentlyUsed_Text, alignSelf: 'center' }}
+                                        allowFontScaling={false}
+                                    >
+                                        {item.description.toUpperCase()}
+                                    </Text>
+                                    <SelectedFoodDetails />
+                                </View>
+                            </>
                             :
                             <>
                                 <View style={styles.renderItem_Search_Result_Container}>
@@ -761,11 +771,12 @@ export const HomeScreen = ({ navigation }) => {
                         visible={modalVisible}
                         animationType="slide"
                         transparent={true}
+                        statusBarTranslucent={true}
                         style={{
                             width: windowWidth,
                         }}
                     >
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             onPress={() => {
                                 setDisplayTop100Foods(true);
                             }}
@@ -775,8 +786,7 @@ export const HomeScreen = ({ navigation }) => {
                                     ...styles.modalVisible_Container,
                                     ...styles.button_Drop_Shadow,
                                     backgroundColor: THEME_COLOR_ATTENTION,
-                                    margin: HeightRatio(5),
-                                    width: windowWidth - HeightRatio(30),
+                                    margin: HeightRatio(0),
 
                                 }}
                             >
@@ -808,9 +818,146 @@ export const HomeScreen = ({ navigation }) => {
                                     }
                                 </View>
                             </View>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
+                        <View
+                            style={{
+                                alignSelf: 'center',
+                                backgroundColor: 'rgba(31, 31, 39, 1.00)',
+                                padding: HeightRatio(10),
+                                width: windowWidth - WidthRatio(10),
+                                borderRadius: HeightRatio(10),
+                                flexDirection: 'row',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginTop: HeightRatio(25),
+                                marginBottom: HeightRatio(5)
+                            }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setDisplayTop100Foods(true);
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        ...styles.homePrimary_Add_Button,
+                                        ...styles.button_Drop_Shadow,
+                                        width: windowWidth / 3.6,
+                                        height: windowWidth / 5
+                                    }}
+                                >
+                                    <View
+                                        style={{ flexDirection: 'column' }}
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faSolid, faStar}
+                                            style={{ color: THEME_FONT_COLOR_BLACK, alignSelf: 'center', marginTop: HeightRatio(10) }}
+                                            size={25}
+                                        />
+                                        <Text
+                                            style={{
+                                                ...styles.renderItem_Search_Result_Container_Text,
+                                                color: THEME_FONT_COLOR_BLACK,
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                textAlign: 'center',
+                                                marginTop: HeightRatio(10)
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Top 100
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                            {!displayTop100Foods &&
+                                <>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            // setDisplayTop100Foods(true);
+                                            setSelectedItem({ description: 'Breast Milk', fdcId: 0 });
+                                            setClearSuggestions(true)
+                                            setDisplayDetails(true);
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                ...styles.homePrimary_Add_Button,
+                                                ...styles.button_Drop_Shadow,
+                                                width: windowWidth / 3.6,
+                                                height: windowWidth / 5,
+                                                // backgroundColor: selectedItem != null && selectedItem.description == 'Breast Milk' ? THEME_COLOR_ATTENTION : THEME_COLOR_POSITIVE
+                                            }}
+                                        >
+                                            <View
+                                                style={{ flexDirection: 'column' }}
+                                            >
+                                                <Image
+                                                    source={require('../../assets/bra_icon.png')}
+                                                    style={{ height: HeightRatio(30), width: HeightRatio(30), alignSelf: 'center' }}
+                                                />
+                                                <Text
+                                                    style={{
+                                                        ...styles.renderItem_Search_Result_Container_Text,
+                                                        color: THEME_FONT_COLOR_BLACK,
+                                                        fontSize: HeightRatio(20),
+                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                        textAlign: 'center',
+                                                        marginTop: HeightRatio(10)
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    Breast Milk
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            // setDisplayTop100Foods(true);
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                ...styles.homePrimary_Add_Button,
+                                                ...styles.button_Drop_Shadow,
+                                                width: windowWidth / 3.6,
+                                                height: windowWidth / 5
+                                            }}
+                                        >
+                                            <View
+                                                style={{ flexDirection: 'column' }}
+                                            >
+                                                <Image
+                                                    source={require('../../assets/formula_icon.png')}
+                                                    style={{ height: HeightRatio(30), width: HeightRatio(30), alignSelf: 'center' }}
+                                                />
+                                                <Text
+                                                    style={{
+                                                        ...styles.renderItem_Search_Result_Container_Text,
+                                                        color: THEME_FONT_COLOR_BLACK,
+                                                        fontSize: HeightRatio(20),
+                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                        textAlign: 'center',
+                                                        marginTop: HeightRatio(10)
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    Formula
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                </>
+                            }
+                        </View>
                         {!displayTop100Foods &&
-                            <View style={styles.modalVisible_Container}>
+                            <View
+                                style={{
+                                    ...styles.modalVisible_Container,
+                                    marginTop: 0
+                                }}
+                            >
                                 <Image
                                     source={require('../../assets/pattern_1.png')}
                                     style={{
@@ -871,7 +1018,7 @@ export const HomeScreen = ({ navigation }) => {
                                         }}
                                     >
                                         <View>
-                                            {top_100_Filtered.map((data, index) => (
+                                            {top_100_Filtered.sort((a, b) => a.tried - b.tried).map((data, index) => (
                                                 <View
                                                     style={{
                                                         ...styles.renderItem_Search_Results,
@@ -879,7 +1026,6 @@ export const HomeScreen = ({ navigation }) => {
                                                     }}
                                                     key={index}
                                                 >
-
                                                     <View style={{ flexDirection: 'row' }}>
                                                         <Text
                                                             style={{
@@ -888,7 +1034,6 @@ export const HomeScreen = ({ navigation }) => {
                                                             }}
                                                         >
                                                             {data.name}
-
                                                         </Text>
                                                         {data.tried &&
                                                             <FontAwesomeIcon
@@ -948,7 +1093,7 @@ export const HomeScreen = ({ navigation }) => {
                                     source={require('../../assets/pattern_1.png')}
                                     style={{
                                         ...styles.homePrimary_Pattern_1,
-                                        margin: HeightRatio(20),
+                                        // margin: HeightRatio(20),
                                         alignSelf: 'center'
                                     }}
                                 />
@@ -975,7 +1120,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                         <View style={styles.modalVisible_recentFoodData_Map_Container_2}>
                                                                             <View style={{ flexDirection: 'column' }}>
                                                                                 <View>
-                                                                                    <Text 
+                                                                                    <Text
                                                                                         style={styles.modalVisible_recentFoodData_Map_Text_Bold}
                                                                                         allowFontScaling={false}
                                                                                     >
@@ -983,7 +1128,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                                     </Text>
                                                                                 </View>
                                                                                 <View style={{ marginLeft: HeightRatio(5) }}>
-                                                                                    <Text 
+                                                                                    <Text
                                                                                         style={styles.modalVisible_recentFoodData_Map_Text_Regular}
                                                                                         allowFontScaling={false}
                                                                                     >
@@ -992,10 +1137,10 @@ export const HomeScreen = ({ navigation }) => {
                                                                                 </View>
                                                                             </View>
                                                                             <TouchableOpacity
-                                                                                onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data);  console.log(data) }}
+                                                                                onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); console.log(data) }}
                                                                                 style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow }}
                                                                             >
-                                                                                <Text 
+                                                                                <Text
                                                                                     style={styles.modalVisible_recentFoodData_Map_Plus_Text}
                                                                                     allowFontScaling={false}
                                                                                 >
@@ -1056,11 +1201,13 @@ export const HomeScreen = ({ navigation }) => {
                                                             onPress={() => {
                                                                 setSelectedItem(null);
                                                                 setDisplayDetails(false)
+                                                                setClearSuggestions(selectedItem.description == 'Breast Milk' ? false : true)
                                                             }}
                                                             style={{
                                                                 ...styles.modalVisible_faX,
                                                                 ...styles.button_Drop_Shadow,
-                                                                right: HeightRatio(-25),
+                                                                right: HeightRatio(0),
+                                                                backgroundColor: 'red'
                                                             }}
                                                         >
                                                             <FontAwesomeIcon
@@ -1090,7 +1237,7 @@ export const HomeScreen = ({ navigation }) => {
                                 >
                                     {selectedFoodDataEntrered ?
                                         <>
-                                            <TouchableOpacity onPress={() => { setModalVisible(false); setDisplayLoading(false);}}>
+                                            <TouchableOpacity onPress={() => { setModalVisible(false); setDisplayLoading(false); }}>
                                                 <View
                                                     style={{
                                                         ...styles.modalVisible_HalfButton,
@@ -1129,7 +1276,7 @@ export const HomeScreen = ({ navigation }) => {
                                             </TouchableOpacity>
                                         </>
                                         :
-                                        <TouchableOpacity onPress={() => {setModalVisible(false); setDisplayLoading(false);}}>
+                                        <TouchableOpacity onPress={() => { setModalVisible(false); setDisplayLoading(false); }}>
                                             <View style={{ ...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow }}>
                                                 <Text
                                                     style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
@@ -1283,7 +1430,7 @@ export const HomeScreen = ({ navigation }) => {
                         }}
                     >
                         <View style={styles.modalVisible_Container}>
-                            <View 
+                            <View
                                 style={{
                                     flexDirection: 'column',
                                     display: 'flex',
@@ -1308,7 +1455,7 @@ export const HomeScreen = ({ navigation }) => {
                                     Metrics: Under Construction
                                 </Text>
                             </View>
-                            <FoodGroupMetrics 
+                            <FoodGroupMetrics
                                 date={currentDateReadable}
                                 userID={mainState.current.userID}
                             />
@@ -1341,7 +1488,7 @@ export const HomeScreen = ({ navigation }) => {
                         }}
                     >
                         <View style={styles.modalVisible_Container}>
-                            <View 
+                            <View
                                 style={{
                                     flexDirection: 'column',
                                     display: 'flex',
@@ -1631,16 +1778,16 @@ const styles = StyleSheet.create({
     modalVisible_Title_Container: {
         display: 'flex',
         justifyContent: 'flex-start',
-        padding: HeightRatio(10),
+        padding: HeightRatio(5),
         alignSelf: 'center',
         width: windowWidth - WidthRatio(100),
-        marginTop: HeightRatio(10),
+        // marginTop: HeightRatio(10),
     },
     modalVisible_Title_Container_Text: {
         color: THEME_FONT_COLOR_WHITE,
-        fontSize: HeightRatio(30),
+        fontSize: HeightRatio(25),
         alignSelf: 'center',
-        fontFamily: 'SofiaSansSemiCondensed-Regular'
+        fontFamily: 'SofiaSansSemiCondensed-ExtraBold'
     },
     modalVisible_recentFoodData_Map_Container_0: {
         backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
@@ -1665,7 +1812,7 @@ const styles = StyleSheet.create({
     },
     modalVisible_recentFoodData_Map_Text_Bold: {
         color: THEME_FONT_COLOR_WHITE,
-        fontSize: HeightRatio(25),
+        fontSize: HeightRatio(20),
         fontFamily: "SofiaSansSemiCondensed-ExtraBold",
         width: WidthRatio(200)
     },

@@ -127,12 +127,7 @@ export const DailyScheduleSimplified = (props) => {
     const [entryKey, setEntryKey] = useState(null)
     const [refreshing, setRefreshing] = useState(false);
     const [premiumServiceModalVisible, setPremiumServiceModalVisible] = useState(false)
-    const onRefresh = useCallback(() => {
-        setRefreshing(true);
-        setTimeout(() => {
-          setRefreshing(false);
-        }, 2000);
-    }, []);
+
 
     const [deleteEntry] = useMutation(DELETE_ENTRY)
     const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
@@ -330,7 +325,7 @@ export const DailyScheduleSimplified = (props) => {
         storeTotalCalorieCount(total)
 
         // setMainState({
-            
+
         // })
     }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, afternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
 
@@ -453,6 +448,7 @@ export const DailyScheduleSimplified = (props) => {
                                                 style={{
                                                     fontSize: HeightRatio(14),
                                                     color: THEME_FONT_COLOR_BLACK,
+                                                    fontFamily: "SofiaSansSemiCondensed-Regular",
                                                 }}
                                                 allowFontScaling={false}
                                             >
@@ -482,89 +478,108 @@ export const DailyScheduleSimplified = (props) => {
                                     </View>
                                 </TouchableOpacity>
                                 {displayLunchNutrients && entryKey.index == index && entryKey.name == data[i].name &&
-                                    <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                                    <>
+                                        {data[i].name == 'BREAST MILK' &&
+                                            <View style={{...styles.scheduleButton_subContent_NutritionDetails_Container_0, padding: HeightRatio(10)}}>
+                                                <Text
+                                                    style={{
+                                                        fontSize: HeightRatio(20),
+                                                        color: THEME_FONT_COLOR_BLACK,
+                                                        fontFamily: "SofiaSansSemiCondensed-ExtraBold",
+                                                    }}
+                                                >
+                                                    Note: Breast milk values are approximate and can vary based on several factors.
+                                                </Text>
+                                            </View>
+                                        }
+                                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
 
-                                        <View style={styles.scheduleButton_subContent_NutritionDetails_Container_0}>
-                                            <View style={{ backgroundColor: THEME_LIGHT_GREEN, height: '100%', width: WidthRatio(140), position: 'absolute', zIndex: -10, borderTopLeftRadius: HeightRatio(4), borderBottomLeftRadius: HeightRatio(4) }} />
-                                            <View style={{ backgroundColor: '#ffcc42', height: '100%', width: WidthRatio(80), position: 'absolute', left: WidthRatio(140), zIndex: -10, borderTopRightRadius: HeightRatio(4), borderBottomRightRadius: HeightRatio(4) }} />
-                                            {Object.keys(emotions[j].nutrients).map((key) => (
-                                                <View
-                                                    style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}
-                                                    key={key}
-                                                >
-                                                    <View
-                                                        style={{
-                                                            width: WidthRatio(140),
-                                                        }}
-                                                    >
-                                                        <Text
-                                                            style={{
-                                                                ...styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text,
-                                                                width: WidthRatio(120),
-                                                            }}
-                                                            allowFontScaling={false}
-                                                            numberOfLines={1}
-                                                            ellipsizeMode="tail"
+
+                                            <View style={styles.scheduleButton_subContent_NutritionDetails_Container_0}>
+                                                <View style={{ backgroundColor: THEME_LIGHT_GREEN, height: '100%', width: WidthRatio(140), position: 'absolute', zIndex: -10, borderTopLeftRadius: HeightRatio(4), borderBottomLeftRadius: HeightRatio(4) }} />
+                                                <View style={{ backgroundColor: '#ffcc42', height: '100%', width: WidthRatio(80), position: 'absolute', left: WidthRatio(140), zIndex: -10, borderTopRightRadius: HeightRatio(4), borderBottomRightRadius: HeightRatio(4) }} />
+                                                {Object.keys(emotions[j].nutrients)
+                                                    .filter((key) => key !== 'iron' && key !== 'zinc' && key !== 'omega3' && key !== 'vitaminD')
+                                                    .map((key) => (
+                                                        <View
+                                                            style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}
+                                                            key={key}
                                                         >
-                                                            {key.replace('_', ' ')}
-                                                        </Text>
-                                                    </View>
-                                                    <Text
-                                                        style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
-                                                        allowFontScaling={false}
-                                                    >
-                                                        {emotions[j].nutrients[key].amount} {emotions[j].nutrients[key].unit}
-                                                    </Text>
-                                                </View>
-                                            ))}
-                                        </View>
-                                        <View
-                                            style={{
-                                                flexDirection: 'column',
-                                                display: 'flex',
-                                                // alignItems: 'center',
-                                                // justifyContent: 'center'
-                                            }}
-                                        >
-                                            {/* '#ec546d', '#d05bb6' */}
-                                            <View style={{...styles.scheduleButton_subContent_Container_Button_DataAmount_Container, backgroundColor: '#102f52'}}>
-                                                <Text
-                                                    style={{
-                                                        ...styles.scheduleButton_subContent_Container_Button_Text,
-                                                    }}
-                                                    allowFontScaling={false}
-                                                >
-                                                    {emotions[j].foodGroup.toUpperCase()}
-                                                </Text>
+                                                            <View
+                                                                style={{
+                                                                    width: WidthRatio(140),
+                                                                }}
+                                                            >
+                                                                <Text
+                                                                    style={{
+                                                                        ...styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text,
+                                                                        width: WidthRatio(120),
+                                                                    }}
+                                                                    allowFontScaling={false}
+                                                                    numberOfLines={1}
+                                                                    ellipsizeMode="tail"
+                                                                >
+                                                                    {key.replace('_', ' ')}
+                                                                </Text>
+                                                            </View>
+                                                            <Text
+                                                                style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
+                                                                allowFontScaling={false}
+                                                            >
+                                                                {emotions[j].nutrients[key].amount} {emotions[j].nutrients[key].unit}
+                                                            </Text>
+                                                        </View>
+                                                    ))}
+
                                             </View>
-                                            <View style={{...styles.scheduleButton_subContent_Container_Button_DataAmount_Container}}>
-                                                <Text
-                                                    style={{
-                                                        ...styles.scheduleButton_subContent_Container_Button_Text,
-                                                    }}
-                                                    allowFontScaling={false}
-                                                >
-                                                    {emotions[j].measurement}
-                                                </Text>
-                                            </View>
-                                            <TouchableOpacity
-                                                onPress={() => { setModalVisible(true); setDeleteID(emotions[j].id) }}
+                                            <View
                                                 style={{
-                                                    ...styles.scheduleButton_subContent_NutritionDetails_Remove_Button,
-                                                    ...styles.button_Drop_Shadow
+                                                    flexDirection: 'column',
+                                                    display: 'flex',
+                                                    // alignItems: 'center',
+                                                    // justifyContent: 'center'
                                                 }}
                                             >
-                                                <Text
+                                                {/* '#ec546d', '#d05bb6' */}
+                                                <View style={{ ...styles.scheduleButton_subContent_Container_Button_DataAmount_Container, backgroundColor: '#102f52' }}>
+                                                    <Text
+                                                        style={{
+                                                            ...styles.scheduleButton_subContent_Container_Button_Text,
+                                                        }}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        {emotions[j].foodGroup.toUpperCase()}
+                                                    </Text>
+                                                </View>
+                                                <View style={{ ...styles.scheduleButton_subContent_Container_Button_DataAmount_Container }}>
+                                                    <Text
+                                                        style={{
+                                                            ...styles.scheduleButton_subContent_Container_Button_Text,
+                                                        }}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        {emotions[j].measurement}
+                                                    </Text>
+                                                </View>
+                                                <TouchableOpacity
+                                                    onPress={() => { setModalVisible(true); setDeleteID(emotions[j].id) }}
                                                     style={{
-                                                        ...styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text,
+                                                        ...styles.scheduleButton_subContent_NutritionDetails_Remove_Button,
+                                                        ...styles.button_Drop_Shadow
                                                     }}
-                                                    allowFontScaling={false}
                                                 >
-                                                    Remove
-                                                </Text>
-                                            </TouchableOpacity>
+                                                    <Text
+                                                        style={{
+                                                            ...styles.scheduleButton_subContent_NutritionDetails_Remove_Button_Text,
+                                                        }}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        Remove
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
                                         </View>
-                                    </View>
+                                    </>
                                 }
 
                             </>
@@ -613,6 +628,17 @@ export const DailyScheduleSimplified = (props) => {
         }, 100)
     }
 
+    // const onRefresh = useCallback(() => {
+    //     setRefreshing(true);
+    //     // Reset Daily Entries
+    //     if (calendarModalFoods && calendarModalEmotion) {
+    //         displaySimplifiedEntries(calendarModalFoods, calendarModalEmotion)
+    //     }
+    //     setTimeout(() => {
+    //         setRefreshing(false);
+    //     }, 2000);
+    // }, []);
+
     return (
         <>
 
@@ -623,13 +649,13 @@ export const DailyScheduleSimplified = (props) => {
                     // backgroundColor: '#ddeafc',
                     height: props.from === "main" ? HeightRatio(450) : HeightRatio(250)
                 }}
-                
+
             >
                 <ScrollView
                     style={styles.scrollView}
-                    refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                    }
+                // refreshControl={
+                //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                // }
                 >
                     {dailyEntries.length > 0 ?
                         <>
@@ -674,63 +700,6 @@ export const DailyScheduleSimplified = (props) => {
                             >
                                 Select `ADD` to get started.
                             </Text>
-                            {/* {bg_color.map((data, index) => (
-                                <View
-                                    style={{
-                                        ...styles.renderItem_Search_Results,
-                                        ...styles.button_Drop_Shadow,
-                                        justifyContent: 'space-between',
-                                        backgroundColor: data,
-
-                                    }}
-                                    key={index}
-                                >
-                                    <View
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            flexDirection: 'row'
-                                        }}
-                                    >
-                                        <View style={{ height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(50), backgroundColor: 'rgba(0, 0, 0, 0.1)' }} />
-                                        <Text
-                                            style={{
-                                                ...styles.renderItem_Search_Result_Container_Text,
-                                                width: WidthRatio(160),
-                                            }}
-
-                                        >
-                                        </Text>
-                                    </View>
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            width: WidthRatio(120),
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'flex-end'
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                marginRight: HeightRatio(10)
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontSize: HeightRatio(14),
-                                                    color: THEME_FONT_COLOR_BLACK,
-                                                }}
-                                                allowFontScaling={false}
-                                            >
-                                            </Text>
-                                        </View>
-
-                                    </View>
-                                </View>
-
-                            ))} */}
                         </>
 
                     }
@@ -837,7 +806,7 @@ export const DailyScheduleSimplified = (props) => {
                 </View>
 
             </Modal>
-            
+
             <Modal
                 visible={premiumServiceModalVisible}
                 animationType="slide"
@@ -855,7 +824,7 @@ export const DailyScheduleSimplified = (props) => {
                             >
                                 Premium Service
                             </Text>
-                            <View 
+                            <View
                                 style={{
                                     display: 'flex',
                                     alignItems: 'center',
@@ -930,7 +899,7 @@ export const DailyScheduleSimplified = (props) => {
                 </View>
 
             </Modal>
-            
+
 
 
         </>
