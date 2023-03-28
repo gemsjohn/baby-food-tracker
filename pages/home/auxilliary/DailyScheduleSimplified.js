@@ -839,7 +839,7 @@ export const DailyScheduleSimplified = (props) => {
                                 }}
                             >
                                 {/* FEATURE 1 */}
-                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(100)), }}>
+                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
                                     <View style={{backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
                                     <Text
                                         style={{
@@ -856,7 +856,7 @@ export const DailyScheduleSimplified = (props) => {
                                 <View style={{borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10)}} />
                                 
                                 {/* FEATURE 2 */}
-                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(100)), }}>
+                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
                                     <View style={{backgroundColor: '#36A2EB', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
                                     <Text
                                         style={{
@@ -873,8 +873,25 @@ export const DailyScheduleSimplified = (props) => {
                                 <View style={{borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10)}} />
 
                                 {/* FEATURE 3 */}
-                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(100)), }}>
+                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
                                     <View style={{backgroundColor: '#FFCE56', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
+                                    <Text
+                                        style={{
+                                            ...styles.modalContainer_1_A_Text,
+                                            textAlign: 'left',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            fontSize: HeightRatio(20),
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Export nutritional data via Email
+                                    </Text>
+                                </View>
+                                <View style={{borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10)}} />
+
+                                {/* FEATURE 4 */}
+                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{backgroundColor: '#4BC0C0', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
                                     <Text
                                         style={{
                                             ...styles.modalContainer_1_A_Text,
@@ -889,9 +906,9 @@ export const DailyScheduleSimplified = (props) => {
                                 </View>
                                 <View style={{borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10)}} />
 
-                                {/* FEATURE 4 */}
-                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(100)) }}>
-                                    <View style={{backgroundColor: '#4BC0C0', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
+                                {/* FEATURE 5 */}
+                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)) }}>
+                                    <View style={{backgroundColor: '#9966FF', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
                                     <Text
                                         style={{
                                             ...styles.modalContainer_1_A_Text,
@@ -903,7 +920,6 @@ export const DailyScheduleSimplified = (props) => {
                                     >
                                         Additional nutrition data
                                     </Text>
-
                                     
                                 </View>
                                 <View style={{display: 'flex', flexDirection: 'column', paddingLeft: HeightRatio(30)}}>
@@ -974,35 +990,10 @@ export const DailyScheduleSimplified = (props) => {
                                     - Feeding schedule reminders
                                 </Text> */}
                                 
-                                
-                                
-                                {/* <Text
-                                    style={{
-                                        ...styles.modalContainer_1_A_Text,
-                                        textAlign: 'left',
-                                        fontSize: HeightRatio(15)
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    - Export data via PDF
-                                </Text> */}
                             </View>
                             
                         </View>
 
-                        {/* sendEmail */}
-                        {/* <View style={styles.modalContainer_1_B}>
-                            <TouchableOpacity onPress={() => console.log("email")}>
-                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
-                                    <Text
-                                        style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
-                                        allowFontScaling={false}
-                                    >
-                                        Email
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View> */}
                         {/* <PDFGenerator /> */}
                         <View style={styles.modalContainer_1_B}>
                             <TouchableOpacity onPress={() => setPremiumServiceModalVisible(false)}>

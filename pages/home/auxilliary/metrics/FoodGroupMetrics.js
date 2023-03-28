@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
         color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(30),
         alignSelf: 'center',
-        fontFamily: 'SofiaSansSemiCondensed-Regular'
+        fontFamily: 'SofiaSansSemiCondensed-ExtraBold'
     },
 });
 
@@ -275,17 +275,39 @@ export const FoodGroupMetrics = (props) => {
     return (
         <View style={styles.chartContainer}>
             <Text style={styles.chartLabel}>Daily Food Groups ( Calories )</Text>
-            <PieChart
-                data={data}
-                width={400}
-                height={200}
-                chartConfig={chartConfig}
-                accessor="calories"
-                backgroundColor="transparent"
-                paddingLeft="15"
-                center={[0, 0]}
-                absolute={true}
-            />
+            {fruitCalTotal + vegetableCalTotal + proteinCalTotal + grainCalTotal + dairyCalTotal > 0 ?
+                <PieChart
+                    data={data}
+                    width={400}
+                    height={200}
+                    chartConfig={chartConfig}
+                    accessor="calories"
+                    backgroundColor="transparent"
+                    paddingLeft="15"
+                    center={[0, 0]}
+                    absolute={true}
+                />
+                :
+                <View
+                    style={{
+                        flexDirection: 'column',
+                        display: 'flex',
+                        // alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: THEME_FONT_COLOR_WHITE,
+                            fontSize: HeightRatio(30),
+                            fontFamily: "SofiaSansSemiCondensed-Regular",
+                            textAlign: 'center',
+                        }}
+                    >
+                        Currently, you do not have any daily entries. Add a daily entry to see data.
+                    </Text>
+                </View>
+            }
         </View>
     );
 };

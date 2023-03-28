@@ -175,7 +175,7 @@ export const AllergyTracking = () => {
                 style={{
                     color: THEME_FONT_COLOR_WHITE,
                     fontSize: HeightRatio(30),
-                    fontFamily: "SofiaSansSemiCondensed-Regular",
+                    fontFamily: "SofiaSansSemiCondensed-ExtraBold",
                     textAlign: 'center',
                     margin: HeightRatio(10),
                     marginLeft: 0
@@ -250,7 +250,7 @@ export const AllergyTracking = () => {
                             textAlign: 'center',
                         }}
                     >
-                        None
+                        Currently, you do not have any recorded allergies.
                     </Text>
                 </View>
             }

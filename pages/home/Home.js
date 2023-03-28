@@ -1433,20 +1433,11 @@ export const HomeScreen = ({ navigation }) => {
                             width: windowWidth,
                         }}
                     >
-                        {/* <View style={styles.modalVisible_Container}>
-                            <FoodGroupMetrics
-                                date={currentDateReadable}
-                                userID={mainState.current.userID}
-                            />
-                        </View> */}
-                        {/* <View style={styles.modalVisible_Container}> */}
-                            {/* <AllergyTracking /> */}
                             <SwipeableViews 
                                 date={currentDateReadable}
                                 userID={mainState.current.userID}
                             />
-                        {/* </View> */}
-                        <View style={styles.modalVisible_Container}>
+                        {/* <View style={styles.modalVisible_Container}> */}
                             <TouchableOpacity
                                 onPress={() => {
                                     setMetricsModalVisible(false);
@@ -1461,7 +1452,7 @@ export const HomeScreen = ({ navigation }) => {
                                     </Text>
                                 </View>
                             </TouchableOpacity>
-                        </View>
+                        {/* </View> */}
                     </Modal>
 
                     {/* displayChooseAnotherOptionModal */}

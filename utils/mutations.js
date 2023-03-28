@@ -282,3 +282,34 @@ mutation Mutation($item: String) {
   }
 }
 `;
+
+export const SEND_PDFCONTENT = gql`
+mutation Mutation($email: String, $html: String) {
+  sendPDFContent(email: $email, html: $html) {
+    _id
+    role
+    username
+    email
+    tracker {
+      _id
+      date
+      entry {
+        _id
+        date
+        schedule
+        item
+        amount
+        emotion
+        nutrients
+        foodGroup
+        allergy
+      }
+    }
+    allergy
+    resetToken
+    resetTokenExpiry
+    currentVersion
+    tokens
+  }
+}
+`;
