@@ -112,6 +112,7 @@ export const usePullDailyContent = (input) => {
         for (let i = 0; i < input.length; i++) {
             let ID = JSON.stringify(input[i]._id);
             const schedule = JSON.stringify(input[i].entry[0].schedule);
+            let time = JSON.stringify(input[i].entry[0].time);
             const jsonString = JSON.stringify(input[i].entry[0].nutrients);
             let amount = JSON.stringify(input[i].entry[0].amount);
             let item = JSON.stringify(input[i].entry[0].item);
@@ -161,9 +162,12 @@ export const usePullDailyContent = (input) => {
             foodGroup = removeBackslashes(foodGroup);
             foodGroup = removeQuotes(foodGroup);
             foodGroup = removeQuotes(foodGroup);
-            // console.log(amount)
+            // console.log(removeQuotes(sampleSchedule_v1))
 
-            emotionIndex.push({item: item, emoji: unicodeEscape, schedule: removeQuotes(sampleSchedule_v1), nutrients: sample_v3, measurement: removeQuotes(amount), id: removeQuotes(ID), foodGroup: foodGroup})
+            time = removeBackslashes(`${time}`);
+
+
+            emotionIndex.push({item: item, emoji: unicodeEscape, schedule: removeQuotes(sampleSchedule_v1), time: removeQuotes(time), nutrients: sample_v3, measurement: removeQuotes(amount), id: removeQuotes(ID), foodGroup: foodGroup})
 
 
             if (sampleSchedule_v2 == "First Thing") {

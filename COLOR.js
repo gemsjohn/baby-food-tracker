@@ -36,4 +36,9 @@ export const THEME_COLOR_PURPLE_LOW_OPACITY = 'rgba(71, 66, 106, 0.25)';
 export const THEME_COLOR_BLACKOUT = 'rgba(0, 71, 98, 0.90)';
 export const THEME_FONT_GREY = 'rgba(255, 255, 255, 1.0)';
 export const THEME_LIGHT_GREEN = 'rgba(128, 245, 171, 1.00)';
+export const THEME_ALT_COLOR_0 = '#36A2EB';
+export const THEME_ALT_COLOR_1 = '#FFCE56';
+export const THEME_ALT_COLOR_2 = '#9966FF';
+
+
 

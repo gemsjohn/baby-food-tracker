@@ -16,6 +16,7 @@ export const LOGIN_USER = gql`
           _id
           date
           schedule
+          time
           item
           amount
           emotion
@@ -48,6 +49,7 @@ export const UPDATE_USER_PASSWORD = gql`
         _id
         date
         schedule
+        time
         item
         amount
         emotion
@@ -79,6 +81,7 @@ export const UPDATE_USER = gql`
         _id
         date
         schedule
+        time
         item
         amount
         emotion
@@ -110,6 +113,7 @@ export const REQUEST_RESET = gql`
         _id
         date
         schedule
+        time
         item
         amount
         emotion
@@ -141,6 +145,7 @@ export const RESET_PASSWORD = gql`
         _id
         date
         schedule
+        time
         item
         amount
         emotion
@@ -174,6 +179,7 @@ export const ADD_USER = gql`
           _id
           date
           schedule
+          time
           item
           amount
           emotion
@@ -200,19 +206,20 @@ export const DELETE_USER = gql`
 `;
 
 export const ADD_ENTRY = gql`
-  mutation Mutation($date: String, $schedule: String, $item: String, $amount: String, $nutrients: String, $emotion: String, $foodGroup: String, $allergy: String) {
-    addEntry(date: $date, schedule: $schedule, item: $item, amount: $amount, nutrients: $nutrients, emotion: $emotion, foodGroup: $foodGroup, allergy: $allergy) {
-      _id
-      date
-      schedule
-      item
-      amount
-      nutrients
-      foodGroup
-      emotion
-      allergy
-    }
+  mutation Mutation($date: String, $schedule: String, $item: String, $amount: String, $nutrients: String, $emotion: String, $foodGroup: String, $time: String, $allergy: String) {
+  addEntry(date: $date, schedule: $schedule, item: $item, amount: $amount, nutrients: $nutrients, emotion: $emotion, foodGroup: $foodGroup, time: $time, allergy: $allergy) {
+    _id
+    date
+    schedule
+    item
+    amount
+    nutrients
+    foodGroup
+    emotion
+    time
+    allergy
   }
+}
 `;
 
 export const DELETE_ENTRY = gql`
@@ -235,6 +242,7 @@ export const UPDATE_TOKEN_COUNT = gql`
         _id
         date
         schedule
+        time
         item
         amount
         emotion
@@ -266,6 +274,7 @@ mutation Mutation($item: String) {
         _id
         date
         schedule
+        time
         item
         amount
         emotion
@@ -297,6 +306,7 @@ mutation Mutation($email: String, $html: String) {
         _id
         date
         schedule
+        time
         item
         amount
         emotion

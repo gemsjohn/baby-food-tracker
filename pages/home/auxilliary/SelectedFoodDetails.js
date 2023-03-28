@@ -28,8 +28,14 @@ import {
     THEME_TRANSPARENT,
     THEME_COLOR_PURPLE,
     THEME_COLOR_PURPLE_LOW_OPACITY,
-    THEME_COLOR_BLACKOUT
+    THEME_COLOR_BLACKOUT,
+    THEME_ALT_COLOR_0,
+    THEME_ALT_COLOR_1,
+    THEME_ALT_COLOR_2
 } from '../../../COLOR'
+import { CustomTimePicker } from '../time/CustomTimePicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 export const SelectedFoodDetails = (props) => {
@@ -48,8 +54,10 @@ export const SelectedFoodDetails = (props) => {
         "Lunch",
         "Afternoon",
         "Dinner",
-        "Before Bed"
+        "Before Bed",
+        "Custom"
     ]
+
     const options_allergy = [
         "None",
         "Mild",
@@ -65,12 +73,14 @@ export const SelectedFoodDetails = (props) => {
     const [selectedTime, setSelectedTime] = useState(null);
     const [selectedEmotion, setSelectedEmotion] = useState(null);
     const [selectedReaction, setSelectedReaction] = useState(null)
+    const [customTime, setCustomTime] = useState('');
+    const intervalID = useRef(null)
 
     // console.log(selectedEmotion)
     // console.log(options_emotion[0])
-    const decodedEmoji = unescape(selectedEmotion!= null ? selectedEmotion.replace(/\\u/g, '%u') : null);
+    const decodedEmoji = unescape(selectedEmotion != null ? selectedEmotion.replace(/\\u/g, '%u') : null);
     // console.log(decodedEmoji); // should output '😀'
-        
+
 
 
 
@@ -80,10 +90,16 @@ export const SelectedFoodDetails = (props) => {
             selectedFood_Quantity: props.textInputValue || null,
             selectedFood_Measurement: props.selectedItem || null,
             selectedFood_Schedule: null,
+            selectedFood_Schedule_Base: null,
+            selectedFood_Schedule_Hour: null,
+            selectedFood_Schedule_Minute: null,
+            selectedFood_Schedule_AMPM: null,
+            selectedFood_Schedule_Custom_Time: null,
             selectedFood_Emotion: null,
-            selectedFood_Allergy: null
+            selectedFood_Allergy: null,
 
         })
+        
     }, [])
 
     const handleTextChange = (text) => {
@@ -113,6 +129,38 @@ export const SelectedFoodDetails = (props) => {
             selectedFood_Quantity: selectedFood_Quantity
         })
     };
+
+    
+    
+
+    const getCustomScheduleTime = async (input) => {
+        console.log("# - getCUstomScheduleTime")
+
+        try {
+            const value = await AsyncStorage.getItem('@storeCustomScheduleTime')
+            console.log("# - GET @storeCustomScheduleTime VALUE")
+            console.log(typeof value)
+            if (value !== "null" && value !== null) {
+                // value previously stored
+                console.log("# - GET @storeCustomScheduleTime VALUE NOT NULL")
+                console.log(value)
+
+                const removeQuotes = (str) => {
+                    return str.replace(/^"(.*)"$/, '$1');
+                }
+                console.log("# - set selectedFood_Schedule")
+                setMainState({
+                    selectedFood_Schedule_Base: input,
+                    selectedFood_Schedule: `${input}`,
+                    selectedFood_Schedule_Custom_Time: `${removeQuotes(value)}`
+                })
+                clearInterval(intervalID.current)
+
+            }
+        } catch (e) {
+            // error reading value
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -215,14 +263,15 @@ export const SelectedFoodDetails = (props) => {
                                 onPress={() => {
                                     setSelectedTime(null);
                                     setMainState({
-                                        selectedFood_Schedule: null
+                                        selectedFood_Schedule: null,
+                                        selectedFood_Schedule_Custom_Time: null,
                                     })
                                 }}
                                 style={styles.itemButton_faX}
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faX}
-                                    style={{color: 'red'}}
+                                    style={{ color: 'red' }}
                                     size={20}
                                 />
                             </TouchableOpacity>
@@ -233,15 +282,18 @@ export const SelectedFoodDetails = (props) => {
                                 <TouchableOpacity
                                     onPress={() => {
                                         setSelectedTime(option);
-                                        setMainState({
-                                            selectedFood_Schedule: option
-                                        })
+                                        intervalID.current = setInterval(() => {
+                                            getCustomScheduleTime(option)
+
+                                        }, 100)
+
+
                                     }}
                                     style={styles.itemButton_AltColor}
                                     key={option}
                                 >
                                     <Text
-                                        style={styles.itemButton_Text}
+                                        style={{ ...styles.itemButton_Text, fontFamily: option == 'Custom' ? 'SofiaSansSemiCondensed-ExtraBold' : 'SofiaSansSemiCondensed-Regular' }}
                                         allowFontScaling={false}
                                     >
                                         {option}
@@ -251,7 +303,17 @@ export const SelectedFoodDetails = (props) => {
                         </>
                     }
                 </View>
+
             </View>
+            <View style={{ marginTop: HeightRatio(10) }}>
+                {selectedTime != null && selectedTime == 'Custom' &&
+                    <View style={{}}>
+                        <CustomTimePicker />
+                    </View>
+                }
+            </View>
+
+
             <View style={{ flexDirection: 'row' }}>
                 <Text
                     style={styles.header}
@@ -262,7 +324,7 @@ export const SelectedFoodDetails = (props) => {
                 <View style={{ marginTop: HeightRatio(10) }}>
                     {selectedReaction != null ?
                         <View style={{ flexDirection: 'row' }}>
-                            <View style={styles.itemButton_AltColor}>
+                            <View style={styles.itemButton_AltColor_1}>
                                 <Text
                                     style={styles.itemButton_Text}
                                     allowFontScaling={false}
@@ -281,7 +343,7 @@ export const SelectedFoodDetails = (props) => {
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faX}
-                                    style={{color: 'red'}}
+                                    style={{ color: 'red' }}
                                     size={20}
                                 />
                             </TouchableOpacity>
@@ -296,7 +358,7 @@ export const SelectedFoodDetails = (props) => {
                                             selectedFood_Allergy: option
                                         })
                                     }}
-                                    style={styles.itemButton_AltColor}
+                                    style={styles.itemButton_AltColor_1}
                                     key={option}
                                 >
                                     <Text
@@ -321,7 +383,7 @@ export const SelectedFoodDetails = (props) => {
                 <View style={{ marginTop: HeightRatio(10) }}>
                     {selectedEmotion != null ?
                         <View style={{ flexDirection: 'row' }}>
-                            <View style={styles.itemButton_AltColor}>
+                            <View style={styles.itemButton_AltColor_3}>
                                 <Text
                                     style={styles.itemButton_Text}
                                     allowFontScaling={false}
@@ -340,7 +402,7 @@ export const SelectedFoodDetails = (props) => {
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faX}
-                                    style={{color: 'red'}}
+                                    style={{ color: 'red' }}
                                     size={20}
                                 />
                             </TouchableOpacity>
@@ -355,7 +417,7 @@ export const SelectedFoodDetails = (props) => {
                                             selectedFood_Emotion: option
                                         })
                                     }}
-                                    style={styles.itemButton_AltColor}
+                                    style={styles.itemButton_AltColor_3}
                                     key={option}
                                 >
                                     <Text
@@ -370,6 +432,7 @@ export const SelectedFoodDetails = (props) => {
                     }
                 </View>
             </View>
+            <View style={{ height: HeightRatio(50) }} />
         </View>
     );
 };
@@ -419,6 +482,39 @@ const styles = StyleSheet.create({
         width: WidthRatio(140),
         borderRadius: HeightRatio(10),
         backgroundColor: THEME_COLOR_ATTENTION,
+    },
+    itemButton_AltColor_1: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        padding: HeightRatio(10),
+        margin: HeightRatio(4),
+        width: WidthRatio(140),
+        borderRadius: HeightRatio(10),
+        backgroundColor: THEME_ALT_COLOR_0,
+    },
+    itemButton_AltColor_2: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        padding: HeightRatio(10),
+        margin: HeightRatio(4),
+        width: WidthRatio(140),
+        borderRadius: HeightRatio(10),
+        backgroundColor: THEME_ALT_COLOR_1,
+    },
+    itemButton_AltColor_3: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        padding: HeightRatio(10),
+        margin: HeightRatio(4),
+        width: WidthRatio(140),
+        borderRadius: HeightRatio(10),
+        backgroundColor: THEME_ALT_COLOR_2,
     },
     itemButton_Text: {
         color: 'black',

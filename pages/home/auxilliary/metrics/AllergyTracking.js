@@ -58,7 +58,359 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { PieChart } from 'react-native-chart-kit';
 import { MainStateContext } from '../../../../App';
 
+
+
+export const AllergyTracking = () => {
+    const { mainState, setMainState } = useContext(MainStateContext);
+    const [allergyArray, setAllergyArray] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false)
+    const [selectedAllergyForDeletion, setSelectedAllergyForDeletion] = useState(null)
+    const [updateUserAllergies] = useMutation(UPDATE_USER_ALLERGIES);
+
+
+    const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
+        variables: { id: mainState.current.userID }
+    });
+
+    const getAllergyData = () => {
+        setAllergyArray([])
+        console.log("# - getAllergyData()")
+        refetch()
+        for (let i = 0; i < userByID?.user.allergy.length; i++) {
+            const allergy = userByID?.user.allergy[i];
+            if (!allergyArray.includes(allergy)) {
+                setAllergyArray((prevArray) => [...prevArray, allergy]);
+            }
+
+        }
+
+    }
+    useEffect(() => {
+        console.log('# --------------------------------------')
+        setAllergyArray([])
+        getAllergyData()
+    }, [])
+
+    useEffect(() => {
+        getAllergyData()
+    }, [userByID?.user])
+
+    const handleUpdateUserAllergies = async (input) => {
+        await updateUserAllergies({
+            variables: {
+                item: `${input}`
+            }
+        });
+    }
+
+
+
+    return (
+        <>
+            <View
+                style={{
+                    flexDirection: 'column',
+                    display: 'flex',
+                    // alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+            >
+                <Text
+                    style={{
+                        color: THEME_FONT_COLOR_WHITE,
+                        fontSize: HeightRatio(30),
+                        fontFamily: "SofiaSansSemiCondensed-ExtraBold",
+                        textAlign: 'center',
+                        margin: HeightRatio(10),
+                        marginLeft: 0
+                    }}
+                >
+                    Allergies
+                </Text>
+                <SafeAreaView
+                    style={{
+                        ...styles.container,
+                        // backgroundColor: '#ddeafc',
+                        height: HeightRatio(250)
+                    }}
+                >
+                    <ScrollView style={styles.scrollView}>
+                        {allergyArray.length > 0 ?
+                            <>
+                                {allergyArray.map((data, index) => (
+                                    <View style={{ flexDirection: 'row', margin: HeightRatio(10), alignSelf: 'center' }}>
+                                        <View
+                                            style={{
+                                                backgroundColor: THEME_COLOR_ATTENTION,
+                                                padding: HeightRatio(10),
+                                                borderRadius: HeightRatio(10),
+                                                borderTopRightRadius: 0,
+                                                borderBottomRightRadius: 0,
+                                                width: WidthRatio(150)
+
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: THEME_FONT_COLOR_BLACK,
+                                                    fontSize: HeightRatio(30),
+                                                    fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                    textAlign: 'center',
+                                                }}
+                                            >
+                                                {data}
+                                            </Text>
+                                        </View>
+                                        <TouchableOpacity
+                                            onPress={() => { setModalVisible(true); setSelectedAllergyForDeletion(data); }}
+                                            style={{
+                                                backgroundColor: THEME_COLOR_NEGATIVE,
+                                                padding: HeightRatio(10),
+                                                borderRadius: HeightRatio(10),
+                                                borderTopLeftRadius: 0,
+                                                borderBottomLeftRadius: 0,
+                                                width: WidthRatio(50),
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+
+                                            }}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faSolid, faX}
+                                                style={{ color: THEME_FONT_COLOR_WHITE }}
+                                                size={20}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                ))}
+                            </>
+                            :
+                            <View
+                                style={{
+                                    flexDirection: 'column',
+                                    display: 'flex',
+                                    // alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        fontSize: HeightRatio(30),
+                                        fontFamily: "SofiaSansSemiCondensed-Regular",
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    Currently, you do not have any recorded allergies.
+                                </Text>
+                            </View>
+                        }
+                    </ScrollView>
+                </SafeAreaView>
+
+                <View>
+                    <Text
+                        style={{
+                            color: THEME_FONT_COLOR_WHITE,
+                            fontSize: HeightRatio(24),
+                            fontFamily: "SofiaSansSemiCondensed-ExtraBold",
+                            textAlign: 'left',
+                            margin: HeightRatio(10),
+                            marginLeft: 0
+                        }}
+                        allowFontScaling={false}
+                    >
+                        What foods most often cause a food allergy?
+                    </Text>
+                    <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                        <View style={{flexDirection: 'column', width: windowWidth/2}}>
+                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <Text
+                                    style={{
+                                        textAlign: 'left',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        fontSize: HeightRatio(20),
+                                        color: THEME_FONT_COLOR_WHITE
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Milk
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <Text
+                                    style={{
+                                        textAlign: 'left',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        fontSize: HeightRatio(20),
+                                        color: THEME_FONT_COLOR_WHITE
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Eggs
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <Text
+                                    style={{
+                                        textAlign: 'left',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        fontSize: HeightRatio(20),
+                                        color: THEME_FONT_COLOR_WHITE
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Wheat
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <Text
+                                    style={{
+                                        textAlign: 'left',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        fontSize: HeightRatio(20),
+                                        color: THEME_FONT_COLOR_WHITE
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Soy
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{flexDirection: 'column'}}>
+                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <Text
+                                    style={{
+                                        textAlign: 'left',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        fontSize: HeightRatio(20),
+                                        color: THEME_FONT_COLOR_WHITE
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Tree nuts
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <Text
+                                    style={{
+                                        textAlign: 'left',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        fontSize: HeightRatio(20),
+                                        color: THEME_FONT_COLOR_WHITE
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Peanuts
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <Text
+                                    style={{
+                                        textAlign: 'left',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        fontSize: HeightRatio(20),
+                                        color: THEME_FONT_COLOR_WHITE
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Fish
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <Text
+                                    style={{
+                                        textAlign: 'left',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        fontSize: HeightRatio(20),
+                                        color: THEME_FONT_COLOR_WHITE
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Shellfish
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+
+            </View>
+            <Modal
+                visible={modalVisible}
+                animationType="slide"
+                transparent={true}
+            >
+                <View style={styles.modalContainer_0}>
+                    <View style={styles.modalContainer_1}>
+                        <View style={styles.modalContainer_1_A}>
+                            <Text
+                                style={styles.modalContainer_1_A_Text}
+                                allowFontScaling={false}
+                            >
+                                Are you sure that you want to delete this allergy?
+                            </Text>
+                        </View>
+                        <View style={styles.modalContainer_1_B}>
+                            <TouchableOpacity onPress={() => { setModalVisible(false); setSelectedAllergyForDeletion(null) }}>
+                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
+                                    <Text
+                                        style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
+                                        allowFontScaling={false}
+                                    >
+                                        Close
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    handleUpdateUserAllergies(selectedAllergyForDeletion);
+                                    getAllergyData();
+                                    setModalVisible(false);
+                                }}
+                            >
+                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
+                                    <Text
+                                        style={styles.modalButton_Text}
+                                        allowFontScaling={false}
+                                    >
+                                        Delete
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+            </Modal>
+        </>
+    );
+};
+
 const styles = StyleSheet.create({
+    container: {
+        // marginTop: HeightRatio(10),
+        height: HeightRatio(450),
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+        // backgroundColor: THEME_COLOR_POSITIVE
+    },
+    scrollView: {
+        // backgroundColor: THEME_COLOR_BACKDROP_DARK,
+        width: windowWidth - HeightRatio(20),
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(10)
+    },
     chartContainer: {
         marginVertical: 8,
     },
@@ -115,194 +467,3 @@ const styles = StyleSheet.create({
         fontFamily: 'SofiaSansSemiCondensed-Regular'
     },
 });
-
-export const AllergyTracking = () => {
-    const { mainState, setMainState } = useContext(MainStateContext);
-    const [allergyArray, setAllergyArray] = useState([]);
-    const [modalVisible, setModalVisible] = useState(false)
-    const [selectedAllergyForDeletion, setSelectedAllergyForDeletion] = useState(null)
-    const [updateUserAllergies] = useMutation(UPDATE_USER_ALLERGIES);
-
-
-    const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
-        variables: { id: mainState.current.userID }
-    });
-
-    const getAllergyData = () => {
-        setAllergyArray([])
-        console.log("# - getAllergyData()")
-        refetch()
-        for (let i = 0; i < userByID?.user.allergy.length; i++) {
-            const allergy = userByID?.user.allergy[i];
-            if (!allergyArray.includes(allergy)) {
-                setAllergyArray((prevArray) => [...prevArray, allergy]);
-            }
-
-        }
-
-    }
-    useEffect(() => {
-        console.log('# --------------------------------------')
-        setAllergyArray([])
-        getAllergyData()
-    }, [])
-
-    useEffect(() => {
-        getAllergyData()
-    }, [userByID?.user])
-
-    const handleUpdateUserAllergies = async (input) => {
-        await updateUserAllergies({
-            variables: {
-                item: `${input}`
-            }
-        });
-    }
-
-
-
-    return (
-        <>
-        <View
-            style={{
-                flexDirection: 'column',
-                display: 'flex',
-                // alignItems: 'center',
-                justifyContent: 'center'
-            }}
-        >
-            <Text
-                style={{
-                    color: THEME_FONT_COLOR_WHITE,
-                    fontSize: HeightRatio(30),
-                    fontFamily: "SofiaSansSemiCondensed-ExtraBold",
-                    textAlign: 'center',
-                    margin: HeightRatio(10),
-                    marginLeft: 0
-                }}
-            >
-                Allergies
-            </Text>
-            {allergyArray.length > 0 ?
-            <>
-                {allergyArray.map((data, index) => (
-                    <View style={{ flexDirection: 'row', margin: HeightRatio(10) }}>
-                        <View
-                            style={{
-                                backgroundColor: THEME_COLOR_ATTENTION,
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                borderTopRightRadius: 0,
-                                borderBottomRightRadius: 0,
-                                width: WidthRatio(150)
-
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    color: THEME_FONT_COLOR_BLACK,
-                                    fontSize: HeightRatio(30),
-                                    fontFamily: "SofiaSansSemiCondensed-Regular",
-                                    textAlign: 'center',
-                                }}
-                            >
-                                {data}
-                            </Text>
-                        </View>
-                        <TouchableOpacity
-                        onPress={() => {setModalVisible(true); setSelectedAllergyForDeletion(data);}}
-                            style={{
-                                backgroundColor: THEME_COLOR_NEGATIVE,
-                                padding: HeightRatio(10),
-                                borderRadius: HeightRatio(10),
-                                borderTopLeftRadius: 0,
-                                borderBottomLeftRadius: 0,
-                                width: WidthRatio(50),
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-
-                            }}
-                        >
-                            <FontAwesomeIcon
-                                icon={faSolid, faX}
-                                style={{ color: THEME_FONT_COLOR_WHITE }}
-                                size={20}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                ))}
-                </>
-                :
-                <View
-                    style={{
-                        flexDirection: 'column',
-                        display: 'flex',
-                        // alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                >
-                    <Text
-                        style={{
-                            color: THEME_FONT_COLOR_WHITE,
-                            fontSize: HeightRatio(30),
-                            fontFamily: "SofiaSansSemiCondensed-Regular",
-                            textAlign: 'center',
-                        }}
-                    >
-                        Currently, you do not have any recorded allergies.
-                    </Text>
-                </View>
-            }
-        </View>
-        <Modal
-                visible={modalVisible}
-                animationType="slide"
-                transparent={true}
-            >
-                <View style={styles.modalContainer_0}>
-                    <View style={styles.modalContainer_1}>
-                        <View style={styles.modalContainer_1_A}>
-                            <Text
-                                style={styles.modalContainer_1_A_Text}
-                                allowFontScaling={false}
-                            >
-                                Are you sure that you want to delete this allergy?
-                            </Text>
-                        </View>
-                        <View style={styles.modalContainer_1_B}>
-                            <TouchableOpacity onPress={() => {setModalVisible(false); setSelectedAllergyForDeletion(null)}}>
-                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
-                                    <Text
-                                        style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
-                                        allowFontScaling={false}
-                                    >
-                                        Close
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    handleUpdateUserAllergies(selectedAllergyForDeletion);
-                                    getAllergyData();
-                                    setModalVisible(false); 
-                                }}
-                            >
-                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
-                                    <Text
-                                        style={styles.modalButton_Text}
-                                        allowFontScaling={false}
-                                    >
-                                        Delete
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-
-            </Modal>
-        </>
-    );
-};
-

@@ -168,8 +168,25 @@ export const HomeScreen = ({ navigation }) => {
                 setRefreshing(false)
             }
 
-            if (mainState.current.selectedFood_Quantity != null && mainState.current.selectedFood_Measurement != null && mainState.current.selectedFood_Schedule != null && mainState.current.selectedFood_Emotion != null && mainState.current.selectedFood_Allergy != null) {
-                setSelectedFoodDataEntrered(true)
+            if (
+                mainState.current.selectedFood_Quantity != null && 
+                mainState.current.selectedFood_Measurement != null && 
+                mainState.current.selectedFood_Schedule != null && 
+                mainState.current.selectedFood_Schedule_Base != null &&
+                mainState.current.selectedFood_Emotion != null && 
+                mainState.current.selectedFood_Allergy != null
+            ) {
+                if (
+                    mainState.current.selectedFood_Schedule_Base == 'Custom' &&
+                    mainState.current.selectedFood_Schedule_Hour != null &&
+                    mainState.current.selectedFood_Schedule_Minute != null &&
+                    mainState.current.selectedFood_Schedule_AMPM != null &&
+                    mainState.current.selectedFood_Schedule_Custom_Time != null
+                ) {
+                    setSelectedFoodDataEntrered(true)
+                } else if (mainState.current.selectedFood_Schedule_Base != 'Custom') {
+                    setSelectedFoodDataEntrered(true)
+                }
             } else {
                 setSelectedFoodDataEntrered(false)
 
@@ -243,6 +260,7 @@ export const HomeScreen = ({ navigation }) => {
                     variables: {
                         date: `${currentDateReadable}`,
                         schedule: `${mainState.current.selectedFood_Schedule}`,
+                        time: `${mainState.current.selectedFood_Schedule_Custom_Time}`,
                         item: `${recentFoodData[selectRecentlyUsed].item}`,
                         amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
                         emotion: `${mainState.current.selectedFood_Emotion}`,
@@ -258,6 +276,7 @@ export const HomeScreen = ({ navigation }) => {
             console.log("# - getNutritionValue / newFoodData")
 
             const prompt = encodeURIComponent(JSON.stringify(data));
+            console.log("# - getNutritionValue / newFoodData CHECK 1")
 
             const config = {
                 method: "POST",
@@ -267,7 +286,7 @@ export const HomeScreen = ({ navigation }) => {
                 },
                 url: `${GLOBAL_GRAPHQL_API_URL}/api/npc/${prompt}`
             }
-
+            console.log("# - getNutritionValue / newFoodData CHECK 2")
             axios(config)
                 .then((response) => {
                     if (response.data.result[0] === "ERROR") {
@@ -288,6 +307,7 @@ export const HomeScreen = ({ navigation }) => {
                         console.log(mainState.current.selectedFood_Measurement)
                         console.log(mainState.current.selectedFood_Schedule)
                         console.log(mainState.current.selectedFood_Emotion)
+                        console.log(mainState.current.selectedFood_Schedule_Custom_Time)
                         console.log("# --------------------------------------")
 
                         let nutrients_JSON = JSON.stringify(response.data.result.conversion);
@@ -326,6 +346,7 @@ export const HomeScreen = ({ navigation }) => {
                                     variables: {
                                         date: `${currentDateReadable}`,
                                         schedule: `${mainState.current.selectedFood_Schedule}`,
+                                        time: `${mainState.current.selectedFood_Schedule_Custom_Time}`,
                                         item: `${itemData}`,
                                         amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
                                         emotion: `${mainState.current.selectedFood_Emotion}`,
@@ -500,6 +521,16 @@ export const HomeScreen = ({ navigation }) => {
     if (!fontsLoaded) {
         return null;
     }
+
+    const storeCustomScheduleTime = async () => {
+        try {
+            const jsonValue = JSON.stringify(null);
+            await AsyncStorage.setItem('@storeCustomScheduleTime', jsonValue)
+        } catch (e) {
+            // saving error
+        }
+    }
+    
     return (
         <>
             {!loading ?
@@ -664,7 +695,9 @@ export const HomeScreen = ({ navigation }) => {
                                                 selectedFood_Quantity: null,
                                                 selectedFood_Measurement: null,
                                                 selectedFood_Schedule: null,
-                                                selectedFood_Emotion: null
+                                                selectedFood_Emotion: null,
+                                                selectedFood_Schedule_Custom_Time: null,
+
                                             })
                                         }}
                                     >
@@ -715,8 +748,10 @@ export const HomeScreen = ({ navigation }) => {
                                                 selectedFood_Quantity: null,
                                                 selectedFood_Measurement: null,
                                                 selectedFood_Schedule: null,
-                                                selectedFood_Emotion: null
+                                                selectedFood_Emotion: null,
+                                                selectedFood_Schedule_Custom_Time: null,
                                             })
+                                            storeCustomScheduleTime()
                                         }}
                                         style={{
                                             ...styles.homePrimary_Add_Button,
@@ -1141,7 +1176,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                                 </View>
                                                                             </View>
                                                                             <TouchableOpacity
-                                                                                onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); console.log(data) }}
+                                                                                onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); }}
                                                                                 style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow }}
                                                                             >
                                                                                 <Text

@@ -121,6 +121,10 @@ export const DailyScheduleSimplified = (props) => {
     const [displayBeforeBedNutrientsForIndex, setDisplayBeforeBedNutrientsForIndex] = useState(null)
     const [displaBool_BeforeBed, setDisplaBool_BeforeBed] = useState(false);
 
+    const [custom, setCustom] = useState([]);
+    const [customCalTotal, setCustomCalTotal] = useState(null)
+    const [customData, setCustomData] = useState([]);
+
     const [deleteID, setDeleteID] = useState(null)
     const [modalVisible, setModalVisible] = useState(false);
     const [uniqueEmotionArray, setUniqueEmotionArray] = useState([])
@@ -159,6 +163,7 @@ export const DailyScheduleSimplified = (props) => {
         setAfternoon([])
         setDinner([])
         setBeforeBed([])
+        setCustom([])
         setFirstThingData([])
         setBreakfastData([])
         setMidmorningData([])
@@ -166,6 +171,7 @@ export const DailyScheduleSimplified = (props) => {
         setAfternoonData([])
         setDinnerData([])
         setBeforeBedData([])
+        setCustomData([])
         getTrackerEntryByDate(props.date)
 
     }, [props.date])
@@ -184,6 +190,7 @@ export const DailyScheduleSimplified = (props) => {
         setAfternoon([])
         setDinner([])
         setBeforeBed([])
+        setCustom([])
         for (let i = 0; i < input.length; i++) {
             const schedule = JSON.stringify(input[i].entry[0].schedule);
             const jsonString = JSON.stringify(input[i].entry[0].nutrients);
@@ -231,6 +238,9 @@ export const DailyScheduleSimplified = (props) => {
             }
             if (sampleSchedule_v2 == "Before Bed") {
                 setBeforeBed(prev => [...prev, sample_v2])
+            }
+            if (sampleSchedule_v2 == "Custom") {
+                setCustom(prev => [...prev, sample_v2])
             }
         }
 
@@ -312,9 +322,19 @@ export const DailyScheduleSimplified = (props) => {
         setBeforeBedCalTotal(sum)
     }, [beforeBed])
 
+    useEffect(() => {
+        let sum = 0;
+
+        for (let i = 0; i < custom.length; i++) {
+            sum += custom[i];
+        }
+
+        setCustomCalTotal(sum)
+    }, [custom])
+
     // TOTAL ALL SCHEDULE SECTIONS
     useEffect(() => {
-        let total = firstThingCalTotal + breakfastCalTotal + midmorningCalTotal + lunchCalTotal + afternoonCalTotal + dinnerCalTotal + beforeBedCalTotal;
+        let total = firstThingCalTotal + breakfastCalTotal + midmorningCalTotal + lunchCalTotal + afternoonCalTotal + dinnerCalTotal + beforeBedCalTotal + customCalTotal;
         const storeTotalCalorieCount = async (value) => {
             try {
                 const jsonValue = JSON.stringify(value)
@@ -362,7 +382,6 @@ export const DailyScheduleSimplified = (props) => {
 
 
     const displaySimplifiedEntries = (data, emotions) => {
-        // console.log(emotions)
         const options_time = [
             "First Thing",
             "Breakfast",
@@ -370,11 +389,10 @@ export const DailyScheduleSimplified = (props) => {
             "Lunch",
             "Afternoon",
             "Dinner",
-            "Before Bed"
+            "Before Bed",
+            "Custom"
         ];
-
-
-
+        
         const textComponents = [];
         const textComponentsBySchedule = {};
 
@@ -382,6 +400,7 @@ export const DailyScheduleSimplified = (props) => {
             for (let j = 0; j < emotions.length; j++) {
                 if (data[i].name == emotions[j].item) {
                     const schedule = emotions[j].schedule;
+                    
                     const index = options_time.indexOf(schedule);
                     if (index !== -1) {
                         const textComponent = (
@@ -419,7 +438,7 @@ export const DailyScheduleSimplified = (props) => {
                                         <Text
                                             style={{
                                                 ...styles.renderItem_Search_Result_Container_Text,
-                                                width: WidthRatio(160),
+                                                width: WidthRatio(145),
                                                 // backgroundColor: 'red'
                                             }}
                                             numberOfLines={1}
@@ -453,7 +472,8 @@ export const DailyScheduleSimplified = (props) => {
                                                 }}
                                                 allowFontScaling={false}
                                             >
-                                                {schedule}
+                                                {schedule} {schedule.includes("Custom") ? emotions[j].time : null}
+                                                
                                             </Text>
                                         </View>
                                         {data[i].tried &&
@@ -585,6 +605,7 @@ export const DailyScheduleSimplified = (props) => {
 
                             </>
                         );
+
                         if (!textComponentsBySchedule[schedule]) {
                             textComponentsBySchedule[schedule] = [];
                         }
@@ -639,6 +660,7 @@ export const DailyScheduleSimplified = (props) => {
     //         setRefreshing(false);
     //     }, 2000);
     // }, []);
+    
 
 
     return (

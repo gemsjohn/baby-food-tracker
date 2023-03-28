@@ -16,6 +16,7 @@ export const GET_ME = gql`
         _id
         date
         schedule
+        time
         item
         amount
         emotion
@@ -47,6 +48,7 @@ export const GET_USER_BY_ID = gql`
         _id
         date
         schedule
+        time
         item
         amount
         emotion
@@ -78,6 +80,7 @@ export const GET_USERS = gql`
         _id
         date
         schedule
+        time
         item
         amount
         emotion
@@ -104,6 +107,7 @@ export const TRACKERS = gql`
       _id
       date
       schedule
+      time
       item
       amount
       emotion

@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         width: windowWidth,
-        height: windowHeight/2,
+        height: windowHeight/1.45,
         // alignItems: 'center',
         // justifyContent: 'center',
     },
