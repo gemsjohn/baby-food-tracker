@@ -130,43 +130,23 @@ export const FoodGroupMetrics = (props) => {
         setDairyCal([])
 
         for (let i = 0; i < tracker.length; i++) {
-            let entry = JSON.parse(JSON.stringify(tracker[i].entry[0]));
+            let entry = tracker[i].entry[0]
 
-            function removeBackslashes(str) {
-                let pattern = /(?<!\\)\\(?!\\)/g;
-                let replacement = '';
-                let updatedStr = str.replace(pattern, replacement);
 
-                return updatedStr;
+            if (entry.foodGroup == "fruit") {
+                setFruitCal(prev => [...prev, entry.nutrients.calories.amount])
             }
-
-            const removeQuotes = (str) => {
-                return str.replace(/^"(.*)"$/, '$1');
+            if (entry.foodGroup == "vegetable") {
+                setVegetableCal(prev => [...prev, entry.nutrients.calories.amount])
             }
-
-            let nutrients = entry.nutrients;
-            let nutrients_calories = nutrients.calories;
-            nutrients_calories = JSON.parse(nutrients_calories);
-            nutrients_calories = nutrients_calories.amount
-
-            let foodGroup = entry.foodGroup;
-            foodGroup = removeQuotes(removeQuotes(removeBackslashes(JSON.stringify(foodGroup))))
-
-
-            if (foodGroup == "fruit") {
-                setFruitCal(prev => [...prev, nutrients_calories])
+            if (entry.foodGroup == "protein") {
+                setProteinCal(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (foodGroup == "vegetable") {
-                setVegetableCal(prev => [...prev, nutrients_calories])
+            if (entry.foodGroup == "grain") {
+                setGrainCal(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (foodGroup == "protein") {
-                setProteinCal(prev => [...prev, nutrients_calories])
-            }
-            if (foodGroup == "grain") {
-                setGrainCal(prev => [...prev, nutrients_calories])
-            }
-            if (foodGroup == "dairy") {
-                setDairyCal(prev => [...prev, nutrients_calories])
+            if (entry.foodGroup == "dairy") {
+                setDairyCal(prev => [...prev, entry.nutrients.calories.amount])
             }
         }
 

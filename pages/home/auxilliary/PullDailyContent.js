@@ -114,86 +114,41 @@ export const usePullDailyContent = (input, subuser) => {
         let itemsArray = []; // create an empty array to store food items
         // console.log(tracker);
         for (let i = 0; i < tracker.length; i++) {
-            let entry = JSON.parse(JSON.stringify(tracker[i].entry[0]));
-            
+            let entry = tracker[i].entry[0]
 
-            function removeBackslashes(str) {
-                let pattern = /(?<!\\)\\(?!\\)/g;
-                let replacement = '';
-                let updatedStr = str.replace(pattern, replacement);
-
-                return updatedStr;
-            }
-
-            const removeQuotes = (str) => {
-                return str.replace(/^"(.*)"$/, '$1');
-            }
-
-            let item = entry.item;
-            item = removeQuotes(removeBackslashes(JSON.stringify(item)))
-            itemsArray.push(item); // add foodItem to the itemsArray
-
-            let emotion = entry.emotion;
-            emotion = removeQuotes(JSON.stringify(emotion))
-            const codePoints = emotion
+            const codePoints = entry.emotion
                 .split('')
                 .map(char => char.charCodeAt(0).toString(16).padStart(4, '0'));
             const unicodeEscape = '\\u' + codePoints.join('\\u');
 
-            // console.log(unicodeEscape)
+            let item = entry.item;
+            itemsArray.push(item); // add foodItem to the itemsArray
 
-            let schedule = entry.schedule;
-            schedule = removeQuotes(removeBackslashes(JSON.stringify(schedule)))
+            emotionIndex.push({ item: entry.item, emoji: unicodeEscape, schedule: entry.schedule, time: entry.time, nutrients: entry.nutrients, measurement: entry.amount, id: entry._id, foodGroup: entry.foodGroup })
 
-            let time = entry.time;
-            time = removeQuotes(removeBackslashes(JSON.stringify(time)))
-
-            let nutrients = entry.nutrients;
-            let nutrients_calories = nutrients.calories;
-            nutrients_calories = JSON.parse(nutrients_calories);
-            nutrients_calories = nutrients_calories.amount
-
-
-
-            // nutrients = removeQuotes(removeBackslashes(JSON.stringify(nutrients)))
-
-            let measurement = entry.amount;
-            measurement = removeQuotes(removeBackslashes(JSON.stringify(measurement)))
-
-            // let ID = entry._id;
-            // ID = removeQuotes(removeBackslashes(JSON.stringify(ID)))
-            let ID = JSON.parse(JSON.stringify(tracker[i]._id));
-            ID = removeQuotes(removeBackslashes(JSON.stringify(ID)))
-
-            let foodGroup = entry.foodGroup;
-            foodGroup = removeQuotes(removeQuotes(removeBackslashes(JSON.stringify(foodGroup))))
-
-            emotionIndex.push({ item: item, emoji: unicodeEscape, schedule: schedule, time: time, nutrients: nutrients, measurement: measurement, id: ID, foodGroup: foodGroup })
-
-
-            if (schedule == "First Thing") {
-                setFirstThing(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "First Thing") {
+                setFirstThing(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (schedule == "Breakfast") {
-                setBreakfast(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "Breakfast") {
+                setBreakfast(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (schedule == "Midmorning") {
-                setMidmorning(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "Midmorning") {
+                setMidmorning(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (schedule == "Lunch") {
-                setLunch(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "Lunch") {
+                setLunch(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (schedule == "Afternoon") {
-                setAfternoon(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "Afternoon") {
+                setAfternoon(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (schedule == "Dinner") {
-                setDinner(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "Dinner") {
+                setDinner(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (schedule == "Before Bed") {
-                setBeforeBed(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "Before Bed") {
+                setBeforeBed(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (schedule == "Custom") {
-                setCustom(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "Custom") {
+                setCustom(prev => [...prev, entry.nutrients.calories.amount])
             }
 
         }

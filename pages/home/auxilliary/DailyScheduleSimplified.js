@@ -192,54 +192,31 @@ export const DailyScheduleSimplified = (props) => {
         setBeforeBed([])
         setCustom([])
         for (let i = 0; i < tracker.length; i++) {
-            let entry = JSON.parse(JSON.stringify(tracker[i].entry[0]));
+            let entry = tracker[i].entry[0]
 
-            function removeBackslashes(str) {
-                let pattern = /(?<!\\)\\(?!\\)/g;
-                let replacement = '';
-                let updatedStr = str.replace(pattern, replacement);
-
-                return updatedStr;
+            if (entry.schedule == "First Thing") {
+                setFirstThing(prev => [...prev, entry.nutrients.calories.amount])
             }
-
-            const removeQuotes = (str) => {
-                return str.replace(/^"(.*)"$/, '$1');
+            if (entry.schedule == "Breakfast") {
+                setBreakfast(prev => [...prev, entry.nutrients.calories.amount])
             }
-
-
-            let schedule = entry.schedule;
-            schedule = removeQuotes(removeBackslashes(JSON.stringify(schedule)))
-
-            let nutrients = entry.nutrients;
-            let nutrients_calories = nutrients.calories;
-            nutrients_calories = JSON.parse(nutrients_calories);
-            nutrients_calories = nutrients_calories.amount
-            // console.log(nutrients_calories)
-
-
-            if (schedule == "First Thing") {
-                setFirstThing(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "Midmorning") {
+                setMidmorning(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (schedule == "Breakfast") {
-                setBreakfast(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "Lunch") {
+                setLunch(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (schedule == "Midmorning") {
-                setMidmorning(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "Afternoon") {
+                setAfternoon(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (schedule == "Lunch") {
-                setLunch(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "Dinner") {
+                setDinner(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (schedule == "Afternoon") {
-                setAfternoon(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "Before Bed") {
+                setBeforeBed(prev => [...prev, entry.nutrients.calories.amount])
             }
-            if (schedule == "Dinner") {
-                setDinner(prev => [...prev, nutrients_calories])
-            }
-            if (schedule == "Before Bed") {
-                setBeforeBed(prev => [...prev, nutrients_calories])
-            }
-            if (schedule == "Custom") {
-                setCustom(prev => [...prev, nutrients_calories])
+            if (entry.schedule == "Custom") {
+                setCustom(prev => [...prev, entry.nutrients.calories.amount])
             }
 
         }
@@ -393,6 +370,12 @@ export const DailyScheduleSimplified = (props) => {
             "Custom"
         ];
 
+        // console.log("# ----------- CHECK --------------")
+        // console.log(data)
+        // console.log(emotions[0])
+        // console.log(emotions[0].nutrients.calories)
+
+
         // Define a function to generate a nutrition details container
         function NutritionDetailsContainer({ title, amount, unit }) {
             return (
@@ -409,7 +392,6 @@ export const DailyScheduleSimplified = (props) => {
             );
         }
 
-        let emotions_updated = JSON.parse(JSON.stringify(emotions));
 
         const textComponents = [];
         const textComponentsBySchedule = {};
@@ -417,7 +399,7 @@ export const DailyScheduleSimplified = (props) => {
         for (let i = 0; i < data.length; i++) {
             for (let j = 0; j < emotions.length; j++) {
                 if (data[i].name == emotions[j].item) {
-                    const schedule = emotions_updated[j].schedule;
+                    const schedule = emotions[j].schedule;
                     const index = options_time.indexOf(schedule);
                     if (index !== -1) {
                         const textComponent = (
@@ -539,56 +521,56 @@ export const DailyScheduleSimplified = (props) => {
 
                                                 <NutritionDetailsContainer 
                                                     title="Calories" 
-                                                    amount={JSON.parse(emotions_updated[j].nutrients.calories).amount} 
-                                                    unit={JSON.parse(emotions_updated[j].nutrients.calories).unit} 
+                                                    amount={emotions[j].nutrients.calories.amount} 
+                                                    unit={emotions[j].nutrients.calories.unit} 
                                                 />
                                                 <NutritionDetailsContainer 
                                                     title="Carbohydrates" 
-                                                    amount={JSON.parse(emotions_updated[j].nutrients.carbohydrates).amount} 
-                                                    unit={JSON.parse(emotions_updated[j].nutrients.carbohydrates).unit} 
+                                                    amount={emotions[j].nutrients.carbohydrates.amount} 
+                                                    unit={emotions[j].nutrients.carbohydrates.unit} 
                                                 />
                                                 <NutritionDetailsContainer 
                                                     title="Fat" 
-                                                    amount={JSON.parse(emotions_updated[j].nutrients.fat).amount} 
-                                                    unit={JSON.parse(emotions_updated[j].nutrients.fat).unit} 
+                                                    amount={emotions[j].nutrients.fat.amount} 
+                                                    unit={emotions[j].nutrients.fat.unit} 
                                                 />
                                                 <NutritionDetailsContainer 
                                                     title="Fiber" 
-                                                    amount={JSON.parse(emotions_updated[j].nutrients.fiber).amount} 
-                                                    unit={JSON.parse(emotions_updated[j].nutrients.fiber).unit} 
+                                                    amount={emotions[j].nutrients.fiber.amount} 
+                                                    unit={emotions[j].nutrients.fiber.unit} 
                                                 />
                                                 <NutritionDetailsContainer 
                                                     title="Protein" 
-                                                    amount={JSON.parse(emotions_updated[j].nutrients.protein).amount} 
-                                                    unit={JSON.parse(emotions_updated[j].nutrients.protein).unit} 
+                                                    amount={emotions[j].nutrients.protein.amount} 
+                                                    unit={emotions[j].nutrients.protein.unit} 
                                                 />
                                                 <NutritionDetailsContainer 
                                                     title="Sugar" 
-                                                    amount={JSON.parse(emotions_updated[j].nutrients.sugar).amount} 
-                                                    unit={JSON.parse(emotions_updated[j].nutrients.sugar).unit} 
+                                                    amount={emotions[j].nutrients.sugar.amount} 
+                                                    unit={emotions[j].nutrients.sugar.unit} 
                                                 />
 
                                                 {props.premium &&
                                                 <>
                                                     <NutritionDetailsContainer 
                                                         title="Iron" 
-                                                        amount={JSON.parse(emotions_updated[j].nutrients.iron).amount} 
-                                                        unit={JSON.parse(emotions_updated[j].nutrients.iron).unit} 
+                                                        amount={emotions[j].nutrients.iron.amount} 
+                                                        unit={emotions[j].nutrients.iron.unit} 
                                                     />
                                                     <NutritionDetailsContainer 
                                                         title="Zinc" 
-                                                        amount={JSON.parse(emotions_updated[j].nutrients.zinc).amount} 
-                                                        unit={JSON.parse(emotions_updated[j].nutrients.zinc).unit} 
+                                                        amount={emotions[j].nutrients.zinc.amount} 
+                                                        unit={emotions[j].nutrients.zinc.unit} 
                                                     />
                                                     <NutritionDetailsContainer 
                                                         title="Omega-3" 
-                                                        amount={JSON.parse(emotions_updated[j].nutrients.omega3).amount} 
-                                                        unit={JSON.parse(emotions_updated[j].nutrients.omega3).unit} 
+                                                        amount={emotions[j].nutrients.omega3.amount} 
+                                                        unit={emotions[j].nutrients.omega3.unit} 
                                                     />
                                                     <NutritionDetailsContainer 
                                                         title="Vitamin D" 
-                                                        amount={JSON.parse(emotions_updated[j].nutrients.vitaminD).amount} 
-                                                        unit={JSON.parse(emotions_updated[j].nutrients.vitaminD).unit} 
+                                                        amount={emotions[j].nutrients.vitaminD.amount} 
+                                                        unit={emotions[j].nutrients.vitaminD.unit} 
                                                     />
                                                 </>
                                                 }
