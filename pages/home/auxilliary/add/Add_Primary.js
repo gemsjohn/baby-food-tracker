@@ -823,56 +823,56 @@ export const Add_Primary = (props) => {
                                 height: '80%',
                             }}
                         >
-                            <ScrollView
+                            <FlatList
                                 style={{
                                     alignSelf: 'center',
                                 }}
-                            >
-                                <View>
-                                    {top_100_Filtered.sort((a, b) => a.tried - b.tried).map((data, index) => (
-                                        <View
-                                            style={{
-                                                ...styles.renderItem_Search_Results,
-                                                justifyContent: 'space-between',
-                                            }}
-                                            key={index}
-                                        >
-                                            <View style={{ flexDirection: 'row' }}>
-                                                <Text
-                                                    style={{
-                                                        ...styles.renderItem_Search_Result_Container_Text,
-                                                        color: data.tried ? THEME_FONT_COLOR_WHITE_LOW_OPACITY : THEME_FONT_COLOR_WHITE,
-                                                    }}
-                                                >
-                                                    {data.name}
-                                                </Text>
-                                                {data.tried &&
-                                                    <FontAwesomeIcon
-                                                        icon={faSolid, faCheck}
-                                                        style={{ color: THEME_COLOR_POSITIVE, marginLeft: HeightRatio(10) }}
-                                                        size={20}
-                                                    />
-                                                }
-                                            </View>
-                                            <TouchableOpacity
-                                                // onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); }}
-                                                onPress={() => {
-                                                    setSearchQuery(data.name)
-                                                    setDisplayTop100Foods(false)
-                                                    handleSearch(data.name);
+                                data={top_100_Filtered.sort((a, b) => a.tried - b.tried)}
+                                renderItem={({ item, index }) => (
+                                    <View
+                                        style={{
+                                            ...styles.renderItem_Search_Results,
+                                            justifyContent: 'space-between',
+                                        }}
+                                        key={index}
+                                    >
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text
+                                                style={{
+                                                    ...styles.renderItem_Search_Result_Container_Text,
+                                                    color: item.tried ? THEME_FONT_COLOR_WHITE_LOW_OPACITY : THEME_FONT_COLOR_WHITE,
                                                 }}
-                                                style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow }}
                                             >
-                                                <Text style={styles.modalVisible_recentFoodData_Map_Plus_Text}>
-                                                    +
-                                                </Text>
-                                            </TouchableOpacity>
+                                                {item.name}
+                                            </Text>
+                                            {item.tried &&
+                                                <FontAwesomeIcon
+                                                    icon={faSolid, faCheck}
+                                                    style={{ color: THEME_COLOR_POSITIVE, marginLeft: HeightRatio(10) }}
+                                                    size={20}
+                                                />
+                                            }
                                         </View>
-                                    ))}
-
-                                </View>
-                            </ScrollView>
+                                        <TouchableOpacity
+                                            // onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(item); }}
+                                            onPress={() => {
+                                                setSearchQuery(item.name)
+                                                setDisplayTop100Foods(false)
+                                                handleSearch(item.name);
+                                            }}
+                                            style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow }}
+                                        >
+                                            <Text style={styles.modalVisible_recentFoodData_Map_Plus_Text}>
+                                                +
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
                         </SafeAreaView>
+
+                        
                         <TouchableOpacity onPress={() => setDisplayTop100Foods(false)}>
                             <View
                                 style={{

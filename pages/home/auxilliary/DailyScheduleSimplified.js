@@ -143,7 +143,7 @@ export const DailyScheduleSimplified = (props) => {
         refetch()
         setMatchingDate([])
 
-        if (props.subuser.tracker) {
+        if (props.subuser && props.subuser.tracker) {
             for (let i = 0; i < props.subuser.tracker.length; i++) {
                 if (props.subuser.tracker[i].date == date) {
                     setMatchingDate(prev => [...prev, props.subuser.tracker[i]]);
