@@ -60,7 +60,7 @@ export const SwipeableViews = (props) => {
                 <View key={0} style={[styles.view]}>
                     <FoodGroupMetrics
                         date={props.date}
-                        userID={props.userID}
+                        subuser={props.subuser}
                     />
                 </View>,
             title: "Food Group"
@@ -75,7 +75,9 @@ export const SwipeableViews = (props) => {
         {
             content:
                 <View key={1} style={styles.view}>
-                    <AllergyTracking />
+                    <AllergyTracking 
+                        subuser={props.subuser}
+                    />
                 </View>,
             title: "Allergies"
 

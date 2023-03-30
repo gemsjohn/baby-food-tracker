@@ -18,7 +18,7 @@ import {
     ActivityIndicator,
     StatusBar
 } from 'react-native';
-import { HeightRatio } from '../../../../Styling';
+import { HeightRatio, windowWidth } from '../../../../Styling';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_USER_BY_ID } from '../../../../utils/queries';
 import {
@@ -94,10 +94,10 @@ export const FoodGroupMetrics = (props) => {
         refetch()
         setMatchingDate([])
 
-        if (userByID?.user.tracker != []) {
-            for (let i = 0; i < userByID?.user.tracker.length; i++) {
-                if (userByID?.user.tracker[i].date == date) {
-                    setMatchingDate(prev => [...prev, userByID?.user.tracker[i]]);
+        if (props.subuser && props.subuser.tracker != []) {
+            for (let i = 0; i < props.subuser.tracker.length; i++) {
+                if (props.subuser.tracker[i].date == date) {
+                    setMatchingDate(prev => [...prev, props.subuser.tracker[i]]);
                 }
             }
         }
@@ -117,10 +117,10 @@ export const FoodGroupMetrics = (props) => {
     }, [props.date])
 
     useEffect(() => {
-        if (userByID?.user != undefined) {
+        if (props.subuser != undefined) {
             getTrackerEntryByDate(props.date)
         }
-    }, [userByID?.user])
+    }, [props.subuser])
 
     const breakDownMatchingDate = (input) => {
         setFruitCal([])
@@ -292,10 +292,20 @@ export const FoodGroupMetrics = (props) => {
                     style={{
                         flexDirection: 'column',
                         display: 'flex',
-                        // alignItems: 'center',
-                        justifyContent: 'center'
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: windowWidth - HeightRatio(100),
+                        alignSelf: 'center'
                     }}
                 >
+                    <Image
+                        source={require('../../../../assets/favicon_0.png')}
+                        style={{
+                            height: HeightRatio(200),
+                            width: HeightRatio(200),
+                            alignSelf: 'center'
+                        }}
+                    />
                     <Text
                         style={{
                             color: THEME_FONT_COLOR_WHITE,

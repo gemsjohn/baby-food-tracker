@@ -37,7 +37,7 @@ import { GET_USER_BY_ID } from '../../../utils/queries';
 import { MainStateContext } from '../../../App';
 import { top_100 } from './TOP_100';
 
-export const usePullDailyContent = (input) => {
+export const usePullDailyContent = (input, subuser) => {
     const { mainState, setMainState } = useContext(MainStateContext);
     const [matchingDate, setMatchingDate] = useState([]);
     const [totalCalorieCount, setTotalCalorieCount] = useState(null);
@@ -76,17 +76,17 @@ export const usePullDailyContent = (input) => {
     const getTrackerEntryByDate = (date) => {
         refetch()
         setMatchingDate([])
-
-        if (userByID?.user.tracker != []) {
-            for (let i = 0; i < userByID?.user.tracker.length; i++) {
-                if (userByID?.user.tracker[i].date == date) {
-                    setMatchingDate(prev => [...prev, userByID?.user.tracker[i]]);
+        console.log(subuser)
+        if (subuser && subuser.tracker) {
+            for (let i = 0; i < subuser.tracker.length; i++) {
+                if (subuser.tracker[i].date == date) {
+                    setMatchingDate(prev => [...prev, subuser.tracker[i]]);
                 }
             }
         }
 
     }
-    
+
 
     useEffect(() => {
         // console.log(input)
@@ -98,7 +98,7 @@ export const usePullDailyContent = (input) => {
     let commonIndex = [];
     let emotionIndex = [];
 
-    const breakDownMatchingDate = (input) => {
+    const breakDownMatchingDate = (tracker) => {
         setFirstThing([])
         setBreakfast([])
         setMidmorning([])
@@ -108,17 +108,9 @@ export const usePullDailyContent = (input) => {
         setBeforeBed([])
 
         let itemsArray = []; // create an empty array to store food items
-
-        for (let i = 0; i < input.length; i++) {
-            let ID = JSON.stringify(input[i]._id);
-            const schedule = JSON.stringify(input[i].entry[0].schedule);
-            let time = JSON.stringify(input[i].entry[0].time);
-            const jsonString = JSON.stringify(input[i].entry[0].nutrients);
-            let amount = JSON.stringify(input[i].entry[0].amount);
-            let item = JSON.stringify(input[i].entry[0].item);
-            let emotion = JSON.stringify(input[i].entry[0].emotion);
-            let foodGroup = JSON.stringify(input[i].entry[0].foodGroup);
-
+        console.log(tracker);
+        for (let i = 0; i < tracker.length; i++) {
+            let entry = JSON.parse(JSON.stringify(tracker[i].entry[0]));
 
             function removeBackslashes(str) {
                 let pattern = /(?<!\\)\\(?!\\)/g;
@@ -132,64 +124,64 @@ export const usePullDailyContent = (input) => {
                 return str.replace(/^"(.*)"$/, '$1');
             }
 
-            let foodItem = JSON.stringify(input[i].entry[0].item);
-            foodItem  = removeQuotes(foodItem);
-            itemsArray.push(foodItem); // add foodItem to the itemsArray
+            let item = entry.item;
+            item = removeQuotes(removeBackslashes(JSON.stringify(item)))
+            itemsArray.push(item); // add foodItem to the itemsArray
 
-
-            let sampleSchedule_v1 = removeBackslashes(`${schedule}`);
-            let sampleSchedule_v2 = removeQuotes(sampleSchedule_v1)
-
-            let sample_v1 = removeBackslashes(`${jsonString}`);
-            let sample_v2 = removeQuotes(sample_v1)
-            sample_v2 = removeBackslashes(sample_v2)
-            sample_v2 = removeQuotes(sample_v2)
-            sample_v2 = JSON.parse(sample_v2)
-            let sample_v3 = sample_v2;
-            sample_v2 = sample_v2.calories.amount
-
-            // EMOJI
-            emotion = removeQuotes(emotion)
+            let emotion = entry.emotion;
+            emotion = removeQuotes(JSON.stringify(emotion))
             const codePoints = emotion
                 .split('')
                 .map(char => char.charCodeAt(0).toString(16).padStart(4, '0'));
             const unicodeEscape = '\\u' + codePoints.join('\\u');
-            item = removeBackslashes(item);
-            item = removeQuotes(item)
 
-            ID = removeBackslashes(ID)
-            amount = removeBackslashes(amount);
-            foodGroup = removeBackslashes(foodGroup);
-            foodGroup = removeQuotes(foodGroup);
-            foodGroup = removeQuotes(foodGroup);
-            // console.log(removeQuotes(sampleSchedule_v1))
+            let schedule = entry.schedule;
+            schedule = removeQuotes(removeBackslashes(JSON.stringify(schedule)))
 
-            time = removeBackslashes(`${time}`);
+            let time = entry.time;
+            time = removeQuotes(removeBackslashes(JSON.stringify(time)))
 
-
-            emotionIndex.push({item: item, emoji: unicodeEscape, schedule: removeQuotes(sampleSchedule_v1), time: removeQuotes(time), nutrients: sample_v3, measurement: removeQuotes(amount), id: removeQuotes(ID), foodGroup: foodGroup})
+            let nutrients = entry.nutrients;
+            let nutrients_calories = nutrients.calories;
+            nutrients_calories = JSON.parse(nutrients_calories);
+            nutrients_calories = nutrients_calories.amount
 
 
-            if (sampleSchedule_v2 == "First Thing") {
-                setFirstThing(prev => [...prev, sample_v2])
+
+            // nutrients = removeQuotes(removeBackslashes(JSON.stringify(nutrients)))
+
+            let measurement = entry.amount;
+            measurement = removeQuotes(removeBackslashes(JSON.stringify(measurement)))
+
+            let ID = entry._id;
+            ID = removeQuotes(removeBackslashes(JSON.stringify(ID)))
+
+            let foodGroup = entry.foodGroup;
+            foodGroup = removeQuotes(removeQuotes(removeBackslashes(JSON.stringify(foodGroup))))
+
+            emotionIndex.push({ item: item, emoji: unicodeEscape, schedule: schedule, time: time, nutrients: nutrients, measurement: measurement, id: ID, foodGroup: foodGroup })
+
+
+            if (schedule == "First Thing") {
+                setFirstThing(prev => [...prev, nutrients_calories])
             }
-            if (sampleSchedule_v2 == "Breakfast") {
-                setBreakfast(prev => [...prev, sample_v2])
+            if (schedule == "Breakfast") {
+                setBreakfast(prev => [...prev, nutrients_calories])
             }
-            if (sampleSchedule_v2 == "Midmorning") {
-                setMidmorning(prev => [...prev, sample_v2])
+            if (schedule == "Midmorning") {
+                setMidmorning(prev => [...prev, nutrients_calories])
             }
-            if (sampleSchedule_v2 == "Lunch") {
-                setLunch(prev => [...prev, sample_v2])
+            if (schedule == "Lunch") {
+                setLunch(prev => [...prev, nutrients_calories])
             }
-            if (sampleSchedule_v2 == "Afternoon") {
-                setAfternoon(prev => [...prev, sample_v2])
+            if (schedule == "Afternoon") {
+                setAfternoon(prev => [...prev, nutrients_calories])
             }
-            if (sampleSchedule_v2 == "Dinner") {
-                setDinner(prev => [...prev, sample_v2])
+            if (schedule == "Dinner") {
+                setDinner(prev => [...prev, nutrients_calories])
             }
-            if (sampleSchedule_v2 == "Before Bed") {
-                setBeforeBed(prev => [...prev, sample_v2])
+            if (schedule == "Before Bed") {
+                setBeforeBed(prev => [...prev, nutrients_calories])
             }
 
         }
@@ -197,21 +189,21 @@ export const usePullDailyContent = (input) => {
         array_1 = itemsArray.filter((item, index) => itemsArray.indexOf(item) === index);
         array_1.forEach((item1, index1) => {
             array_0.forEach((item2, index2) => {
-              const itemName = item2.name.toUpperCase();
-              if (item1.includes(itemName)) {
-                commonIndex.push(index1);
-              }
+                const itemName = item2.name.toUpperCase();
+                if (item1.includes(itemName)) {
+                    commonIndex.push(index1);
+                }
             });
-          });
-        
+        });
+
         // console.log(commonIndex);
 
         function updateArray(arr, indexArr) {
             return arr.map((item, index) => {
                 if (indexArr.includes(index)) {
-                    return {name: item, tried: true};
+                    return { name: item, tried: true };
                 } else {
-                    return {name: item, tried: false};
+                    return { name: item, tried: false };
                 }
             });
         }
@@ -222,7 +214,7 @@ export const usePullDailyContent = (input) => {
         setUniqueEmotionArray(emotionIndex)
         // console.log(emotionIndex)
     }
-    
+
 
     // UPDATE SCHEDULE SECTION TOTAL CAL's
     useEffect(() => {

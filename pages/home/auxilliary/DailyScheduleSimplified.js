@@ -66,7 +66,7 @@ export const DailyScheduleSimplified = (props) => {
 
     const { mainState, setMainState } = useContext(MainStateContext);
     const [matchingDate, setMatchingDate] = useState([]);
-    const { calendarModalCalorieTotal, calendarModalDate, calendarModalFoods, calendarModalEmotion } = usePullDailyContent(props.date);
+    const { calendarModalCalorieTotal, calendarModalDate, calendarModalFoods, calendarModalEmotion } = usePullDailyContent(props.date, props.subuser);
     const [displayTop100Foods, setDisplayTop100Foods] = useState(false)
 
     localContainerHeight = props.containerHeight;
@@ -143,10 +143,10 @@ export const DailyScheduleSimplified = (props) => {
         refetch()
         setMatchingDate([])
 
-        if (userByID?.user.tracker != []) {
-            for (let i = 0; i < userByID?.user.tracker.length; i++) {
-                if (userByID?.user.tracker[i].date == date) {
-                    setMatchingDate(prev => [...prev, userByID?.user.tracker[i]]);
+        if (props.subuser.tracker != []) {
+            for (let i = 0; i < props.subuser.tracker.length; i++) {
+                if (props.subuser.tracker[i].date == date) {
+                    setMatchingDate(prev => [...prev, props.subuser.tracker[i]]);
                 }
             }
         }
@@ -177,12 +177,12 @@ export const DailyScheduleSimplified = (props) => {
     }, [props.date])
 
     useEffect(() => {
-        if (userByID?.user != undefined) {
+        if (props.subuser != undefined) {
             getTrackerEntryByDate(props.date)
         }
-    }, [userByID?.user])
+    }, [props.subuser])
 
-    const breakDownMatchingDate = (input) => {
+    const breakDownMatchingDate = (tracker) => {
         setFirstThing([])
         setBreakfast([])
         setMidmorning([])
@@ -191,9 +191,8 @@ export const DailyScheduleSimplified = (props) => {
         setDinner([])
         setBeforeBed([])
         setCustom([])
-        for (let i = 0; i < input.length; i++) {
-            const schedule = JSON.stringify(input[i].entry[0].schedule);
-            const jsonString = JSON.stringify(input[i].entry[0].nutrients);
+        for (let i = 0; i < tracker.length; i++) {
+            let entry = JSON.parse(JSON.stringify(tracker[i].entry[0]));
 
             function removeBackslashes(str) {
                 let pattern = /(?<!\\)\\(?!\\)/g;
@@ -207,41 +206,38 @@ export const DailyScheduleSimplified = (props) => {
                 return str.replace(/^"(.*)"$/, '$1');
             }
 
-            let sampleSchedule_v1 = removeBackslashes(`${schedule}`);
-            let sampleSchedule_v2 = removeQuotes(sampleSchedule_v1)
 
-            let sample_v1 = removeBackslashes(`${jsonString}`);
-            let sample_v2 = removeQuotes(sample_v1)
-            sample_v2 = removeBackslashes(sample_v2)
-            sample_v2 = removeQuotes(sample_v2)
-            sample_v2 = JSON.parse(sample_v2)
-            sample_v2 = sample_v2.calories.amount
+            let schedule = entry.schedule;
+            schedule = removeQuotes(removeBackslashes(JSON.stringify(schedule)))
+
+            let nutrients = entry.nutrients;
+            let nutrients_calories = nutrients.calories;
+            nutrients_calories = JSON.parse(nutrients_calories);
+            nutrients_calories = nutrients_calories.amount
 
 
-            if (sampleSchedule_v2 == "First Thing") {
-                setFirstThing(prev => [...prev, sample_v2])
+            if (schedule == "First Thing") {
+                setFirstThing(prev => [...prev, nutrients_calories])
             }
-            if (sampleSchedule_v2 == "Breakfast") {
-                setBreakfast(prev => [...prev, sample_v2])
+            if (schedule == "Breakfast") {
+                setBreakfast(prev => [...prev, nutrients_calories])
             }
-            if (sampleSchedule_v2 == "Midmorning") {
-                setMidmorning(prev => [...prev, sample_v2])
+            if (schedule == "Midmorning") {
+                setMidmorning(prev => [...prev, nutrients_calories])
             }
-            if (sampleSchedule_v2 == "Lunch") {
-                setLunch(prev => [...prev, sample_v2])
+            if (schedule == "Lunch") {
+                setLunch(prev => [...prev, nutrients_calories])
             }
-            if (sampleSchedule_v2 == "Afternoon") {
-                setAfternoon(prev => [...prev, sample_v2])
+            if (schedule == "Afternoon") {
+                setAfternoon(prev => [...prev, nutrients_calories])
             }
-            if (sampleSchedule_v2 == "Dinner") {
-                setDinner(prev => [...prev, sample_v2])
+            if (schedule == "Dinner") {
+                setDinner(prev => [...prev, nutrients_calories])
             }
-            if (sampleSchedule_v2 == "Before Bed") {
-                setBeforeBed(prev => [...prev, sample_v2])
+            if (schedule == "Before Bed") {
+                setBeforeBed(prev => [...prev, nutrients_calories])
             }
-            if (sampleSchedule_v2 == "Custom") {
-                setCustom(prev => [...prev, sample_v2])
-            }
+
         }
 
     }

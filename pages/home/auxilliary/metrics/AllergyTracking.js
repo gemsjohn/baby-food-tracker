@@ -60,7 +60,7 @@ import { MainStateContext } from '../../../../App';
 
 
 
-export const AllergyTracking = () => {
+export const AllergyTracking = (props) => {
     const { mainState, setMainState } = useContext(MainStateContext);
     const [allergyArray, setAllergyArray] = useState([]);
     const [modalVisible, setModalVisible] = useState(false)
@@ -76,12 +76,14 @@ export const AllergyTracking = () => {
         setAllergyArray([])
         console.log("# - getAllergyData()")
         refetch()
-        for (let i = 0; i < userByID?.user.allergy.length; i++) {
-            const allergy = userByID?.user.allergy[i];
-            if (!allergyArray.includes(allergy)) {
-                setAllergyArray((prevArray) => [...prevArray, allergy]);
-            }
+        if (props.subuser) {
+            for (let i = 0; i < props.subuser.allergy.length; i++) {
+                const allergy = props.subuser.allergy[i];
+                if (!allergyArray.includes(allergy)) {
+                    setAllergyArray((prevArray) => [...prevArray, allergy]);
+                }
 
+            }
         }
 
     }
@@ -93,7 +95,7 @@ export const AllergyTracking = () => {
 
     useEffect(() => {
         getAllergyData()
-    }, [userByID?.user])
+    }, [props.subuser])
 
     const handleUpdateUserAllergies = async (input) => {
         await updateUserAllergies({

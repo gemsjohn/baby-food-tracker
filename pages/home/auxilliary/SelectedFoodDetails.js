@@ -279,26 +279,44 @@ export const SelectedFoodDetails = (props) => {
                         :
                         <>
                             {options_time.map((option) => (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setSelectedTime(option);
-                                        intervalID.current = setInterval(() => {
-                                            getCustomScheduleTime(option)
+                                <>
+                                
+                                {option == 'Custom' ?
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setSelectedTime(option);
+                                            intervalID.current = setInterval(() => {
+                                                getCustomScheduleTime(option)
 
-                                        }, 100)
-
-
-                                    }}
-                                    style={styles.itemButton_AltColor}
-                                    key={option}
-                                >
-                                    <Text
-                                        style={{ ...styles.itemButton_Text, fontFamily: option == 'Custom' ? 'SofiaSansSemiCondensed-ExtraBold' : 'SofiaSansSemiCondensed-Regular' }}
-                                        allowFontScaling={false}
+                                            }, 100)
+                                        }}
+                                        style={styles.itemButton_AltColor}
+                                        key={option}
                                     >
-                                        {option}
-                                    </Text>
-                                </TouchableOpacity>
+                                        <Text
+                                            style={{ ...styles.itemButton_Text, fontFamily: option == 'Custom' ? 'SofiaSansSemiCondensed-ExtraBold' : 'SofiaSansSemiCondensed-Regular' }}
+                                            allowFontScaling={false}
+                                        >
+                                            {option}
+                                        </Text>
+                                    </TouchableOpacity>
+                                    :
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setSelectedTime(option);
+                                        }}
+                                        style={styles.itemButton_AltColor}
+                                        key={option}
+                                    >
+                                        <Text
+                                            style={{ ...styles.itemButton_Text, fontFamily: option == 'Custom' ? 'SofiaSansSemiCondensed-ExtraBold' : 'SofiaSansSemiCondensed-Regular' }}
+                                            allowFontScaling={false}
+                                        >
+                                            {option}
+                                        </Text>
+                                    </TouchableOpacity>
+                                }
+                                </>
                             ))}
                         </>
                     }
