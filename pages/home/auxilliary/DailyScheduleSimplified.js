@@ -606,10 +606,18 @@ export const DailyScheduleSimplified = (props) => {
                                                     </Text>
                                                 </View>
                                                 <TouchableOpacity
-                                                    onPress={() => { setModalVisible(true); setDeleteID(emotions[j].id) }}
+                                                    onPress={() => { 
+                                                        setModalVisible(true); 
+                                                        setDeleteID(emotions[j].id);
+                                                        setMainState({
+                                                            triggerRefresh: false
+                                                        }) 
+                                                        
+                                                    }}
                                                     style={{
                                                         ...styles.scheduleButton_subContent_NutritionDetails_Remove_Button,
                                                         ...styles.button_Drop_Shadow
+                                                        
                                                     }}
                                                 >
                                                     <Text
@@ -1097,7 +1105,7 @@ const styles = StyleSheet.create({
         // backgroundColor: THEME_COLOR_BACKDROP_DARK,
         width: windowWidth - HeightRatio(20),
         padding: HeightRatio(10),
-        borderRadius: HeightRatio(10)
+        borderRadius: HeightRatio(10),
     },
     scheduleButton: {
         display: "flex",

@@ -44,7 +44,7 @@ import { convertDateFormat } from '../.././auxilliary/ConvertDateFormat';
 import { SelectedFoodDetails } from '../.././auxilliary/SelectedFoodDetails';
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_ENTRY } from '../../../../utils/mutations';
-import { GET_USER_BY_ID } from '../../../../utils/queries';
+import { GET_USER_BY_ID, FOOD } from '../../../../utils/queries';
 import { useCheckUserTop100 } from '../../auxilliary/CheckUserTop100';
 import {
     THEME_COLOR_POSITIVE,
@@ -110,6 +110,7 @@ export const Add_Primary = (props) => {
     // const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
     //     variables: { id: mainState.current.userID }
     // });
+    const { data: FOODDATA, refetch } = useQuery(FOOD);
 
     // # - DATE
     const formatString = 'DD/MM/YYYY';
@@ -238,6 +239,8 @@ export const Add_Primary = (props) => {
     };
 
     const getNutritionValue = async (input) => {
+        console.log("# ----    -----")
+        console.log(input)
         setRefreshing_Nutrition(true)
         setMainState({
             triggerRefresh: true
@@ -283,92 +286,123 @@ export const Add_Primary = (props) => {
             }
             updateUserEntry();
         } else {
+            console.log("# - CHECK TO SEE IF FOOD EXISTS")
+            let doesFoodExistsWithinDB;
+            let foodData;
+            for (let i = 0; i < FOODDATA.foods.length; i++) {
+                console.log("===========")
+                console.log(FOODDATA.foods[i].item)
+                console.log(input.description.toUpperCase())
+                console.log("===========")
 
-            const prompt = encodeURIComponent(JSON.stringify(data));
-
-            const config = {
-                method: "POST",
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                url: `${GLOBAL_GRAPHQL_API_URL}/api/npc/${prompt}`
+                if (FOODDATA.foods[i].item == input.description.toUpperCase()) {
+                    console.log("MATCH")
+                    doesFoodExistsWithinDB = true;
+                    foodData = FOODDATA.foods[i];
+                    break;
+                } else {
+                    console.log("NO MATCH")
+                    doesFoodExistsWithinDB = false;
+                }
             }
-            axios(config)
-                .then((response) => {
-                    if (response.data.result[0] === "ERROR") {
-                    } else {
-                        const removeQuotes = (str) => {
-                            return str.replace(/^"(.*)"$/, '$1');
-                        }
-                        function removeBackslashes(str) {
-                            let pattern = /(?<!\\)\\(?!\\)/g;
-                            let replacement = '';
-                            let updatedStr = str.replace(pattern, replacement);
 
-                            return updatedStr;
-                        }
-                        console.log("# - getNutritionvalue:")
-                        console.log(mainState.current.selectedFood_Quantity)
-                        console.log(mainState.current.selectedFood_Measurement)
-                        console.log(mainState.current.selectedFood_Schedule)
-                        console.log(mainState.current.selectedFood_Emotion)
-                        console.log(mainState.current.selectedFood_Schedule_Custom_Time)
-                        console.log("# --------------------------------------")
+            if (doesFoodExistsWithinDB) {
+                console.log("# - doesFoodExistsWithinDB TRUE")
+                console.log(JSON.parse(JSON.stringify((foodData.foodGroup))))
+                let filtered_fooddata_nutrients = JSON.stringify((foodData.nutrients))
+                console.log(filtered_fooddata_nutrients)
 
-                        let nutrients_JSON = JSON.stringify(response.data.result.conversion);
-                        let foodGroup_JSON = response.data.result.foodGroup;
-                        if (foodGroup_JSON) {
-                            console.log("# - foodGroup Defined")
-                            // foodGroup_JSON = removeBackslashes(foodGroup_JSON);
-                            // foodGroup_JSON = removeQuotes(foodGroup_JSON);
-                            foodGroup_JSON = foodGroup_JSON.toLowerCase();
+
+                const updateUserEntry = async () => {
+                    await addEntry({
+                        variables: {
+                            subuserid: `${props.subuser._id}`,
+                            date: `${props.date}`,
+                            schedule: `${mainState.current.selectedFood_Schedule}`,
+                            time: `${mainState.current.selectedFood_Schedule_Custom_Time}`,
+                            item: `${input.description}`,
+                            amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
+                            emotion: `${mainState.current.selectedFood_Emotion}`,
+                            nutrients: filtered_fooddata_nutrients,
+                            foodGroup: foodData.foodGroup,
+                            allergy: `${mainState.current.selectedFood_Allergy}`
+                        }
+                    });
+                    onRefresh();
+                }
+                updateUserEntry();
+            } else {
+                console.log("# - doesFoodExistsWithinDB FALSE")
+
+                const prompt = encodeURIComponent(JSON.stringify(data));
+
+                const config = {
+                    method: "POST",
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    url: `${GLOBAL_GRAPHQL_API_URL}/api/npc/${prompt}`
+                }
+
+                axios(config)
+                    .then((response) => {
+                        if (response.data.result[0] === "ERROR") {
                         } else {
-                            console.log("# - foodGroup Undefined")
-                            foodGroup_JSON = '?';
-                        }
-
-
-
-                        nutrients_JSON = removeQuotes(nutrients_JSON)
-                        foodGroup_JSON = removeQuotes(foodGroup_JSON);
-                        if (nutrients_JSON == "not found") {
-                            setDisplayChooseAnotherOptionModal(true)
-                            console.log("Choose Another Option!!")
-                            onRefresh();
-                        } else {
-                            const updateUserEntry = async () => {
-
-                                let itemData = input.description;
-
-                                if (input.description == undefined && recentFoodData[selectRecentlyUsed].item != '') {
-                                    itemData = recentFoodData[selectRecentlyUsed].item;
-                                }
-
-                                await addEntry({
-                                    variables: {
-                                        subuserid: `${props.subuser._id}`,
-                                        date: `${props.date}`,
-                                        schedule: `${mainState.current.selectedFood_Schedule}`,
-                                        time: `${mainState.current.selectedFood_Schedule_Custom_Time}`,
-                                        item: `${itemData}`,
-                                        amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
-                                        emotion: `${mainState.current.selectedFood_Emotion}`,
-                                        nutrients: `${nutrients_JSON}`,
-                                        foodGroup: foodGroup_JSON,
-                                        allergy: `${mainState.current.selectedFood_Allergy}`
-                                    }
-                                });
-                                onRefresh();
+                            const removeQuotes = (str) => {
+                                return str.replace(/^"(.*)"$/, '$1');
                             }
-                            updateUserEntry();
-                        }
 
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+                            let nutrients_JSON = JSON.stringify(response.data.result.conversion);
+                            let foodGroup_JSON = response.data.result.foodGroup;
+
+                            if (foodGroup_JSON) {
+                                console.log("# - foodGroup Defined")
+                                foodGroup_JSON = foodGroup_JSON.toLowerCase();
+                            } else {
+                                console.log("# - foodGroup Undefined")
+                                foodGroup_JSON = '?';
+                            }
+
+                            nutrients_JSON = removeQuotes(nutrients_JSON)
+                            foodGroup_JSON = removeQuotes(foodGroup_JSON);
+
+                            if (nutrients_JSON == "not found") {
+                                setDisplayChooseAnotherOptionModal(true)
+                                console.log("Choose Another Option!!")
+                                onRefresh();
+                            } else {
+                                const updateUserEntry = async () => {
+                                    await addEntry({
+                                        variables: {
+                                            subuserid: `${props.subuser._id}`,
+                                            date: `${props.date}`,
+                                            schedule: `${mainState.current.selectedFood_Schedule}`,
+                                            time: `${mainState.current.selectedFood_Schedule_Custom_Time}`,
+                                            item: `${input.description}`,
+                                            amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
+                                            emotion: `${mainState.current.selectedFood_Emotion}`,
+                                            nutrients: `${nutrients_JSON}`,
+                                            foodGroup: foodGroup_JSON,
+                                            allergy: `${mainState.current.selectedFood_Allergy}`
+                                        }
+                                    });
+                                    onRefresh();
+                                }
+                                updateUserEntry();
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+
+            }
+
+
+
+
+
 
         }
 
@@ -386,29 +420,11 @@ export const Add_Primary = (props) => {
             data_array = data.slice(-5);
 
             for (let i = 0; i < data_array.length; i++) {
-                function removeBackslashes(str) {
-                    let pattern = /(?<!\\)\\(?!\\)/g;
-                    let replacement = '';
-                    let updatedStr = str.replace(pattern, replacement);
 
-                    return updatedStr;
-                }
-
-                const removeQuotes = (str) => {
-                    return str.replace(/^"(.*)"$/, '$1');
-                }
-
-                let item = JSON.stringify(data_array[i].entry[0].item);
-                item = removeQuotes(item);
-                let amount = JSON.stringify(data_array[i].entry[0].amount);
-                amount = removeQuotes(amount)
-                let emotion = JSON.stringify(data_array[i].entry[0].emotion);
-                emotion = removeQuotes(emotion)
+                let item = data_array[i].entry[0].item;
+                let amount = data_array[i].entry[0].amount;
+                let emotion = data_array[i].entry[0].emotion;
                 let foodGroup = data_array[i].entry[0].foodGroup;
-                foodGroup = removeBackslashes(foodGroup);
-                foodGroup = removeQuotes(foodGroup);
-                foodGroup = removeQuotes(foodGroup);
-
 
                 const codePoints = emotion
                     .split('')
@@ -418,10 +434,8 @@ export const Add_Primary = (props) => {
 
 
 
-                let nutrients = JSON.stringify(data_array[i].entry[0].nutrients);
-                nutrients = removeBackslashes(nutrients)
-                nutrients = removeQuotes(nutrients)
-                // nutrients = JSON.parse(nutrients)
+                let nutrients = data_array[i].entry[0].nutrients;
+
                 let id = data_array[i]._id;
 
                 function separateMeasurement(inputString) {
@@ -438,7 +452,9 @@ export const Add_Primary = (props) => {
                     return null;
                 }
 
+                console.log(amount)
                 const result = separateMeasurement(amount);
+                console.log(result)
 
                 let item_amount = { item: item, amount: amount, number: result.number, measurement: result.measurement, emotion: unicodeEscape, nutrients: nutrients, id: id, foodGroup: foodGroup }
                 setRecentFoodData(prev => [...prev, item_amount])
@@ -529,12 +545,13 @@ export const Add_Primary = (props) => {
                 onPress={() => {
                     setDisplayTop100Foods(true);
                     setClearSuggestions(false)
-                    // RecentFood()
+                    RecentFood()
                     setModalVisible(true);
                     setSearchQuery('');
                     setSelectedItem(null);
                     setDisplayDetails(false);
                     setFoodData([]);
+                    refetch();
                     setMainState({
                         selectedFood_Quantity: null,
                         selectedFood_Measurement: null,
@@ -581,12 +598,13 @@ export const Add_Primary = (props) => {
             <TouchableOpacity
                 onPress={() => {
                     setClearSuggestions(false)
-                    // RecentFood()
+                    RecentFood()
                     setModalVisible(true);
                     setSearchQuery('');
                     setSelectedItem(null);
                     setDisplayDetails(false);
                     setFoodData([]);
+                    refetch();
                     setMainState({
                         selectedFood_Quantity: null,
                         selectedFood_Measurement: null,
@@ -875,7 +893,7 @@ export const Add_Primary = (props) => {
                             />
                         </SafeAreaView>
 
-                        
+
                         <TouchableOpacity onPress={() => setDisplayTop100Foods(false)}>
                             <View
                                 style={{
@@ -1108,6 +1126,58 @@ export const Add_Primary = (props) => {
                     </View>
                 }
 
+            </Modal>
+
+            <Modal
+                visible={displayChooseAnotherOptionModal}
+                animationType="slide"
+                transparent={true}
+                style={{
+                    width: windowWidth,
+                }}
+            >
+                <View style={styles.modalVisible_Container}>
+                    <View
+                        style={{
+                            flexDirection: 'column',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                    >
+                        <FontAwesomeIcon
+                            icon={faSolid, faTriangleExclamation}
+                            style={{
+                                color: THEME_FONT_COLOR_WHITE,
+                                justifyContent: 'center',
+                                alignSelf: 'center',
+                                marginRight: HeightRatio(20)
+                            }}
+                            size={30}
+                        />
+                        <Text
+                            style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(20) }}
+                            allowFontScaling={false}
+                        >
+                            Nutritional details for that item cannot be found. Choose another similar option.
+                        </Text>
+                    </View>
+                    <TouchableOpacity
+                        onPress={() => {
+                            setDisplayChooseAnotherOptionModal(false);
+                        }}
+                    >
+                        <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE }}>
+                            <Text
+                                style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
+                                allowFontScaling={false}
+                            >
+                                Close
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+
+                </View>
             </Modal>
         </>
     )

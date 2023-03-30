@@ -170,6 +170,7 @@ export const HomeScreen = ({ navigation }) => {
 
             if (mainState.current.triggerRefresh) {
                 setRefreshing(true)
+                setCalendarModalVisible(false)
                 refetch()
             } else {
                 setRefreshing(false)
@@ -347,20 +348,7 @@ export const HomeScreen = ({ navigation }) => {
                         </View>
 
                         {/* / */}
-                        {userByID?.user.subuser &&
-                            <Text
-                                style={{
-                                    color: THEME_FONT_COLOR_BLACK,
-                                    textAlign: 'center',
-                                    fontSize: HeightRatio(20),
-                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold",
-                                    marginTop: HeightRatio(10)
-                                }}
-                                allowFontScaling={false}
-                            >
-                                {userByID?.user.subuser[0].subusername}
-                            </Text>
-                        }
+                        
 
                         {!refreshing && !refreshing_Nutrition ?
                             <>
@@ -370,7 +358,7 @@ export const HomeScreen = ({ navigation }) => {
                                 />
 
 
-                                <View style={{ flexDirection: 'row', marginTop: HeightRatio(30) }}>
+                                <View style={{ flexDirection: 'row', marginTop: HeightRatio(20) }}>
                                     <Calories_Primary 
                                         totalCalorieCount={totalCalorieCount}
                                     />
@@ -387,6 +375,20 @@ export const HomeScreen = ({ navigation }) => {
                                         subuser={userByID?.user.subuser[0]}
                                     />
                                 </View>
+                                {userByID?.user.subuser &&
+                                    <Text
+                                        style={{
+                                            color: THEME_FONT_COLOR_BLACK,
+                                            textAlign: 'center',
+                                            fontSize: HeightRatio(20),
+                                            fontFamily: "SofiaSansSemiCondensed-ExtraBold",
+                                            marginTop: HeightRatio(20)
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        {userByID?.user.subuser[0].subusername}
+                                    </Text>
+                                }
                                 <DailyScheduleSimplified
                                     date={currentDateReadable}
                                     userID={userByID?.user._id}
@@ -420,7 +422,7 @@ export const HomeScreen = ({ navigation }) => {
 
 
 
-                    {/* <Modal
+                    <Modal
                         visible={calendarModalVisible}
                         animationType="slide"
                         transparent={true}
@@ -497,9 +499,12 @@ export const HomeScreen = ({ navigation }) => {
                                         </View>
                                     </View>
                                     <DailyScheduleSimplified
-                                        date={calendarModalDate}
-                                        userID={mainState.current.userID}
-                                        from={"modal"}
+                                        date={currentDateReadable}
+                                        userID={userByID?.user._id}
+                                        containerHeight={HeightRatio(250)}
+                                        from={"calendar"}
+                                        subuser={userByID?.user.subuser[0]}
+                                        premium={userByID?.user.premium}
                                     />
 
 
@@ -543,61 +548,7 @@ export const HomeScreen = ({ navigation }) => {
                                 </View>
                             </View>
                         }
-                    </Modal> */}
-
-                    {/* <Modal
-                        visible={displayChooseAnotherOptionModal}
-                        animationType="slide"
-                        transparent={true}
-                        style={{
-                            width: windowWidth,
-                        }}
-                    >
-                        <View style={styles.modalVisible_Container}>
-                            <View
-                                style={{
-                                    flexDirection: 'column',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}
-                            >
-                                <FontAwesomeIcon
-                                    icon={faSolid, faTriangleExclamation}
-                                    style={{
-                                        color: THEME_FONT_COLOR_WHITE,
-                                        justifyContent: 'center',
-                                        alignSelf: 'center',
-                                        marginRight: HeightRatio(20)
-                                    }}
-                                    size={30}
-                                />
-                                <Text
-                                    style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(20) }}
-                                    allowFontScaling={false}
-                                >
-                                    Nutritional details for that item cannot be found. Choose another similar option.
-                                </Text>
-                            </View>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setDisplayChooseAnotherOptionModal(false);
-                                }}
-                            >
-                                <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE }}>
-                                    <Text
-                                        style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
-                                        allowFontScaling={false}
-                                    >
-                                        Close
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-
-                        </View>
-                    </Modal> */}
-
-
+                    </Modal>
 
 
                 </>
@@ -748,7 +699,7 @@ const styles = StyleSheet.create({
         borderRadius: HeightRatio(10),
         position: 'absolute',
         alignSelf: 'center',
-        top: HeightRatio(65),
+        top: HeightRatio(55),
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

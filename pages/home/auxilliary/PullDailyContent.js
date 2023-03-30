@@ -124,7 +124,7 @@ export const usePullDailyContent = (input, subuser) => {
             let item = entry.item;
             itemsArray.push(item); // add foodItem to the itemsArray
 
-            emotionIndex.push({ item: entry.item, emoji: unicodeEscape, schedule: entry.schedule, time: entry.time, nutrients: entry.nutrients, measurement: entry.amount, id: entry._id, foodGroup: entry.foodGroup })
+            emotionIndex.push({ item: entry.item, emoji: unicodeEscape, schedule: entry.schedule, time: entry.time, nutrients: entry.nutrients, measurement: entry.amount, id: tracker[i]._id, foodGroup: entry.foodGroup })
 
             if (entry.schedule == "First Thing") {
                 setFirstThing(prev => [...prev, entry.nutrients.calories.amount])
