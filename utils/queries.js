@@ -3,51 +3,81 @@ import { gql } from '@apollo/client';
 
 
 export const GET_ME = gql`
-  query Query {
-    me {
+  query Me {
+  me {
+    _id
+    role
+    username
+    email
+    resetToken
+    resetTokenExpiry
+    currentVersion
+    premium
+    subuser {
       _id
-      role
-      username
-      email
-      resetToken
-      resetTokenExpiry
-      currentVersion
-      premium
-      subuser {
+      subusername
+      tracker {
         _id
-        subusername
-        tracker {
+        date
+        entry {
           _id
+          subuserid
           date
-          entry {
-            _id
-            subuserid
-            date
-            schedule
-            time
-            item
-            amount
-            emotion
-            nutrients {
-              calories
-              protein
-              fat
-              carbohydrates
-              fiber
-              sugar
-              iron
-              zinc
-              omega3
-              vitaminD
+          schedule
+          time
+          item
+          amount
+          emotion
+          nutrients {
+            calories {
+              amount
+              unit
             }
-            foodGroup
-            allergy
+            protein {
+              amount
+              unit
+            }
+            fat {
+              amount
+              unit
+            }
+            carbohydrates {
+              amount
+              unit
+            }
+            fiber {
+              amount
+              unit
+            }
+            sugar {
+              amount
+              unit
+            }
+            iron {
+              amount
+              unit
+            }
+            zinc {
+              amount
+              unit
+            }
+            omega3 {
+              amount
+              unit
+            }
+            vitaminD {
+              amount
+              unit
+            }
           }
+          foodGroup
+          allergy
         }
-        allergy
       }
+      allergy
     }
   }
+}
 `;
 
 export const GET_USER_BY_ID = gql`
@@ -77,17 +107,47 @@ export const GET_USER_BY_ID = gql`
             amount
             emotion
             nutrients {
-              calories
-              protein
-              fat
-              carbohydrates
-              fiber
-              sugar
-              iron
-              zinc
-              omega3
-              vitaminD
+            calories {
+              amount
+              unit
             }
+            protein {
+              amount
+              unit
+            }
+            fat {
+              amount
+              unit
+            }
+            carbohydrates {
+              amount
+              unit
+            }
+            fiber {
+              amount
+              unit
+            }
+            sugar {
+              amount
+              unit
+            }
+            iron {
+              amount
+              unit
+            }
+            zinc {
+              amount
+              unit
+            }
+            omega3 {
+              amount
+              unit
+            }
+            vitaminD {
+              amount
+              unit
+            }
+          }
             foodGroup
             allergy
           }
@@ -161,17 +221,47 @@ export const TRACKERS = gql`
         amount
         emotion
         nutrients {
-          calories
-          protein
-          fat
-          carbohydrates
-          fiber
-          sugar
-          iron
-          zinc
-          omega3
-          vitaminD
-        }
+            calories {
+              amount
+              unit
+            }
+            protein {
+              amount
+              unit
+            }
+            fat {
+              amount
+              unit
+            }
+            carbohydrates {
+              amount
+              unit
+            }
+            fiber {
+              amount
+              unit
+            }
+            sugar {
+              amount
+              unit
+            }
+            iron {
+              amount
+              unit
+            }
+            zinc {
+              amount
+              unit
+            }
+            omega3 {
+              amount
+              unit
+            }
+            vitaminD {
+              amount
+              unit
+            }
+          }
         foodGroup
         allergy
       }
@@ -185,17 +275,47 @@ export const FOOD = gql`
       _id
       item
       nutrients {
-        calories
-        protein
-        fat
-        carbohydrates
-        fiber
-        sugar
-        iron
-        zinc
-        omega3
-        vitaminD
-      }
+            calories {
+              amount
+              unit
+            }
+            protein {
+              amount
+              unit
+            }
+            fat {
+              amount
+              unit
+            }
+            carbohydrates {
+              amount
+              unit
+            }
+            fiber {
+              amount
+              unit
+            }
+            sugar {
+              amount
+              unit
+            }
+            iron {
+              amount
+              unit
+            }
+            zinc {
+              amount
+              unit
+            }
+            omega3 {
+              amount
+              unit
+            }
+            vitaminD {
+              amount
+              unit
+            }
+          }
       foodGroup
     }
   }

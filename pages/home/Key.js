@@ -7,6 +7,8 @@ import { CommonActions } from '@react-navigation/native';
 import moment from 'moment';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import { useMutation, useQuery } from '@apollo/client';
+import { GET_USER_BY_ID } from '../../utils/queries';
 import {
     THEME_COLOR_POSITIVE,
     THEME_COLOR_POSITIVE_LOW_OPACITY,
@@ -48,17 +50,10 @@ export const KeyScreen = ({ navigation }) => {
     const [count, setCount] = useState(0);
     const [pageLoadComplete, setPageLoadComplete] = useState(false);
 
-    const handleKeyPress = (value) => {
-        setKeyPress(keyPress + value);
-        setKeyArray(current => [...current, value])
-        setCount(prev => prev + 1)
-    };
-
     async function getValueFor(key) {
-        console.log("# - Get value for cosmicKey")
+        console.log("# - GET VALUE FOR COSMIC KEY")
         let result = await SecureStore.getItemAsync(key);
         if (result) {
-            console.log("# - Key.js Loaded")
             setKey(result.split(''));
             setPageLoadComplete(true)
         } else {
@@ -76,24 +71,25 @@ export const KeyScreen = ({ navigation }) => {
     }
 
     const updateAuth = async () => {
-        console.log("# - Update Authorization")
+        console.log("# - UPDATE AUTHORIZATION")
         let localBearerToken = await SecureStore.getItemAsync('bearerToken');
         let localUserID = await SecureStore.getItemAsync('userID');
         let localAuthState = await SecureStore.getItemAsync('authState');
         let updatedLocalAuthState;
         if (localAuthState == 'true') {
-            updatedLocalAuthState = true;
+          updatedLocalAuthState = true;
         } else if (localAuthState == 'false' || !localAuthState) {
-            updatedLocalAuthState = false;
+          updatedLocalAuthState = false;
         }
-
+      
         setMainState({
-            bearerToken: `${localBearerToken}`,
-            userID: `${localUserID}`,
-            authState: updatedLocalAuthState,
-            initialKeyMoment: moment()
+          bearerToken: `${localBearerToken}`,
+          userID: `${localUserID}`,
+          authState: updatedLocalAuthState,
+          initialKeyMoment: moment()
         })
     }
+      
 
     useEffect(() => {
         if (count > 3 && areArraysEqual(key, keyArray)) {
@@ -108,6 +104,12 @@ export const KeyScreen = ({ navigation }) => {
             setCount(0)
         }
     }, [count])
+
+    const handleKeyPress = (value) => {
+        setKeyPress(keyPress + value);
+        setKeyArray(current => [...current, value])
+        setCount(prev => prev + 1)
+    };
 
 
     const [fontsLoaded] = useFonts({

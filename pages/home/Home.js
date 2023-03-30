@@ -166,7 +166,7 @@ export const HomeScreen = ({ navigation }) => {
         }, 500)
 
         setInterval(() => {
-            // getTotalCalorieCount()
+            getTotalCalorieCount()
 
             if (mainState.current.triggerRefresh) {
                 setRefreshing(true)
@@ -183,29 +183,29 @@ export const HomeScreen = ({ navigation }) => {
             // console.log(mainState.current.selectedFood_Allergy)
 
 
-            if (
-                mainState.current.selectedFood_Quantity != null &&
-                mainState.current.selectedFood_Measurement != null &&
-                mainState.current.selectedFood_Schedule != null &&
-                mainState.current.selectedFood_Schedule_Base != null &&
-                mainState.current.selectedFood_Emotion != null &&
-                mainState.current.selectedFood_Allergy != null
-            ) {
-                if (
-                    mainState.current.selectedFood_Schedule_Base == 'Custom' &&
-                    mainState.current.selectedFood_Schedule_Hour != null &&
-                    mainState.current.selectedFood_Schedule_Minute != null &&
-                    mainState.current.selectedFood_Schedule_AMPM != null &&
-                    mainState.current.selectedFood_Schedule_Custom_Time != null
-                ) {
-                    setSelectedFoodDataEntrered(true)
-                } else if (mainState.current.selectedFood_Schedule_Base != 'Custom') {
-                    setSelectedFoodDataEntrered(true)
-                }
-            } else {
-                setSelectedFoodDataEntrered(false)
+            // if (
+            //     mainState.current.selectedFood_Quantity != null &&
+            //     mainState.current.selectedFood_Measurement != null &&
+            //     mainState.current.selectedFood_Schedule != null &&
+            //     mainState.current.selectedFood_Schedule_Base != null &&
+            //     mainState.current.selectedFood_Emotion != null &&
+            //     mainState.current.selectedFood_Allergy != null
+            // ) {
+            //     if (
+            //         mainState.current.selectedFood_Schedule_Base == 'Custom' &&
+            //         mainState.current.selectedFood_Schedule_Hour != null &&
+            //         mainState.current.selectedFood_Schedule_Minute != null &&
+            //         mainState.current.selectedFood_Schedule_AMPM != null &&
+            //         mainState.current.selectedFood_Schedule_Custom_Time != null
+            //     ) {
+            //         setSelectedFoodDataEntrered(true)
+            //     } else if (mainState.current.selectedFood_Schedule_Base != 'Custom') {
+            //         setSelectedFoodDataEntrered(true)
+            //     }
+            // } else {
+            //     setSelectedFoodDataEntrered(false)
 
-            }
+            // }
         }, 200)
     }, [])
 
@@ -218,10 +218,6 @@ export const HomeScreen = ({ navigation }) => {
     const getTotalCalorieCount = async () => {
         try {
             const value = await AsyncStorage.getItem('@TotalCalorieCount')
-            console.log("*")
-            console.log(value)
-            console.log("*")
-
             if (value !== null) {
                 // value previously stored
                 setTotalCalorieCount(value)

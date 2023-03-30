@@ -44,14 +44,6 @@ export default function App() {
   });
 
 
-
-  const forFade = ({ current }) => ({
-    cardStyle: {
-      opacity: current.progress,
-    },
-  });
-
-
   return (
     <>
       <ApolloProvider client={apolloClient}>

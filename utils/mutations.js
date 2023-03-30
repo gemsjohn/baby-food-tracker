@@ -29,16 +29,46 @@ export const LOGIN_USER = gql`
               amount
               emotion
               nutrients {
-                calories
-                protein
-                fat
-                carbohydrates
-                fiber
-                sugar
-                iron
-                zinc
-                omega3
-                vitaminD
+                calories {
+                  amount
+                  unit
+                }
+                protein {
+                  amount
+                  unit
+                }
+                fat {
+                  amount
+                  unit
+                }
+                carbohydrates {
+                  amount
+                  unit
+                }
+                fiber {
+                  amount
+                  unit
+                }
+                sugar {
+                  amount
+                  unit
+                }
+                iron {
+                  amount
+                  unit
+                }
+                zinc {
+                  amount
+                  unit
+                }
+                omega3 {
+                  amount
+                  unit
+                }
+                vitaminD {
+                  amount
+                  unit
+                }
               }
               foodGroup
               allergy
@@ -80,16 +110,46 @@ export const ADD_USER = gql`
               amount
               emotion
               nutrients {
-                calories
-                protein
-                fat
-                carbohydrates
-                fiber
-                sugar
-                iron
-                zinc
-                omega3
-                vitaminD
+                calories {
+                  amount
+                  unit
+                }
+                protein {
+                  amount
+                  unit
+                }
+                fat {
+                  amount
+                  unit
+                }
+                carbohydrates {
+                  amount
+                  unit
+                }
+                fiber {
+                  amount
+                  unit
+                }
+                sugar {
+                  amount
+                  unit
+                }
+                iron {
+                  amount
+                  unit
+                }
+                zinc {
+                  amount
+                  unit
+                }
+                omega3 {
+                  amount
+                  unit
+                }
+                vitaminD {
+                  amount
+                  unit
+                }
               }
               foodGroup
               allergy
@@ -129,16 +189,46 @@ export const UPDATE_USER = gql`
             amount
             emotion
             nutrients {
-              calories
-              protein
-              fat
-              carbohydrates
-              fiber
-              sugar
-              iron
-              zinc
-              omega3
-              vitaminD
+              calories {
+                amount
+                unit
+              }
+              protein {
+                amount
+                unit
+              }
+              fat {
+                amount
+                unit
+              }
+              carbohydrates {
+                amount
+                unit
+              }
+              fiber {
+                amount
+                unit
+              }
+              sugar {
+                amount
+                unit
+              }
+              iron {
+                amount
+                unit
+              }
+              zinc {
+                amount
+                unit
+              }
+              omega3 {
+                amount
+                unit
+              }
+              vitaminD {
+                amount
+                unit
+              }
             }
             foodGroup
             allergy
@@ -177,16 +267,46 @@ export const UPDATE_PREMIUM = gql`
             amount
             emotion
             nutrients {
-              calories
-              protein
-              fat
-              carbohydrates
-              fiber
-              sugar
-              iron
-              zinc
-              omega3
-              vitaminD
+              calories {
+                amount
+                unit
+              }
+              protein {
+                amount
+                unit
+              }
+              fat {
+                amount
+                unit
+              }
+              carbohydrates {
+                amount
+                unit
+              }
+              fiber {
+                amount
+                unit
+              }
+              sugar {
+                amount
+                unit
+              }
+              iron {
+                amount
+                unit
+              }
+              zinc {
+                amount
+                unit
+              }
+              omega3 {
+                amount
+                unit
+              }
+              vitaminD {
+                amount
+                unit
+              }
             }
             foodGroup
             allergy
@@ -225,16 +345,46 @@ export const UPDATE_USER_PASSWORD = gql`
             amount
             emotion
             nutrients {
-              calories
-              protein
-              fat
-              carbohydrates
-              fiber
-              sugar
-              iron
-              zinc
-              omega3
-              vitaminD
+              calories {
+                amount
+                unit
+              }
+              protein {
+                amount
+                unit
+              }
+              fat {
+                amount
+                unit
+              }
+              carbohydrates {
+                amount
+                unit
+              }
+              fiber {
+                amount
+                unit
+              }
+              sugar {
+                amount
+                unit
+              }
+              iron {
+                amount
+                unit
+              }
+              zinc {
+                amount
+                unit
+              }
+              omega3 {
+                amount
+                unit
+              }
+              vitaminD {
+                amount
+                unit
+              }
             }
             foodGroup
             allergy
@@ -275,16 +425,46 @@ export const REQUEST_RESET = gql`
             amount
             emotion
             nutrients {
-              calories
-              protein
-              fat
-              carbohydrates
-              fiber
-              sugar
-              iron
-              zinc
-              omega3
-              vitaminD
+              calories {
+                amount
+                unit
+              }
+              protein {
+                amount
+                unit
+              }
+              fat {
+                amount
+                unit
+              }
+              carbohydrates {
+                amount
+                unit
+              }
+              fiber {
+                amount
+                unit
+              }
+              sugar {
+                amount
+                unit
+              }
+              iron {
+                amount
+                unit
+              }
+              zinc {
+                amount
+                unit
+              }
+              omega3 {
+                amount
+                unit
+              }
+              vitaminD {
+                amount
+                unit
+              }
             }
             foodGroup
             allergy
@@ -323,16 +503,46 @@ export const RESET_PASSWORD = gql`
             amount
             emotion
             nutrients {
-              calories
-              protein
-              fat
-              carbohydrates
-              fiber
-              sugar
-              iron
-              zinc
-              omega3
-              vitaminD
+              calories {
+                amount
+                unit
+              }
+              protein {
+                amount
+                unit
+              }
+              fat {
+                amount
+                unit
+              }
+              carbohydrates {
+                amount
+                unit
+              }
+              fiber {
+                amount
+                unit
+              }
+              sugar {
+                amount
+                unit
+              }
+              iron {
+                amount
+                unit
+              }
+              zinc {
+                amount
+                unit
+              }
+              omega3 {
+                amount
+                unit
+              }
+              vitaminD {
+                amount
+                unit
+              }
             }
             foodGroup
             allergy
@@ -368,17 +578,47 @@ export const ADD_SUB_USER = gql`
         amount
         emotion
         nutrients {
-          calories
-          protein
-          fat
-          carbohydrates
-          fiber
-          sugar
-          iron
-          zinc
-          omega3
-          vitaminD
-        }
+            calories {
+              amount
+              unit
+            }
+            protein {
+              amount
+              unit
+            }
+            fat {
+              amount
+              unit
+            }
+            carbohydrates {
+              amount
+              unit
+            }
+            fiber {
+              amount
+              unit
+            }
+            sugar {
+              amount
+              unit
+            }
+            iron {
+              amount
+              unit
+            }
+            zinc {
+              amount
+              unit
+            }
+            omega3 {
+              amount
+              unit
+            }
+            vitaminD {
+              amount
+              unit
+            }
+          }
         foodGroup
         allergy
       }
@@ -406,16 +646,46 @@ export const UPDATE_USER_ALLERGIES = gql`
           amount
           emotion
           nutrients {
-            calories
-            protein
-            fat
-            carbohydrates
-            fiber
-            sugar
-            iron
-            zinc
-            omega3
-            vitaminD
+            calories {
+              amount
+              unit
+            }
+            protein {
+              amount
+              unit
+            }
+            fat {
+              amount
+              unit
+            }
+            carbohydrates {
+              amount
+              unit
+            }
+            fiber {
+              amount
+              unit
+            }
+            sugar {
+              amount
+              unit
+            }
+            iron {
+              amount
+              unit
+            }
+            zinc {
+              amount
+              unit
+            }
+            omega3 {
+              amount
+              unit
+            }
+            vitaminD {
+              amount
+              unit
+            }
           }
           foodGroup
           allergy
@@ -455,17 +725,47 @@ export const ADD_ENTRY = gql`
       amount
       emotion
       nutrients {
-        calories
-        protein
-        fat
-        carbohydrates
-        fiber
-        sugar
-        iron
-        zinc
-        omega3
-        vitaminD
-      }
+            calories {
+              amount
+              unit
+            }
+            protein {
+              amount
+              unit
+            }
+            fat {
+              amount
+              unit
+            }
+            carbohydrates {
+              amount
+              unit
+            }
+            fiber {
+              amount
+              unit
+            }
+            sugar {
+              amount
+              unit
+            }
+            iron {
+              amount
+              unit
+            }
+            zinc {
+              amount
+              unit
+            }
+            omega3 {
+              amount
+              unit
+            }
+            vitaminD {
+              amount
+              unit
+            }
+          }
       foodGroup
       allergy
     }
@@ -490,17 +790,47 @@ mutation Mutation($item: String, $nutrients: [String], $foodGroup: String) {
     _id
     item
     nutrients {
-      calories
-      protein
-      fat
-      carbohydrates
-      fiber
-      sugar
-      iron
-      zinc
-      omega3
-      vitaminD
-    }
+            calories {
+              amount
+              unit
+            }
+            protein {
+              amount
+              unit
+            }
+            fat {
+              amount
+              unit
+            }
+            carbohydrates {
+              amount
+              unit
+            }
+            fiber {
+              amount
+              unit
+            }
+            sugar {
+              amount
+              unit
+            }
+            iron {
+              amount
+              unit
+            }
+            zinc {
+              amount
+              unit
+            }
+            omega3 {
+              amount
+              unit
+            }
+            vitaminD {
+              amount
+              unit
+            }
+          }
     foodGroup
   }
 }
@@ -512,17 +842,47 @@ export const EDIT_FOOD = gql`
       _id
       item
       nutrients {
-        calories
-        protein
-        fat
-        carbohydrates
-        fiber
-        sugar
-        iron
-        zinc
-        omega3
-        vitaminD
-      }
+            calories {
+              amount
+              unit
+            }
+            protein {
+              amount
+              unit
+            }
+            fat {
+              amount
+              unit
+            }
+            carbohydrates {
+              amount
+              unit
+            }
+            fiber {
+              amount
+              unit
+            }
+            sugar {
+              amount
+              unit
+            }
+            iron {
+              amount
+              unit
+            }
+            zinc {
+              amount
+              unit
+            }
+            omega3 {
+              amount
+              unit
+            }
+            vitaminD {
+              amount
+              unit
+            }
+          }
       foodGroup
     }
   }
@@ -563,16 +923,46 @@ export const SEND_PDFCONTENT = gql`
             amount
             emotion
             nutrients {
-              calories
-              protein
-              fat
-              carbohydrates
-              fiber
-              sugar
-              iron
-              zinc
-              omega3
-              vitaminD
+              calories {
+                amount
+                unit
+              }
+              protein {
+                amount
+                unit
+              }
+              fat {
+                amount
+                unit
+              }
+              carbohydrates {
+                amount
+                unit
+              }
+              fiber {
+                amount
+                unit
+              }
+              sugar {
+                amount
+                unit
+              }
+              iron {
+                amount
+                unit
+              }
+              zinc {
+                amount
+                unit
+              }
+              omega3 {
+                amount
+                unit
+              }
+              vitaminD {
+                amount
+                unit
+              }
             }
             foodGroup
             allergy

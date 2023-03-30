@@ -94,7 +94,8 @@ export const Add_Primary = (props) => {
             selectedFood_Schedule_Hour: null,
             selectedFood_Schedule_Minute: null,
             selectedFood_Schedule_AMPM: null,
-            selectedFood_Schedule_Custom_Time: null
+            selectedFood_Schedule_Custom_Time: null,
+            triggerRefresh: false
         })
         // refetch();
         setRefreshing(true);
@@ -204,7 +205,6 @@ export const Add_Primary = (props) => {
     const handleSearch = async (input) => {
         setClearSuggestions(true)
         console.log(`Searching for: ${searchQuery}`);
-        console.log(`Searching for: ${input}`);
 
         setDisplayLoading(true)
         const data = {
@@ -239,6 +239,9 @@ export const Add_Primary = (props) => {
 
     const getNutritionValue = async (input) => {
         setRefreshing_Nutrition(true)
+        setMainState({
+            triggerRefresh: true
+        })
 
         const data = {
             search: input,
@@ -1066,8 +1069,7 @@ export const Add_Primary = (props) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() => {
-                                            getNutritionValue(selectedItem == null && selectRecentlyUsedData.item != null ? selectRecentlyUsedData.item : selectedItem); // selectedItem == null && recentFoodData.item != null ? recentFoodData.item : selectedItem
-                                            
+                                            getNutritionValue(selectedItem == null && selectRecentlyUsedData.item != null ? selectRecentlyUsedData.item : selectedItem);
                                             setModalVisible(false);
 
                                         }}
