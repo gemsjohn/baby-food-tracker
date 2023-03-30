@@ -53,29 +53,7 @@ import {
 } from '../../../../COLOR.js';
 import { MainStateContext } from '../../../../App';
 
-export const Calories_Primary = () => {
-    const [totalCalorieCount, setTotalCalorieCount] = useState(0)
-
-    const getTotalCalorieCount = async () => {
-        try {
-            const value = await AsyncStorage.getItem('@TotalCalorieCount')
-            if (value !== null) {
-                // value previously stored
-                setTotalCalorieCount(value)
-                setTimeout(() => {
-                    setLoading(false)
-                }, 100)
-            }
-        } catch (e) {
-            // error reading value
-        }
-    }
-
-    useEffect(() => {
-        console.log("# - Calories_Primary.js")
-        getTotalCalorieCount()
-    }, [])
-
+export const Calories_Primary = (props) => {
     return (
         <View
             style={{
@@ -86,7 +64,7 @@ export const Calories_Primary = () => {
             }}
         >
             <Text style={styles.homePrimary_TotalCalories_Text}>
-                {totalCalorieCount}
+                {props.totalCalorieCount}
             </Text>
             <Text
                 style={{

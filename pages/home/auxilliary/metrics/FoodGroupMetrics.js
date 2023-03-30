@@ -122,17 +122,15 @@ export const FoodGroupMetrics = (props) => {
         }
     }, [props.subuser])
 
-    const breakDownMatchingDate = (input) => {
+    const breakDownMatchingDate = (tracker) => {
         setFruitCal([])
         setVegetableCal([])
         setProteinCal([])
         setGrainCal([])
         setDairyCal([])
 
-        for (let i = 0; i < input.length; i++) {
-            const schedule = JSON.stringify(input[i].entry[0].schedule);
-            const jsonString = JSON.stringify(input[i].entry[0].nutrients);
-            const foodGroup = JSON.stringify(input[i].entry[0].foodGroup)
+        for (let i = 0; i < tracker.length; i++) {
+            let entry = JSON.parse(JSON.stringify(tracker[i].entry[0]));
 
             function removeBackslashes(str) {
                 let pattern = /(?<!\\)\\(?!\\)/g;
@@ -146,33 +144,29 @@ export const FoodGroupMetrics = (props) => {
                 return str.replace(/^"(.*)"$/, '$1');
             }
 
-            let sampleFoodGroup_v1 = removeBackslashes(`${foodGroup}`);
-            let sampleFoodGroup_v2 = removeQuotes(sampleFoodGroup_v1)
-            sampleFoodGroup_v2 = removeQuotes(sampleFoodGroup_v2)
-            console.log(sampleFoodGroup_v2)
+            let nutrients = entry.nutrients;
+            let nutrients_calories = nutrients.calories;
+            nutrients_calories = JSON.parse(nutrients_calories);
+            nutrients_calories = nutrients_calories.amount
 
-            let sample_v1 = removeBackslashes(`${jsonString}`);
-            let sample_v2 = removeQuotes(sample_v1)
-            sample_v2 = removeBackslashes(sample_v2)
-            sample_v2 = removeQuotes(sample_v2)
-            sample_v2 = JSON.parse(sample_v2)
-            sample_v2 = sample_v2.calories.amount
+            let foodGroup = entry.foodGroup;
+            foodGroup = removeQuotes(removeQuotes(removeBackslashes(JSON.stringify(foodGroup))))
 
 
-            if (sampleFoodGroup_v2 == "fruit") {
-                setFruitCal(prev => [...prev, sample_v2])
+            if (foodGroup == "fruit") {
+                setFruitCal(prev => [...prev, nutrients_calories])
             }
-            if (sampleFoodGroup_v2 == "vegetable") {
-                setVegetableCal(prev => [...prev, sample_v2])
+            if (foodGroup == "vegetable") {
+                setVegetableCal(prev => [...prev, nutrients_calories])
             }
-            if (sampleFoodGroup_v2 == "protein") {
-                setProteinCal(prev => [...prev, sample_v2])
+            if (foodGroup == "protein") {
+                setProteinCal(prev => [...prev, nutrients_calories])
             }
-            if (sampleFoodGroup_v2 == "grain") {
-                setGrainCal(prev => [...prev, sample_v2])
+            if (foodGroup == "grain") {
+                setGrainCal(prev => [...prev, nutrients_calories])
             }
-            if (sampleFoodGroup_v2 == "dairy") {
-                setDairyCal(prev => [...prev, sample_v2])
+            if (foodGroup == "dairy") {
+                setDairyCal(prev => [...prev, nutrients_calories])
             }
         }
 

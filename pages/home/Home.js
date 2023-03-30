@@ -175,6 +175,14 @@ export const HomeScreen = ({ navigation }) => {
                 setRefreshing(false)
             }
 
+            // console.log(mainState.current.selectedFood_Quantity)
+            // console.log(mainState.current.selectedFood_Measurement)
+            // console.log(mainState.current.selectedFood_Schedule)
+            // console.log(mainState.current.selectedFood_Schedule_Base)
+            // console.log(mainState.current.selectedFood_Emotion)
+            // console.log(mainState.current.selectedFood_Allergy)
+
+
             if (
                 mainState.current.selectedFood_Quantity != null &&
                 mainState.current.selectedFood_Measurement != null &&
@@ -205,6 +213,30 @@ export const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         setCurrentDateReadable(convertDateFormat(currentDate));
     }, [currentDate])
+
+
+    const getTotalCalorieCount = async () => {
+        try {
+            const value = await AsyncStorage.getItem('@TotalCalorieCount')
+            console.log("*")
+            console.log(value)
+            console.log("*")
+
+            if (value !== null) {
+                // value previously stored
+                setTotalCalorieCount(value)
+                setTimeout(() => {
+                    setLoading(false)
+                }, 100)
+            }
+        } catch (e) {
+            // error reading value
+        }
+    }
+
+    useEffect(() => {
+        getTotalCalorieCount()
+    }, [])
 
 
 
@@ -343,7 +375,9 @@ export const HomeScreen = ({ navigation }) => {
 
 
                                 <View style={{ flexDirection: 'row', marginTop: HeightRatio(30) }}>
-                                    <Calories_Primary />
+                                    <Calories_Primary 
+                                        totalCalorieCount={totalCalorieCount}
+                                    />
 
                                     {userByID?.user.premium &&
                                         <Metrics_Primary
@@ -359,10 +393,11 @@ export const HomeScreen = ({ navigation }) => {
                                 </View>
                                 <DailyScheduleSimplified
                                     date={currentDateReadable}
-                                    userID={mainState.current.userID}
+                                    userID={userByID?.user._id}
                                     containerHeight={HeightRatio(450)}
                                     from={"main"}
                                     subuser={userByID?.user.subuser[0]}
+                                    premium={userByID?.user.premium}
                                 />
                                 <View style={{ flexDirection: 'row' }}>
 

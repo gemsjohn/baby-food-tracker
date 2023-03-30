@@ -135,27 +135,23 @@ export const SelectedFoodDetails = (props) => {
 
     const getCustomScheduleTime = async (input) => {
         console.log("# - getCUstomScheduleTime")
+        console.log(input)
+
+        const removeQuotes = (str) => {
+            return str.replace(/^"(.*)"$/, '$1');
+        }
+        setMainState({
+            selectedFood_Schedule_Base: input,
+            selectedFood_Schedule: `${input}`,
+        })
 
         try {
             const value = await AsyncStorage.getItem('@storeCustomScheduleTime')
-            console.log("# - GET @storeCustomScheduleTime VALUE")
-            console.log(typeof value)
             if (value !== "null" && value !== null) {
-                // value previously stored
-                console.log("# - GET @storeCustomScheduleTime VALUE NOT NULL")
-                console.log(value)
-
-                const removeQuotes = (str) => {
-                    return str.replace(/^"(.*)"$/, '$1');
-                }
-                console.log("# - set selectedFood_Schedule")
                 setMainState({
-                    selectedFood_Schedule_Base: input,
-                    selectedFood_Schedule: `${input}`,
                     selectedFood_Schedule_Custom_Time: `${removeQuotes(value)}`
                 })
                 clearInterval(intervalID.current)
-
             }
         } catch (e) {
             // error reading value
@@ -304,6 +300,7 @@ export const SelectedFoodDetails = (props) => {
                                     <TouchableOpacity
                                         onPress={() => {
                                             setSelectedTime(option);
+                                            getCustomScheduleTime(option)
                                         }}
                                         style={styles.itemButton_AltColor}
                                         key={option}

@@ -143,7 +143,7 @@ export const DailyScheduleSimplified = (props) => {
         refetch()
         setMatchingDate([])
 
-        if (props.subuser.tracker != []) {
+        if (props.subuser.tracker) {
             for (let i = 0; i < props.subuser.tracker.length; i++) {
                 if (props.subuser.tracker[i].date == date) {
                     setMatchingDate(prev => [...prev, props.subuser.tracker[i]]);
@@ -214,6 +214,7 @@ export const DailyScheduleSimplified = (props) => {
             let nutrients_calories = nutrients.calories;
             nutrients_calories = JSON.parse(nutrients_calories);
             nutrients_calories = nutrients_calories.amount
+            // console.log(nutrients_calories)
 
 
             if (schedule == "First Thing") {
@@ -236,6 +237,9 @@ export const DailyScheduleSimplified = (props) => {
             }
             if (schedule == "Before Bed") {
                 setBeforeBed(prev => [...prev, nutrients_calories])
+            }
+            if (schedule == "Custom") {
+                setCustom(prev => [...prev, nutrients_calories])
             }
 
         }
@@ -344,7 +348,7 @@ export const DailyScheduleSimplified = (props) => {
         // setMainState({
 
         // })
-    }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, afternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
+    }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, afternoonCalTotal, dinnerCalTotal, beforeBedCalTotal, customCalTotal])
 
     useEffect(() => {
         // console.log(displayLunchNutrients)
@@ -388,15 +392,32 @@ export const DailyScheduleSimplified = (props) => {
             "Before Bed",
             "Custom"
         ];
-        
+
+        // Define a function to generate a nutrition details container
+        function NutritionDetailsContainer({ title, amount, unit }) {
+            return (
+            <View style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}>
+                <View style={{ width: WidthRatio(140) }}>
+                <Text style={{ ...styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text, width: WidthRatio(120) }} allowFontScaling={false} numberOfLines={1} ellipsizeMode="tail">
+                    {title}
+                </Text>
+                </View>
+                <Text style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text} allowFontScaling={false}>
+                {amount} {unit}
+                </Text>
+            </View>
+            );
+        }
+
+        let emotions_updated = JSON.parse(JSON.stringify(emotions));
+
         const textComponents = [];
         const textComponentsBySchedule = {};
 
         for (let i = 0; i < data.length; i++) {
             for (let j = 0; j < emotions.length; j++) {
                 if (data[i].name == emotions[j].item) {
-                    const schedule = emotions[j].schedule;
-                    
+                    const schedule = emotions_updated[j].schedule;
                     const index = options_time.indexOf(schedule);
                     if (index !== -1) {
                         const textComponent = (
@@ -469,7 +490,7 @@ export const DailyScheduleSimplified = (props) => {
                                                 allowFontScaling={false}
                                             >
                                                 {schedule} {schedule.includes("Custom") ? emotions[j].time : null}
-                                                
+
                                             </Text>
                                         </View>
                                         {data[i].tried &&
@@ -497,7 +518,7 @@ export const DailyScheduleSimplified = (props) => {
                                 {displayLunchNutrients && entryKey.index == index && entryKey.name == data[i].name &&
                                     <>
                                         {data[i].name == 'BREAST MILK' &&
-                                            <View style={{...styles.scheduleButton_subContent_NutritionDetails_Container_0, padding: HeightRatio(10)}}>
+                                            <View style={{ ...styles.scheduleButton_subContent_NutritionDetails_Container_0, padding: HeightRatio(10) }}>
                                                 <Text
                                                     style={{
                                                         fontSize: HeightRatio(20),
@@ -515,38 +536,62 @@ export const DailyScheduleSimplified = (props) => {
                                             <View style={styles.scheduleButton_subContent_NutritionDetails_Container_0}>
                                                 <View style={{ backgroundColor: THEME_LIGHT_GREEN, height: '100%', width: WidthRatio(140), position: 'absolute', zIndex: -10, borderTopLeftRadius: HeightRatio(4), borderBottomLeftRadius: HeightRatio(4) }} />
                                                 <View style={{ backgroundColor: '#ffcc42', height: '100%', width: WidthRatio(80), position: 'absolute', left: WidthRatio(140), zIndex: -10, borderTopRightRadius: HeightRatio(4), borderBottomRightRadius: HeightRatio(4) }} />
-                                                {Object.keys(emotions[j].nutrients)
-                                                    .filter((key) => key !== 'iron' && key !== 'zinc' && key !== 'omega3' && key !== 'vitaminD')
-                                                    .map((key) => (
-                                                        <View
-                                                            style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}
-                                                            key={key}
-                                                        >
-                                                            <View
-                                                                style={{
-                                                                    width: WidthRatio(140),
-                                                                }}
-                                                            >
-                                                                <Text
-                                                                    style={{
-                                                                        ...styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text,
-                                                                        width: WidthRatio(120),
-                                                                    }}
-                                                                    allowFontScaling={false}
-                                                                    numberOfLines={1}
-                                                                    ellipsizeMode="tail"
-                                                                >
-                                                                    {key.replace('_', ' ')}
-                                                                </Text>
-                                                            </View>
-                                                            <Text
-                                                                style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
-                                                                allowFontScaling={false}
-                                                            >
-                                                                {emotions[j].nutrients[key].amount} {emotions[j].nutrients[key].unit}
-                                                            </Text>
-                                                        </View>
-                                                    ))}
+
+                                                <NutritionDetailsContainer 
+                                                    title="Calories" 
+                                                    amount={JSON.parse(emotions_updated[j].nutrients.calories).amount} 
+                                                    unit={JSON.parse(emotions_updated[j].nutrients.calories).unit} 
+                                                />
+                                                <NutritionDetailsContainer 
+                                                    title="Carbohydrates" 
+                                                    amount={JSON.parse(emotions_updated[j].nutrients.carbohydrates).amount} 
+                                                    unit={JSON.parse(emotions_updated[j].nutrients.carbohydrates).unit} 
+                                                />
+                                                <NutritionDetailsContainer 
+                                                    title="Fat" 
+                                                    amount={JSON.parse(emotions_updated[j].nutrients.fat).amount} 
+                                                    unit={JSON.parse(emotions_updated[j].nutrients.fat).unit} 
+                                                />
+                                                <NutritionDetailsContainer 
+                                                    title="Fiber" 
+                                                    amount={JSON.parse(emotions_updated[j].nutrients.fiber).amount} 
+                                                    unit={JSON.parse(emotions_updated[j].nutrients.fiber).unit} 
+                                                />
+                                                <NutritionDetailsContainer 
+                                                    title="Protein" 
+                                                    amount={JSON.parse(emotions_updated[j].nutrients.protein).amount} 
+                                                    unit={JSON.parse(emotions_updated[j].nutrients.protein).unit} 
+                                                />
+                                                <NutritionDetailsContainer 
+                                                    title="Sugar" 
+                                                    amount={JSON.parse(emotions_updated[j].nutrients.sugar).amount} 
+                                                    unit={JSON.parse(emotions_updated[j].nutrients.sugar).unit} 
+                                                />
+
+                                                {props.premium &&
+                                                <>
+                                                    <NutritionDetailsContainer 
+                                                        title="Iron" 
+                                                        amount={JSON.parse(emotions_updated[j].nutrients.iron).amount} 
+                                                        unit={JSON.parse(emotions_updated[j].nutrients.iron).unit} 
+                                                    />
+                                                    <NutritionDetailsContainer 
+                                                        title="Zinc" 
+                                                        amount={JSON.parse(emotions_updated[j].nutrients.zinc).amount} 
+                                                        unit={JSON.parse(emotions_updated[j].nutrients.zinc).unit} 
+                                                    />
+                                                    <NutritionDetailsContainer 
+                                                        title="Omega-3" 
+                                                        amount={JSON.parse(emotions_updated[j].nutrients.omega3).amount} 
+                                                        unit={JSON.parse(emotions_updated[j].nutrients.omega3).unit} 
+                                                    />
+                                                    <NutritionDetailsContainer 
+                                                        title="Vitamin D" 
+                                                        amount={JSON.parse(emotions_updated[j].nutrients.vitaminD).amount} 
+                                                        unit={JSON.parse(emotions_updated[j].nutrients.vitaminD).unit} 
+                                                    />
+                                                </>
+                                                }
 
                                             </View>
                                             <View
@@ -633,9 +678,11 @@ export const DailyScheduleSimplified = (props) => {
         setMainState({
             triggerRefresh: true
         })
+
         await deleteEntry({
             variables: {
-                deleteEntryId: deleteID
+                deleteEntryId: deleteID,
+                subuserid: props.subuser._id
             }
         })
         refetch()
@@ -656,7 +703,7 @@ export const DailyScheduleSimplified = (props) => {
     //         setRefreshing(false);
     //     }, 2000);
     // }, []);
-    
+
 
 
     return (
@@ -835,7 +882,7 @@ export const DailyScheduleSimplified = (props) => {
                 <View style={styles.modalContainer_0}>
                     <View style={styles.modalContainer_1}>
                         <View style={styles.modalContainer_1_A}>
-                            <View style={{marginBottom: HeightRatio(20), alignSelf: 'center'}}>
+                            <View style={{ marginBottom: HeightRatio(20), alignSelf: 'center' }}>
                                 <Text
                                     style={{
                                         ...styles.modalContainer_1_A_Text,
@@ -857,8 +904,8 @@ export const DailyScheduleSimplified = (props) => {
                                 }}
                             >
                                 {/* FEATURE 1 */}
-                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                    <View style={{backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                     <Text
                                         style={{
                                             ...styles.modalContainer_1_A_Text,
@@ -871,11 +918,11 @@ export const DailyScheduleSimplified = (props) => {
                                         Daily nutrition metrics (e.g. food group ratios)
                                     </Text>
                                 </View>
-                                <View style={{borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10)}} />
-                                
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
+
                                 {/* FEATURE 2 */}
-                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                    <View style={{backgroundColor: '#36A2EB', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#36A2EB', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                     <Text
                                         style={{
                                             ...styles.modalContainer_1_A_Text,
@@ -888,11 +935,11 @@ export const DailyScheduleSimplified = (props) => {
                                         Personalized insights and recommendations
                                     </Text>
                                 </View>
-                                <View style={{borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10)}} />
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
 
                                 {/* FEATURE 3 */}
-                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                    <View style={{backgroundColor: '#FFCE56', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#FFCE56', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                     <Text
                                         style={{
                                             ...styles.modalContainer_1_A_Text,
@@ -905,11 +952,11 @@ export const DailyScheduleSimplified = (props) => {
                                         Export nutritional data via Email
                                     </Text>
                                 </View>
-                                <View style={{borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10)}} />
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
 
                                 {/* FEATURE 4 */}
-                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                    <View style={{backgroundColor: '#4BC0C0', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#4BC0C0', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                     <Text
                                         style={{
                                             ...styles.modalContainer_1_A_Text,
@@ -922,11 +969,11 @@ export const DailyScheduleSimplified = (props) => {
                                         Allergy tracking
                                     </Text>
                                 </View>
-                                <View style={{borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10)}} />
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
 
                                 {/* FEATURE 5 */}
-                                <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)) }}>
-                                    <View style={{backgroundColor: '#9966FF', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)) }}>
+                                    <View style={{ backgroundColor: '#9966FF', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                     <Text
                                         style={{
                                             ...styles.modalContainer_1_A_Text,
@@ -938,11 +985,11 @@ export const DailyScheduleSimplified = (props) => {
                                     >
                                         Additional nutrition data
                                     </Text>
-                                    
+
                                 </View>
-                                <View style={{display: 'flex', flexDirection: 'column', paddingLeft: HeightRatio(30)}}>
-                                        <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                                        <View style={{backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
+                                <View style={{ display: 'flex', flexDirection: 'column', paddingLeft: HeightRatio(30) }}>
+                                    <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
+                                        <View style={{ backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                         <Text
                                             style={{
                                                 ...styles.modalContainer_1_A_Text,
@@ -953,9 +1000,9 @@ export const DailyScheduleSimplified = (props) => {
                                         >
                                             Iron
                                         </Text>
-                                        </View>
-                                        <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                                        <View style={{backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
+                                    </View>
+                                    <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
+                                        <View style={{ backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                         <Text
                                             style={{
                                                 ...styles.modalContainer_1_A_Text,
@@ -966,9 +1013,9 @@ export const DailyScheduleSimplified = (props) => {
                                         >
                                             Zinc
                                         </Text>
-                                        </View>
-                                        <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                                        <View style={{backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
+                                    </View>
+                                    <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
+                                        <View style={{ backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                         <Text
                                             style={{
                                                 ...styles.modalContainer_1_A_Text,
@@ -979,9 +1026,9 @@ export const DailyScheduleSimplified = (props) => {
                                         >
                                             Omega-3 Fatty Acids
                                         </Text>
-                                        </View>
-                                        <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                                        <View style={{backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10)}} />
+                                    </View>
+                                    <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
+                                        <View style={{ backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                         <Text
                                             style={{
                                                 ...styles.modalContainer_1_A_Text,
@@ -992,9 +1039,27 @@ export const DailyScheduleSimplified = (props) => {
                                         >
                                             Vitamin D
                                         </Text>
-                                        </View>
-                                        
                                     </View>
+
+                                </View>
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
+
+                                {/* FEATURE 6 */}
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#2da94b', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                    <Text
+                                        style={{
+                                            ...styles.modalContainer_1_A_Text,
+                                            textAlign: 'left',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            fontSize: HeightRatio(20),
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Add and track multiple children
+                                    </Text>
+                                </View>
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
                                 {/* <View style={{borderBottomWidth: 1, borderBottomColor: 'white', width: windowWidth - HeightRatio(100), margin: HeightRatio(10)}} /> */}
 
                                 {/* <Text
@@ -1007,9 +1072,9 @@ export const DailyScheduleSimplified = (props) => {
                                 >
                                     - Feeding schedule reminders
                                 </Text> */}
-                                
+
                             </View>
-                            
+
                         </View>
 
                         {/* <PDFGenerator /> */}

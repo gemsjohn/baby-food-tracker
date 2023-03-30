@@ -65,6 +65,9 @@ export const usePullDailyContent = (input, subuser) => {
     const [beforeBed, setBeforeBed] = useState([]);
     const [beforeBedCalTotal, setBeforeBedCalTotal] = useState(null)
 
+    const [custom, setCustom] = useState([]);
+    const [customCalTotal, setCustomCalTotal] = useState(null)
+
     const [uniqueEmotionArray, setUniqueEmotionArray] = useState([])
 
     const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
@@ -76,7 +79,7 @@ export const usePullDailyContent = (input, subuser) => {
     const getTrackerEntryByDate = (date) => {
         refetch()
         setMatchingDate([])
-        console.log(subuser)
+        // console.log(subuser)
         if (subuser && subuser.tracker) {
             for (let i = 0; i < subuser.tracker.length; i++) {
                 if (subuser.tracker[i].date == date) {
@@ -106,11 +109,13 @@ export const usePullDailyContent = (input, subuser) => {
         setAfternoon([])
         setDinner([])
         setBeforeBed([])
+        setCustom([])
 
         let itemsArray = []; // create an empty array to store food items
-        console.log(tracker);
+        // console.log(tracker);
         for (let i = 0; i < tracker.length; i++) {
             let entry = JSON.parse(JSON.stringify(tracker[i].entry[0]));
+            
 
             function removeBackslashes(str) {
                 let pattern = /(?<!\\)\\(?!\\)/g;
@@ -135,6 +140,8 @@ export const usePullDailyContent = (input, subuser) => {
                 .map(char => char.charCodeAt(0).toString(16).padStart(4, '0'));
             const unicodeEscape = '\\u' + codePoints.join('\\u');
 
+            // console.log(unicodeEscape)
+
             let schedule = entry.schedule;
             schedule = removeQuotes(removeBackslashes(JSON.stringify(schedule)))
 
@@ -153,7 +160,9 @@ export const usePullDailyContent = (input, subuser) => {
             let measurement = entry.amount;
             measurement = removeQuotes(removeBackslashes(JSON.stringify(measurement)))
 
-            let ID = entry._id;
+            // let ID = entry._id;
+            // ID = removeQuotes(removeBackslashes(JSON.stringify(ID)))
+            let ID = JSON.parse(JSON.stringify(tracker[i]._id));
             ID = removeQuotes(removeBackslashes(JSON.stringify(ID)))
 
             let foodGroup = entry.foodGroup;
@@ -182,6 +191,9 @@ export const usePullDailyContent = (input, subuser) => {
             }
             if (schedule == "Before Bed") {
                 setBeforeBed(prev => [...prev, nutrients_calories])
+            }
+            if (schedule == "Custom") {
+                setCustom(prev => [...prev, nutrients_calories])
             }
 
         }
@@ -286,12 +298,21 @@ export const usePullDailyContent = (input, subuser) => {
 
         setBeforeBedCalTotal(sum)
     }, [beforeBed])
+    useEffect(() => {
+        let sum = 0;
+
+        for (let i = 0; i < custom.length; i++) {
+            sum += custom[i];
+        }
+
+        setCustomCalTotal(sum)
+    }, [custom])
 
     // TOTAL ALL SCHEDULE SECTIONS
     useEffect(() => {
-        let total = firstThingCalTotal + breakfastCalTotal + midmorningCalTotal + lunchCalTotal + afternoonCalTotal + dinnerCalTotal + beforeBedCalTotal;
+        let total = firstThingCalTotal + breakfastCalTotal + midmorningCalTotal + lunchCalTotal + afternoonCalTotal + dinnerCalTotal + beforeBedCalTotal + customCalTotal;
         setTotalCalorieCount(total)
-    }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, afternoonCalTotal, dinnerCalTotal, beforeBedCalTotal])
+    }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, afternoonCalTotal, dinnerCalTotal, beforeBedCalTotal, customCalTotal])
 
     useEffect(() => {
         breakDownMatchingDate(matchingDate)

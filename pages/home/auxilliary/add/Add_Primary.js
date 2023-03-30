@@ -84,6 +84,18 @@ export const Add_Primary = (props) => {
     const [displayChooseAnotherOptionModal, setDisplayChooseAnotherOptionModal] = useState(false)
     const onRefresh = useCallback(() => {
         setLoading(true)
+        setMainState({
+            selectedFood_Quantity: null,
+            selectedFood_Measurement: null,
+            selectedFood_Schedule: null,
+            selectedFood_Schedule_Base: null,
+            selectedFood_Emotion: null,
+            selectedFood_Allergy: null,
+            selectedFood_Schedule_Hour: null,
+            selectedFood_Schedule_Minute: null,
+            selectedFood_Schedule_AMPM: null,
+            selectedFood_Schedule_Custom_Time: null
+        })
         // refetch();
         setRefreshing(true);
         setRefreshing_Nutrition(true)
@@ -514,7 +526,7 @@ export const Add_Primary = (props) => {
                 onPress={() => {
                     setDisplayTop100Foods(true);
                     setClearSuggestions(false)
-                    RecentFood()
+                    // RecentFood()
                     setModalVisible(true);
                     setSearchQuery('');
                     setSelectedItem(null);
@@ -566,7 +578,7 @@ export const Add_Primary = (props) => {
             <TouchableOpacity
                 onPress={() => {
                     setClearSuggestions(false)
-                    RecentFood()
+                    // RecentFood()
                     setModalVisible(true);
                     setSearchQuery('');
                     setSelectedItem(null);
@@ -1055,18 +1067,7 @@ export const Add_Primary = (props) => {
                                     <TouchableOpacity
                                         onPress={() => {
                                             getNutritionValue(selectedItem == null && selectRecentlyUsedData.item != null ? selectRecentlyUsedData.item : selectedItem); // selectedItem == null && recentFoodData.item != null ? recentFoodData.item : selectedItem
-                                            setMainState({
-                                                selectedFood_Quantity: null,
-                                                selectedFood_Measurement: null,
-                                                selectedFood_Schedule: null,
-                                                selectedFood_Schedule_Base: null,
-                                                selectedFood_Emotion: null,
-                                                selectedFood_Allergy: null,
-                                                selectedFood_Schedule_Hour: null,
-                                                selectedFood_Schedule_Minute: null,
-                                                selectedFood_Schedule_AMPM: null,
-                                                selectedFood_Schedule_Custom_Time: null
-                                            })
+                                            
                                             setModalVisible(false);
 
                                         }}
