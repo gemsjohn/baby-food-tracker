@@ -64,6 +64,7 @@ import {
     THEME_COLOR_BLACKOUT,
     THEME_FONT_GREY
 } from '../../../../COLOR.js';
+import { Loading } from '../../../../components/Loading';
 
 export const Add_Primary = (props) => {
     const { mainState, setMainState } = useContext(MainStateContext);
@@ -83,7 +84,6 @@ export const Add_Primary = (props) => {
     const [metricsModalVisible, setMetricsModalVisible] = useState(false)
     const [displayChooseAnotherOptionModal, setDisplayChooseAnotherOptionModal] = useState(false)
     const onRefresh = useCallback(() => {
-        setLoading(true)
         setMainState({
             selectedFood_Quantity: null,
             selectedFood_Measurement: null,
@@ -150,14 +150,9 @@ export const Add_Primary = (props) => {
     }
 
     useEffect(() => {
-        setLoading(true)
         setTimeout(() => {
             authState.current = mainState.current.authState
             userID.current = mainState.current.userID;
-
-            setTimeout(() => {
-                setLoading(false)
-            }, 500)
         }, 500)
 
         setInterval(() => {
@@ -242,9 +237,7 @@ export const Add_Primary = (props) => {
         console.log("# ----    -----")
         console.log(input)
         setRefreshing_Nutrition(true)
-        setMainState({
-            triggerRefresh: true
-        })
+        
 
         const data = {
             search: input,
@@ -405,6 +398,9 @@ export const Add_Primary = (props) => {
 
 
         }
+        setMainState({
+            triggerRefresh: true
+        })
 
 
 

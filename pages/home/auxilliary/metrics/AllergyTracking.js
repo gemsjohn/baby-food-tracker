@@ -100,6 +100,7 @@ export const AllergyTracking = (props) => {
     const handleUpdateUserAllergies = async (input) => {
         await updateUserAllergies({
             variables: {
+                subuserid: props.subuser._id,
                 item: `${input}`
             }
         });

@@ -59,6 +59,15 @@ import { usePullDailyContent } from './PullDailyContent';
 import { convertDateFormat } from './ConvertDateFormat';
 import { LinearGradient } from 'expo-linear-gradient';
 import { PDFGenerator } from '../pdf/PDFGenerator';
+import { Premium } from '../auxilliary/premium/Premium';
+import { Purchases } from 'react-native-purchases';
+import { GoogleProducts } from './premium/GoogProducts';
+
+const APIKeys = {
+    google: "goog_caDqiYZPHvJIwlqyFoZDgTqOywO",
+};
+
+
 
 let localContainerHeight;
 
@@ -132,6 +141,7 @@ export const DailyScheduleSimplified = (props) => {
     const [entryKey, setEntryKey] = useState(null)
     const [refreshing, setRefreshing] = useState(false);
     const [premiumServiceModalVisible, setPremiumServiceModalVisible] = useState(false)
+    const [displaySubscriptionModal, setDisplaySubscriptionModal] = useState(false)
 
 
     const [deleteEntry] = useMutation(DELETE_ENTRY)
@@ -379,16 +389,16 @@ export const DailyScheduleSimplified = (props) => {
         // Define a function to generate a nutrition details container
         function NutritionDetailsContainer({ title, amount, unit }) {
             return (
-            <View style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}>
-                <View style={{ width: WidthRatio(140) }}>
-                <Text style={{ ...styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text, width: WidthRatio(120) }} allowFontScaling={false} numberOfLines={1} ellipsizeMode="tail">
-                    {title}
-                </Text>
+                <View style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}>
+                    <View style={{ width: WidthRatio(140) }}>
+                        <Text style={{ ...styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text, width: WidthRatio(120) }} allowFontScaling={false} numberOfLines={1} ellipsizeMode="tail">
+                            {title}
+                        </Text>
+                    </View>
+                    <Text style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text} allowFontScaling={false}>
+                        {amount} {unit}
+                    </Text>
                 </View>
-                <Text style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text} allowFontScaling={false}>
-                {amount} {unit}
-                </Text>
-            </View>
             );
         }
 
@@ -519,60 +529,60 @@ export const DailyScheduleSimplified = (props) => {
                                                 <View style={{ backgroundColor: THEME_LIGHT_GREEN, height: '100%', width: WidthRatio(140), position: 'absolute', zIndex: -10, borderTopLeftRadius: HeightRatio(4), borderBottomLeftRadius: HeightRatio(4) }} />
                                                 <View style={{ backgroundColor: '#ffcc42', height: '100%', width: WidthRatio(80), position: 'absolute', left: WidthRatio(140), zIndex: -10, borderTopRightRadius: HeightRatio(4), borderBottomRightRadius: HeightRatio(4) }} />
 
-                                                <NutritionDetailsContainer 
-                                                    title="Calories" 
-                                                    amount={emotions[j].nutrients.calories.amount} 
-                                                    unit={emotions[j].nutrients.calories.unit} 
+                                                <NutritionDetailsContainer
+                                                    title="Calories"
+                                                    amount={emotions[j].nutrients.calories.amount}
+                                                    unit={emotions[j].nutrients.calories.unit}
                                                 />
-                                                <NutritionDetailsContainer 
-                                                    title="Carbohydrates" 
-                                                    amount={emotions[j].nutrients.carbohydrates.amount} 
-                                                    unit={emotions[j].nutrients.carbohydrates.unit} 
+                                                <NutritionDetailsContainer
+                                                    title="Carbohydrates"
+                                                    amount={emotions[j].nutrients.carbohydrates.amount}
+                                                    unit={emotions[j].nutrients.carbohydrates.unit}
                                                 />
-                                                <NutritionDetailsContainer 
-                                                    title="Fat" 
-                                                    amount={emotions[j].nutrients.fat.amount} 
-                                                    unit={emotions[j].nutrients.fat.unit} 
+                                                <NutritionDetailsContainer
+                                                    title="Fat"
+                                                    amount={emotions[j].nutrients.fat.amount}
+                                                    unit={emotions[j].nutrients.fat.unit}
                                                 />
-                                                <NutritionDetailsContainer 
-                                                    title="Fiber" 
-                                                    amount={emotions[j].nutrients.fiber.amount} 
-                                                    unit={emotions[j].nutrients.fiber.unit} 
+                                                <NutritionDetailsContainer
+                                                    title="Fiber"
+                                                    amount={emotions[j].nutrients.fiber.amount}
+                                                    unit={emotions[j].nutrients.fiber.unit}
                                                 />
-                                                <NutritionDetailsContainer 
-                                                    title="Protein" 
-                                                    amount={emotions[j].nutrients.protein.amount} 
-                                                    unit={emotions[j].nutrients.protein.unit} 
+                                                <NutritionDetailsContainer
+                                                    title="Protein"
+                                                    amount={emotions[j].nutrients.protein.amount}
+                                                    unit={emotions[j].nutrients.protein.unit}
                                                 />
-                                                <NutritionDetailsContainer 
-                                                    title="Sugar" 
-                                                    amount={emotions[j].nutrients.sugar.amount} 
-                                                    unit={emotions[j].nutrients.sugar.unit} 
+                                                <NutritionDetailsContainer
+                                                    title="Sugar"
+                                                    amount={emotions[j].nutrients.sugar.amount}
+                                                    unit={emotions[j].nutrients.sugar.unit}
                                                 />
 
                                                 {props.premium &&
-                                                <>
-                                                    <NutritionDetailsContainer 
-                                                        title="Iron" 
-                                                        amount={emotions[j].nutrients.iron.amount} 
-                                                        unit={emotions[j].nutrients.iron.unit} 
-                                                    />
-                                                    <NutritionDetailsContainer 
-                                                        title="Zinc" 
-                                                        amount={emotions[j].nutrients.zinc.amount} 
-                                                        unit={emotions[j].nutrients.zinc.unit} 
-                                                    />
-                                                    <NutritionDetailsContainer 
-                                                        title="Omega-3" 
-                                                        amount={emotions[j].nutrients.omega3.amount} 
-                                                        unit={emotions[j].nutrients.omega3.unit} 
-                                                    />
-                                                    <NutritionDetailsContainer 
-                                                        title="Vitamin D" 
-                                                        amount={emotions[j].nutrients.vitaminD.amount} 
-                                                        unit={emotions[j].nutrients.vitaminD.unit} 
-                                                    />
-                                                </>
+                                                    <>
+                                                        <NutritionDetailsContainer
+                                                            title="Iron"
+                                                            amount={emotions[j].nutrients.iron.amount}
+                                                            unit={emotions[j].nutrients.iron.unit}
+                                                        />
+                                                        <NutritionDetailsContainer
+                                                            title="Zinc"
+                                                            amount={emotions[j].nutrients.zinc.amount}
+                                                            unit={emotions[j].nutrients.zinc.unit}
+                                                        />
+                                                        <NutritionDetailsContainer
+                                                            title="Omega-3"
+                                                            amount={emotions[j].nutrients.omega3.amount}
+                                                            unit={emotions[j].nutrients.omega3.unit}
+                                                        />
+                                                        <NutritionDetailsContainer
+                                                            title="Vitamin D"
+                                                            amount={emotions[j].nutrients.vitaminD.amount}
+                                                            unit={emotions[j].nutrients.vitaminD.unit}
+                                                        />
+                                                    </>
                                                 }
 
                                             </View>
@@ -606,18 +616,18 @@ export const DailyScheduleSimplified = (props) => {
                                                     </Text>
                                                 </View>
                                                 <TouchableOpacity
-                                                    onPress={() => { 
-                                                        setModalVisible(true); 
+                                                    onPress={() => {
+                                                        setModalVisible(true);
                                                         setDeleteID(emotions[j].id);
                                                         setMainState({
                                                             triggerRefresh: false
-                                                        }) 
-                                                        
+                                                        })
+
                                                     }}
                                                     style={{
                                                         ...styles.scheduleButton_subContent_NutritionDetails_Remove_Button,
                                                         ...styles.button_Drop_Shadow
-                                                        
+
                                                     }}
                                                 >
                                                     <Text
@@ -683,19 +693,6 @@ export const DailyScheduleSimplified = (props) => {
         }, 100)
     }
 
-    // const onRefresh = useCallback(() => {
-    //     setRefreshing(true);
-    //     // Reset Daily Entries
-    //     if (calendarModalFoods && calendarModalEmotion) {
-    //         displaySimplifiedEntries(calendarModalFoods, calendarModalEmotion)
-    //     }
-    //     setTimeout(() => {
-    //         setRefreshing(false);
-    //     }, 2000);
-    // }, []);
-
-
-
     return (
         <>
 
@@ -738,7 +735,7 @@ export const DailyScheduleSimplified = (props) => {
                             <Text
                                 style={{
                                     fontSize: HeightRatio(50),
-                                    color: THEME_FONT_COLOR_BLACK,
+                                    color: props.from == 'main' ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                                     fontFamily: "GochiHand_400Regular",
                                     textAlign: 'center'
                                 }}
@@ -749,7 +746,7 @@ export const DailyScheduleSimplified = (props) => {
                             <Text
                                 style={{
                                     fontSize: HeightRatio(30),
-                                    color: THEME_FONT_COLOR_BLACK,
+                                    color: props.from == 'main' ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE,
                                     fontFamily: "SofiaSansSemiCondensed-Regular",
                                     textAlign: 'center'
                                 }}
@@ -757,6 +754,7 @@ export const DailyScheduleSimplified = (props) => {
                             >
                                 Select `ADD` to get started.
                             </Text>
+                            <View style={{height: HeightRatio(50)}} />
                         </>
 
                     }
@@ -765,53 +763,119 @@ export const DailyScheduleSimplified = (props) => {
 
             {props.from === "main" &&
                 <View style={{ width: windowWidth, height: HeightRatio(140) }}>
-                    <TouchableOpacity
-                        onPress={() => setPremiumServiceModalVisible(true)}
-                    >
-                        <LinearGradient
-                            colors={['#ec546d', '#d05bb6']}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 1 }}
+                    
+                    {props.premium ?
+                    <>
+                        {props.subuser &&
+                        <>
+                        <View
                             style={{
-                                ...styles.renderItem_Search_Results,
-                                ...styles.button_Drop_Shadow,
-                                borderRadius: HeightRatio(50),
-                                backgroundColor: '#feda9a',
-                                width: WidthRatio(300),
-                                padding: HeightRatio(15)
-
+                                backgroundColor: '#1f1f27',
+                                width: '90%',
+                                height: HeightRatio(120),
+                                alignSelf: 'center',
+                                borderRadius: HeightRatio(10),
+                                display: 'flex',
+                                // alignItems: 'center',
+                                // justifyContent: 'center',
+                                padding: HeightRatio(20),
+                                marginTop: HeightRatio(8)
                             }}
                         >
                             <View
                                 style={{
-                                    height: HeightRatio(50),
-                                    width: HeightRatio(50),
-                                    borderRadius: HeightRatio(100),
-                                    borderWidth: 3,
-                                    borderColor: 'white',
+                                    backgroundColor: THEME_COLOR_POSITIVE,
+                                    padding: HeightRatio(8),
                                     display: 'flex',
                                     alignItems: 'center',
-                                    justifyContent: 'center'
+                                    justifyContent: 'center',
+                                    alignSelf: 'flex-start',
+                                    borderRadius: HeightRatio(10)
                                 }}
                             >
-                                <FontAwesomeIcon
-                                    icon={faSolid, faGlasses}
-                                    style={{ color: THEME_FONT_COLOR_WHITE }}
-                                    size={25}
-                                />
-                            </View>
                             <Text
                                 style={{
-                                    fontSize: HeightRatio(22),
-                                    color: THEME_FONT_COLOR_WHITE,
-                                    marginLeft: HeightRatio(20)
+                                    color: THEME_FONT_COLOR_BLACK,
+                                    // textAlign: 'center',
+                                    fontSize: HeightRatio(20),
+                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold",
+                                    // marginTop: HeightRatio(20)
                                 }}
                                 allowFontScaling={false}
                             >
-                                Premium Service
+                                {props.subuser.subusername}
                             </Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
+                            </View>
+                            <Text
+                                style={{
+                                    color: THEME_FONT_COLOR_WHITE,
+                                    // textAlign: 'center',
+                                    fontSize: HeightRatio(20),
+                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold",
+                                    // marginTop: HeightRatio(20)
+                                }}
+                                allowFontScaling={false}
+                            >
+                                Random Insight
+                            </Text>
+                        </View>
+                            
+                            </>
+                        }
+                    </>
+                    :
+                    <>
+                        <TouchableOpacity
+                            onPress={() => { setPremiumServiceModalVisible(true); }}
+                        >
+                            <LinearGradient
+                                colors={['#ec546d', '#d05bb6']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 1 }}
+                                style={{
+                                    ...styles.renderItem_Search_Results,
+                                    ...styles.button_Drop_Shadow,
+                                    borderRadius: HeightRatio(50),
+                                    backgroundColor: '#feda9a',
+                                    width: WidthRatio(300),
+                                    padding: HeightRatio(15)
+
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        height: HeightRatio(50),
+                                        width: HeightRatio(50),
+                                        borderRadius: HeightRatio(100),
+                                        borderWidth: 3,
+                                        borderColor: 'white',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faSolid, faGlasses}
+                                        style={{ color: THEME_FONT_COLOR_WHITE }}
+                                        size={25}
+                                    />
+                                </View>
+                                <Text
+                                    style={{
+                                        fontSize: HeightRatio(22),
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        marginLeft: HeightRatio(20)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Premium Service
+                                </Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    </>
+
+                    }
+                    
                 </View>
 
             }
@@ -1079,10 +1143,39 @@ export const DailyScheduleSimplified = (props) => {
                                     </Text>
                                 </View>
                             </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => { setDisplaySubscriptionModal(true); }}
+                            >
+                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
+                                    <Text
+                                        style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
+                                        allowFontScaling={false}
+                                    >
+                                        Subscribe
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
+
+                        
                     </View>
                 </View>
 
+            </Modal>
+
+            <Modal
+                visible={displaySubscriptionModal}
+                animationType="slide"
+                transparent={true}
+            >
+                <View style={styles.modalContainer_0}>
+                    <View style={styles.modalContainer_1}>
+                        <View style={styles.modalContainer_1_A}>
+                            {/* <GoogleProducts userID={props.userID} /> */}
+                            <Premium userID={props.userID} />
+                        </View>
+                    </View>
+                </View>
             </Modal>
 
 
@@ -1098,7 +1191,7 @@ const styles = StyleSheet.create({
         width: '100%',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
         // backgroundColor: THEME_COLOR_POSITIVE
     },
     scrollView: {

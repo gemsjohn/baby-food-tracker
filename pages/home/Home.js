@@ -16,6 +16,7 @@ import {
     TextInput,
     FlatList,
     ActivityIndicator,
+    TouchableWithoutFeedback
 } from 'react-native';
 import {
     faSolid,
@@ -48,7 +49,7 @@ import { SelectedFoodDetails } from './auxilliary/SelectedFoodDetails';
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_ENTRY } from '../../utils/mutations';
 import { GET_USER_BY_ID } from '../../utils/queries';
-import { DailySchedule } from './auxilliary/DailySchedule';
+// import { DailySchedule } from './auxilliary/DailySchedule';
 import { Loading } from '../../components/Loading';
 import { Calendar } from 'react-native-calendars';
 import { usePullDailyContent } from './auxilliary/PullDailyContent';
@@ -80,6 +81,15 @@ import { Metrics_Primary } from './auxilliary/metrics/Metrics_Primary';
 import { Calories_Primary } from './auxilliary/calories/Calories_Primary';
 import { Add_Primary } from './auxilliary/add/Add_Primary';
 import { Add_Subuser_Modal } from './auxilliary/add/Add_Subuser_Modal';
+import { LinearGradient } from 'expo-linear-gradient';
+import { CommonActions } from '@react-navigation/native';
+
+
+const resetActionKey = CommonActions.reset({
+    index: 1,
+    routes: [{ name: 'Key', params: {} }]
+});
+
 
 export const HomeScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
@@ -154,6 +164,23 @@ export const HomeScreen = ({ navigation }) => {
         setCurrentDate(moment(currentDate, formatString).add(1, 'days').format(formatString));
     }
 
+    const lastTouchTimeRef = useRef(Date.now());
+    const touchTimerRef = useRef(null);
+    const handleTouchCalled = useRef(false);
+  
+    const handleTouch = () => {
+        console.log("handleTouch")
+      lastTouchTimeRef.current = Date.now();
+  
+      if (touchTimerRef.current) {
+        clearTimeout(touchTimerRef.current);
+      }
+  
+      touchTimerRef.current = setTimeout(() => {
+          navigation.dispatch(resetActionKey)
+      }, 10000); // 1 minute in milliseconds
+    };
+
     useEffect(() => {
         setLoading(true)
         setTimeout(() => {
@@ -169,11 +196,22 @@ export const HomeScreen = ({ navigation }) => {
             getTotalCalorieCount()
 
             if (mainState.current.triggerRefresh) {
+                refetch()
                 setRefreshing(true)
                 setCalendarModalVisible(false)
-                refetch()
             } else {
                 setRefreshing(false)
+            }
+
+
+            if (mainState.current.triggerRefresh || mainState.current.userTouch) {
+                handleTouchCalled.current = false;
+                setMainState({ userTouch: false })
+            } else {
+                if (handleTouchCalled.current == false) {
+                    handleTouchCalled.current = true;
+                    handleTouch()
+                }
             }
 
             // console.log(mainState.current.selectedFood_Quantity)
@@ -264,155 +302,168 @@ export const HomeScreen = ({ navigation }) => {
         }
     }
 
+    // const [lastTouchTime, setLastTouchTime] = useState('');
+
+    // const handleTouch = () => {
+    //     console.log("TEST")
+    // //   setLastTouchTime(Date.now());
+    // };
+
+    // useEffect(() => {
+    //   const touchTimer = setTimeout(() => {
+    //     // return to login screen or do any other action
+    //     navigation.dispatch(resetActionKey)
+    //   }, 60000); // 1 minute in milliseconds
+
+    //   return () => clearTimeout(touchTimer);
+    // }, [lastTouchTime]);
+
     return (
         <>
             {!loading ?
                 <>
                     {refreshing || refreshing_Nutrition &&
-                        <View style={styles.updatingScreen_Container}>
-                            <Text
-                                style={styles.updatingScreen_Container_Text}
-                                allowFontScaling={false}
-                            >
-                                Updating...
-                            </Text>
-                        </View>
+                        // <View style={styles.updatingScreen_Container}>
+                        //     <Text
+                        //         style={styles.updatingScreen_Container_Text}
+                        //         allowFontScaling={false}
+                        //     >
+                        //         Updating...
+                        //     </Text>
+                        // </View>
+                        <Loading />
                     }
                     {modalVisible && <View style={styles.modalVisible_Blackout} />}
                     {calendarModalVisible && <View style={styles.modalVisible_Blackout} />}
                     {metricsModalVisible && <View style={styles.modalVisible_Blackout} />}
+                    
                     <View
                         style={styles.homePrimary_Container}
                         onLayout={onLayoutRootView}
                     >
-                        <View style={styles.homePrimary_Date}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    handlePreviousDay();
-                                    // setLoading(true);
-                                }}
-                                style={styles.homePrimary_Date_Arrow}
-                            >
-                                <FontAwesomeIcon
-                                    icon={faSolid, faArrowLeft}
-                                    style={{ color: THEME_FONT_COLOR_BLACK }}
-                                    size={25}
-                                />
-                            </TouchableOpacity>
-                            <View style={styles.homePrimary_Date_Current}>
+
+
+                        <LinearGradient
+                            colors={['#8bccde', '#d05bb6']}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            style={styles.homePrimary_Container}
+                        >
+                            <View style={styles.homePrimary_Date}>
                                 <TouchableOpacity
-                                    onPress={() => setCalendarModalVisible(true)}
+                                    onPress={() => {
+                                        handlePreviousDay();
+                                        // setLoading(true);
+                                    }}
+                                    style={styles.homePrimary_Date_Arrow}
                                 >
-                                    <Text
-                                        style={styles.homePrimary_Date_Current_Text}
-                                        allowFontScaling={false}
-                                    >
-                                        {currentDateReadable}
-                                    </Text>
+                                    <FontAwesomeIcon
+                                        icon={faSolid, faArrowLeft}
+                                        style={{ color: THEME_FONT_COLOR_BLACK }}
+                                        size={25}
+                                    />
                                 </TouchableOpacity>
-                                {currentDate != moment().format(formatString) &&
+                                <View style={styles.homePrimary_Date_Current}>
                                     <TouchableOpacity
-                                        onPress={() => {
-                                            setCurrentDate(moment().format(formatString));
-                                            // setLoading(true)
-                                        }}
-                                        style={{
-                                            ...styles.homePrimary_Date_Return_Button,
-                                            ...styles.button_Drop_Shadow
-                                        }}
+                                        onPress={() => setCalendarModalVisible(true)}
                                     >
                                         <Text
-                                            style={styles.homePrimary_Date_Return_Button_Text}
+                                            style={styles.homePrimary_Date_Current_Text}
                                             allowFontScaling={false}
                                         >
-                                            Return to Today
+                                            {currentDateReadable}
                                         </Text>
                                     </TouchableOpacity>
-                                }
-                            </View>
-
-
-                            <TouchableOpacity
-                                onPress={() => {
-                                    handleNextDay();
-                                    // setLoading(true);
-                                }}
-                                style={styles.homePrimary_Date_Arrow}
-                            >
-                                <FontAwesomeIcon
-                                    icon={faSolid, faArrowRight}
-                                    style={{ color: THEME_FONT_COLOR_BLACK }}
-                                    size={25}
-                                />
-                            </TouchableOpacity>
-                        </View>
-
-                        {/* / */}
-                        
-
-                        {!refreshing && !refreshing_Nutrition ?
-                            <>
-                                <Image
-                                    source={require('../../assets/pattern_1.png')}
-                                    style={styles.homePrimary_Pattern_1}
-                                />
-
-
-                                <View style={{ flexDirection: 'row', marginTop: HeightRatio(20) }}>
-                                    <Calories_Primary 
-                                        totalCalorieCount={totalCalorieCount}
-                                    />
-
-                                    {userByID?.user.premium &&
-                                        <Metrics_Primary
-                                            subuser={userByID?.user.subuser[0]}
-                                            currentDateReadable={currentDateReadable}
-                                        />
+                                    {currentDate != moment().format(formatString) &&
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                setCurrentDate(moment().format(formatString));
+                                                // setLoading(true)
+                                            }}
+                                            style={{
+                                                ...styles.homePrimary_Date_Return_Button,
+                                                ...styles.button_Drop_Shadow
+                                            }}
+                                        >
+                                            <Text
+                                                style={styles.homePrimary_Date_Return_Button_Text}
+                                                allowFontScaling={false}
+                                            >
+                                                Return to Today
+                                            </Text>
+                                        </TouchableOpacity>
                                     }
-
-                                    <Add_Primary
-                                        date={currentDateReadable}
-                                        subuser={userByID?.user.subuser[0]}
-                                    />
-                                </View>
-                                {userByID?.user.subuser &&
-                                    <Text
-                                        style={{
-                                            color: THEME_FONT_COLOR_BLACK,
-                                            textAlign: 'center',
-                                            fontSize: HeightRatio(20),
-                                            fontFamily: "SofiaSansSemiCondensed-ExtraBold",
-                                            marginTop: HeightRatio(20)
-                                        }}
-                                        allowFontScaling={false}
-                                    >
-                                        {userByID?.user.subuser[0].subusername}
-                                    </Text>
-                                }
-                                <DailyScheduleSimplified
-                                    date={currentDateReadable}
-                                    userID={userByID?.user._id}
-                                    containerHeight={HeightRatio(450)}
-                                    from={"main"}
-                                    subuser={userByID?.user.subuser[0]}
-                                    premium={userByID?.user.premium}
-                                />
-                                <View style={{ flexDirection: 'row' }}>
-
-
                                 </View>
 
-                            </>
-                            :
-                            <View style={styles.updatingScreen_Container}>
-                                <Text
-                                    style={styles.updatingScreen_Container_Text}
-                                    allowFontScaling={false}
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        handleNextDay();
+                                        // setLoading(true);
+                                    }}
+                                    style={styles.homePrimary_Date_Arrow}
                                 >
-                                    Updating...
-                                </Text>
+                                    <FontAwesomeIcon
+                                        icon={faSolid, faArrowRight}
+                                        style={{ color: THEME_FONT_COLOR_BLACK }}
+                                        size={25}
+                                    />
+                                </TouchableOpacity>
                             </View>
-                        }
+
+
+                            {/* / */}
+
+
+                            {!refreshing && !refreshing_Nutrition ?
+                                <>
+                                    <Image
+                                        source={require('../../assets/pattern_1.png')}
+                                        style={styles.homePrimary_Pattern_1}
+                                    />
+
+
+                                    <View style={{ flexDirection: 'row', marginTop: HeightRatio(20) }}>
+                                        <Calories_Primary
+                                            totalCalorieCount={totalCalorieCount}
+                                        />
+
+                                        {userByID?.user.premium &&
+                                            <Metrics_Primary
+                                                subuser={userByID?.user.subuser[0]}
+                                                currentDateReadable={currentDateReadable}
+                                            />
+                                        }
+
+                                        <Add_Primary
+                                            date={currentDateReadable}
+                                            subuser={userByID?.user.subuser[0]}
+                                        />
+                                    </View>
+
+                                    <DailyScheduleSimplified
+                                        date={currentDateReadable}
+                                        userID={userByID?.user._id}
+                                        containerHeight={HeightRatio(450)}
+                                        from={"main"}
+                                        subuser={userByID?.user.subuser[0]}
+                                        premium={userByID?.user.premium}
+                                    />
+                                    <View style={{ flexDirection: 'row' }}>
+
+
+                                    </View>
+
+                                </>
+                                :
+                                <View
+                                    style={styles.homePrimary_Container}
+                                // onLayout={onLayoutRootView}
+                                >
+                                    <Loading />
+                                </View>
+                            }
+                        </LinearGradient>
                     </View>
 
 
@@ -553,7 +604,10 @@ export const HomeScreen = ({ navigation }) => {
 
                 </>
                 :
-                <View style={styles.loading_Container}>
+                <View
+                    style={styles.homePrimary_Container}
+                // onLayout={onLayoutRootView}
+                >
                     <Loading />
                 </View>
             }

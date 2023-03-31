@@ -236,7 +236,8 @@ export const UserDetails = (props) => {
                                 flexDirection: 'column',
                                 margin: HeightRatio(5),
                                 alignSelf: 'center',
-                                backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY
+                                backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
+                                ...styles.button_Drop_Shadow,
                             }}
                         >
                         
@@ -289,14 +290,14 @@ export const UserDetails = (props) => {
                                         padding: HeightRatio(12),
                                         borderRadius: HeightRatio(10),
                                         flexDirection: 'row',
-                                        backgroundColor: THEME_COLOR_POSITIVE,
-                                        ...styles.button_Drop_Shadow
+                                        // backgroundColor: THEME_COLOR_POSITIVE,
+                                        // ...styles.button_Drop_Shadow
                                     }}
                                 >
                                     <Text
                                         style={{
-                                            color: THEME_FONT_COLOR_BLACK,
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            color: THEME_FONT_COLOR_WHITE,
+                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
                                             fontSize: HeightRatio(23),
                                             alignSelf: 'flex-end'
                                         }}
@@ -662,8 +663,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     button_Drop_Shadow: {
-        padding: 10,
-        borderRadius: 5,
+        padding: HeightRatio(12),
+        borderRadius: HeightRatio(20),
         ...Platform.select({
             ios: {
                 shadowColor: '#000',

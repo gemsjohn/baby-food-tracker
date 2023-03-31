@@ -26,6 +26,7 @@ import {
     THEME_COLOR_PURPLE_LOW_OPACITY,
     THEME_COLOR_BLACKOUT
 } from '../../COLOR';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const resetActionHome = CommonActions.reset({
     index: 1,
@@ -77,19 +78,19 @@ export const KeyScreen = ({ navigation }) => {
         let localAuthState = await SecureStore.getItemAsync('authState');
         let updatedLocalAuthState;
         if (localAuthState == 'true') {
-          updatedLocalAuthState = true;
+            updatedLocalAuthState = true;
         } else if (localAuthState == 'false' || !localAuthState) {
-          updatedLocalAuthState = false;
+            updatedLocalAuthState = false;
         }
-      
+
         setMainState({
-          bearerToken: `${localBearerToken}`,
-          userID: `${localUserID}`,
-          authState: updatedLocalAuthState,
-          initialKeyMoment: moment()
+            bearerToken: `${localBearerToken}`,
+            userID: `${localUserID}`,
+            authState: updatedLocalAuthState,
+            initialKeyMoment: moment()
         })
     }
-      
+
 
     useEffect(() => {
         if (count > 3 && areArraysEqual(key, keyArray)) {
@@ -130,129 +131,138 @@ export const KeyScreen = ({ navigation }) => {
     return (
         <>
             {pageLoadComplete ?
+            <LinearGradient
+                colors={['#8bccde', '#d05bb6']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.keyContainer}
+            >
                 <View
                     style={styles.keyContainer}
                     onLayout={onLayoutRootView}
                 >
-                    <StatusBar
-                        barStyle="default"
-                        hidden={false}
-                        backgroundColor="transparent"
-                        translucent={true}
-                        networkActivityIndicatorVisible={true}
-                    />
-                    <Image
-                        source={require('../../assets/favicon_0.png')}
-                        style={styles.image_Favicon}
-                    />
-                    <Text
-                        style={styles.title_Text}
-                        allowFontScaling={false}
-                    >
-                        Baby Food Tracker
-                    </Text>
-                    <View style={{ margin: HeightRatio(20), alignSelf: 'center' }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            {count > 0 ?
-                                <View style={styles.key_Full} />
-                                :
-                                <View style={styles.key_Empty} />
-                            }
-                            {count > 1 ?
-                                <View style={styles.key_Full} />
-                                :
-                                <View style={styles.key_Empty} />
-                            }
-                            {count > 2 ?
-                                <View style={styles.key_Full} />
-                                :
-                                <View style={styles.key_Empty} />
-                            }
-                            {count > 3 ?
-                                <View style={styles.key_Full} />
-                                :
-                                <View style={styles.key_Empty} />
-                            }
-                        </View>
-
-                    </View>
-                    <View style={{ marginTop: 10, marginBottom: 10 }}>
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('1')}>
-                                <Text style={styles.button_Text} allowFontScaling={false} >
-                                    1
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('2')}>
-                                <Text style={styles.button_Text} allowFontScaling={false}>
-                                    2
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('3')}>
-                                <Text style={styles.button_Text} allowFontScaling={false}>
-                                    3
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('4')}>
-                                <Text style={styles.button_Text} allowFontScaling={false}>
-                                    4
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('5')}>
-                                <Text style={styles.button_Text} allowFontScaling={false}>
-                                    5
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('6')}>
-                                <Text style={styles.button_Text} allowFontScaling={false}>
-                                    6
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('7')}>
-                                <Text style={styles.button_Text} allowFontScaling={false}>
-                                    7
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('8')}>
-                                <Text style={styles.button_Text} allowFontScaling={false}>
-                                    8
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('9')}>
-                                <Text style={styles.button_Text} allowFontScaling={false}>
-                                    9
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-
-                            <TouchableOpacity style={{...styles.button, ...styles.button_Drop_Shadow}} onPress={() => handleKeyPress('0')}>
-                                <Text style={styles.button_Text} allowFontScaling={false}>
-                                    0
-                                </Text>
-                            </TouchableOpacity>
-
-                        </View>
-                    </View>
-                    <View>
-                        <TouchableOpacity
-                            onPress={() => {
-                                deleteKey('cosmicKey');
-                                navigation.dispatch(resetActionHome);
-                            }}
-                            style={Styling.modalWordButton}>
-                            <View style={{...styles.forgotKey_Button, ...styles.button_Drop_Shadow}}>
-                                <Text style={styles.forgotKey_Button_Text} allowFontScaling={false}>
-                                    Forgot Key?
-                                </Text>
+                    
+                        <StatusBar
+                            barStyle="default"
+                            hidden={false}
+                            backgroundColor="transparent"
+                            translucent={true}
+                            networkActivityIndicatorVisible={true}
+                        />
+                        <Image
+                            source={require('../../assets/favicon_0.png')}
+                            style={styles.image_Favicon}
+                        />
+                        <Text
+                            style={styles.title_Text}
+                            allowFontScaling={false}
+                        >
+                            Baby Food Tracker
+                        </Text>
+                        <View style={{ margin: HeightRatio(20), alignSelf: 'center' }}>
+                            <View style={{ flexDirection: 'row' }}>
+                                {count > 0 ?
+                                    <View style={styles.key_Full} />
+                                    :
+                                    <View style={styles.key_Empty} />
+                                }
+                                {count > 1 ?
+                                    <View style={styles.key_Full} />
+                                    :
+                                    <View style={styles.key_Empty} />
+                                }
+                                {count > 2 ?
+                                    <View style={styles.key_Full} />
+                                    :
+                                    <View style={styles.key_Empty} />
+                                }
+                                {count > 3 ?
+                                    <View style={styles.key_Full} />
+                                    :
+                                    <View style={styles.key_Empty} />
+                                }
                             </View>
-                        </TouchableOpacity>
-                    </View>
+
+                        </View>
+                        <View style={{ marginTop: 10, marginBottom: 10 }}>
+                            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                                <TouchableOpacity style={{ ...styles.button, ...styles.button_Drop_Shadow }} onPress={() => handleKeyPress('1')}>
+                                    <Text style={styles.button_Text} allowFontScaling={false} >
+                                        1
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ ...styles.button, ...styles.button_Drop_Shadow }} onPress={() => handleKeyPress('2')}>
+                                    <Text style={styles.button_Text} allowFontScaling={false}>
+                                        2
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ ...styles.button, ...styles.button_Drop_Shadow }} onPress={() => handleKeyPress('3')}>
+                                    <Text style={styles.button_Text} allowFontScaling={false}>
+                                        3
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                                <TouchableOpacity style={{ ...styles.button, ...styles.button_Drop_Shadow }} onPress={() => handleKeyPress('4')}>
+                                    <Text style={styles.button_Text} allowFontScaling={false}>
+                                        4
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ ...styles.button, ...styles.button_Drop_Shadow }} onPress={() => handleKeyPress('5')}>
+                                    <Text style={styles.button_Text} allowFontScaling={false}>
+                                        5
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ ...styles.button, ...styles.button_Drop_Shadow }} onPress={() => handleKeyPress('6')}>
+                                    <Text style={styles.button_Text} allowFontScaling={false}>
+                                        6
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                                <TouchableOpacity style={{ ...styles.button, ...styles.button_Drop_Shadow }} onPress={() => handleKeyPress('7')}>
+                                    <Text style={styles.button_Text} allowFontScaling={false}>
+                                        7
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ ...styles.button, ...styles.button_Drop_Shadow }} onPress={() => handleKeyPress('8')}>
+                                    <Text style={styles.button_Text} allowFontScaling={false}>
+                                        8
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ ...styles.button, ...styles.button_Drop_Shadow }} onPress={() => handleKeyPress('9')}>
+                                    <Text style={styles.button_Text} allowFontScaling={false}>
+                                        9
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+
+                                <TouchableOpacity style={{ ...styles.button, ...styles.button_Drop_Shadow }} onPress={() => handleKeyPress('0')}>
+                                    <Text style={styles.button_Text} allowFontScaling={false}>
+                                        0
+                                    </Text>
+                                </TouchableOpacity>
+
+                            </View>
+                        </View>
+                        <View>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    deleteKey('cosmicKey');
+                                    navigation.dispatch(resetActionHome);
+                                }}
+                                style={Styling.modalWordButton}>
+                                <View style={{ ...styles.forgotKey_Button, ...styles.button_Drop_Shadow }}>
+                                    <Text style={styles.forgotKey_Button_Text} allowFontScaling={false}>
+                                        Forgot Key?
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                 </View>
+                </LinearGradient>
+
                 :
                 <View style={{ backgroundColor: 'black' }} />
             }
@@ -263,7 +273,7 @@ export const KeyScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     keyContainer: {
         flex: 1,
-        backgroundColor: THEME_COLOR_BACKDROP_DARK,
+        // backgroundColor: THEME_COLOR_BACKDROP_DARK,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -274,7 +284,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     title_Text: {
-        color: THEME_FONT_COLOR_WHITE,
+        color: THEME_FONT_COLOR_BLACK,
         textAlign: 'center',
         fontSize: HeightRatio(30),
         fontFamily: 'SofiaSansSemiCondensed-Regular',

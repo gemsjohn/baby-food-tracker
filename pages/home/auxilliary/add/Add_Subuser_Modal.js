@@ -52,6 +52,8 @@ import {
     THEME_FONT_GREY
 } from '../../../../COLOR.js';
 import { MainStateContext } from '../../../../App';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 export const Add_Subuser_Modal = (props) => {
     const [addSubUserModalVisible, setAddSubUserModalVisible] = useState(props.subuser ? false : true)
@@ -70,6 +72,49 @@ export const Add_Subuser_Modal = (props) => {
                     ...styles.homePrimary_Container
                 }}
             >
+                <LinearGradient
+                    colors={['#ec546d', '#d05bb6']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={{
+                        ...styles.renderItem_Search_Results,
+                        ...styles.button_Drop_Shadow,
+                        borderRadius: HeightRatio(50),
+                        backgroundColor: '#feda9a',
+                        width: WidthRatio(300),
+                        padding: HeightRatio(15)
+
+                    }}
+                >
+                    <View
+                        style={{
+                            height: HeightRatio(50),
+                            width: HeightRatio(50),
+                            borderRadius: HeightRatio(100),
+                            borderWidth: 3,
+                            borderColor: 'white',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                    >
+                        <FontAwesomeIcon
+                            icon={faSolid, faPlus}
+                            style={{ color: THEME_FONT_COLOR_WHITE }}
+                            size={25}
+                        />
+                    </View>
+                    <Text
+                        style={{
+                            fontSize: HeightRatio(22),
+                            color: THEME_FONT_COLOR_WHITE,
+                            marginLeft: HeightRatio(20)
+                        }}
+                        allowFontScaling={false}
+                    >
+                        Add Child
+                    </Text>
+                </LinearGradient>
                 <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
                         onPress={() => {

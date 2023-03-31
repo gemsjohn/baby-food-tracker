@@ -10,7 +10,8 @@ import {
     ImageBackground,
     Image,
     RefreshControl,
-    Animated
+    Animated,
+    StyleSheet
 } from 'react-native';
 import { Styling, HeightRatio, WidthRatio, windowHeight, windowWidth } from '../Styling';
 import { useFonts } from 'expo-font';
@@ -32,6 +33,8 @@ import {
     THEME_COLOR_PURPLE_LOW_OPACITY,
     THEME_COLOR_BLACKOUT
 } from '../COLOR';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 export const Loading = () => {
     const [fontsLoaded] = useFonts({
@@ -51,36 +54,54 @@ export const Loading = () => {
     }
 
     return (
-        <View style={{ alignSelf: 'center', flexDirection: 'column' }}>
-            <Image
-                source={require('../assets/favicon_0.png')}
-                style={{
-                    height: HeightRatio(80),
-                    width: HeightRatio(80),
-                    alignSelf: 'center'
-                }}
-            />
-            <Text
-                style={{
-                    fontFamily: 'SofiaSansSemiCondensed-Regular',
-                    color: THEME_FONT_COLOR_BLACK,
-                    fontSize: HeightRatio(50),
-                    top: HeightRatio(20),
-                    textAlign: 'center',
-                    width: WidthRatio(200)
-                }}
-                allowFontScaling={false}
-            >Baby Food Tracker</Text>
-            <Text
-                style={{
-                    fontFamily: 'SofiaSansSemiCondensed-Regular',
-                    color: THEME_COLOR_ATTENTION,
-                    fontSize: HeightRatio(30),
-                    top: HeightRatio(20),
-                    alignSelf: 'center'
-                }}
-                allowFontScaling={false}
-            >Loading...</Text>
+        <View>
+            <LinearGradient
+                colors={['#8bccde', '#d05bb6']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.homePrimary_Container}
+            >
+                <Image
+                    source={require('../assets/favicon_0.png')}
+                    style={{
+                        height: HeightRatio(80),
+                        width: HeightRatio(80),
+                        alignSelf: 'center'
+                    }}
+                />
+                <Text
+                    style={{
+                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                        color: THEME_FONT_COLOR_BLACK,
+                        fontSize: HeightRatio(50),
+                        top: HeightRatio(20),
+                        textAlign: 'center',
+                        width: WidthRatio(200)
+                    }}
+                    allowFontScaling={false}
+                >Baby Food Tracker</Text>
+                <Text
+                    style={{
+                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                        color: THEME_COLOR_ATTENTION,
+                        fontSize: HeightRatio(30),
+                        top: HeightRatio(20),
+                        alignSelf: 'center'
+                    }}
+                    allowFontScaling={false}
+                >Loading...</Text>
+            </LinearGradient>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    homePrimary_Container: {
+        flex: 1,
+        backgroundColor: THEME_COLOR_BACKDROP_DARK,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: windowWidth,
+    },
+})
