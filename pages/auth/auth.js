@@ -32,6 +32,7 @@ import {
   THEME_COLOR_PURPLE_LOW_OPACITY,
   THEME_COLOR_BLACKOUT
 } from '../../COLOR';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const resetActionProfile = CommonActions.reset({
   index: 1,
@@ -334,368 +335,218 @@ export const Auth = ({ navigation }) => {
             style={{ ...Styling.container, backgroundColor: THEME_COLOR_BACKDROP_DARK }}
             onLayout={onLayoutRootView}
           >
-            <SafeAreaView style={{ height: '90%', marginBottom: 32, marginTop: 32 }}>
-              <ScrollView style={{}} keyboardShouldPersistTaps={'always'} keyboardDismissMode="on-drag">
+            <LinearGradient
+              colors={['#8bccde', '#d05bb6']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{ ...Styling.container }}
+            >
+              <SafeAreaView style={{ height: '90%', marginBottom: 32, marginTop: 32 }}>
+                <ScrollView style={{}} keyboardShouldPersistTaps={'always'} keyboardDismissMode="on-drag">
 
-                {!isTokenValid &&
-                  <>
-                    {newUser ?
-                      <>
-                        <Text
-                          style={{
-                            color: THEME_FONT_COLOR_WHITE,
-                            alignSelf: 'center',
-                            fontSize: HeightRatio(100),
-                            marginTop: HeightRatio(40),
-                            fontFamily: 'SofiaSansSemiCondensed-Regular',
-                          }}
-                          allowFontScaling={false}
-                        >
-                          Sign Up
-                        </Text>
+                  {!isTokenValid &&
+                    <>
+                      {newUser ?
                         <>
-                          {/* [[[CHECK BOXES]]] */}
-                          <View style={{ flexDirection: 'row', alignSelf: 'center', margin: HeightRatio(40) }}>
-                            {promptEmailInput ?
-                              <View
-                                style={{
-                                  flexDirection: 'column',
-                                  marginLeft: HeightRatio(20),
-                                  marginRight: HeightRatio(20)
-                                }}
-                              >
-                                <FontAwesomeIcon
-                                  icon={faSolid, faCheck}
-                                  style={{ color: THEME_COLOR_POSITIVE, margin: HeightRatio(14), alignSelf: 'center' }}
-                                />
-                                <Text
+                          <Text
+                            style={{
+                              color: THEME_FONT_COLOR_WHITE,
+                              alignSelf: 'center',
+                              fontSize: HeightRatio(100),
+                              marginTop: HeightRatio(40),
+                              fontFamily: 'SofiaSansSemiCondensed-Regular',
+                            }}
+                            allowFontScaling={false}
+                          >
+                            Sign Up
+                          </Text>
+                          <>
+                            {/* [[[CHECK BOXES]]] */}
+                            <View style={{ flexDirection: 'row', alignSelf: 'center', margin: HeightRatio(40) }}>
+                              {promptEmailInput ?
+                                <View
                                   style={{
-                                    color: THEME_FONT_COLOR_WHITE,
-                                    fontSize: HeightRatio(20),
-                                    textAlign: 'center',
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    flexDirection: 'column',
+                                    marginLeft: HeightRatio(20),
+                                    marginRight: HeightRatio(20)
                                   }}
-                                  allowFontScaling={false}
-                                >Email</Text>
-                              </View>
-                              :
-                              <View
-                                style={{
-                                  flexDirection: 'column',
-                                  marginLeft: HeightRatio(20),
-                                  marginRight: HeightRatio(20)
-                                }}
-                              >
-                                <FontAwesomeIcon
-                                  icon={faSolid, faEnvelope}
-                                  style={{ color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(14), alignSelf: 'center' }}
-                                />
-                                <Text
-                                  style={{
-                                    color: THEME_FONT_COLOR_WHITE,
-                                    fontSize: HeightRatio(20),
-                                    textAlign: 'center',
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                  }}
-                                  allowFontScaling={false}
-                                >Email</Text>
-                              </View>
-                            }
-                            {promptUsernameInput ?
-                              <View
-                                style={{
-                                  flexDirection: 'column',
-                                  marginLeft: HeightRatio(20),
-                                  marginRight: HeightRatio(20)
-                                }}
-                              >
-                                <FontAwesomeIcon
-                                  icon={faSolid, faCheck}
-                                  style={{ color: THEME_COLOR_POSITIVE, margin: HeightRatio(14), alignSelf: 'center' }}
-                                />
-                                <Text
-                                  style={{
-                                    color: THEME_FONT_COLOR_WHITE,
-                                    fontSize: HeightRatio(20),
-                                    textAlign: 'center',
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                  }}
-                                  allowFontScaling={false}
-                                >Username </Text>
-                              </View>
-                              :
-                              <View
-                                style={{
-                                  flexDirection: 'column',
-                                  marginLeft: HeightRatio(20),
-                                  marginRight: HeightRatio(20)
-                                }}
-                              >
-                                <FontAwesomeIcon
-                                  icon={faSolid, faUser}
-                                  style={{ color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(14), alignSelf: 'center' }}
-                                />
-                                <Text
-                                  style={{
-                                    color: THEME_FONT_COLOR_WHITE,
-                                    fontSize: HeightRatio(20),
-                                    textAlign: 'center',
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                  }}
-                                  allowFontScaling={false}
-                                >Username </Text>
-                              </View>
-                            }
-                            {promptPasswordInput ?
-                              <View
-                                style={{
-                                  flexDirection: 'column',
-                                  marginLeft: HeightRatio(20),
-                                  marginRight: HeightRatio(20)
-                                }}
-                              >
-                                <FontAwesomeIcon
-                                  icon={faSolid, faCheck}
-                                  style={{ color: THEME_COLOR_POSITIVE, margin: HeightRatio(14), alignSelf: 'center' }}
-                                />
-                                <Text
-                                  style={{
-                                    color: THEME_FONT_COLOR_WHITE,
-                                    fontSize: HeightRatio(20),
-                                    textAlign: 'center',
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                  }}
-                                  allowFontScaling={false}
-                                >Password</Text>
-                              </View>
-                              :
-                              <View
-                                style={{
-                                  flexDirection: 'column',
-                                  marginLeft: HeightRatio(20),
-                                  marginRight: HeightRatio(20)
-                                }}
-                              >
-                                <FontAwesomeIcon
-                                  icon={faSolid, faLock}
-                                  style={{ color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(14), alignSelf: 'center' }}
-                                />
-                                <Text
-                                  style={{
-                                    color: THEME_FONT_COLOR_WHITE,
-                                    fontSize: HeightRatio(20),
-                                    textAlign: 'center',
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                  }}
-                                  allowFontScaling={false}
-                                >Password</Text>
-                              </View>
-                            }
-                          </View>
-                        </>
-
-                        <TextInput
-                          type="text"
-                          name="email"
-                          placeholder="Email"
-                          placeholderTextColor="black"
-                          value={promptEmailInput}
-                          onChangeText={setPromptEmailInput}
-                          style={Styling.textInputStyle}
-                          disableFullscreenUI={true}
-                          allowFontScaling={false}
-                        />
-                        <TextInput
-                          type="text"
-                          name="username"
-                          placeholder="Username"
-                          placeholderTextColor="black"
-                          value={promptUsernameInput}
-                          onChangeText={setPromptUsernameInput}
-                          style={Styling.textInputStyle}
-                          disableFullscreenUI={true}
-                          allowFontScaling={false}
-                        />
-                        <TextInput
-                          type="password"
-                          name="password"
-                          placeholder="Password"
-                          placeholderTextColor="black"
-                          value={promptPasswordInput}
-                          onChangeText={setPromptPasswordInput}
-                          secureTextEntry={true}
-                          style={Styling.textInputStyle}
-                          disableFullscreenUI={true}
-                          allowFontScaling={false}
-                        />
-
-                        {
-                          promptEmailInput != "" &&
-                            promptUsernameInput != "" &&
-                            promptPasswordInput != "" ?
-                            <TouchableOpacity
-                              onPress={() => {
-                                handleFormSubmit()
-                                setDisplayLoading(true);
-                              }}
-
-                            >
-                              <View style={{
-                                backgroundColor: THEME_COLOR_POSITIVE,
-                                ...styles.button_Drop_Shadow,
-                                display: 'flex',
-                                justifyContent: 'flex-start',
-                                padding: HeightRatio(20),
-                                borderRadius: HeightRatio(10),
-                                alignSelf: 'center',
-                                width: windowWidth - WidthRatio(50),
-                                margin: HeightRatio(10)
-                              }}>
-                                <Text
-                                  style={{
-                                    color: THEME_FONT_COLOR_BLACK,
-                                    fontSize: HeightRatio(30),
-                                    // fontWeight: 'bold',
-                                    alignSelf: 'center',
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                  }}
-                                  allowFontScaling={false}
                                 >
-                                  Sign Up
-                                </Text>
-                              </View>
-                            </TouchableOpacity>
-                            :
-                            <TouchableOpacity
-                              onPress={() => { }}
-                              disabled={true}
-                            >
-                              <View style={{
-                                backgroundColor: THEME_COLOR_POSITIVE,
-                                ...styles.button_Drop_Shadow,
-                                display: 'flex',
-                                justifyContent: 'flex-start',
-                                padding: HeightRatio(20),
-                                borderRadius: HeightRatio(10),
-                                alignSelf: 'center',
-                                width: windowWidth - WidthRatio(50),
-                                margin: HeightRatio(10)
-                              }}>
-                                <Text
+                                  <FontAwesomeIcon
+                                    icon={faSolid, faCheck}
+                                    style={{ color: THEME_COLOR_POSITIVE, margin: HeightRatio(14), alignSelf: 'center' }}
+                                  />
+                                  <Text
+                                    style={{
+                                      color: THEME_FONT_COLOR_WHITE,
+                                      fontSize: HeightRatio(20),
+                                      textAlign: 'center',
+                                      fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    }}
+                                    allowFontScaling={false}
+                                  >Email</Text>
+                                </View>
+                                :
+                                <View
                                   style={{
-                                    color: THEME_FONT_COLOR_BLACK,
-                                    fontSize: HeightRatio(30),
-                                    // fontWeight: 'bold',
-                                    alignSelf: 'center',
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                    flexDirection: 'column',
+                                    marginLeft: HeightRatio(20),
+                                    marginRight: HeightRatio(20)
                                   }}
-                                  allowFontScaling={false}
                                 >
-                                  Sign Up
-                                </Text>
-                              </View>
-                            </TouchableOpacity>
-                        }
-                        <Text
-                          style={{
-                            color: THEME_FONT_COLOR_BLACK,
-                            alignSelf: 'center',
-                            fontSize: HeightRatio(30),
-                            margin: HeightRatio(15),
-                            fontFamily: 'SofiaSansSemiCondensed-Regular'
-                          }}
-                          allowFontScaling={false}
-                        >
-                          Already have an account?
-                        </Text>
-                        <TouchableOpacity
-                          onPress={() => {
-                            setPromptEmailInput("")
-                            setPromptUsernameInput("")
-                            setPromptPasswordInput("")
-                            setNewUser(false)
-                          }}
-                        >
-                          <View style={{
-                            backgroundColor: THEME_COLOR_NEGATIVE,
-                            ...styles.button_Drop_Shadow,
-                            display: 'flex',
-                            justifyContent: 'flex-start',
-                            padding: HeightRatio(20),
-                            borderRadius: HeightRatio(10),
-                            alignSelf: 'center',
-                            width: windowWidth - WidthRatio(50)
-                          }}>
-                            <Text
-                              style={{
-                                color: THEME_FONT_COLOR_WHITE,
-                                fontSize: HeightRatio(30),
-                                // fontWeight: 'bold',
-                                alignSelf: 'center',
-                                fontFamily: 'SofiaSansSemiCondensed-Regular'
-                              }}
-                              allowFontScaling={false}
-                            >
-                              Login
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
-                      </>
-                      :
-                      <>
-                        {displayLoading ?
-                          // <Loading />
-                          null
-                          :
-                          <View>
-                            <Text
-                              style={{
-                                color: THEME_FONT_COLOR_WHITE,
-                                alignSelf: 'center',
-                                fontSize: HeightRatio(100),
-                                margin: 20,
-                                fontFamily: 'SofiaSansSemiCondensed-Regular',
-                              }}
-                              allowFontScaling={false}
-                            >
-                              Login
-                            </Text>
-                            <TextInput
-                              type="text"
-                              name="username"
-                              placeholder="Username"
-                              placeholderTextColor="black"
-                              value={promptInput_0}
-                              onChangeText={setPromptInput_0}
-                              style={Styling.textInputStyle}
-                              disableFullscreenUI={true}
-                              allowFontScaling={false}
-                            />
-                            <TextInput
-                              type="password"
-                              name="password"
-                              placeholder="Password"
-                              placeholderTextColor="black"
-                              value={promptInput_1}
-                              onChangeText={setPromptInput_1}
-                              secureTextEntry={true}
-                              style={Styling.textInputStyle}
-                              disableFullscreenUI={true}
-                              allowFontScaling={false}
-                            />
-                            {displayLoginFailureAlert &&
-                              <View style={{ alignSelf: 'center' }}>
-                                <Text
-                                  style={{ fontSize: HeightRatio(30), color: 'red', fontFamily: 'SofiaSansSemiCondensed-Regular' }}
-                                  allowFontScaling={false}
+                                  <FontAwesomeIcon
+                                    icon={faSolid, faEnvelope}
+                                    style={{ color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(14), alignSelf: 'center' }}
+                                  />
+                                  <Text
+                                    style={{
+                                      color: THEME_FONT_COLOR_WHITE,
+                                      fontSize: HeightRatio(20),
+                                      textAlign: 'center',
+                                      fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    }}
+                                    allowFontScaling={false}
+                                  >Email</Text>
+                                </View>
+                              }
+                              {promptUsernameInput ?
+                                <View
+                                  style={{
+                                    flexDirection: 'column',
+                                    marginLeft: HeightRatio(20),
+                                    marginRight: HeightRatio(20)
+                                  }}
                                 >
-                                  Incorrect Credentials
-                                </Text>
-                              </View>
-                            }
-                            {promptInput_0 != "" &&
-                              promptInput_1 != "" ?
-                              <TouchableOpacity onPress={() => { handleLogin(); setDisplayLoading(true); }}>
+                                  <FontAwesomeIcon
+                                    icon={faSolid, faCheck}
+                                    style={{ color: THEME_COLOR_POSITIVE, margin: HeightRatio(14), alignSelf: 'center' }}
+                                  />
+                                  <Text
+                                    style={{
+                                      color: THEME_FONT_COLOR_WHITE,
+                                      fontSize: HeightRatio(20),
+                                      textAlign: 'center',
+                                      fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    }}
+                                    allowFontScaling={false}
+                                  >Username </Text>
+                                </View>
+                                :
+                                <View
+                                  style={{
+                                    flexDirection: 'column',
+                                    marginLeft: HeightRatio(20),
+                                    marginRight: HeightRatio(20)
+                                  }}
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faSolid, faUser}
+                                    style={{ color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(14), alignSelf: 'center' }}
+                                  />
+                                  <Text
+                                    style={{
+                                      color: THEME_FONT_COLOR_WHITE,
+                                      fontSize: HeightRatio(20),
+                                      textAlign: 'center',
+                                      fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    }}
+                                    allowFontScaling={false}
+                                  >Username </Text>
+                                </View>
+                              }
+                              {promptPasswordInput ?
+                                <View
+                                  style={{
+                                    flexDirection: 'column',
+                                    marginLeft: HeightRatio(20),
+                                    marginRight: HeightRatio(20)
+                                  }}
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faSolid, faCheck}
+                                    style={{ color: THEME_COLOR_POSITIVE, margin: HeightRatio(14), alignSelf: 'center' }}
+                                  />
+                                  <Text
+                                    style={{
+                                      color: THEME_FONT_COLOR_WHITE,
+                                      fontSize: HeightRatio(20),
+                                      textAlign: 'center',
+                                      fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    }}
+                                    allowFontScaling={false}
+                                  >Password</Text>
+                                </View>
+                                :
+                                <View
+                                  style={{
+                                    flexDirection: 'column',
+                                    marginLeft: HeightRatio(20),
+                                    marginRight: HeightRatio(20)
+                                  }}
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faSolid, faLock}
+                                    style={{ color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(14), alignSelf: 'center' }}
+                                  />
+                                  <Text
+                                    style={{
+                                      color: THEME_FONT_COLOR_WHITE,
+                                      fontSize: HeightRatio(20),
+                                      textAlign: 'center',
+                                      fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    }}
+                                    allowFontScaling={false}
+                                  >Password</Text>
+                                </View>
+                              }
+                            </View>
+                          </>
+
+                          <TextInput
+                            type="text"
+                            name="email"
+                            placeholder="Email"
+                            placeholderTextColor='white'
+                            value={promptEmailInput}
+                            onChangeText={setPromptEmailInput}
+                            style={Styling.textInputStyle}
+                            disableFullscreenUI={true}
+                            allowFontScaling={false}
+                          />
+                          <TextInput
+                            type="text"
+                            name="username"
+                            placeholder="Username"
+                            placeholderTextColor='white'
+                            value={promptUsernameInput}
+                            onChangeText={setPromptUsernameInput}
+                            style={Styling.textInputStyle}
+                            disableFullscreenUI={true}
+                            allowFontScaling={false}
+                          />
+                          <TextInput
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            placeholderTextColor='white'
+                            value={promptPasswordInput}
+                            onChangeText={setPromptPasswordInput}
+                            secureTextEntry={true}
+                            style={Styling.textInputStyle}
+                            disableFullscreenUI={true}
+                            allowFontScaling={false}
+                          />
+
+                          {
+                            promptEmailInput != "" &&
+                              promptUsernameInput != "" &&
+                              promptPasswordInput != "" ?
+                              <TouchableOpacity
+                                onPress={() => {
+                                  handleFormSubmit()
+                                  setDisplayLoading(true);
+                                }}
+
+                              >
                                 <View style={{
                                   backgroundColor: THEME_COLOR_POSITIVE,
                                   ...styles.button_Drop_Shadow,
@@ -717,7 +568,7 @@ export const Auth = ({ navigation }) => {
                                     }}
                                     allowFontScaling={false}
                                   >
-                                    Login
+                                    Sign Up
                                   </Text>
                                 </View>
                               </TouchableOpacity>
@@ -747,73 +598,271 @@ export const Auth = ({ navigation }) => {
                                     }}
                                     allowFontScaling={false}
                                   >
-                                    Login
+                                    Sign Up
                                   </Text>
                                 </View>
                               </TouchableOpacity>
-                            }
-
-                            {/* <View style={Styling.profileDivisionLine}></View> */}
+                          }
+                          <Text
+                            style={{
+                              color: THEME_FONT_COLOR_BLACK,
+                              alignSelf: 'center',
+                              fontSize: HeightRatio(30),
+                              margin: HeightRatio(15),
+                              fontFamily: 'SofiaSansSemiCondensed-Regular'
+                            }}
+                            allowFontScaling={false}
+                          >
+                            Already have an account?
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setPromptEmailInput("")
+                              setPromptUsernameInput("")
+                              setPromptPasswordInput("")
+                              setNewUser(false)
+                            }}
+                          >
                             <View style={{
-                              // backgroundColor: 'rgba(0, 0, 0, 0.25)',
-                              // margin: HeightRatio(30),
-                              borderRadius: HeightRatio(30)
+                              backgroundColor: THEME_COLOR_NEGATIVE,
+                              ...styles.button_Drop_Shadow,
+                              display: 'flex',
+                              justifyContent: 'flex-start',
+                              padding: HeightRatio(20),
+                              borderRadius: HeightRatio(10),
+                              alignSelf: 'center',
+                              width: windowWidth - WidthRatio(50)
                             }}>
-
-                              <TouchableOpacity
-                                onPress={() => setDisplayForgotPasswordContent(current => !current)}>
-                                <View style={{
-                                  backgroundColor: THEME_COLOR_ATTENTION,
-                                  ...styles.button_Drop_Shadow,
-                                  display: 'flex',
-                                  justifyContent: 'flex-start',
-                                  padding: HeightRatio(20),
-                                  borderRadius: HeightRatio(10),
+                              <Text
+                                style={{
+                                  color: THEME_FONT_COLOR_WHITE,
+                                  fontSize: HeightRatio(30),
+                                  // fontWeight: 'bold',
                                   alignSelf: 'center',
-                                  width: windowWidth - WidthRatio(50),
-                                  margin: HeightRatio(10)
-                                }}>
+                                  fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                }}
+                                allowFontScaling={false}
+                              >
+                                Login
+                              </Text>
+                            </View>
+                          </TouchableOpacity>
+                        </>
+                        :
+                        <>
+                          {displayLoading ?
+                            // <Loading />
+                            null
+                            :
+                            <View>
+                              <Text
+                                style={{
+                                  color: THEME_FONT_COLOR_WHITE,
+                                  alignSelf: 'center',
+                                  fontSize: HeightRatio(100),
+                                  margin: 20,
+                                  fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                }}
+                                allowFontScaling={false}
+                              >
+                                Login
+                              </Text>
+                              <TextInput
+                                type="text"
+                                name="username"
+                                placeholder="Username"
+                                placeholderTextColor='white'
+                                value={promptInput_0}
+                                onChangeText={setPromptInput_0}
+                                style={Styling.textInputStyle}
+                                disableFullscreenUI={true}
+                                allowFontScaling={false}
+                              />
+                              <TextInput
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                placeholderTextColor='white'
+                                value={promptInput_1}
+                                onChangeText={setPromptInput_1}
+                                secureTextEntry={true}
+                                style={Styling.textInputStyle}
+                                disableFullscreenUI={true}
+                                allowFontScaling={false}
+                              />
+                              {displayLoginFailureAlert &&
+                                <View style={{ alignSelf: 'center' }}>
                                   <Text
-                                    style={{
-                                      color: THEME_FONT_COLOR_BLACK,
-                                      fontSize: HeightRatio(30),
-                                      // fontWeight: 'bold',
-                                      alignSelf: 'center',
-                                      fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                    }}
+                                    style={{ fontSize: HeightRatio(30), color: 'red', fontFamily: 'SofiaSansSemiCondensed-Regular' }}
                                     allowFontScaling={false}
                                   >
-                                    Forgot Password?
+                                    Incorrect Credentials
                                   </Text>
                                 </View>
-                              </TouchableOpacity>
-                              {displayForgotPasswordContent ?
-                                <View
-                                  style={{
+                              }
+                              {promptInput_0 != "" &&
+                                promptInput_1 != "" ?
+                                <TouchableOpacity onPress={() => { handleLogin(); setDisplayLoading(true); }}>
+                                  <View style={{
+                                    backgroundColor: THEME_COLOR_POSITIVE,
+                                    ...styles.button_Drop_Shadow,
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    padding: HeightRatio(20),
+                                    borderRadius: HeightRatio(10),
                                     alignSelf: 'center',
-                                    // margin: HeightRatio(20),
-                                    width: WidthRatio(160)
-                                  }}
+                                    width: windowWidth - WidthRatio(50),
+                                    margin: HeightRatio(10)
+                                  }}>
+                                    <Text
+                                      style={{
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        fontSize: HeightRatio(30),
+                                        // fontWeight: 'bold',
+                                        alignSelf: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                      }}
+                                      allowFontScaling={false}
+                                    >
+                                      Login
+                                    </Text>
+                                  </View>
+                                </TouchableOpacity>
+                                :
+                                <TouchableOpacity
+                                  onPress={() => { }}
+                                  disabled={true}
                                 >
-                                  <View style={{ flexDirection: 'column', alignSelf: 'center' }}>
-
-                                    <TextInput
-                                      type="text"
-                                      name="resetemail"
-                                      placeholder="Enter Email"
-                                      placeholderTextColor='white'
-                                      value={promptResetEmail}
-                                      onChangeText={setPromptResetEmail}
+                                  <View style={{
+                                    backgroundColor: THEME_COLOR_POSITIVE,
+                                    ...styles.button_Drop_Shadow,
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    padding: HeightRatio(20),
+                                    borderRadius: HeightRatio(10),
+                                    alignSelf: 'center',
+                                    width: windowWidth - WidthRatio(50),
+                                    margin: HeightRatio(10)
+                                  }}>
+                                    <Text
+                                      style={{
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        fontSize: HeightRatio(30),
+                                        // fontWeight: 'bold',
+                                        alignSelf: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                      }}
                                       allowFontScaling={false}
-                                      style={Styling.textInputStyle}
-                                      disableFullscreenUI={true}
-                                      allowFontScaling={false}
-                                    />
-                                    {/* [[[SUBMIT BUTTON]]] */}
+                                    >
+                                      Login
+                                    </Text>
+                                  </View>
+                                </TouchableOpacity>
+                              }
 
-                                    <TouchableOpacity onPress={() => handleRequestReset()}>
+                              {/* <View style={Styling.profileDivisionLine}></View> */}
+                              <View style={{
+                                // backgroundColor: 'rgba(0, 0, 0, 0.25)',
+                                // margin: HeightRatio(30),
+                                borderRadius: HeightRatio(30)
+                              }}>
+
+                                <TouchableOpacity
+                                  onPress={() => setDisplayForgotPasswordContent(current => !current)}>
+                                  <View style={{
+                                    backgroundColor: THEME_COLOR_ATTENTION,
+                                    ...styles.button_Drop_Shadow,
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    padding: HeightRatio(20),
+                                    borderRadius: HeightRatio(10),
+                                    alignSelf: 'center',
+                                    width: windowWidth - WidthRatio(50),
+                                    margin: HeightRatio(10)
+                                  }}>
+                                    <Text
+                                      style={{
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        fontSize: HeightRatio(30),
+                                        // fontWeight: 'bold',
+                                        alignSelf: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                      }}
+                                      allowFontScaling={false}
+                                    >
+                                      Forgot Password?
+                                    </Text>
+                                  </View>
+                                </TouchableOpacity>
+                                {displayForgotPasswordContent ?
+                                  <View
+                                    style={{
+                                      alignSelf: 'center',
+                                      // margin: HeightRatio(20),
+                                      width: WidthRatio(160)
+                                    }}
+                                  >
+                                    <View style={{ flexDirection: 'column', alignSelf: 'center' }}>
+
+                                      <TextInput
+                                        type="text"
+                                        name="resetemail"
+                                        placeholder="Enter Email"
+                                        placeholderTextColor='white'
+                                        value={promptResetEmail}
+                                        onChangeText={setPromptResetEmail}
+                                        allowFontScaling={false}
+                                        style={Styling.textInputStyle}
+                                        disableFullscreenUI={true}
+                                        allowFontScaling={false}
+                                      />
+                                      {/* [[[SUBMIT BUTTON]]] */}
+
+                                      <TouchableOpacity onPress={() => handleRequestReset()}>
+                                        <View style={{
+                                          backgroundColor: THEME_COLOR_POSITIVE,
+                                          ...styles.button_Drop_Shadow,
+                                          display: 'flex',
+                                          justifyContent: 'flex-start',
+                                          padding: HeightRatio(20),
+                                          borderRadius: HeightRatio(10),
+                                          alignSelf: 'center',
+                                          width: windowWidth - WidthRatio(50),
+                                          margin: HeightRatio(10)
+                                        }}>
+                                          <Text
+                                            style={{
+                                              color: THEME_FONT_COLOR_BLACK,
+                                              fontSize: HeightRatio(30),
+                                              // fontWeight: 'bold',
+                                              alignSelf: 'center',
+                                              fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                            }}
+                                            allowFontScaling={false}
+                                          >
+                                            Submit
+                                          </Text>
+                                        </View>
+                                      </TouchableOpacity>
+                                    </View>
+                                    {resetRequestStatus != '' &&
+                                      <View style={{ width: windowWidth, alignSelf: 'center' }}>
+                                        <Text
+                                          style={{
+                                            color: THEME_COLOR_NEGATIVE,
+                                            alignSelf: 'center',
+                                            fontSize: HeightRatio(30),
+                                            // margin: HeightRatio(10),
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                          }}
+                                          allowFontScaling={false}
+                                        >{resetRequestStatus}</Text>
+                                      </View>
+                                    }
+
+                                    <TouchableOpacity onPress={() => setDisplayForgotPasswordForm(true)}>
                                       <View style={{
-                                        backgroundColor: THEME_COLOR_POSITIVE,
+                                        backgroundColor: 'white',
                                         ...styles.button_Drop_Shadow,
                                         display: 'flex',
                                         justifyContent: 'flex-start',
@@ -833,257 +882,216 @@ export const Auth = ({ navigation }) => {
                                           }}
                                           allowFontScaling={false}
                                         >
-                                          Submit
+                                          Have a reset token?
                                         </Text>
                                       </View>
                                     </TouchableOpacity>
-                                  </View>
-                                  {resetRequestStatus != '' &&
-                                    <View style={{ width: windowWidth, alignSelf: 'center' }}>
-                                      <Text
-                                        style={{
-                                          color: THEME_COLOR_NEGATIVE,
-                                          alignSelf: 'center',
-                                          fontSize: HeightRatio(30),
-                                          // margin: HeightRatio(10),
-                                          fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                        }}
-                                        allowFontScaling={false}
-                                      >{resetRequestStatus}</Text>
-                                    </View>
-                                  }
-
-                                  <TouchableOpacity onPress={() => setDisplayForgotPasswordForm(true)}>
-                                    <View style={{
-                                      backgroundColor: 'white',
-                                      ...styles.button_Drop_Shadow,
-                                      display: 'flex',
-                                      justifyContent: 'flex-start',
-                                      padding: HeightRatio(20),
-                                      borderRadius: HeightRatio(10),
-                                      alignSelf: 'center',
-                                      width: windowWidth - WidthRatio(50),
-                                      margin: HeightRatio(10)
-                                    }}>
-                                      <Text
-                                        style={{
-                                          color: THEME_FONT_COLOR_BLACK,
-                                          fontSize: HeightRatio(30),
-                                          // fontWeight: 'bold',
-                                          alignSelf: 'center',
-                                          fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                        }}
-                                        allowFontScaling={false}
-                                      >
-                                        Have a reset token?
-                                      </Text>
-                                    </View>
-                                  </TouchableOpacity>
-                                  {displayForgotPasswordForm &&
-                                    <>
-                                      <TextInput
-                                        type="text"
-                                        name="resetoken"
-                                        placeholder="Enter Reset Token"
-                                        placeholderTextColor="black"
-                                        value={promptResetToken}
-                                        onChangeText={setPromptResetToken}
-                                        style={Styling.textInputStyle}
-                                        disableFullscreenUI={true}
-                                        allowFontScaling={false}
-                                      />
-                                      <View style={{ flexDirection: 'row', alignSelf: 'center', margin: 10 }}>
+                                    {displayForgotPasswordForm &&
+                                      <>
                                         <TextInput
-                                          type="password"
-                                          name="resetpassword_0"
-                                          placeholder="New Password"
+                                          type="text"
+                                          name="resetoken"
+                                          placeholder="Enter Reset Token"
                                           placeholderTextColor='white'
-                                          value={promptResetPassword_0}
-                                          onChangeText={setPromptResetPassword_0}
-                                          secureTextEntry={true}
-                                          allowFontScaling={false}
+                                          value={promptResetToken}
+                                          onChangeText={setPromptResetToken}
                                           style={Styling.textInputStyle}
                                           disableFullscreenUI={true}
                                           allowFontScaling={false}
                                         />
-                                      </View>
+                                        <View style={{ flexDirection: 'row', alignSelf: 'center', margin: 10 }}>
+                                          <TextInput
+                                            type="password"
+                                            name="resetpassword_0"
+                                            placeholder="New Password"
+                                            placeholderTextColor='white'
+                                            value={promptResetPassword_0}
+                                            onChangeText={setPromptResetPassword_0}
+                                            secureTextEntry={true}
+                                            allowFontScaling={false}
+                                            style={Styling.textInputStyle}
+                                            disableFullscreenUI={true}
+                                            allowFontScaling={false}
+                                          />
+                                        </View>
 
-                                      <View style={{ flexDirection: 'column', alignSelf: 'center', margin: 10 }}>
-                                        <TextInput
-                                          type="password"
-                                          name="resetpassword_1"
-                                          placeholder='Confirm Password'
-                                          placeholderTextColor='white'
-                                          value={promptResetPassword_1}
-                                          onChangeText={setPromptResetPassword_1}
-                                          secureTextEntry={true}
-                                          allowFontScaling={false}
-                                          style={Styling.textInputStyle}
-                                          disableFullscreenUI={true}
-                                          allowFontScaling={false}
-                                        />
-                                        {promptResetPassword_0 == promptResetPassword_1 && promptResetPassword_0 != '' && promptResetPassword_1 != '' &&
-                                          <View style={{ alignSelf: 'center' }}>
-                                            <Text style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(25), fontStyle: 'SofiaSansSemiCondensed-Regular' }}
-                                              allowFontScaling={false}>
-                                              Passwords match!
-                                            </Text>
-                                          </View>
-                                        }
-                                        {promptResetPassword_0 != promptResetPassword_1 && promptResetPassword_0 != '' && promptResetPassword_1 != '' &&
-                                          <View style={{ alignSelf: 'center' }}>
-                                            <Text style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(25), fontStyle: 'SofiaSansSemiCondensed-Regular' }}
-                                              allowFontScaling={false}>
-                                              Passwords do not match!
-                                            </Text>
-                                          </View>
-                                        }
-                                        {/* [[[SUBMIT BUTTON]]] */}
-                                        <TouchableOpacity onPress={() => handleResetPassword()}>
-                                          <View style={{
-                                            backgroundColor: THEME_COLOR_POSITIVE,
-                                            ...styles.button_Drop_Shadow,
-                                            display: 'flex',
-                                            justifyContent: 'flex-start',
-                                            padding: HeightRatio(20),
-                                            borderRadius: HeightRatio(10),
-                                            alignSelf: 'center',
-                                            width: windowWidth - WidthRatio(50),
-                                            margin: HeightRatio(10)
-                                          }}>
-                                            <Text
-                                              style={{
-                                                color: THEME_FONT_COLOR_BLACK,
-                                                fontSize: HeightRatio(30),
-                                                // fontWeight: 'bold',
-                                                alignSelf: 'center',
-                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                              }}
-                                              allowFontScaling={false}
-                                            >
-                                              Submit
-                                            </Text>
-                                          </View>
-                                        </TouchableOpacity>
-
-                                      </View>
-                                    </>
-                                  }
-
-                                  <View>
-                                    <Modal
-                                      animationType="slide"
-                                      transparent={true}
-                                      visible={displayResetSuccessModal}
-                                      onRequestClose={() => {
-                                        Alert.alert("Modal has been closed.");
-                                        setDisplayResetSuccessModal(!displayResetSuccessModal);
-                                      }}
-                                    >
-                                      <View style={styles.centeredView}>
-                                        <View style={styles.modalView}>
-                                          {/* TOP ROW */}
-                                          <View
-                                            style={{
-                                              backgroundColor: THEME_COLOR_NEGATIVE,
+                                        <View style={{ flexDirection: 'column', alignSelf: 'center', margin: 10 }}>
+                                          <TextInput
+                                            type="password"
+                                            name="resetpassword_1"
+                                            placeholder='Confirm Password'
+                                            placeholderTextColor='white'
+                                            value={promptResetPassword_1}
+                                            onChangeText={setPromptResetPassword_1}
+                                            secureTextEntry={true}
+                                            allowFontScaling={false}
+                                            style={Styling.textInputStyle}
+                                            disableFullscreenUI={true}
+                                            allowFontScaling={false}
+                                          />
+                                          {promptResetPassword_0 == promptResetPassword_1 && promptResetPassword_0 != '' && promptResetPassword_1 != '' &&
+                                            <View style={{ alignSelf: 'center' }}>
+                                              <Text style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(25), fontStyle: 'SofiaSansSemiCondensed-Regular' }}
+                                                allowFontScaling={false}>
+                                                Passwords match!
+                                              </Text>
+                                            </View>
+                                          }
+                                          {promptResetPassword_0 != promptResetPassword_1 && promptResetPassword_0 != '' && promptResetPassword_1 != '' &&
+                                            <View style={{ alignSelf: 'center' }}>
+                                              <Text style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(25), fontStyle: 'SofiaSansSemiCondensed-Regular' }}
+                                                allowFontScaling={false}>
+                                                Passwords do not match!
+                                              </Text>
+                                            </View>
+                                          }
+                                          {/* [[[SUBMIT BUTTON]]] */}
+                                          <TouchableOpacity onPress={() => handleResetPassword()}>
+                                            <View style={{
+                                              backgroundColor: THEME_COLOR_POSITIVE,
+                                              ...styles.button_Drop_Shadow,
+                                              display: 'flex',
+                                              justifyContent: 'flex-start',
+                                              padding: HeightRatio(20),
+                                              borderRadius: HeightRatio(10),
                                               alignSelf: 'center',
-                                              borderRadius: HeightRatio(16),
-                                              position: 'absolute',
-                                              zIndex: 10,
-                                              top: 0,
-                                              right: 0
-                                            }}
-                                          >
-                                            <TouchableOpacity
-                                              onPress={() => { setDisplayResetSuccessModal(!displayResetSuccessModal); setDisplayForgotPasswordContent(false); }}
-                                              style={{
-                                                borderRadius: HeightRatio(20),
-                                                height: HeightRatio(100),
-                                                width: HeightRatio(100),
-                                                ...styles.button_Drop_Shadow,
-                                              }}
-                                            >
-                                              <FontAwesomeIcon
-                                                icon={faSolid, faX}
+                                              width: windowWidth - WidthRatio(50),
+                                              margin: HeightRatio(10)
+                                            }}>
+                                              <Text
                                                 style={{
                                                   color: THEME_FONT_COLOR_BLACK,
-                                                  justifyContent: 'center',
+                                                  fontSize: HeightRatio(30),
+                                                  // fontWeight: 'bold',
                                                   alignSelf: 'center',
-                                                  marginTop: HeightRatio(30)
+                                                  fontFamily: 'SofiaSansSemiCondensed-Regular'
                                                 }}
-                                              />
+                                                allowFontScaling={false}
+                                              >
+                                                Submit
+                                              </Text>
+                                            </View>
+                                          </TouchableOpacity>
+
+                                        </View>
+                                      </>
+                                    }
+
+                                    <View>
+                                      <Modal
+                                        animationType="slide"
+                                        transparent={true}
+                                        visible={displayResetSuccessModal}
+                                        onRequestClose={() => {
+                                          Alert.alert("Modal has been closed.");
+                                          setDisplayResetSuccessModal(!displayResetSuccessModal);
+                                        }}
+                                      >
+                                        <View style={styles.centeredView}>
+                                          <View style={styles.modalView}>
+                                            {/* TOP ROW */}
+                                            <View
+                                              style={{
+                                                backgroundColor: THEME_COLOR_NEGATIVE,
+                                                alignSelf: 'center',
+                                                borderRadius: HeightRatio(16),
+                                                position: 'absolute',
+                                                zIndex: 10,
+                                                top: 0,
+                                                right: 0
+                                              }}
+                                            >
+                                              <TouchableOpacity
+                                                onPress={() => { setDisplayResetSuccessModal(!displayResetSuccessModal); setDisplayForgotPasswordContent(false); }}
+                                                style={{
+                                                  borderRadius: HeightRatio(20),
+                                                  height: HeightRatio(100),
+                                                  width: HeightRatio(100),
+                                                  ...styles.button_Drop_Shadow,
+                                                }}
+                                              >
+                                                <FontAwesomeIcon
+                                                  icon={faSolid, faX}
+                                                  style={{
+                                                    color: THEME_FONT_COLOR_BLACK,
+                                                    justifyContent: 'center',
+                                                    alignSelf: 'center',
+                                                    marginTop: HeightRatio(30)
+                                                  }}
+                                                />
+                                              </TouchableOpacity>
+                                            </View>
+                                            {/* MIDDLE ROW */}
+                                            <Text style={{
+                                              ...Styling.modalText,
+                                              fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                            }}>Reset successful, try to Login!</Text>
+                                            <TouchableOpacity
+                                              style={[Styling.button, Styling.buttonClose], { ...styles.button_Drop_Shadow, }}
+                                              onPress={() => { setDisplayResetSuccessModal(!displayResetSuccessModal); setDisplayForgotPasswordContent(false); }}
+                                            >
+                                              <Text
+                                                style={{ ...Styling.textStyle, fontFamily: 'SofiaSansSemiCondensed-Regular', }}
+                                                allowFontScaling={false}
+                                              >Cool</Text>
                                             </TouchableOpacity>
                                           </View>
-                                          {/* MIDDLE ROW */}
-                                          <Text style={{
-                                            ...Styling.modalText,
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                          }}>Reset successful, try to Login!</Text>
-                                          <TouchableOpacity
-                                            style={[Styling.button, Styling.buttonClose], {...styles.button_Drop_Shadow,}}
-                                            onPress={() => { setDisplayResetSuccessModal(!displayResetSuccessModal); setDisplayForgotPasswordContent(false); }}
-                                          >
-                                            <Text
-                                              style={{ ...Styling.textStyle, fontFamily: 'SofiaSansSemiCondensed-Regular', }}
-                                              allowFontScaling={false}
-                                            >Cool</Text>
-                                          </TouchableOpacity>
                                         </View>
-                                      </View>
-                                    </Modal>
-                                  </View>
-                                </View>
-                                :
-                                <>
-                                  <Text
-                                    style={{
-                                      color: THEME_FONT_COLOR_BLACK,
-                                      alignSelf: 'center',
-                                      fontSize: HeightRatio(30),
-                                      margin: HeightRatio(20),
-                                      fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                    }}
-                                    allowFontScaling={false}
-                                  >
-                                    Don't have an account?
-                                  </Text>
-                                  <TouchableOpacity onPress={() => { setNewUser(true) }}>
-                                    <View style={{
-                                      backgroundColor: THEME_COLOR_NEGATIVE,
-                                      ...styles.button_Drop_Shadow,
-                                      display: 'flex',
-                                      justifyContent: 'flex-start',
-                                      padding: HeightRatio(20),
-                                      borderRadius: HeightRatio(10),
-                                      alignSelf: 'center',
-                                      width: windowWidth - WidthRatio(50)
-                                    }}>
-                                      <Text
-                                        style={{
-                                          color: THEME_FONT_COLOR_WHITE,
-                                          fontSize: HeightRatio(30),
-                                          // fontWeight: 'bold',
-                                          alignSelf: 'center',
-                                          fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                        }}
-                                        allowFontScaling={false}
-                                      >
-                                        Sign Up
-                                      </Text>
+                                      </Modal>
                                     </View>
-                                  </TouchableOpacity>
-                                </>
-                              }
+                                  </View>
+                                  :
+                                  <>
+                                    <Text
+                                      style={{
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        alignSelf: 'center',
+                                        fontSize: HeightRatio(30),
+                                        margin: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                      }}
+                                      allowFontScaling={false}
+                                    >
+                                      Don't have an account?
+                                    </Text>
+                                    <TouchableOpacity onPress={() => { setNewUser(true) }}>
+                                      <View style={{
+                                        backgroundColor: THEME_COLOR_NEGATIVE,
+                                        ...styles.button_Drop_Shadow,
+                                        display: 'flex',
+                                        justifyContent: 'flex-start',
+                                        padding: HeightRatio(20),
+                                        borderRadius: HeightRatio(10),
+                                        alignSelf: 'center',
+                                        width: windowWidth - WidthRatio(50)
+                                      }}>
+                                        <Text
+                                          style={{
+                                            color: THEME_FONT_COLOR_WHITE,
+                                            fontSize: HeightRatio(30),
+                                            // fontWeight: 'bold',
+                                            alignSelf: 'center',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                          }}
+                                          allowFontScaling={false}
+                                        >
+                                          Sign Up
+                                        </Text>
+                                      </View>
+                                    </TouchableOpacity>
+                                  </>
+                                }
+                              </View>
                             </View>
-                          </View>
-                        }
-                      </>
-                    }
-                  </>
-                }
-                <View style={{ marginBottom: HeightRatio(400) }}></View>
-              </ScrollView>
-            </SafeAreaView>
+                          }
+                        </>
+                      }
+                    </>
+                  }
+                  <View style={{ marginBottom: HeightRatio(400) }}></View>
+                </ScrollView>
+              </SafeAreaView>
+            </LinearGradient>
             {/* </ImageBackground> */}
 
           </View>
@@ -1138,15 +1146,15 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     ...Platform.select({
-        ios: {
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.3,
-            shadowRadius: 2,
-        },
-        android: {
-            elevation: 5,
-        },
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 5,
+      },
     }),
-}
+  }
 });

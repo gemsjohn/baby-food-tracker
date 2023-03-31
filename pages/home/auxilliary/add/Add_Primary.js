@@ -97,13 +97,6 @@ export const Add_Primary = (props) => {
             selectedFood_Schedule_Custom_Time: null,
             triggerRefresh: false
         })
-        // refetch();
-        setRefreshing(true);
-        setRefreshing_Nutrition(true)
-        setTimeout(() => {
-            setRefreshing(false);
-            setRefreshing_Nutrition(false)
-        }, 2000);
     }, []);
 
     const [addEntry] = useMutation(ADD_ENTRY);
@@ -156,15 +149,6 @@ export const Add_Primary = (props) => {
         }, 500)
 
         setInterval(() => {
-            // getTotalCalorieCount()
-
-            if (mainState.current.triggerRefresh) {
-                setRefreshing(true)
-                // refetch()
-            } else {
-                setRefreshing(false)
-            }
-
             if (
                 mainState.current.selectedFood_Quantity != null &&
                 mainState.current.selectedFood_Measurement != null &&
@@ -237,6 +221,9 @@ export const Add_Primary = (props) => {
         console.log("# ----    -----")
         console.log(input)
         setRefreshing_Nutrition(true)
+        setMainState({
+            triggerRefresh: true
+        })
         
 
         const data = {
@@ -258,7 +245,7 @@ export const Add_Primary = (props) => {
         }
         if (recently_used) {
             const nutrients_JSON = JSON.stringify(recentFoodData[selectRecentlyUsed].nutrients);
-            const foodGroup_JSON = JSON.stringify(recentFoodData[selectRecentlyUsed].foodGroup);
+            const foodGroup_JSON = recentFoodData[selectRecentlyUsed].foodGroup;
 
             const updateUserEntry = async () => {
                 await addEntry({
@@ -398,9 +385,7 @@ export const Add_Primary = (props) => {
 
 
         }
-        setMainState({
-            triggerRefresh: true
-        })
+        
 
 
 
@@ -493,6 +478,7 @@ export const Add_Primary = (props) => {
                                     onPress={() => {
                                         setSelectedItem(item);
                                         setDisplayDetails(true)
+                                        setMainState({ userTouch: true })
                                     }}
                                     style={{ ...styles.renderItem_Search_Result_Container_Plus, ...styles.button_Drop_Shadow }}
                                 >
@@ -554,8 +540,10 @@ export const Add_Primary = (props) => {
                         selectedFood_Schedule: null,
                         selectedFood_Emotion: null,
                         selectedFood_Schedule_Custom_Time: null,
+                        userTouch: true
 
                     })
+                    
                 }}
             >
                 <View
@@ -607,6 +595,7 @@ export const Add_Primary = (props) => {
                         selectedFood_Schedule: null,
                         selectedFood_Emotion: null,
                         selectedFood_Schedule_Custom_Time: null,
+                        userTouch: true
                     })
                     storeCustomScheduleTime()
                 }}
@@ -664,6 +653,7 @@ export const Add_Primary = (props) => {
                     <TouchableOpacity
                         onPress={() => {
                             setDisplayTop100Foods(true);
+                            setMainState({ userTouch: true })
                         }}
                     >
                         <View
@@ -706,6 +696,7 @@ export const Add_Primary = (props) => {
                                     setSelectedItem({ description: 'Breast Milk', fdcId: 0 });
                                     setClearSuggestions(true)
                                     setDisplayDetails(true);
+                                    setMainState({ userTouch: true })
                                 }}
                             >
                                 <View
@@ -743,6 +734,7 @@ export const Add_Primary = (props) => {
                             <TouchableOpacity
                                 onPress={() => {
                                     // setDisplayTop100Foods(true);
+                                    setMainState({ userTouch: true })
                                 }}
                             >
                                 <View
@@ -806,7 +798,7 @@ export const Add_Primary = (props) => {
                             disableFullscreenUI={true}
                             allowFontScaling={false}
                         />
-                        <TouchableOpacity onPress={() => { handleSearch() }}>
+                        <TouchableOpacity onPress={() => { handleSearch(); setMainState({ userTouch: true }) }}>
                             <View style={{ ...styles.modalVisible_Search_Button, ...styles.button_Drop_Shadow }}>
                                 <Text
                                     style={styles.modalVisible_Search_Button_Text}
@@ -876,6 +868,7 @@ export const Add_Primary = (props) => {
                                                 setSearchQuery(item.name)
                                                 setDisplayTop100Foods(false)
                                                 handleSearch(item.name);
+                                                setMainState({ userTouch: true })
                                             }}
                                             style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow }}
                                         >
@@ -890,7 +883,7 @@ export const Add_Primary = (props) => {
                         </SafeAreaView>
 
 
-                        <TouchableOpacity onPress={() => setDisplayTop100Foods(false)}>
+                        <TouchableOpacity onPress={() => {setDisplayTop100Foods(false); setMainState({ userTouch: true })}}>
                             <View
                                 style={{
                                     ...styles.modalVisible_FullButton,
@@ -965,7 +958,7 @@ export const Add_Primary = (props) => {
                                                                         </View>
                                                                     </View>
                                                                     <TouchableOpacity
-                                                                        onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); }}
+                                                                        onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(data); setMainState({ userTouch: true }) }}
                                                                         style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow }}
                                                                     >
                                                                         <Text
@@ -996,6 +989,7 @@ export const Add_Primary = (props) => {
                                                                         onPress={() => {
                                                                             setSelectRecentlyUsed(null)
                                                                             setSelectRecentlyUsedData(null)
+                                                                            setMainState({ userTouch: true })
                                                                         }}
                                                                         style={{ ...styles.modalVisible_faX, ...styles.button_Drop_Shadow }}
                                                                     >
@@ -1030,6 +1024,7 @@ export const Add_Primary = (props) => {
                                                         setSelectedItem(null);
                                                         setDisplayDetails(false)
                                                         setClearSuggestions(selectedItem.description == 'Breast Milk' ? false : true)
+                                                        setMainState({ userTouch: true })
                                                     }}
                                                     style={{
                                                         ...styles.modalVisible_faX,
@@ -1065,7 +1060,7 @@ export const Add_Primary = (props) => {
                         >
                             {selectedFoodDataEntrered ?
                                 <>
-                                    <TouchableOpacity onPress={() => { setModalVisible(false); setDisplayLoading(false); }}>
+                                    <TouchableOpacity onPress={() => { setModalVisible(false); setDisplayLoading(false); setMainState({ userTouch: true }) }}>
                                         <View
                                             style={{
                                                 ...styles.modalVisible_HalfButton,
@@ -1085,6 +1080,7 @@ export const Add_Primary = (props) => {
                                         onPress={() => {
                                             getNutritionValue(selectedItem == null && selectRecentlyUsedData.item != null ? selectRecentlyUsedData.item : selectedItem);
                                             setModalVisible(false);
+                                            setMainState({ userTouch: true })
 
                                         }}
                                     >
@@ -1105,7 +1101,7 @@ export const Add_Primary = (props) => {
                                     </TouchableOpacity>
                                 </>
                                 :
-                                <TouchableOpacity onPress={() => { setModalVisible(false); setDisplayLoading(false); }}>
+                                <TouchableOpacity onPress={() => { setModalVisible(false); setDisplayLoading(false); setMainState({ userTouch: true }) }}>
                                     <View style={{ ...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow }}>
                                         <Text
                                             style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
@@ -1161,6 +1157,7 @@ export const Add_Primary = (props) => {
                     <TouchableOpacity
                         onPress={() => {
                             setDisplayChooseAnotherOptionModal(false);
+                            setMainState({ userTouch: true })
                         }}
                     >
                         <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE }}>

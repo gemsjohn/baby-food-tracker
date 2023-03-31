@@ -418,6 +418,7 @@ export const DailyScheduleSimplified = (props) => {
                                     onPress={() => {
                                         setDisplayLunchNutrients(current => !current);
                                         setEntryKey({ index: index, name: data[i].name })
+                                        setMainState({ userTouch: true })
                                     }}
                                     style={{
                                         ...styles.renderItem_Search_Results,
@@ -620,7 +621,8 @@ export const DailyScheduleSimplified = (props) => {
                                                         setModalVisible(true);
                                                         setDeleteID(emotions[j].id);
                                                         setMainState({
-                                                            triggerRefresh: false
+                                                            triggerRefresh: false,
+                                                            userTouch: true
                                                         })
 
                                                     }}
@@ -700,16 +702,13 @@ export const DailyScheduleSimplified = (props) => {
             <SafeAreaView
                 style={{
                     ...styles.container,
-                    // backgroundColor: '#ddeafc',
-                    height: props.from === "main" ? HeightRatio(450) : HeightRatio(250)
+                    height: props.from === "main" ? HeightRatio(450) : HeightRatio(250),
                 }}
 
             >
                 <ScrollView
                     style={styles.scrollView}
-                // refreshControl={
-                //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                // }
+
                 >
                     {dailyEntries.length > 0 ?
                         <>
@@ -754,7 +753,7 @@ export const DailyScheduleSimplified = (props) => {
                             >
                                 Select `ADD` to get started.
                             </Text>
-                            <View style={{height: HeightRatio(50)}} />
+                            <View style={{ height: HeightRatio(50) }} />
                         </>
 
                     }
@@ -763,119 +762,119 @@ export const DailyScheduleSimplified = (props) => {
 
             {props.from === "main" &&
                 <View style={{ width: windowWidth, height: HeightRatio(140) }}>
-                    
-                    {props.premium ?
-                    <>
-                        {props.subuser &&
-                        <>
-                        <View
-                            style={{
-                                backgroundColor: '#1f1f27',
-                                width: '90%',
-                                height: HeightRatio(120),
-                                alignSelf: 'center',
-                                borderRadius: HeightRatio(10),
-                                display: 'flex',
-                                // alignItems: 'center',
-                                // justifyContent: 'center',
-                                padding: HeightRatio(20),
-                                marginTop: HeightRatio(8)
-                            }}
-                        >
-                            <View
-                                style={{
-                                    backgroundColor: THEME_COLOR_POSITIVE,
-                                    padding: HeightRatio(8),
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    alignSelf: 'flex-start',
-                                    borderRadius: HeightRatio(10)
-                                }}
-                            >
-                            <Text
-                                style={{
-                                    color: THEME_FONT_COLOR_BLACK,
-                                    // textAlign: 'center',
-                                    fontSize: HeightRatio(20),
-                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold",
-                                    // marginTop: HeightRatio(20)
-                                }}
-                                allowFontScaling={false}
-                            >
-                                {props.subuser.subusername}
-                            </Text>
-                            </View>
-                            <Text
-                                style={{
-                                    color: THEME_FONT_COLOR_WHITE,
-                                    // textAlign: 'center',
-                                    fontSize: HeightRatio(20),
-                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold",
-                                    // marginTop: HeightRatio(20)
-                                }}
-                                allowFontScaling={false}
-                            >
-                                Random Insight
-                            </Text>
-                        </View>
-                            
-                            </>
-                        }
-                    </>
-                    :
-                    <>
-                        <TouchableOpacity
-                            onPress={() => { setPremiumServiceModalVisible(true); }}
-                        >
-                            <LinearGradient
-                                colors={['#ec546d', '#d05bb6']}
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 1 }}
-                                style={{
-                                    ...styles.renderItem_Search_Results,
-                                    ...styles.button_Drop_Shadow,
-                                    borderRadius: HeightRatio(50),
-                                    backgroundColor: '#feda9a',
-                                    width: WidthRatio(300),
-                                    padding: HeightRatio(15)
 
-                                }}
+                    {props.premium ?
+                        <>
+                            {props.subuser &&
+                                <>
+                                    <View
+                                        style={{
+                                            backgroundColor: '#1f1f27',
+                                            width: '90%',
+                                            height: HeightRatio(120),
+                                            alignSelf: 'center',
+                                            borderRadius: HeightRatio(10),
+                                            display: 'flex',
+                                            // alignItems: 'center',
+                                            // justifyContent: 'center',
+                                            padding: HeightRatio(20),
+                                            marginTop: HeightRatio(8)
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                backgroundColor: THEME_COLOR_POSITIVE,
+                                                padding: HeightRatio(8),
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                alignSelf: 'flex-start',
+                                                borderRadius: HeightRatio(10)
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: THEME_FONT_COLOR_BLACK,
+                                                    // textAlign: 'center',
+                                                    fontSize: HeightRatio(20),
+                                                    fontFamily: "SofiaSansSemiCondensed-ExtraBold",
+                                                    // marginTop: HeightRatio(20)
+                                                }}
+                                                allowFontScaling={false}
+                                            >
+                                                {props.subuser.subusername}
+                                            </Text>
+                                        </View>
+                                        <Text
+                                            style={{
+                                                color: THEME_FONT_COLOR_WHITE,
+                                                // textAlign: 'center',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: "SofiaSansSemiCondensed-ExtraBold",
+                                                // marginTop: HeightRatio(20)
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Random Insight
+                                        </Text>
+                                    </View>
+
+                                </>
+                            }
+                        </>
+                        :
+                        <>
+                            <TouchableOpacity
+                                onPress={() => { setPremiumServiceModalVisible(true); setMainState({ userTouch: true }); }}
                             >
-                                <View
+                                <LinearGradient
+                                    colors={['#ec546d', '#d05bb6']}
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 1 }}
                                     style={{
-                                        height: HeightRatio(50),
-                                        width: HeightRatio(50),
-                                        borderRadius: HeightRatio(100),
-                                        borderWidth: 3,
-                                        borderColor: 'white',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
+                                        ...styles.renderItem_Search_Results,
+                                        ...styles.button_Drop_Shadow,
+                                        borderRadius: HeightRatio(50),
+                                        backgroundColor: '#feda9a',
+                                        width: WidthRatio(300),
+                                        padding: HeightRatio(15)
+
                                     }}
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faSolid, faGlasses}
-                                        style={{ color: THEME_FONT_COLOR_WHITE }}
-                                        size={25}
-                                    />
-                                </View>
-                                <Text
-                                    style={{
-                                        fontSize: HeightRatio(22),
-                                        color: THEME_FONT_COLOR_WHITE,
-                                        marginLeft: HeightRatio(20)
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    Premium Service
-                                </Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    </>
+                                    <View
+                                        style={{
+                                            height: HeightRatio(50),
+                                            width: HeightRatio(50),
+                                            borderRadius: HeightRatio(100),
+                                            borderWidth: 3,
+                                            borderColor: 'white',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faSolid, faGlasses}
+                                            style={{ color: THEME_FONT_COLOR_WHITE }}
+                                            size={25}
+                                        />
+                                    </View>
+                                    <Text
+                                        style={{
+                                            fontSize: HeightRatio(22),
+                                            color: THEME_FONT_COLOR_WHITE,
+                                            marginLeft: HeightRatio(20)
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Premium Service
+                                    </Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+                        </>
 
                     }
-                    
+
                 </View>
 
             }
@@ -896,7 +895,7 @@ export const DailyScheduleSimplified = (props) => {
                             </Text>
                         </View>
                         <View style={styles.modalContainer_1_B}>
-                            <TouchableOpacity onPress={() => setModalVisible(false)}>
+                            <TouchableOpacity onPress={() => { setModalVisible(false); setMainState({ userTouch: true }); }}>
                                 <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
                                     <Text
                                         style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
@@ -910,6 +909,7 @@ export const DailyScheduleSimplified = (props) => {
                                 onPress={() => {
                                     setModalVisible(false);
                                     handleDeleteEntry()
+                                    setMainState({ userTouch: true })
 
                                 }}
                             >
@@ -1133,7 +1133,7 @@ export const DailyScheduleSimplified = (props) => {
 
                         {/* <PDFGenerator /> */}
                         <View style={styles.modalContainer_1_B}>
-                            <TouchableOpacity onPress={() => setPremiumServiceModalVisible(false)}>
+                            <TouchableOpacity onPress={() => { setPremiumServiceModalVisible(false); setMainState({ userTouch: true }); }}>
                                 <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
                                     <Text
                                         style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
@@ -1144,7 +1144,7 @@ export const DailyScheduleSimplified = (props) => {
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                onPress={() => { setDisplaySubscriptionModal(true); }}
+                                onPress={() => { setDisplaySubscriptionModal(true); setMainState({ userTouch: true }) }}
                             >
                                 <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
                                     <Text
@@ -1157,7 +1157,7 @@ export const DailyScheduleSimplified = (props) => {
                             </TouchableOpacity>
                         </View>
 
-                        
+
                     </View>
                 </View>
 

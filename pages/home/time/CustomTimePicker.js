@@ -111,6 +111,7 @@ export const CustomTimePicker = () => {
                 <TouchableOpacity
                     onPress={() => {
                         storeCustomScheduleTime(hour, minute, amPm)
+                        setMainState({ userTouch: true })
                     }}
                 >
                     <View

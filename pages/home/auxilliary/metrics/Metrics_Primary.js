@@ -64,6 +64,7 @@ export const Metrics_Primary = (props) => {
             <TouchableOpacity
                 onPress={() => {
                     setMetricsModalVisible(true);
+                    setMainState({ userTouch: true })
                 }}
             >
                 <View
@@ -114,6 +115,7 @@ export const Metrics_Primary = (props) => {
                 <TouchableOpacity
                     onPress={() => {
                         setMetricsModalVisible(false);
+                        setMainState({ userTouch: true })
                     }}
                 >
                     <View

@@ -76,7 +76,7 @@ export const Premium = (props) => {
 
     const Item = ({ title, identifier, description, priceString, purchasePackage }) => (
         <TouchableOpacity
-            onPress={() => onSelection(purchasePackage)}
+            onPress={() => {onSelection(purchasePackage); setMainState({ userTouch: true });}}
         >
 
             <View>

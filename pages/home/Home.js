@@ -47,7 +47,7 @@ import { GLOBAL_GRAPHQL_API_URL } from '../../App'
 import { convertDateFormat } from './auxilliary/ConvertDateFormat';
 import { SelectedFoodDetails } from './auxilliary/SelectedFoodDetails';
 import { useMutation, useQuery } from '@apollo/client';
-import { ADD_ENTRY } from '../../utils/mutations';
+import { ADD_ENTRY, ADD_SUB_USER } from '../../utils/mutations';
 import { GET_USER_BY_ID } from '../../utils/queries';
 // import { DailySchedule } from './auxilliary/DailySchedule';
 import { Loading } from '../../components/Loading';
@@ -80,7 +80,6 @@ import { SwipeableViews } from './auxilliary/metrics';
 import { Metrics_Primary } from './auxilliary/metrics/Metrics_Primary';
 import { Calories_Primary } from './auxilliary/calories/Calories_Primary';
 import { Add_Primary } from './auxilliary/add/Add_Primary';
-import { Add_Subuser_Modal } from './auxilliary/add/Add_Subuser_Modal';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions } from '@react-navigation/native';
 
@@ -112,19 +111,16 @@ export const HomeScreen = ({ navigation }) => {
     const [displayTop100Foods, setDisplayTop100Foods] = useState(false)
     const [metricsModalVisible, setMetricsModalVisible] = useState(false)
     const [displayChooseAnotherOptionModal, setDisplayChooseAnotherOptionModal] = useState(false)
+    const subuserIndex = useRef(userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium ? 0 : null)
+    const [handleTimeout, setHandleTimeout] = useState(false)
 
     const onRefresh = useCallback(() => {
         setLoading(true)
         refetch();
-        setRefreshing(true);
-        setRefreshing_Nutrition(true)
         setTimeout(() => {
-            setRefreshing(false);
-            setRefreshing_Nutrition(false)
-        }, 2000);
+            setLoading(false)
+        }, 100);
     }, []);
-
-    const [addEntry] = useMutation(ADD_ENTRY);
 
 
     // # - DATE
@@ -164,22 +160,35 @@ export const HomeScreen = ({ navigation }) => {
         setCurrentDate(moment(currentDate, formatString).add(1, 'days').format(formatString));
     }
 
+
+
     const lastTouchTimeRef = useRef(Date.now());
     const touchTimerRef = useRef(null);
     const handleTouchCalled = useRef(false);
-  
+
     const handleTouch = () => {
-        console.log("handleTouch")
-      lastTouchTimeRef.current = Date.now();
-  
-      if (touchTimerRef.current) {
+        console.log("handleTouch");
+        lastTouchTimeRef.current = Date.now();
+
         clearTimeout(touchTimerRef.current);
-      }
-  
-      touchTimerRef.current = setTimeout(() => {
-          navigation.dispatch(resetActionKey)
-      }, 10000); // 1 minute in milliseconds
+        setHandleTimeout(false)
+
+        touchTimerRef.current = setTimeout(() => {
+            async function getValueFor(key) {
+                console.log("# - GET VALUE FOR COSMIC KEY  - FROM HOME")
+                let result = await SecureStore.getItemAsync(key);
+                if (result && !handleTimeout) {
+                    setHandleTimeout(true)
+                    navigation.dispatch(resetActionKey);
+                } else {
+                    null
+                }
+            }
+            getValueFor('cosmicKey')
+
+        }, 30000);
     };
+
 
     useEffect(() => {
         setLoading(true)
@@ -213,38 +222,6 @@ export const HomeScreen = ({ navigation }) => {
                     handleTouch()
                 }
             }
-
-            // console.log(mainState.current.selectedFood_Quantity)
-            // console.log(mainState.current.selectedFood_Measurement)
-            // console.log(mainState.current.selectedFood_Schedule)
-            // console.log(mainState.current.selectedFood_Schedule_Base)
-            // console.log(mainState.current.selectedFood_Emotion)
-            // console.log(mainState.current.selectedFood_Allergy)
-
-
-            // if (
-            //     mainState.current.selectedFood_Quantity != null &&
-            //     mainState.current.selectedFood_Measurement != null &&
-            //     mainState.current.selectedFood_Schedule != null &&
-            //     mainState.current.selectedFood_Schedule_Base != null &&
-            //     mainState.current.selectedFood_Emotion != null &&
-            //     mainState.current.selectedFood_Allergy != null
-            // ) {
-            //     if (
-            //         mainState.current.selectedFood_Schedule_Base == 'Custom' &&
-            //         mainState.current.selectedFood_Schedule_Hour != null &&
-            //         mainState.current.selectedFood_Schedule_Minute != null &&
-            //         mainState.current.selectedFood_Schedule_AMPM != null &&
-            //         mainState.current.selectedFood_Schedule_Custom_Time != null
-            //     ) {
-            //         setSelectedFoodDataEntrered(true)
-            //     } else if (mainState.current.selectedFood_Schedule_Base != 'Custom') {
-            //         setSelectedFoodDataEntrered(true)
-            //     }
-            // } else {
-            //     setSelectedFoodDataEntrered(false)
-
-            // }
         }, 200)
     }, [])
 
@@ -274,7 +251,21 @@ export const HomeScreen = ({ navigation }) => {
     }, [])
 
 
+    const [addSubUserModalVisible, setAddSubUserModalVisible] = useState(true) //userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium ? false : true
+    const [addSubUser] = useMutation(ADD_SUB_USER);
 
+    const [subuserInput, setSubuserInput] = useState('')
+
+    const handleAddSubuser = async () => {
+        setMainState({ triggerRefresh: true })
+        await addSubUser({
+            variables: {
+                subusername: subuserInput
+            }
+        });
+        setMainState({ triggerRefresh: false })
+
+    }
 
 
     const [fontsLoaded] = useFonts({
@@ -302,47 +293,22 @@ export const HomeScreen = ({ navigation }) => {
         }
     }
 
-    // const [lastTouchTime, setLastTouchTime] = useState('');
-
-    // const handleTouch = () => {
-    //     console.log("TEST")
-    // //   setLastTouchTime(Date.now());
-    // };
-
-    // useEffect(() => {
-    //   const touchTimer = setTimeout(() => {
-    //     // return to login screen or do any other action
-    //     navigation.dispatch(resetActionKey)
-    //   }, 60000); // 1 minute in milliseconds
-
-    //   return () => clearTimeout(touchTimer);
-    // }, [lastTouchTime]);
 
     return (
         <>
             {!loading ?
                 <>
                     {refreshing || refreshing_Nutrition &&
-                        // <View style={styles.updatingScreen_Container}>
-                        //     <Text
-                        //         style={styles.updatingScreen_Container_Text}
-                        //         allowFontScaling={false}
-                        //     >
-                        //         Updating...
-                        //     </Text>
-                        // </View>
                         <Loading />
                     }
                     {modalVisible && <View style={styles.modalVisible_Blackout} />}
                     {calendarModalVisible && <View style={styles.modalVisible_Blackout} />}
                     {metricsModalVisible && <View style={styles.modalVisible_Blackout} />}
-                    
+
                     <View
                         style={styles.homePrimary_Container}
                         onLayout={onLayoutRootView}
                     >
-
-
                         <LinearGradient
                             colors={['#8bccde', '#d05bb6']}
                             start={{ x: 0, y: 0 }}
@@ -353,7 +319,7 @@ export const HomeScreen = ({ navigation }) => {
                                 <TouchableOpacity
                                     onPress={() => {
                                         handlePreviousDay();
-                                        // setLoading(true);
+                                        setMainState({ userTouch: true })
                                     }}
                                     style={styles.homePrimary_Date_Arrow}
                                 >
@@ -365,7 +331,7 @@ export const HomeScreen = ({ navigation }) => {
                                 </TouchableOpacity>
                                 <View style={styles.homePrimary_Date_Current}>
                                     <TouchableOpacity
-                                        onPress={() => setCalendarModalVisible(true)}
+                                        onPress={() => { setCalendarModalVisible(true); setMainState({ userTouch: true }) }}
                                     >
                                         <Text
                                             style={styles.homePrimary_Date_Current_Text}
@@ -378,7 +344,7 @@ export const HomeScreen = ({ navigation }) => {
                                         <TouchableOpacity
                                             onPress={() => {
                                                 setCurrentDate(moment().format(formatString));
-                                                // setLoading(true)
+                                                setMainState({ userTouch: true })
                                             }}
                                             style={{
                                                 ...styles.homePrimary_Date_Return_Button,
@@ -399,7 +365,7 @@ export const HomeScreen = ({ navigation }) => {
                                 <TouchableOpacity
                                     onPress={() => {
                                         handleNextDay();
-                                        // setLoading(true);
+                                        setMainState({ userTouch: true })
                                     }}
                                     style={styles.homePrimary_Date_Arrow}
                                 >
@@ -410,10 +376,6 @@ export const HomeScreen = ({ navigation }) => {
                                     />
                                 </TouchableOpacity>
                             </View>
-
-
-                            {/* / */}
-
 
                             {!refreshing && !refreshing_Nutrition ?
                                 <>
@@ -430,14 +392,14 @@ export const HomeScreen = ({ navigation }) => {
 
                                         {userByID?.user.premium &&
                                             <Metrics_Primary
-                                                subuser={userByID?.user.subuser[0]}
+                                                subuser={userByID?.user.subuser[subuserIndex.current]}
                                                 currentDateReadable={currentDateReadable}
                                             />
                                         }
 
                                         <Add_Primary
                                             date={currentDateReadable}
-                                            subuser={userByID?.user.subuser[0]}
+                                            subuser={userByID?.user.subuser[subuserIndex.current]}
                                         />
                                     </View>
 
@@ -446,7 +408,7 @@ export const HomeScreen = ({ navigation }) => {
                                         userID={userByID?.user._id}
                                         containerHeight={HeightRatio(450)}
                                         from={"main"}
-                                        subuser={userByID?.user.subuser[0]}
+                                        subuser={userByID?.user.subuser[subuserIndex.current]}
                                         premium={userByID?.user.premium}
                                     />
                                     <View style={{ flexDirection: 'row' }}>
@@ -465,12 +427,6 @@ export const HomeScreen = ({ navigation }) => {
                             }
                         </LinearGradient>
                     </View>
-
-
-                    <Add_Subuser_Modal
-                        subuser={userByID?.user.subuser[0]}
-                    />
-
 
 
                     <Modal
@@ -507,7 +463,8 @@ export const HomeScreen = ({ navigation }) => {
                                 <TouchableOpacity
                                     onPress={() => {
                                         setCalendarModalVisible(false);
-                                        setSelectedCalendarModalDate('')
+                                        setSelectedCalendarModalDate('');
+                                        setMainState({ userTouch: true })
                                     }}
                                 >
                                     <View style={{ ...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow }}>
@@ -554,7 +511,7 @@ export const HomeScreen = ({ navigation }) => {
                                         userID={userByID?.user._id}
                                         containerHeight={HeightRatio(250)}
                                         from={"calendar"}
-                                        subuser={userByID?.user.subuser[0]}
+                                        subuser={userByID?.user.subuser[subuserIndex.current]}
                                         premium={userByID?.user.premium}
                                     />
 
@@ -569,6 +526,7 @@ export const HomeScreen = ({ navigation }) => {
                                             setTimeout(() => {
                                                 setLoading(false)
                                             }, 500)
+                                            setMainState({ userTouch: true })
                                         }}
                                     >
                                         <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE }}>
@@ -585,6 +543,7 @@ export const HomeScreen = ({ navigation }) => {
                                             setCurrentDate(selectedDateFromCalendar);
                                             setCalendarModalVisible(false);
                                             setSelectedCalendarModalDate('');
+                                            setMainState({ userTouch: true })
                                         }}
                                     >
                                         <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_POSITIVE }}>
@@ -601,12 +560,192 @@ export const HomeScreen = ({ navigation }) => {
                         }
                     </Modal>
 
+                    <Modal
+                        visible={addSubUserModalVisible}
+                        animationType="slide"
+                        transparent={true}
+                        style={{
+                            ...styles.homePrimary_Container
+                        }}
+                    >
+                        <View
+                            style={{
+                                ...styles.homePrimary_Container,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <LinearGradient
+                                colors={['#8bccde', '#d05bb6']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 1 }}
+                                style={{
+                                    ...styles.homePrimary_Container,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                {userByID?.user && userByID?.user.subuser.length == 0 && !userByID?.user.premium &&
+                                    <>
+                                        <View style={{ margin: 20, backgroundColor: 'rgba(0, 0, 0, 0.1)', borderRadius: HeightRatio(20), padding: HeightRatio(20) }}>
+                                            <Text
+                                                style={{
+                                                    color: THEME_FONT_COLOR_WHITE,
+                                                    alignSelf: 'center',
+                                                    fontSize: HeightRatio(50),
+                                                    margin: 20,
+                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                }}
+                                                allowFontScaling={false}
+                                            >
+                                                Add a Child
+                                            </Text>
+                                            <TextInput
+                                                type="text"
+                                                name="subuser"
+                                                placeholder="Child's name"
+                                                placeholderTextColor='white'
+                                                value={subuserInput}
+                                                onChangeText={setSubuserInput}
+                                                style={{
+                                                    ...Styling.textInputStyle
+                                                }}
+                                                disableFullscreenUI={true}
+                                                allowFontScaling={false}
+                                            />
+
+
+                                            {subuserInput != "" &&
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        // setAddSubUserModalVisible(false);
+                                                        handleAddSubuser()
+
+                                                    }}
+                                                >
+                                                    <View style={{
+                                                        backgroundColor: THEME_COLOR_POSITIVE,
+                                                        ...styles.button_Drop_Shadow,
+                                                        display: 'flex',
+                                                        justifyContent: 'flex-start',
+                                                        padding: HeightRatio(20),
+                                                        borderRadius: HeightRatio(10),
+                                                        alignSelf: 'center',
+                                                        width: windowWidth - WidthRatio(50),
+                                                        margin: HeightRatio(10)
+                                                    }}>
+                                                        <Text
+                                                            style={{
+                                                                color: THEME_FONT_COLOR_BLACK,
+                                                                fontSize: HeightRatio(30),
+                                                                // fontWeight: 'bold',
+                                                                alignSelf: 'center',
+                                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                            }}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            ADD
+                                                        </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                        </View>
+                                        <View style={{ borderBottomWidth: 2, borderBottomColor: 'white', width: '90%', margin: 20, }} />
+                                    </>
+
+                                }
+
+
+                                {/* {userByID?.user && userByID?.user.subuser.length > 0 && userByID?.user.premium && */}
+                                <>
+                                    <SafeAreaView
+                                        style={{
+                                            ...styles.container,
+                                            height: HeightRatio(480)
+                                        }}
+                                    >
+                                        <ScrollView style={styles.scrollView}>
+                                            <Text
+                                                style={{
+                                                    color: THEME_FONT_COLOR_WHITE,
+                                                    alignSelf: 'center',
+                                                    fontSize: HeightRatio(50),
+                                                    margin: 20,
+                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                }}
+                                                allowFontScaling={false}
+                                            >
+                                                Select a Child
+                                            </Text>
+                                            {userByID?.user.subuser.map((data, index) => (
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        setAddSubUserModalVisible(false);
+                                                        setMainState({ userTouch: true })
+                                                        subuserIndex.current = index;
+                                                        onRefresh();
+                                                    }}
+                                                    key={index}
+                                                >
+                                                    <View style={{
+                                                        backgroundColor: THEME_COLOR_POSITIVE,
+                                                        ...styles.button_Drop_Shadow,
+                                                        display: 'flex',
+                                                        justifyContent: 'flex-start',
+                                                        padding: HeightRatio(20),
+                                                        borderRadius: HeightRatio(10),
+                                                        alignSelf: 'center',
+                                                        width: windowWidth - WidthRatio(50),
+                                                        margin: HeightRatio(10)
+                                                    }}>
+                                                        <Text
+                                                            style={{
+                                                                color: THEME_FONT_COLOR_BLACK,
+                                                                fontSize: HeightRatio(30),
+                                                                // fontWeight: 'bold',
+                                                                alignSelf: 'center',
+                                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                            }}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            {data.subusername}
+                                                        </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            ))}
+                                            {userByID?.user && !userByID?.user.premium &&
+                                                <View style={{ margin: HeightRatio(20) }}>
+                                                    <Text
+                                                        style={{
+                                                            color: THEME_FONT_COLOR_BLACK,
+                                                            fontSize: HeightRatio(28),
+                                                            // fontWeight: 'bold',
+                                                            textAlign: 'center',
+                                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                        }}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        *Premium users can add additional users.
+                                                    </Text>
+                                                </View>
+                                            }
+                                        </ScrollView>
+                                    </SafeAreaView>
+
+                                </>
+                                {/* } */}
+                            </LinearGradient>
+                        </View>
+
+                    </Modal>
+
 
                 </>
                 :
                 <View
                     style={styles.homePrimary_Container}
-                // onLayout={onLayoutRootView}
                 >
                     <Loading />
                 </View>

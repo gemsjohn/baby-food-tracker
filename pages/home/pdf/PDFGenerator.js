@@ -53,7 +53,7 @@ export const PDFGenerator = () => {
 
   return (
     <View>
-      <TouchableOpacity onPress={() => handleShareContent()}>
+      <TouchableOpacity onPress={() => {handleShareContent(); setMainState({ userTouch: true })}}>
         <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
           <Text
             style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}

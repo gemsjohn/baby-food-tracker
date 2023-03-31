@@ -350,6 +350,7 @@ export const ProfileScreen = ({ navigation }) => {
                                                                 setTimeout(() => {
                                                                     setDisplaySetUpCosmicKeyModal(true)
                                                                 }, 500)
+                                                                setMainState({ userTouch: true })
                                                             }}
                                                             style={Styling.modalWordButton}>
                                                             <View
@@ -403,6 +404,7 @@ export const ProfileScreen = ({ navigation }) => {
                                                                     userID: null,
                                                                     authState: false
                                                                 })
+                                                                setMainState({ userTouch: true })
                                                                 navigation.dispatch(resetActionAuth)
                                                             }}
                                                             style={{
@@ -472,6 +474,7 @@ export const ProfileScreen = ({ navigation }) => {
                         <TouchableOpacity
                             onPress={() => {
                                 setDisplayTokens(false)
+                                setMainState({ userTouch: true })
                             }}
                             style={{
                                 borderWidth: 3,
@@ -510,7 +513,7 @@ export const ProfileScreen = ({ navigation }) => {
                             <SecureStorage />
 
                             <TouchableOpacity
-                                onPress={() => setDisplaySetUpCosmicKeyModal(!displaySetUpCosmicKeyModal)}
+                                onPress={() => {setDisplaySetUpCosmicKeyModal(!displaySetUpCosmicKeyModal); setMainState({ userTouch: true })}}
                                 style={Styling.modalWordButton}>
                                 <View style={{
                                     backgroundColor: THEME_COLOR_ATTENTION,

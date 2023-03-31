@@ -103,7 +103,7 @@ export const PurchaseFilter = (props) => {
                     {!authState.current ?
                         <>
                             <TouchableOpacity
-                                onPress={() => props.nav.dispatch(resetActionAuth)}
+                                onPress={() => {props.nav.dispatch(resetActionAuth); setMainState({ userTouch: true });}}
                                 style={{ ...Styling.modalWordButton, marginTop: 10 }}
                             >
                                 <View style={{
@@ -149,7 +149,7 @@ export const PurchaseFilter = (props) => {
                     :
                         <>
                             <TouchableOpacity
-                                onPress={() => setDisplayTokens(current => !current)}
+                                onPress={() => {setDisplayTokens(current => !current); setMainState({ userTouch: true });}}
                                 style={{ ...Styling.modalWordButton, marginTop: 10 }}
                             >
                                 <View style={{

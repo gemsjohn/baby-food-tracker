@@ -165,7 +165,7 @@ export const AllergyTracking = (props) => {
                                             </Text>
                                         </View>
                                         <TouchableOpacity
-                                            onPress={() => { setModalVisible(true); setSelectedAllergyForDeletion(data); }}
+                                            onPress={() => { setModalVisible(true); setSelectedAllergyForDeletion(data); setMainState({ userTouch: true }) }}
                                             style={{
                                                 backgroundColor: THEME_COLOR_NEGATIVE,
                                                 padding: HeightRatio(10),
@@ -363,7 +363,7 @@ export const AllergyTracking = (props) => {
                             </Text>
                         </View>
                         <View style={styles.modalContainer_1_B}>
-                            <TouchableOpacity onPress={() => { setModalVisible(false); setSelectedAllergyForDeletion(null) }}>
+                            <TouchableOpacity onPress={() => { setModalVisible(false); setSelectedAllergyForDeletion(null); setMainState({ userTouch: true }) }}>
                                 <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
                                     <Text
                                         style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
@@ -378,6 +378,7 @@ export const AllergyTracking = (props) => {
                                     handleUpdateUserAllergies(selectedAllergyForDeletion);
                                     getAllergyData();
                                     setModalVisible(false);
+                                    setMainState({ userTouch: true })
                                 }}
                             >
                                 <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>

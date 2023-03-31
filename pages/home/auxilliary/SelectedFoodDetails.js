@@ -198,8 +198,10 @@ export const SelectedFoodDetails = (props) => {
                                 onPress={() => {
                                     setSelectedItem(null);
                                     setMainState({
-                                        selectedFood_Measurement: null
+                                        selectedFood_Measurement: null,
+                                        userTouch: true
                                     })
+                                    
                                 }}
                                 style={styles.itemButton_faX}
                             >
@@ -218,7 +220,8 @@ export const SelectedFoodDetails = (props) => {
                                     onPress={() => {
                                         setSelectedItem(option);
                                         setMainState({
-                                            selectedFood_Measurement: option
+                                            selectedFood_Measurement: option,
+                                            userTouch: true
                                         })
                                     }}
                                     style={styles.itemButton}
@@ -261,6 +264,7 @@ export const SelectedFoodDetails = (props) => {
                                     setMainState({
                                         selectedFood_Schedule: null,
                                         selectedFood_Schedule_Custom_Time: null,
+                                        userTouch: true
                                     })
                                 }}
                                 style={styles.itemButton_faX}
@@ -285,6 +289,7 @@ export const SelectedFoodDetails = (props) => {
                                                 getCustomScheduleTime(option)
 
                                             }, 100)
+                                            setMainState({ userTouch: true })
                                         }}
                                         style={styles.itemButton_AltColor}
                                         key={option}
@@ -301,6 +306,7 @@ export const SelectedFoodDetails = (props) => {
                                         onPress={() => {
                                             setSelectedTime(option);
                                             getCustomScheduleTime(option)
+                                            setMainState({ userTouch: true })
                                         }}
                                         style={styles.itemButton_AltColor}
                                         key={option}
@@ -351,7 +357,8 @@ export const SelectedFoodDetails = (props) => {
                                 onPress={() => {
                                     setSelectedReaction(null);
                                     setMainState({
-                                        selectedFood_Allergy: null
+                                        selectedFood_Allergy: null,
+                                        userTouch: true
                                     })
                                 }}
                                 style={styles.itemButton_faX}
@@ -370,7 +377,8 @@ export const SelectedFoodDetails = (props) => {
                                     onPress={() => {
                                         setSelectedReaction(option);
                                         setMainState({
-                                            selectedFood_Allergy: option
+                                            selectedFood_Allergy: option,
+                                            userTouch: true
                                         })
                                     }}
                                     style={styles.itemButton_AltColor_1}
@@ -410,7 +418,8 @@ export const SelectedFoodDetails = (props) => {
                                 onPress={() => {
                                     setSelectedEmotion(null);
                                     setMainState({
-                                        selectedFood_Emotion: null
+                                        selectedFood_Emotion: null,
+                                        userTouch: true
                                     })
                                 }}
                                 style={styles.itemButton_faX}
@@ -429,7 +438,8 @@ export const SelectedFoodDetails = (props) => {
                                     onPress={() => {
                                         setSelectedEmotion(option);
                                         setMainState({
-                                            selectedFood_Emotion: option
+                                            selectedFood_Emotion: option,
+                                            userTouch: true
                                         })
                                     }}
                                     style={styles.itemButton_AltColor_3}

@@ -223,6 +223,7 @@ export const UserDetails = (props) => {
                         setPromptPasswordInput2("");
                         setPromptVerificationInput("");
                         setPromptDeleteInput("");
+                        setMainState({ userTouch: true })
                     }}
                 >
                     <LinearGradient
@@ -317,7 +318,7 @@ export const UserDetails = (props) => {
                                                 <>
                                                     {i == 3 &&
                                                         <>
-                                                            <TouchableOpacity onPress={() => copyToClipboard()} style={{}}>
+                                                            <TouchableOpacity onPress={() => {copyToClipboard(); setMainState({ userTouch: true })}} style={{}}>
                                                                 
                                                                 <View style={{
                                                                     backgroundColor: THEME_COLOR_POSITIVE,
@@ -390,6 +391,7 @@ export const UserDetails = (props) => {
                                                                     setShowEditableFieldPassword(false);
                                                                     setShowEditableFieldVerification(false);
                                                                     setShowEditableFieldDelete(false);
+                                                                    setMainState({ userTouch: true })
                                                                 }}
                                                                 style={{
                                                                     backgroundColor: THEME_COLOR_POSITIVE,
@@ -485,6 +487,7 @@ export const UserDetails = (props) => {
                                                                 setShowEditableFieldPassword(false);
                                                                 setShowEditableFieldVerification(false);
                                                                 setShowEditableFieldDelete(false);
+                                                                setMainState({ userTouch: true })
                                                             }}
                                                             style={{
                                                                 backgroundColor: THEME_COLOR_POSITIVE,
@@ -571,7 +574,7 @@ export const UserDetails = (props) => {
                             }}
                         >
                             <TouchableOpacity
-                                onPress={() => { setDeleteUserModal(!deleteUserModal) }}
+                                onPress={() => { {setDeleteUserModal(!deleteUserModal); setMainState({ userTouch: true })} }}
                                 style={{
                                     borderRadius: 10,
                                     height: 50,
@@ -596,7 +599,7 @@ export const UserDetails = (props) => {
                         >Are you sure you want to delete your account?</Text>
                         <TouchableOpacity
                             style={[styles.button, styles.buttonClose]}
-                            onPress={() => handleDeleteAccount()}
+                            onPress={() => {handleDeleteAccount(); setMainState({ userTouch: true })}}
                         >
                             <Text 
                                 style={styles.textStyle}

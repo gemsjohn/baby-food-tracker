@@ -192,6 +192,7 @@ export const Navbar = (props) => {
                     <TouchableOpacity
                         onPress={() => {
                             isTokenValid ? props.nav.dispatch(resetActionHome) : setDisplaySignUpModal(true);
+                            setMainState({ userTouch: true })
                         }}
                         style={{ backgroundColor: fromHome ? THEME_COLOR_POSITIVE : THEME_FONT_COLOR_BLACK, borderTopLeftRadius: HeightRatio(30) }}
                     >
@@ -232,6 +233,7 @@ export const Navbar = (props) => {
                                 setMainState({
                                     isGameInProgress: false
                                 })
+                                setMainState({ userTouch: true })
                             }}
                             style={{ backgroundColor: fromProfile ? THEME_COLOR_POSITIVE : THEME_FONT_COLOR_BLACK, borderTopRightRadius: HeightRatio(30) }}
                         >
@@ -263,7 +265,7 @@ export const Navbar = (props) => {
                         </TouchableOpacity>
                         :
                         <TouchableOpacity
-                            onPress={() => { props.nav.dispatch(resetActionAuth); }}
+                            onPress={() => { props.nav.dispatch(resetActionAuth); setMainState({ userTouch: true }) }}
                             style={{ backgroundColor: fromProfile ? THEME_COLOR_POSITIVE : THEME_FONT_COLOR_BLACK, borderTopRightRadius: HeightRatio(30) }}
                         >
                             <View
@@ -316,12 +318,12 @@ export const Navbar = (props) => {
                     <View
                         style={{
                             // flex: 1,
-                            backgroundColor: THEME_COLOR_PURPLE,
+                            backgroundColor: '#1f1f27',
                             margin: 20,
                             zIndex: 999,
                             borderRadius: 10,
                             display: 'flex',
-                            alignItems: 'center',
+                            // alignItems: 'center',
                             justifyContent: 'center',
                             position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
                         }}
@@ -329,40 +331,60 @@ export const Navbar = (props) => {
                         <View
                             style={{
                                 margin: HeightRatio(20),
-                                alignSelf: 'center'
+                                // alignSelf: 'center'
                             }}
                         >
-                            <Image
-                                source={require('../assets/favicon_0.png')}
+                            <View 
                                 style={{
-                                    height: HeightRatio(80),
-                                    width: HeightRatio(80),
-                                    alignSelf: 'center'
-                                }}
-                            />
-                            <Text
-                                style={{
-                                    color: THEME_FONT_COLOR_WHITE,
-                                    fontSize: HeightRatio(30),
-                                    // width: (windowWidth - WidthRatio(100)),
-                                    alignSelf: 'center'
+                                    flexDirection: 'row',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    // justifyContent: 'center'
                                 }}
                             >
-                                Baby Food Tracker
-                            </Text>
-                            <Text
+                                <Image
+                                    source={require('../assets/favicon_0.png')}
+                                    style={{
+                                        height: HeightRatio(40),
+                                        width: HeightRatio(40),
+                                        // alignSelf: 'center'
+                                    }}
+                                />
+                                <Text style={{color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14)}}>
+                                    Baby Food Tracker
+                                </Text>
+                            </View>
+                            <View style={{ height: HeightRatio(10) }}></View>
+                            <View 
                                 style={{
-                                    color: THEME_FONT_COLOR_WHITE,
-                                    textAlign: 'center',
-                                    fontSize: HeightRatio(20),
-                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                    marginTop: HeightRatio(10)
+                                    padding: HeightRatio(10)
                                 }}
-                                allowFontScaling={false}
                             >
-                                You need an account to use this service.
-                            </Text>
-                            <View style={{ height: 10 }}></View>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        marginTop: HeightRatio(10)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Hello there, friend! &#128075;
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        marginTop: HeightRatio(2)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    To use the Baby Food Tracker you must sign up and login. 
+                                </Text>
+                            </View>
 
                             <TouchableOpacity
                                 onPress={() => {
@@ -370,6 +392,7 @@ export const Navbar = (props) => {
                                     setMainState({
                                         displaySignUpModal: false
                                     })
+                                    setMainState({ userTouch: true })
                                 }}
                                 style={{
                                     backgroundColor: THEME_COLOR_NEGATIVE,
