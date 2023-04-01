@@ -85,18 +85,24 @@ export const Add_Primary = (props) => {
     const [displayChooseAnotherOptionModal, setDisplayChooseAnotherOptionModal] = useState(false)
     const onRefresh = useCallback(() => {
         setMainState({
-            selectedFood_Quantity: null,
-            selectedFood_Measurement: null,
-            selectedFood_Schedule: null,
-            selectedFood_Schedule_Base: null,
-            selectedFood_Emotion: null,
-            selectedFood_Allergy: null,
-            selectedFood_Schedule_Hour: null,
-            selectedFood_Schedule_Minute: null,
-            selectedFood_Schedule_AMPM: null,
-            selectedFood_Schedule_Custom_Time: null,
-            triggerRefresh: false
+            triggerRefresh: true
         })
+        setTimeout(() => {
+            setMainState({
+                selectedFood_Quantity: null,
+                selectedFood_Measurement: null,
+                selectedFood_Schedule: null,
+                selectedFood_Schedule_Base: null,
+                selectedFood_Emotion: null,
+                selectedFood_Allergy: null,
+                selectedFood_Schedule_Hour: null,
+                selectedFood_Schedule_Minute: null,
+                selectedFood_Schedule_AMPM: null,
+                selectedFood_Schedule_Custom_Time: null,
+                triggerRefresh: false
+            })
+        }, 200)
+        
     }, []);
 
     const [addEntry] = useMutation(ADD_ENTRY);
@@ -221,9 +227,7 @@ export const Add_Primary = (props) => {
         console.log("# ----    -----")
         console.log(input)
         setRefreshing_Nutrition(true)
-        setMainState({
-            triggerRefresh: true
-        })
+        
         
 
         const data = {
@@ -248,13 +252,15 @@ export const Add_Primary = (props) => {
             const foodGroup_JSON = recentFoodData[selectRecentlyUsed].foodGroup;
 
             const updateUserEntry = async () => {
+                console.log(recentFoodData[selectRecentlyUsed].item)
+                console.log(typeof recentFoodData[selectRecentlyUsed].item)
                 await addEntry({
                     variables: {
                         subuserid: `${props.subuser._id}`,
                         date: `${props.date}`,
                         schedule: `${mainState.current.selectedFood_Schedule}`,
                         time: `${mainState.current.selectedFood_Schedule_Custom_Time}`,
-                        item: `${recentFoodData[selectRecentlyUsed].item}`,
+                        item: `${recentFoodData[selectRecentlyUsed].item}`, // dif
                         amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
                         emotion: `${mainState.current.selectedFood_Emotion}`,
                         nutrients: `${nutrients_JSON}`,
@@ -262,6 +268,21 @@ export const Add_Primary = (props) => {
                         allergy: `${mainState.current.selectedFood_Allergy}`
                     }
                 });
+
+                // await addEntry({
+                //     variables: {
+                //         subuserid: `${props.subuser._id}`,
+                //         date: `${props.date}`,
+                //         schedule: `${mainState.current.selectedFood_Schedule}`,
+                //         time: `${mainState.current.selectedFood_Schedule_Custom_Time}`,
+                //         item: `${input.description}`,
+                //         amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
+                //         emotion: `${mainState.current.selectedFood_Emotion}`,
+                //         nutrients: filtered_fooddata_nutrients,
+                //         foodGroup: foodData.foodGroup,
+                //         allergy: `${mainState.current.selectedFood_Allergy}`
+                //     }
+                // });
                 onRefresh();
             }
             updateUserEntry();
@@ -269,13 +290,25 @@ export const Add_Primary = (props) => {
             console.log("# - CHECK TO SEE IF FOOD EXISTS")
             let doesFoodExistsWithinDB;
             let foodData;
+            let INPUTDESCRIPTION;
             for (let i = 0; i < FOODDATA.foods.length; i++) {
                 console.log("===========")
                 console.log(FOODDATA.foods[i].item)
-                console.log(input.description.toUpperCase())
+                // console.log(input.description.toUpperCase())
+
+                
+
+                if (input.description) {
+                    INPUTDESCRIPTION = input.description.toUpperCase()
+                } else if (recentFoodData[selectRecentlyUsed].item) {
+                    INPUTDESCRIPTION = recentFoodData[selectRecentlyUsed].item.toUpperCase();
+                }
+
+                console.log(INPUTDESCRIPTION)
                 console.log("===========")
 
-                if (FOODDATA.foods[i].item == input.description.toUpperCase()) {
+
+                if (FOODDATA.foods[i].item == INPUTDESCRIPTION) {
                     console.log("MATCH")
                     doesFoodExistsWithinDB = true;
                     foodData = FOODDATA.foods[i];
@@ -300,7 +333,7 @@ export const Add_Primary = (props) => {
                             date: `${props.date}`,
                             schedule: `${mainState.current.selectedFood_Schedule}`,
                             time: `${mainState.current.selectedFood_Schedule_Custom_Time}`,
-                            item: `${input.description}`,
+                            item: `${INPUTDESCRIPTION}`,
                             amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
                             emotion: `${mainState.current.selectedFood_Emotion}`,
                             nutrients: filtered_fooddata_nutrients,

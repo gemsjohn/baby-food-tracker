@@ -112,7 +112,8 @@ export const HomeScreen = ({ navigation }) => {
     const [metricsModalVisible, setMetricsModalVisible] = useState(false)
     const [displayChooseAnotherOptionModal, setDisplayChooseAnotherOptionModal] = useState(false)
     const subuserIndex = useRef(userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium ? 0 : null)
-    const [handleTimeout, setHandleTimeout] = useState(false)
+    // const [handleTimeout, setHandleTimeout] = useState(false)
+    const handleTimeout = useRef(false)
 
     const onRefresh = useCallback(() => {
         setLoading(true)
@@ -171,18 +172,29 @@ export const HomeScreen = ({ navigation }) => {
         lastTouchTimeRef.current = Date.now();
 
         clearTimeout(touchTimerRef.current);
-        setHandleTimeout(false)
+        handleTimeout.current = false;
 
         touchTimerRef.current = setTimeout(() => {
+            console.log("CHECK 1")
             async function getValueFor(key) {
-                console.log("# - GET VALUE FOR COSMIC KEY  - FROM HOME")
+                console.log("CHECK 2")
+                
                 let result = await SecureStore.getItemAsync(key);
-                if (result && !handleTimeout) {
-                    setHandleTimeout(true)
-                    navigation.dispatch(resetActionKey);
-                } else {
-                    null
+                console.log("CHECK 3")
+
+                if (!handleTimeout.current) {
+                    console.log("# - GET VALUE FOR COSMIC KEY  - FROM HOME")
+                    
+                    if (result && !handleTimeout.current) {
+                        handleTimeout.current = true;
+                        console.log("# - Result True")
+                        navigation.dispatch(resetActionKey);
+                    } else {
+                        console.log("# - Result False")
+                        null
+                    }
                 }
+                
             }
             getValueFor('cosmicKey')
 
@@ -507,7 +519,7 @@ export const HomeScreen = ({ navigation }) => {
                                         </View>
                                     </View>
                                     <DailyScheduleSimplified
-                                        date={currentDateReadable}
+                                        date={calendarModalDate}
                                         userID={userByID?.user._id}
                                         containerHeight={HeightRatio(250)}
                                         from={"calendar"}
@@ -677,7 +689,7 @@ export const HomeScreen = ({ navigation }) => {
                                                 }}
                                                 allowFontScaling={false}
                                             >
-                                                Select a Child
+                                                Select Child
                                             </Text>
                                             {userByID?.user.subuser.map((data, index) => (
                                                 <TouchableOpacity

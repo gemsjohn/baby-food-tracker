@@ -46,8 +46,10 @@ export const SelectedFoodDetails = (props) => {
         "Teaspoons",
         "Tablespoons",
         "Cups",
+        "Minutes"
     ]
     const options_time = [
+        "Custom",
         "First Thing",
         "Breakfast",
         "Midmorning",
@@ -55,7 +57,6 @@ export const SelectedFoodDetails = (props) => {
         "Afternoon",
         "Dinner",
         "Before Bed",
-        "Custom"
     ]
 
     const options_allergy = [
