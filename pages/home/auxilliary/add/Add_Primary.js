@@ -155,6 +155,24 @@ export const Add_Primary = (props) => {
         }, 500)
 
         setInterval(() => {
+            // console.log("###############################")
+            // console.log("-------------------------------")
+            // console.log("###############################")
+            // console.log(mainState.current.selectedFood_Quantity)
+            // console.log(mainState.current.selectedFood_Measurement)
+            // console.log("###############################")
+            // console.log(mainState.current.selectedFood_Schedule)
+            // console.log(mainState.current.selectedFood_Schedule_Base)
+            // console.log(mainState.current.selectedFood_Schedule_Hour)
+            // console.log(mainState.current.selectedFood_Schedule_Minute)
+            // console.log(mainState.current.selectedFood_Schedule_AMPM)
+            // console.log(mainState.current.selectedFood_Schedule_Custom_Time)
+            // console.log("###############################")
+            // console.log(mainState.current.selectedFood_Emotion)
+            // console.log(mainState.current.selectedFood_Allergy)
+            // console.log("###############################")
+            
+
             if (
                 mainState.current.selectedFood_Quantity != null &&
                 mainState.current.selectedFood_Measurement != null &&
@@ -163,7 +181,6 @@ export const Add_Primary = (props) => {
                 mainState.current.selectedFood_Emotion != null &&
                 mainState.current.selectedFood_Allergy != null
             ) {
-
                 if (
                     mainState.current.selectedFood_Schedule_Base == 'Custom' &&
                     mainState.current.selectedFood_Schedule_Hour != null &&

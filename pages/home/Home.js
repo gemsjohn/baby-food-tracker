@@ -198,7 +198,7 @@ export const HomeScreen = ({ navigation }) => {
             }
             getValueFor('cosmicKey')
 
-        }, 30000);
+        }, 120000);
     };
 
 
@@ -231,7 +231,7 @@ export const HomeScreen = ({ navigation }) => {
             } else {
                 if (handleTouchCalled.current == false) {
                     handleTouchCalled.current = true;
-                    handleTouch()
+                    // handleTouch()
                 }
             }
         }, 200)

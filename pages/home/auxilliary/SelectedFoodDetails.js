@@ -100,7 +100,7 @@ export const SelectedFoodDetails = (props) => {
             selectedFood_Allergy: null,
 
         })
-        
+
     }, [])
 
     const handleTextChange = (text) => {
@@ -131,11 +131,11 @@ export const SelectedFoodDetails = (props) => {
         })
     };
 
-    
-    
 
-    const getCustomScheduleTime = async (input) => {
-        console.log("# - getCUstomScheduleTime")
+
+
+    const handleScheduleTime = async (input) => {
+        console.log("# - handleScheduleTime")
         console.log(input)
 
         const removeQuotes = (str) => {
@@ -145,18 +145,20 @@ export const SelectedFoodDetails = (props) => {
             selectedFood_Schedule_Base: input,
             selectedFood_Schedule: `${input}`,
         })
-
-        try {
-            const value = await AsyncStorage.getItem('@storeCustomScheduleTime')
-            if (value !== "null" && value !== null) {
-                setMainState({
-                    selectedFood_Schedule_Custom_Time: `${removeQuotes(value)}`
-                })
-                clearInterval(intervalID.current)
+        if (input == 'Custom') {
+            try {
+                const value = await AsyncStorage.getItem('@storeCustomScheduleTime')
+                if (value !== "null" && value !== null) {
+                    setMainState({
+                        selectedFood_Schedule_Custom_Time: `${removeQuotes(value)}`
+                    })
+                    clearInterval(intervalID.current)
+                }
+            } catch (e) {
+                // error reading value
             }
-        } catch (e) {
-            // error reading value
         }
+        
     }
 
     return (
@@ -202,7 +204,7 @@ export const SelectedFoodDetails = (props) => {
                                         selectedFood_Measurement: null,
                                         userTouch: true
                                     })
-                                    
+
                                 }}
                                 style={styles.itemButton_faX}
                             >
@@ -242,12 +244,46 @@ export const SelectedFoodDetails = (props) => {
             </View>
 
             <View style={{ flexDirection: 'row' }}>
-                <Text
-                    style={styles.header}
-                    allowFontScaling={false}
-                >
-                    Schedule
-                </Text>
+                <View style={{ flexDirection: 'column'}}>
+                    <Text
+                        style={styles.header}
+                        allowFontScaling={false}
+                    >
+                        Schedule
+                    </Text>
+                    {options_time.map((option) => (
+                        <>
+                            {selectedTime == null && option == 'Custom' &&
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setSelectedTime(option);
+                                        handleScheduleTime(option)
+                                        setMainState({ userTouch: true })
+                                    }}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        padding: HeightRatio(10),
+                                        marginTop: HeightRatio(20),
+                                        width: WidthRatio(100),
+                                        height: WidthRatio(100),
+                                        borderRadius: HeightRatio(10),
+                                        backgroundColor: '#fdffbb'
+                                    }}
+                                    key={option}
+                                >
+                                    <Text
+                                        style={{ ...styles.itemButton_Text, fontFamily: option == 'Custom' ? 'SofiaSansSemiCondensed-ExtraBold' : 'SofiaSansSemiCondensed-Regular' }}
+                                        allowFontScaling={false}
+                                    >
+                                        {option}
+                                    </Text>
+                                </TouchableOpacity>
+                            }
+                        </>
+                    ))}
+                </View>
                 <View style={{ marginTop: HeightRatio(10) }}>
                     {selectedTime != null ?
                         <View style={{ flexDirection: 'row' }}>
@@ -281,45 +317,24 @@ export const SelectedFoodDetails = (props) => {
                         <>
                             {options_time.map((option) => (
                                 <>
-                                
-                                {option == 'Custom' ?
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            setSelectedTime(option);
-                                            intervalID.current = setInterval(() => {
-                                                getCustomScheduleTime(option)
-
-                                            }, 100)
-                                            setMainState({ userTouch: true })
-                                        }}
-                                        style={styles.itemButton_AltColor}
-                                        key={option}
-                                    >
-                                        <Text
-                                            style={{ ...styles.itemButton_Text, fontFamily: option == 'Custom' ? 'SofiaSansSemiCondensed-ExtraBold' : 'SofiaSansSemiCondensed-Regular' }}
-                                            allowFontScaling={false}
+                                    {option != 'Custom' &&
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                setSelectedTime(option);
+                                                handleScheduleTime(option)
+                                                setMainState({ userTouch: true })
+                                            }}
+                                            style={styles.itemButton_AltColor}
+                                            key={option}
                                         >
-                                            {option}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    :
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            setSelectedTime(option);
-                                            getCustomScheduleTime(option)
-                                            setMainState({ userTouch: true })
-                                        }}
-                                        style={styles.itemButton_AltColor}
-                                        key={option}
-                                    >
-                                        <Text
-                                            style={{ ...styles.itemButton_Text, fontFamily: option == 'Custom' ? 'SofiaSansSemiCondensed-ExtraBold' : 'SofiaSansSemiCondensed-Regular' }}
-                                            allowFontScaling={false}
-                                        >
-                                            {option}
-                                        </Text>
-                                    </TouchableOpacity>
-                                }
+                                            <Text
+                                                style={{ ...styles.itemButton_Text, fontFamily: option == 'Custom' ? 'SofiaSansSemiCondensed-ExtraBold' : 'SofiaSansSemiCondensed-Regular' }}
+                                                allowFontScaling={false}
+                                            >
+                                                {option}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    }
                                 </>
                             ))}
                         </>
@@ -348,7 +363,7 @@ export const SelectedFoodDetails = (props) => {
                         <View style={{ flexDirection: 'row' }}>
                             <View style={styles.itemButton_AltColor_1}>
                                 <Text
-                                    style={styles.itemButton_Text}
+                                    style={{...styles.itemButton_Text, color: 'white'}}
                                     allowFontScaling={false}
                                 >
                                     {selectedReaction}
@@ -386,7 +401,7 @@ export const SelectedFoodDetails = (props) => {
                                     key={option}
                                 >
                                     <Text
-                                        style={styles.itemButton_Text}
+                                        style={{...styles.itemButton_Text, color: 'white'}}
                                         allowFontScaling={false}
                                     >
                                         {option}

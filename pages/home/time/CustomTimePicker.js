@@ -55,7 +55,8 @@ export const CustomTimePicker = () => {
             setMainState({
                 selectedFood_Schedule_Hour: hour,
                 selectedFood_Schedule_Minute: minute,
-                selectedFood_Schedule_AMPM: amPm
+                selectedFood_Schedule_AMPM: amPm,
+                selectedFood_Schedule_Custom_Time: hour + ':' + minute + amPm
             })
             setSuccessColor(true)
         } catch (e) {
