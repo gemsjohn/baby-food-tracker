@@ -126,7 +126,7 @@ export const usePullDailyContent = (input, subuser) => {
 
 
             emotionIndex.push({ item: entry.item, emoji: unicodeEscape, schedule: entry.schedule, time: entry.time, nutrients: entry.nutrients, measurement: entry.amount, id: tracker[i]._id, foodGroup: entry.foodGroup })
-
+            
             if (entry.schedule == "First Thing") {
                 setFirstThing(prev => [...prev, entry.nutrients.calories.amount])
             }
@@ -267,6 +267,7 @@ export const usePullDailyContent = (input, subuser) => {
     // TOTAL ALL SCHEDULE SECTIONS
     useEffect(() => {
         let total = firstThingCalTotal + breakfastCalTotal + midmorningCalTotal + lunchCalTotal + afternoonCalTotal + dinnerCalTotal + beforeBedCalTotal + customCalTotal;
+        // console.log(total)
         setTotalCalorieCount(total)
     }, [firstThingCalTotal, breakfastCalTotal, midmorningCalTotal, lunchCalTotal, afternoonCalTotal, dinnerCalTotal, beforeBedCalTotal, customCalTotal])
 

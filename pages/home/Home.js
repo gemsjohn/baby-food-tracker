@@ -178,13 +178,13 @@ export const HomeScreen = ({ navigation }) => {
             console.log("CHECK 1")
             async function getValueFor(key) {
                 console.log("CHECK 2")
-                
+
                 let result = await SecureStore.getItemAsync(key);
                 console.log("CHECK 3")
 
                 if (!handleTimeout.current) {
                     console.log("# - GET VALUE FOR COSMIC KEY  - FROM HOME")
-                    
+
                     if (result && !handleTimeout.current) {
                         handleTimeout.current = true;
                         console.log("# - Result True")
@@ -194,7 +194,7 @@ export const HomeScreen = ({ navigation }) => {
                         null
                     }
                 }
-                
+
             }
             getValueFor('cosmicKey')
 
@@ -509,14 +509,14 @@ export const HomeScreen = ({ navigation }) => {
                                                 {calendarModalDate}
                                             </Text>
                                         </View>
-                                        <View style={{ ...styles.homePrimary_TotalCalories, backgroundColor: THEME_TRANSPARENT, }}>
+                                        {/* <View style={{ ...styles.homePrimary_TotalCalories, backgroundColor: THEME_TRANSPARENT, }}>
                                             <Text
                                                 style={{ ...styles.homePrimary_TotalCalories_Text, fontSize: HeightRatio(20), color: THEME_FONT_COLOR_WHITE }}
                                                 allowFontScaling={false}
                                             >
                                                 {calendarModalCalorieTotal} CALORIES
                                             </Text>
-                                        </View>
+                                        </View> */}
                                     </View>
                                     <DailyScheduleSimplified
                                         date={calendarModalDate}
@@ -669,6 +669,146 @@ export const HomeScreen = ({ navigation }) => {
 
                                 }
 
+                                {userByID?.user && userByID?.user.subuser.length == 0 && userByID?.user.premium &&
+                                    <>
+                                        <View style={{ margin: 20, backgroundColor: 'rgba(0, 0, 0, 0.1)', borderRadius: HeightRatio(20), padding: HeightRatio(20) }}>
+                                            <Text
+                                                style={{
+                                                    color: THEME_FONT_COLOR_WHITE,
+                                                    alignSelf: 'center',
+                                                    fontSize: HeightRatio(50),
+                                                    margin: 20,
+                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                }}
+                                                allowFontScaling={false}
+                                            >
+                                                Add a Child
+                                            </Text>
+                                            <TextInput
+                                                type="text"
+                                                name="subuser"
+                                                placeholder="Child's name"
+                                                placeholderTextColor='white'
+                                                value={subuserInput}
+                                                onChangeText={setSubuserInput}
+                                                style={{
+                                                    ...Styling.textInputStyle
+                                                }}
+                                                disableFullscreenUI={true}
+                                                allowFontScaling={false}
+                                            />
+
+
+                                            {subuserInput != "" &&
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        // setAddSubUserModalVisible(false);
+                                                        handleAddSubuser()
+
+                                                    }}
+                                                >
+                                                    <View style={{
+                                                        backgroundColor: THEME_COLOR_POSITIVE,
+                                                        ...styles.button_Drop_Shadow,
+                                                        display: 'flex',
+                                                        justifyContent: 'flex-start',
+                                                        padding: HeightRatio(20),
+                                                        borderRadius: HeightRatio(10),
+                                                        alignSelf: 'center',
+                                                        width: windowWidth - WidthRatio(50),
+                                                        margin: HeightRatio(10)
+                                                    }}>
+                                                        <Text
+                                                            style={{
+                                                                color: THEME_FONT_COLOR_BLACK,
+                                                                fontSize: HeightRatio(30),
+                                                                // fontWeight: 'bold',
+                                                                alignSelf: 'center',
+                                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                            }}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            ADD
+                                                        </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                        </View>
+                                        <View style={{ borderBottomWidth: 2, borderBottomColor: 'white', width: '90%', margin: 20, }} />
+                                    </>
+
+                                }
+
+                                {userByID?.user && userByID?.user.subuser.length > 0 && userByID?.user.premium &&
+                                    <>
+                                        <View style={{ margin: 20, backgroundColor: 'rgba(0, 0, 0, 0.1)', borderRadius: HeightRatio(20), padding: HeightRatio(20) }}>
+                                            <Text
+                                                style={{
+                                                    color: THEME_FONT_COLOR_WHITE,
+                                                    alignSelf: 'center',
+                                                    fontSize: HeightRatio(50),
+                                                    margin: 20,
+                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                }}
+                                                allowFontScaling={false}
+                                            >
+                                                Add a Child
+                                            </Text>
+                                            <TextInput
+                                                type="text"
+                                                name="subuser"
+                                                placeholder="Child's name"
+                                                placeholderTextColor='white'
+                                                value={subuserInput}
+                                                onChangeText={setSubuserInput}
+                                                style={{
+                                                    ...Styling.textInputStyle
+                                                }}
+                                                disableFullscreenUI={true}
+                                                allowFontScaling={false}
+                                            />
+
+
+                                            {subuserInput != "" &&
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        // setAddSubUserModalVisible(false);
+                                                        handleAddSubuser()
+
+                                                    }}
+                                                >
+                                                    <View style={{
+                                                        backgroundColor: THEME_COLOR_POSITIVE,
+                                                        ...styles.button_Drop_Shadow,
+                                                        display: 'flex',
+                                                        justifyContent: 'flex-start',
+                                                        padding: HeightRatio(20),
+                                                        borderRadius: HeightRatio(10),
+                                                        alignSelf: 'center',
+                                                        width: windowWidth - WidthRatio(50),
+                                                        margin: HeightRatio(10)
+                                                    }}>
+                                                        <Text
+                                                            style={{
+                                                                color: THEME_FONT_COLOR_BLACK,
+                                                                fontSize: HeightRatio(30),
+                                                                // fontWeight: 'bold',
+                                                                alignSelf: 'center',
+                                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                            }}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            ADD
+                                                        </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                        </View>
+                                        <View style={{ borderBottomWidth: 2, borderBottomColor: 'white', width: '90%', margin: 20, }} />
+                                    </>
+
+                                }
+
 
                                 {/* {userByID?.user && userByID?.user.subuser.length > 0 && userByID?.user.premium && */}
                                 <>
@@ -692,7 +832,8 @@ export const HomeScreen = ({ navigation }) => {
                                                 Select Child
                                             </Text>
                                             {userByID?.user.subuser.map((data, index) => (
-                                                <TouchableOpacity
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <TouchableOpacity
                                                     onPress={() => {
                                                         setAddSubUserModalVisible(false);
                                                         setMainState({ userTouch: true })
@@ -700,8 +841,7 @@ export const HomeScreen = ({ navigation }) => {
                                                         onRefresh();
                                                     }}
                                                     key={index}
-                                                >
-                                                    <View style={{
+                                                    style={{
                                                         backgroundColor: THEME_COLOR_POSITIVE,
                                                         ...styles.button_Drop_Shadow,
                                                         display: 'flex',
@@ -709,23 +849,57 @@ export const HomeScreen = ({ navigation }) => {
                                                         padding: HeightRatio(20),
                                                         borderRadius: HeightRatio(10),
                                                         alignSelf: 'center',
-                                                        width: windowWidth - WidthRatio(50),
+                                                        width: (windowWidth - WidthRatio(50)) * 0.8,
                                                         margin: HeightRatio(10)
-                                                    }}>
-                                                        <Text
-                                                            style={{
-                                                                color: THEME_FONT_COLOR_BLACK,
-                                                                fontSize: HeightRatio(30),
-                                                                // fontWeight: 'bold',
-                                                                alignSelf: 'center',
-                                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                            }}
-                                                            allowFontScaling={false}
-                                                        >
-                                                            {data.subusername}
-                                                        </Text>
-                                                    </View>
-                                                </TouchableOpacity>
+                                                    }}
+                                                    >
+                                                    <Text
+                                                        style={{
+                                                        color: THEME_FONT_COLOR_BLACK,
+                                                        fontSize: HeightRatio(30),
+                                                        // fontWeight: 'bold',
+                                                        textAlign: 'center',
+                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                        width: '90%'
+
+                                                        }}
+                                                        allowFontScaling={false}
+                                                        numberOfLines={1}
+                                                        ellipsizeMode={'tail'}
+                                                    >
+                                                        {data.subusername}
+                                                    </Text>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity
+                                                    onPress={() => console.log("DELETE")}
+                                                    style={{
+                                                        backgroundColor: THEME_COLOR_NEGATIVE,
+                                                        ...styles.button_Drop_Shadow,
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        padding: HeightRatio(20),
+                                                        borderRadius: HeightRatio(10),
+                                                        alignSelf: 'center',
+                                                        width: (windowWidth - WidthRatio(50)) * 0.2,
+                                                        margin: HeightRatio(10)
+                                                    }}
+                                                    >
+                                                    <Text
+                                                        style={{
+                                                        color: THEME_FONT_COLOR_WHITE,
+                                                        fontSize: HeightRatio(30),
+                                                        // fontWeight: 'bold',
+                                                        alignSelf: 'center',
+                                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                        }}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        X
+                                                    </Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                              
                                             ))}
                                             {userByID?.user && !userByID?.user.premium &&
                                                 <View style={{ margin: HeightRatio(20) }}>

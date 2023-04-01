@@ -688,6 +688,14 @@ export const Add_Primary = (props) => {
             >
                 <View
                     style={{
+                        width: windowWidth,
+                        backgroundColor: '#1f1f27',
+                        height: '100%',
+                        width: '100%'
+                    }}
+                >
+                <View
+                    style={{
                         alignSelf: 'center',
                         backgroundColor: 'rgba(31, 31, 39, 1.00)',
                         padding: HeightRatio(10),
@@ -1167,7 +1175,7 @@ export const Add_Primary = (props) => {
 
                     </View>
                 }
-
+                </View>
             </Modal>
 
             <Modal

@@ -99,43 +99,55 @@ export const Metrics_Primary = (props) => {
                     </View>
                 </View>
             </TouchableOpacity>
-            
+
             <Modal
                 visible={metricsModalVisible}
                 animationType="slide"
                 transparent={true}
                 style={{
                     width: windowWidth,
+                    backgroundColor: 'red',
+                    height: '100%',
+                    width: '100%'
                 }}
             >
-                <SwipeableViews
-                    date={props.currentDateReadable}
-                    subuser={props.subuser}
-                />
-                <TouchableOpacity
-                    onPress={() => {
-                        setMetricsModalVisible(false);
-                        setMainState({ userTouch: true })
+                <View
+                    style={{
+                        width: windowWidth,
+                        backgroundColor: '#1f1f27',
+                        height: '100%',
+                        width: '100%'
                     }}
                 >
-                    <View
-                        style={{
-                            ...styles.modalVisible_HalfButton,
-                            ...styles.button_Drop_Shadow,
-                            backgroundColor: THEME_COLOR_NEGATIVE
+                    <SwipeableViews
+                        date={props.currentDateReadable}
+                        subuser={props.subuser}
+                    />
+                    <TouchableOpacity
+                        onPress={() => {
+                            setMetricsModalVisible(false);
+                            setMainState({ userTouch: true })
                         }}
                     >
-                        <Text
+                        <View
                             style={{
-                                ...styles.modalVisible_Button_Text,
-                                color: THEME_FONT_COLOR_WHITE
+                                ...styles.modalVisible_HalfButton,
+                                ...styles.button_Drop_Shadow,
+                                backgroundColor: THEME_COLOR_NEGATIVE
                             }}
-                            allowFontScaling={false}
                         >
-                            Close
-                        </Text>
-                    </View>
-                </TouchableOpacity>
+                            <Text
+                                style={{
+                                    ...styles.modalVisible_Button_Text,
+                                    color: THEME_FONT_COLOR_WHITE
+                                }}
+                                allowFontScaling={false}
+                            >
+                                Close
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
             </Modal>
         </>
     )
