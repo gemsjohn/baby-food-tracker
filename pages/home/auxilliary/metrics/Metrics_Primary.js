@@ -104,11 +104,9 @@ export const Metrics_Primary = (props) => {
                 visible={metricsModalVisible}
                 animationType="slide"
                 transparent={true}
+                statusBarTranslucent={false}
                 style={{
                     width: windowWidth,
-                    backgroundColor: 'red',
-                    height: '100%',
-                    width: '100%'
                 }}
             >
                 <View

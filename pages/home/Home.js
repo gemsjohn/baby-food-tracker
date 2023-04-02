@@ -47,7 +47,7 @@ import { GLOBAL_GRAPHQL_API_URL } from '../../App'
 import { convertDateFormat } from './auxilliary/ConvertDateFormat';
 import { SelectedFoodDetails } from './auxilliary/SelectedFoodDetails';
 import { useMutation, useQuery } from '@apollo/client';
-import { ADD_ENTRY, ADD_SUB_USER } from '../../utils/mutations';
+import { ADD_ENTRY, ADD_SUB_USER, DELETE_SUB_USER } from '../../utils/mutations';
 import { GET_USER_BY_ID } from '../../utils/queries';
 // import { DailySchedule } from './auxilliary/DailySchedule';
 import { Loading } from '../../components/Loading';
@@ -113,6 +113,9 @@ export const HomeScreen = ({ navigation }) => {
     const [displayChooseAnotherOptionModal, setDisplayChooseAnotherOptionModal] = useState(false)
     const subuserIndex = useRef(userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium ? 0 : null)
     // const [handleTimeout, setHandleTimeout] = useState(false)
+    const [deleteSubuserModalVisible, setDeleteSubuserModalVisible] = useState(false);
+    const [deleteSubuserIndex, setDeleteSubuserIndex] = useState(null)
+
     const handleTimeout = useRef(false)
 
     const onRefresh = useCallback(() => {
@@ -265,6 +268,8 @@ export const HomeScreen = ({ navigation }) => {
 
     const [addSubUserModalVisible, setAddSubUserModalVisible] = useState(true) //userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium ? false : true
     const [addSubUser] = useMutation(ADD_SUB_USER);
+    const [deleteSubUser] = useMutation(DELETE_SUB_USER);
+
 
     const [subuserInput, setSubuserInput] = useState('')
 
@@ -303,6 +308,24 @@ export const HomeScreen = ({ navigation }) => {
         } catch (e) {
             // saving error
         }
+    }
+
+    const handleDeleteSubuser = async() => {
+        await deleteSubUser({
+            variables: {
+                userid: userByID?.user._id,
+                subuserid: userByID?.user.subuser[deleteSubuserIndex]._id
+            }
+        });
+        setMainState({
+            triggerRefresh: true
+        })
+        setTimeout(() => {
+            setMainState({
+                triggerRefresh: false
+            })
+        }, 300)
+        
     }
 
 
@@ -595,8 +618,8 @@ export const HomeScreen = ({ navigation }) => {
                                 style={{
                                     ...styles.homePrimary_Container,
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
+                                    // alignItems: 'center',
+                                    // justifyContent: 'center'
                                 }}
                             >
                                 {userByID?.user && userByID?.user.subuser.length == 0 && !userByID?.user.premium &&
@@ -871,7 +894,11 @@ export const HomeScreen = ({ navigation }) => {
                                                     </Text>
                                                     </TouchableOpacity>
                                                     <TouchableOpacity
-                                                    onPress={() => console.log("DELETE")}
+                                                    onPress={() => {
+                                                        // console.log("DELETE");
+                                                        setDeleteSubuserModalVisible(true);
+                                                        setDeleteSubuserIndex(index)
+                                                    }}
                                                     style={{
                                                         backgroundColor: THEME_COLOR_NEGATIVE,
                                                         ...styles.button_Drop_Shadow,
@@ -926,6 +953,67 @@ export const HomeScreen = ({ navigation }) => {
                         </View>
 
                     </Modal>
+
+                    <Modal
+                            visible={deleteSubuserModalVisible}
+                            animationType="slide"
+                            transparent={true}
+                        >
+                            <View style={styles.modalContainer_0}>
+                                <View style={styles.modalContainer_1}>
+                                    <>
+                                    {userByID?.user && userByID?.user.subuser[deleteSubuserIndex] && userByID?.user.subuser[deleteSubuserIndex].subusername &&
+                                        <View style={styles.modalContainer_1_A}>
+                                            <Text
+                                                style={styles.modalContainer_1_A_Text}
+                                                allowFontScaling={false}
+                                            >
+                                                {userByID?.user.subuser[deleteSubuserIndex].subusername}
+                                            </Text>
+                                        </View>
+                                    }
+                                    </>
+                                    <View style={styles.modalContainer_1_A}>
+                                        <Text
+                                            style={styles.modalContainer_1_A_Text}
+                                            allowFontScaling={false}
+                                        >
+                                            Are you sure you want to remove this child from the list?
+                                        </Text>
+                                    </View>
+                                    <View style={styles.modalContainer_1_B}>
+                                        <TouchableOpacity onPress={() => { setDeleteSubuserModalVisible(false); setMainState({ userTouch: true }); }}>
+                                            <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
+                                                <Text
+                                                    style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    Close
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                setDeleteSubuserModalVisible(false);
+                                                handleDeleteSubuser()
+                                                setMainState({ userTouch: true })
+                                                
+                                            }}
+                                        >
+                                            <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
+                                                <Text
+                                                    style={styles.modalButton_Text}
+                                                    allowFontScaling={false}
+                                                >
+                                                    Remove
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+
+                        </Modal>
 
 
                 </>
@@ -1299,5 +1387,49 @@ const styles = StyleSheet.create({
                 elevation: 5,
             },
         }),
-    }
+    }, 
+    modalContainer_0: {
+        flex: 1,
+        backgroundColor: THEME_COLOR_BLACKOUT
+    },
+    modalContainer_1: {
+        backgroundColor: 'rgba(31, 31, 39, 1.00)',
+        margin: 20,
+        zIndex: 999,
+        borderRadius: 10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: HeightRatio(30),
+        left: 0,
+        right: 0
+    },
+    modalContainer_1_A: {
+        margin: HeightRatio(20),
+        alignSelf: 'center'
+    },
+    modalContainer_1_A_Text: {
+        color: THEME_FONT_COLOR_WHITE,
+        fontSize: HeightRatio(30),
+    },
+    modalContainer_1_B: {
+        flexDirection: 'row',
+        alignSelf: 'center'
+    },
+    modalButton: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(10),
+        alignSelf: 'center',
+        width: (windowWidth - WidthRatio(100)) / 2,
+        margin: HeightRatio(10)
+    },
+    modalButton_Text: {
+        color: THEME_FONT_COLOR_WHITE,
+        fontSize: HeightRatio(25),
+        alignSelf: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
+    },
 });

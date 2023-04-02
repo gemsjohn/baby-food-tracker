@@ -681,7 +681,7 @@ export const Add_Primary = (props) => {
                 visible={modalVisible}
                 animationType="slide"
                 transparent={true}
-                statusBarTranslucent={true}
+                statusBarTranslucent={false}
                 style={{
                     width: windowWidth,
                 }}
@@ -964,7 +964,7 @@ export const Add_Primary = (props) => {
                     <View
                         style={{
                             ...styles.modalVisible_Container,
-                            height: windowHeight / 1.7,
+                            height: windowHeight / 1.9,
                             margin: HeightRatio(0)
                         }}
                     >
@@ -987,7 +987,7 @@ export const Add_Primary = (props) => {
                                         Recently Used
                                     </Text>
                                 </View>
-                                <SafeAreaView style={styles.container}>
+                                <SafeAreaView style={{...styles.container}}>
                                     <ScrollView style={styles.scrollView}>
                                         <View>
                                             {recentFoodData.map((data, index) => (
@@ -1160,7 +1160,7 @@ export const Add_Primary = (props) => {
                                 </>
                                 :
                                 <TouchableOpacity onPress={() => { setModalVisible(false); setDisplayLoading(false); setMainState({ userTouch: true }) }}>
-                                    <View style={{ ...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow }}>
+                                    <View style={{ ...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow, marginTop: HeightRatio(15) }}>
                                         <Text
                                             style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
                                             allowFontScaling={false}

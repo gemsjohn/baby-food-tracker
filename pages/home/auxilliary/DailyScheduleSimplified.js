@@ -957,6 +957,22 @@ export const DailyScheduleSimplified = (props) => {
                                     // paddingLeft: HeightRatio(10)
                                 }}
                             >
+                                {/* FEATURE 6 */}
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#2da94b', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                    <Text
+                                        style={{
+                                            ...styles.modalContainer_1_A_Text,
+                                            textAlign: 'left',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            fontSize: HeightRatio(20),
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Add and track multiple children
+                                    </Text>
+                                </View>
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
                                 {/* FEATURE 1 */}
                                 <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
                                     <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
@@ -970,57 +986,6 @@ export const DailyScheduleSimplified = (props) => {
                                         allowFontScaling={false}
                                     >
                                         Daily nutrition metrics (e.g. food group ratios)
-                                    </Text>
-                                </View>
-                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
-
-                                {/* FEATURE 2 */}
-                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                    <View style={{ backgroundColor: '#36A2EB', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
-                                    <Text
-                                        style={{
-                                            ...styles.modalContainer_1_A_Text,
-                                            textAlign: 'left',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                            fontSize: HeightRatio(20),
-                                        }}
-                                        allowFontScaling={false}
-                                    >
-                                        Personalized insights and recommendations
-                                    </Text>
-                                </View>
-                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
-
-                                {/* FEATURE 3 */}
-                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                    <View style={{ backgroundColor: '#FFCE56', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
-                                    <Text
-                                        style={{
-                                            ...styles.modalContainer_1_A_Text,
-                                            textAlign: 'left',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                            fontSize: HeightRatio(20),
-                                        }}
-                                        allowFontScaling={false}
-                                    >
-                                        Export nutritional data via Email
-                                    </Text>
-                                </View>
-                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
-
-                                {/* FEATURE 4 */}
-                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                    <View style={{ backgroundColor: '#4BC0C0', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
-                                    <Text
-                                        style={{
-                                            ...styles.modalContainer_1_A_Text,
-                                            textAlign: 'left',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                            fontSize: HeightRatio(20),
-                                        }}
-                                        allowFontScaling={false}
-                                    >
-                                        Allergy tracking
                                     </Text>
                                 </View>
                                 <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
@@ -1098,9 +1063,9 @@ export const DailyScheduleSimplified = (props) => {
                                 </View>
                                 <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
 
-                                {/* FEATURE 6 */}
+                                {/* FEATURE 4 */}
                                 <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                    <View style={{ backgroundColor: '#2da94b', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                    <View style={{ backgroundColor: '#4BC0C0', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                     <Text
                                         style={{
                                             ...styles.modalContainer_1_A_Text,
@@ -1110,10 +1075,65 @@ export const DailyScheduleSimplified = (props) => {
                                         }}
                                         allowFontScaling={false}
                                     >
-                                        Add and track multiple children
+                                        Allergy tracking
                                     </Text>
                                 </View>
                                 <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
+                                
+                                <View style={{ marginBottom: HeightRatio(20), alignSelf: 'center', backgroundColor: THEME_COLOR_ATTENTION, width: '100%', borderRadius: HeightRatio(10) }}>
+                                    <Text
+                                        style={{
+                                            ...styles.modalContainer_1_A_Text,
+                                            textAlign: 'center',
+                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                            fontSize: HeightRatio(30),
+                                            color: THEME_FONT_COLOR_BLACK
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Additional Services in Development
+                                    </Text>
+                                </View>
+
+                                {/* FEATURE 2 */}
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#36A2EB', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                    <Text
+                                        style={{
+                                            ...styles.modalContainer_1_A_Text,
+                                            textAlign: 'left',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            fontSize: HeightRatio(20),
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Personalized insights and recommendations
+                                    </Text>
+                                </View>
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
+
+                                {/* FEATURE 3 */}
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#FFCE56', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                    <Text
+                                        style={{
+                                            ...styles.modalContainer_1_A_Text,
+                                            textAlign: 'left',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            fontSize: HeightRatio(20),
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Export nutritional data via Email
+                                    </Text>
+                                </View>
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
+
+
+
+
+
+
                                 {/* <View style={{borderBottomWidth: 1, borderBottomColor: 'white', width: windowWidth - HeightRatio(100), margin: HeightRatio(10)}} /> */}
 
                                 {/* <Text
@@ -1173,6 +1193,33 @@ export const DailyScheduleSimplified = (props) => {
                         <View style={styles.modalContainer_1_A}>
                             {/* <GoogleProducts userID={props.userID} /> */}
                             <Premium userID={props.userID} />
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setDisplaySubscriptionModal(false)
+                                    setMainState({ userTouch: true })
+                                }}
+                                style={{
+                                    backgroundColor: THEME_COLOR_NEGATIVE,
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    padding: HeightRatio(10),
+                                    borderRadius: HeightRatio(10),
+                                    alignSelf: 'center',
+                                    width: (windowWidth - WidthRatio(100)) / 2,
+                                    margin: HeightRatio(10)
+                                }}>
+                                    <Text
+                                        style={{
+                                            color: THEME_FONT_COLOR_WHITE,
+                                            fontSize: HeightRatio(25),
+                                            alignSelf: 'center',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Close
+                                    </Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>

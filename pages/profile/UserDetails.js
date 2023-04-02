@@ -584,7 +584,7 @@ export const UserDetails = (props) => {
                                 <FontAwesomeIcon
                                     icon={faSolid, faX}
                                     style={{
-                                        color: THEME_FONT_COLOR_BLACK,
+                                        color: THEME_FONT_COLOR_WHITE,
                                         justifyContent: 'center',
                                         alignSelf: 'center',
                                         marginTop: 17
@@ -598,7 +598,7 @@ export const UserDetails = (props) => {
                             allowFontScaling={false}
                         >Are you sure you want to delete your account?</Text>
                         <TouchableOpacity
-                            style={[styles.button, styles.buttonClose]}
+                            style={[styles.button]}
                             onPress={() => {handleDeleteAccount(); setMainState({ userTouch: true })}}
                         >
                             <Text 
@@ -639,7 +639,7 @@ const styles = StyleSheet.create({
         width: WidthRatio(300)
     },
     button: {
-        borderRadius: 20,
+        borderRadius: 5,
         padding: 10,
         elevation: 2,
         backgroundColor: THEME_COLOR_NEGATIVE
