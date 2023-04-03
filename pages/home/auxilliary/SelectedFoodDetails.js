@@ -159,7 +159,7 @@ export const SelectedFoodDetails = (props) => {
                 // error reading value
             }
         }
-        
+
     }
 
     return (
@@ -181,7 +181,7 @@ export const SelectedFoodDetails = (props) => {
             </View>
 
             <View style={{ flexDirection: 'row' }}>
-            <View style={{ flexDirection: 'column'}}>
+                <View style={{ flexDirection: 'column' }}>
                     <Text
                         style={styles.header}
                         allowFontScaling={false}
@@ -189,7 +189,7 @@ export const SelectedFoodDetails = (props) => {
                         Measurement
                     </Text>
                     {options.filter(option => props.item == 'BREAST MILK' ? option : null).map((option) => (
-                        <>
+                        <View key={option}>
                             {selectedItem == null && option == 'Minutes' &&
                                 <TouchableOpacity
                                     onPress={() => {
@@ -210,7 +210,7 @@ export const SelectedFoodDetails = (props) => {
                                         borderRadius: HeightRatio(10),
                                         backgroundColor: THEME_COLOR_POSITIVE
                                     }}
-                                    key={option}
+
                                 >
                                     <Text
                                         style={{ ...styles.itemButton_Text, fontFamily: option == 'Custom' ? 'SofiaSansSemiCondensed-ExtraBold' : 'SofiaSansSemiCondensed-Regular' }}
@@ -220,7 +220,7 @@ export const SelectedFoodDetails = (props) => {
                                     </Text>
                                 </TouchableOpacity>
                             }
-                        </>
+                        </View>
                     ))}
                 </View>
                 <View style={{ marginTop: HeightRatio(10) }}>
@@ -234,6 +234,7 @@ export const SelectedFoodDetails = (props) => {
                                     {selectedItem}
                                 </Text>
                             </View>
+                            
                             <TouchableOpacity
                                 onPress={() => {
                                     setSelectedItem(null);
@@ -243,12 +244,24 @@ export const SelectedFoodDetails = (props) => {
                                     })
 
                                 }}
-                                style={styles.itemButton_faX}
+                                style={{
+                                    backgroundColor: THEME_COLOR_NEGATIVE,
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    padding: HeightRatio(4),
+                                    borderRadius: HeightRatio(10),
+                                    height: HeightRatio(30),
+                                    width: HeightRatio(30),
+                                    position: 'absolute',
+                                    right: HeightRatio(-4),
+                                    
+                                }}
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faX}
-                                    style={{ color: 'red' }}
-                                    size={20}
+                                    style={{ color: 'white' }}
+                                    size={14}
                                 />
                             </TouchableOpacity>
 
@@ -283,7 +296,7 @@ export const SelectedFoodDetails = (props) => {
             </View>
 
             <View style={{ flexDirection: 'row' }}>
-                <View style={{ flexDirection: 'column'}}>
+                <View style={{ flexDirection: 'column' }}>
                     <Text
                         style={styles.header}
                         allowFontScaling={false}
@@ -291,7 +304,7 @@ export const SelectedFoodDetails = (props) => {
                         Schedule
                     </Text>
                     {options_time.map((option) => (
-                        <>
+                        <View key={option}>
                             {selectedTime == null && option == 'Custom' &&
                                 <TouchableOpacity
                                     onPress={() => {
@@ -310,7 +323,7 @@ export const SelectedFoodDetails = (props) => {
                                         borderRadius: HeightRatio(10),
                                         backgroundColor: '#fdffbb'
                                     }}
-                                    key={option}
+
                                 >
                                     <Text
                                         style={{ ...styles.itemButton_Text, fontFamily: option == 'Custom' ? 'SofiaSansSemiCondensed-ExtraBold' : 'SofiaSansSemiCondensed-Regular' }}
@@ -320,7 +333,7 @@ export const SelectedFoodDetails = (props) => {
                                     </Text>
                                 </TouchableOpacity>
                             }
-                        </>
+                        </View>
                     ))}
                 </View>
                 <View style={{ marginTop: HeightRatio(10) }}>
@@ -334,6 +347,7 @@ export const SelectedFoodDetails = (props) => {
                                     {selectedTime}
                                 </Text>
                             </View>
+                            
                             <TouchableOpacity
                                 onPress={() => {
                                     setSelectedTime(null);
@@ -343,19 +357,31 @@ export const SelectedFoodDetails = (props) => {
                                         userTouch: true
                                     })
                                 }}
-                                style={styles.itemButton_faX}
+                                style={{
+                                    backgroundColor: THEME_COLOR_NEGATIVE,
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    padding: HeightRatio(4),
+                                    borderRadius: HeightRatio(10),
+                                    height: HeightRatio(30),
+                                    width: HeightRatio(30),
+                                    position: 'absolute',
+                                    right: HeightRatio(-4),
+                                    
+                                }}
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faX}
-                                    style={{ color: 'red' }}
-                                    size={20}
+                                    style={{ color: 'white' }}
+                                    size={14}
                                 />
                             </TouchableOpacity>
                         </View>
                         :
                         <>
                             {options_time.map((option) => (
-                                <>
+                                <View key={option}>
                                     {option != 'Custom' &&
                                         <TouchableOpacity
                                             onPress={() => {
@@ -364,7 +390,7 @@ export const SelectedFoodDetails = (props) => {
                                                 setMainState({ userTouch: true })
                                             }}
                                             style={styles.itemButton_AltColor}
-                                            key={option}
+
                                         >
                                             <Text
                                                 style={{ ...styles.itemButton_Text, fontFamily: option == 'Custom' ? 'SofiaSansSemiCondensed-ExtraBold' : 'SofiaSansSemiCondensed-Regular' }}
@@ -374,7 +400,7 @@ export const SelectedFoodDetails = (props) => {
                                             </Text>
                                         </TouchableOpacity>
                                     }
-                                </>
+                                </View>
                             ))}
                         </>
                     }
@@ -402,12 +428,13 @@ export const SelectedFoodDetails = (props) => {
                         <View style={{ flexDirection: 'row' }}>
                             <View style={styles.itemButton_AltColor_1}>
                                 <Text
-                                    style={{...styles.itemButton_Text, color: 'white'}}
+                                    style={{ ...styles.itemButton_Text, color: 'white' }}
                                     allowFontScaling={false}
                                 >
                                     {selectedReaction}
                                 </Text>
                             </View>
+                            
                             <TouchableOpacity
                                 onPress={() => {
                                     setSelectedReaction(null);
@@ -416,12 +443,24 @@ export const SelectedFoodDetails = (props) => {
                                         userTouch: true
                                     })
                                 }}
-                                style={styles.itemButton_faX}
+                                style={{
+                                    backgroundColor: THEME_COLOR_NEGATIVE,
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    padding: HeightRatio(4),
+                                    borderRadius: HeightRatio(10),
+                                    height: HeightRatio(30),
+                                    width: HeightRatio(30),
+                                    position: 'absolute',
+                                    right: HeightRatio(-4),
+                                    
+                                }}
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faX}
-                                    style={{ color: 'red' }}
-                                    size={20}
+                                    style={{ color: 'white' }}
+                                    size={14}
                                 />
                             </TouchableOpacity>
                         </View>
@@ -440,7 +479,7 @@ export const SelectedFoodDetails = (props) => {
                                     key={option}
                                 >
                                     <Text
-                                        style={{...styles.itemButton_Text, color: 'white'}}
+                                        style={{ ...styles.itemButton_Text, color: 'white' }}
                                         allowFontScaling={false}
                                     >
                                         {option}
@@ -469,6 +508,7 @@ export const SelectedFoodDetails = (props) => {
                                     {decodedEmoji}
                                 </Text>
                             </View>
+                            
                             <TouchableOpacity
                                 onPress={() => {
                                     setSelectedEmotion(null);
@@ -477,12 +517,24 @@ export const SelectedFoodDetails = (props) => {
                                         userTouch: true
                                     })
                                 }}
-                                style={styles.itemButton_faX}
+                                style={{
+                                    backgroundColor: THEME_COLOR_NEGATIVE,
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    padding: HeightRatio(4),
+                                    borderRadius: HeightRatio(10),
+                                    height: HeightRatio(30),
+                                    width: HeightRatio(30),
+                                    position: 'absolute',
+                                    right: HeightRatio(-4),
+                                    
+                                }}
                             >
                                 <FontAwesomeIcon
                                     icon={faSolid, faX}
-                                    style={{ color: 'red' }}
-                                    size={20}
+                                    style={{ color: 'white' }}
+                                    size={14}
                                 />
                             </TouchableOpacity>
                         </View>
@@ -523,7 +575,7 @@ const styles = StyleSheet.create({
         width: windowWidth - HeightRatio(100),
     },
     header: {
-        color: 'white',
+        color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(25),
         fontFamily: 'SofiaSansSemiCondensed-Regular',
         width: WidthRatio(125),

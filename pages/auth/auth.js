@@ -40,14 +40,10 @@ const resetActionProfile = CommonActions.reset({
 });
 
 async function save(key, value) {
-  console.log(key)
-  console.log(value)
   await SecureStore.setItemAsync(key, value);
 }
 
 async function deleteKey(key) {
-  // console.log("** DELETE **")
-  // console.log(key)
   await SecureStore.deleteItemAsync(key);
 }
 
@@ -59,6 +55,8 @@ export const Auth = ({ navigation }) => {
   const [displayLoginFailureAlert, setDisplayLoginFailureAlert] = useState(false)
   const [loading, setLoading] = useState(false);
   const [navigateToProfile, setNavigateToProfile] = useState(false)
+  const [signUpFailedModal, setSignUpFailedModal] = useState(false)
+  const [signUpFailedError, setSignUpFailedError] = useState('')
 
 
   // Sign Up: Email
@@ -98,8 +96,6 @@ export const Auth = ({ navigation }) => {
   const [isTokenValid, setIsTokenValid] = useState(null);
 
   const checkToken = async (value) => {
-    console.log("checkToken")
-    console.log(value)
     try {
       const response = await fetch(`${GLOBAL_GRAPHQL_API_URL}/protected-route`, {
         method: 'GET',
@@ -152,8 +148,6 @@ export const Auth = ({ navigation }) => {
           authState: true
         })
 
-        console.log("Auth - Adding bearerToken, userID, and authState to SecureStore")
-
         save('bearerToken', `Bearer ${data.login.token}`);
         save('userID', `${decoded?.data._id}`);
         save('authState', 'true');
@@ -173,8 +167,8 @@ export const Auth = ({ navigation }) => {
         authState: false
       })
 
-      save('bearerToken', null);
-      save('userID', null);
+      save('bearerToken', '');
+      save('userID', '');
       save('authState', 'false');
     }
   }
@@ -207,8 +201,6 @@ export const Auth = ({ navigation }) => {
           authState: true
         })
 
-        console.log("Auth - Adding bearerToken, userID, and authState to SecureStore")
-
         save('bearerToken', `Bearer ${data.addUser.token}`);
         save('userID', `${decoded?.data._id}`);
         save('authState', 'true');
@@ -222,13 +214,17 @@ export const Auth = ({ navigation }) => {
       setPromptUsernameInput("")
       setPromptPasswordInput("")
 
-      Alert.alert(
-        "Sign Up Failed",
-        `${e}`,
-        [
-          { text: "OK", onPress: () => console.log("OK Pressed") }
-        ]
-      );
+      // Alert.alert(
+      //   "Sign Up Failed",
+      //   `${e}`,
+      //   [
+      //     { text: "OK", onPress: () => console.log("OK Pressed") }
+      //   ]
+      // );
+
+      setSignUpFailedModal(true)
+
+      setSignUpFailedError(`${e}`)
 
       setMainState({
         bearerToken: null,
@@ -236,8 +232,8 @@ export const Auth = ({ navigation }) => {
         authState: false
       })
 
-      save('bearerToken', null);
-      save('userID', null);
+      save('bearerToken', '');
+      save('userID', '');
       save('authState', 'false');
 
     }
@@ -277,7 +273,6 @@ export const Auth = ({ navigation }) => {
         setPromptResetPassword_1('');
       } catch (e) {
         console.error(e)
-        console.log("Token expired or incorrect");
       }
     }
   }
@@ -341,7 +336,7 @@ export const Auth = ({ navigation }) => {
               end={{ x: 1, y: 1 }}
               style={{ ...Styling.container }}
             >
-              <SafeAreaView style={{ height: '90%', marginBottom: 32, marginTop: 32 }}>
+              <SafeAreaView style={{ height: '90%', marginBottom: 20, marginTop: 20 }}>
                 <ScrollView style={{}} keyboardShouldPersistTaps={'always'} keyboardDismissMode="on-drag">
 
                   {!isTokenValid &&
@@ -353,7 +348,7 @@ export const Auth = ({ navigation }) => {
                               color: THEME_FONT_COLOR_WHITE,
                               alignSelf: 'center',
                               fontSize: HeightRatio(100),
-                              marginTop: HeightRatio(40),
+                              marginTop: HeightRatio(20),
                               fontFamily: 'SofiaSansSemiCondensed-Regular',
                             }}
                             allowFontScaling={false}
@@ -366,136 +361,175 @@ export const Auth = ({ navigation }) => {
                               {promptEmailInput ?
                                 <View
                                   style={{
-                                    flexDirection: 'column',
-                                    marginLeft: HeightRatio(20),
-                                    marginRight: HeightRatio(20)
+                                    ...styles.homePrimary_Add_Button,
+                                    ...styles.button_Drop_Shadow,
+                                    width: windowWidth / 3.6,
+                                    height: windowWidth / 5
                                   }}
                                 >
-                                  <FontAwesomeIcon
-                                    icon={faSolid, faCheck}
-                                    style={{ color: THEME_COLOR_POSITIVE, margin: HeightRatio(14), alignSelf: 'center' }}
-                                  />
-                                  <Text
-                                    style={{
-                                      color: THEME_FONT_COLOR_BLACK,
-                                      fontSize: HeightRatio(20),
-                                      textAlign: 'center',
-                                      fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                    }}
-                                    allowFontScaling={false}
-                                  >Email</Text>
+
+                                  <View
+                                    style={{ flexDirection: 'column' }}
+                                  >
+
+                                    <FontAwesomeIcon
+                                      icon={faSolid, faCheck}
+                                      style={{ color: THEME_FONT_COLOR_BLACK, margin: HeightRatio(14), alignSelf: 'center' }}
+                                    />
+                                    <Text
+                                      style={{
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        fontSize: HeightRatio(20),
+                                        textAlign: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                      }}
+                                      allowFontScaling={false}
+                                    >Email</Text>
+                                  </View>
                                 </View>
                                 :
                                 <View
                                   style={{
-                                    flexDirection: 'column',
-                                    marginLeft: HeightRatio(20),
-                                    marginRight: HeightRatio(20)
+                                    ...styles.homePrimary_Add_Button,
+                                    ...styles.button_Drop_Shadow,
+                                    width: windowWidth / 3.6,
+                                    height: windowWidth / 5
                                   }}
                                 >
-                                  <FontAwesomeIcon
-                                    icon={faSolid, faEnvelope}
-                                    style={{ color: THEME_FONT_COLOR_BLACK, margin: HeightRatio(14), alignSelf: 'center' }}
-                                  />
-                                  <Text
-                                    style={{
-                                      color: THEME_FONT_COLOR_BLACK,
-                                      fontSize: HeightRatio(20),
-                                      textAlign: 'center',
-                                      fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                    }}
-                                    allowFontScaling={false}
-                                  >Email</Text>
+                                  <View
+                                    style={{ flexDirection: 'column' }}
+                                  >
+
+                                    <FontAwesomeIcon
+                                      icon={faSolid, faEnvelope}
+                                      style={{ color: THEME_FONT_COLOR_BLACK, margin: HeightRatio(14), alignSelf: 'center' }}
+                                    />
+                                    <Text
+                                      style={{
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        fontSize: HeightRatio(20),
+                                        textAlign: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                      }}
+                                      allowFontScaling={false}
+                                    >Email</Text>
+                                  </View>
                                 </View>
+
+
                               }
                               {promptUsernameInput ?
                                 <View
                                   style={{
-                                    flexDirection: 'column',
-                                    marginLeft: HeightRatio(20),
-                                    marginRight: HeightRatio(20)
+                                    ...styles.homePrimary_Add_Button,
+                                    ...styles.button_Drop_Shadow,
+                                    width: windowWidth / 3.6,
+                                    height: windowWidth / 5
                                   }}
                                 >
-                                  <FontAwesomeIcon
-                                    icon={faSolid, faCheck}
-                                    style={{ color: THEME_COLOR_POSITIVE, margin: HeightRatio(14), alignSelf: 'center' }}
-                                  />
-                                  <Text
-                                    style={{
-                                      color: THEME_FONT_COLOR_BLACK,
-                                      fontSize: HeightRatio(20),
-                                      textAlign: 'center',
-                                      fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                    }}
-                                    allowFontScaling={false}
-                                  >Username </Text>
+                                  <View
+                                    style={{ flexDirection: 'column' }}
+                                  >
+
+                                    <FontAwesomeIcon
+                                      icon={faSolid, faCheck}
+                                      style={{ color: THEME_FONT_COLOR_BLACK, margin: HeightRatio(14), alignSelf: 'center' }}
+                                    />
+                                    <Text
+                                      style={{
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        fontSize: HeightRatio(20),
+                                        textAlign: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                      }}
+                                      allowFontScaling={false}
+                                    >Username</Text>
+                                  </View>
                                 </View>
                                 :
                                 <View
                                   style={{
-                                    flexDirection: 'column',
-                                    marginLeft: HeightRatio(20),
-                                    marginRight: HeightRatio(20)
+                                    ...styles.homePrimary_Add_Button,
+                                    ...styles.button_Drop_Shadow,
+                                    width: windowWidth / 3.6,
+                                    height: windowWidth / 5
                                   }}
                                 >
-                                  <FontAwesomeIcon
-                                    icon={faSolid, faUser}
-                                    style={{ color: THEME_FONT_COLOR_BLACK, margin: HeightRatio(14), alignSelf: 'center' }}
-                                  />
-                                  <Text
-                                    style={{
-                                      color: THEME_FONT_COLOR_BLACK,
-                                      fontSize: HeightRatio(20),
-                                      textAlign: 'center',
-                                      fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                    }}
-                                    allowFontScaling={false}
-                                  >Username </Text>
+                                  <View
+                                    style={{ flexDirection: 'column' }}
+                                  >
+
+                                    <FontAwesomeIcon
+                                      icon={faSolid, faUser}
+                                      style={{ color: THEME_FONT_COLOR_BLACK, margin: HeightRatio(14), alignSelf: 'center' }}
+                                    />
+                                    <Text
+                                      style={{
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        fontSize: HeightRatio(20),
+                                        textAlign: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                      }}
+                                      allowFontScaling={false}
+                                    >Username</Text>
+                                  </View>
                                 </View>
                               }
                               {promptPasswordInput ?
                                 <View
                                   style={{
-                                    flexDirection: 'column',
-                                    marginLeft: HeightRatio(20),
-                                    marginRight: HeightRatio(20)
+                                    ...styles.homePrimary_Add_Button,
+                                    ...styles.button_Drop_Shadow,
+                                    width: windowWidth / 3.6,
+                                    height: windowWidth / 5
                                   }}
                                 >
-                                  <FontAwesomeIcon
-                                    icon={faSolid, faCheck}
-                                    style={{ color: THEME_COLOR_POSITIVE, margin: HeightRatio(14), alignSelf: 'center' }}
-                                  />
-                                  <Text
-                                    style={{
-                                      color: THEME_FONT_COLOR_BLACK,
-                                      fontSize: HeightRatio(20),
-                                      textAlign: 'center',
-                                      fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                    }}
-                                    allowFontScaling={false}
-                                  >Password</Text>
+                                  <View
+                                    style={{ flexDirection: 'column' }}
+                                  >
+
+                                    <FontAwesomeIcon
+                                      icon={faSolid, faCheck}
+                                      style={{ color: THEME_FONT_COLOR_BLACK, margin: HeightRatio(14), alignSelf: 'center' }}
+                                    />
+                                    <Text
+                                      style={{
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        fontSize: HeightRatio(20),
+                                        textAlign: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                      }}
+                                      allowFontScaling={false}
+                                    >Password</Text>
+                                  </View>
                                 </View>
                                 :
                                 <View
                                   style={{
-                                    flexDirection: 'column',
-                                    marginLeft: HeightRatio(20),
-                                    marginRight: HeightRatio(20)
+                                    ...styles.homePrimary_Add_Button,
+                                    ...styles.button_Drop_Shadow,
+                                    width: windowWidth / 3.6,
+                                    height: windowWidth / 5
                                   }}
                                 >
-                                  <FontAwesomeIcon
-                                    icon={faSolid, faLock}
-                                    style={{ color: THEME_FONT_COLOR_BLACK, margin: HeightRatio(14), alignSelf: 'center' }}
-                                  />
-                                  <Text
-                                    style={{
-                                      color: THEME_FONT_COLOR_BLACK,
-                                      fontSize: HeightRatio(20),
-                                      textAlign: 'center',
-                                      fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                    }}
-                                    allowFontScaling={false}
-                                  >Password</Text>
+                                  <View
+                                    style={{ flexDirection: 'column' }}
+                                  >
+
+                                    <FontAwesomeIcon
+                                      icon={faSolid, faLock}
+                                      style={{ color: THEME_FONT_COLOR_BLACK, margin: HeightRatio(14), alignSelf: 'center' }}
+                                    />
+                                    <Text
+                                      style={{
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        fontSize: HeightRatio(20),
+                                        textAlign: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                      }}
+                                      allowFontScaling={false}
+                                    >Password</Text>
+                                  </View>
                                 </View>
                               }
                             </View>
@@ -1092,7 +1126,139 @@ export const Auth = ({ navigation }) => {
                 </ScrollView>
               </SafeAreaView>
             </LinearGradient>
-            {/* </ImageBackground> */}
+
+            <Modal
+              animationType="none"
+              transparent={true}
+              visible={signUpFailedModal}
+              onRequestClose={() => {
+                setSignUpFailedModal(!signUpFailedModal)
+
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  backgroundColor: 'rgba(0, 0, 0, 0.75)'
+                }}
+              >
+                <View
+                  style={{
+                    // flex: 1,
+                    backgroundColor: '#1f1f27',
+                    margin: 20,
+                    zIndex: 999,
+                    borderRadius: 10,
+                    display: 'flex',
+                    // alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
+                  }}
+                >
+                  <View
+                    style={{
+                      margin: HeightRatio(20),
+                      // alignSelf: 'center'
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        display: 'flex',
+                        alignItems: 'center',
+                        // justifyContent: 'center'
+                      }}
+                    >
+                      <Image
+                        source={require('../../assets/favicon_0.png')}
+                        style={{
+                          height: HeightRatio(40),
+                          width: HeightRatio(40),
+                          // alignSelf: 'center'
+                        }}
+                      />
+                      <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
+                        Baby Food Tracker
+                      </Text>
+                    </View>
+                    <View style={{ height: HeightRatio(10) }}></View>
+                    <View
+                      style={{
+                        padding: HeightRatio(10)
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: THEME_FONT_COLOR_WHITE,
+                          textAlign: 'left',
+                          fontSize: HeightRatio(20),
+                          fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                          marginTop: HeightRatio(10)
+                        }}
+                        allowFontScaling={false}
+                      >
+                        Sign Up Failed
+                      </Text>
+                      <Text
+                        style={{
+                          color: THEME_FONT_COLOR_WHITE,
+                          textAlign: 'left',
+                          fontSize: HeightRatio(20),
+                          fontFamily: 'SofiaSansSemiCondensed-Regular',
+                          marginTop: HeightRatio(2)
+                        }}
+                        allowFontScaling={false}
+                      >
+                        {signUpFailedError.replace('ApolloError:', '').trim()}.
+                      </Text>
+                      {/* <Text
+                        style={{
+                          color: THEME_COLOR_ATTENTION,
+                          textAlign: 'left',
+                          fontSize: HeightRatio(20),
+                          fontFamily: 'SofiaSansSemiCondensed-Regular',
+                          marginTop: HeightRatio(10)
+                        }}
+                        allowFontScaling={false}
+                      >
+                        example@email.com
+                      </Text> */}
+
+                    </View>
+
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSignUpFailedModal(!signUpFailedModal);
+                        setMainState({ userTouch: true })
+                      }}
+                      style={{
+                        backgroundColor: THEME_COLOR_NEGATIVE,
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                        padding: HeightRatio(10),
+                        borderRadius: HeightRatio(10),
+                        alignSelf: 'center',
+                        width: (windowWidth - WidthRatio(100)) / 2,
+                        margin: HeightRatio(10)
+                      }}>
+                      <Text
+                        style={{
+                          color: THEME_FONT_COLOR_WHITE,
+                          fontSize: HeightRatio(25),
+                          alignSelf: 'center',
+                          fontFamily: 'SofiaSansSemiCondensed-Regular'
+                        }}
+                        allowFontScaling={false}
+                      >
+                        Close
+                      </Text>
+                    </TouchableOpacity>
+
+
+                  </View>
+                </View>
+              </View>
+            </Modal>
 
           </View>
         </>
@@ -1156,5 +1322,15 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
-  }
+  },
+  homePrimary_Add_Button: {
+    backgroundColor: THEME_COLOR_POSITIVE,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // padding: HeightRatio(20),
+    borderRadius: HeightRatio(10),
+    alignSelf: 'center',
+    margin: HeightRatio(4)
+  },
 });

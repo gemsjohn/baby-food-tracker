@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
 import { HomeScreen } from './pages/home/Home';
+import { PremiumScreen } from './pages/premium/Premium';
 import { KeyScreen } from './pages/home/Key';
 import { ProfileScreen } from './pages/profile/Profile';
 import { Auth } from './pages/auth/auth';
@@ -70,6 +71,15 @@ export default function App() {
                 <Stack.Screen
                   name="Home"
                   component={HomeScreen}
+                  options={{
+                    headerShown: false,
+                    orientation: 'portrait_up',
+                    
+                  }}
+                />
+                <Stack.Screen
+                  name="Premium"
+                  component={PremiumScreen}
                   options={{
                     headerShown: false,
                     orientation: 'portrait_up',

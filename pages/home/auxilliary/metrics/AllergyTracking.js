@@ -141,7 +141,7 @@ export const AllergyTracking = (props) => {
                         {allergyArray.length > 0 ?
                             <>
                                 {allergyArray.map((data, index) => (
-                                    <View style={{ flexDirection: 'row', margin: HeightRatio(10), alignSelf: 'center' }}>
+                                    <View style={{ flexDirection: 'row', margin: HeightRatio(10), alignSelf: 'center' }} key={index}>
                                         <View
                                             style={{
                                                 backgroundColor: THEME_COLOR_ATTENTION,
@@ -352,44 +352,102 @@ export const AllergyTracking = (props) => {
                 animationType="slide"
                 transparent={true}
             >
-                <View style={styles.modalContainer_0}>
-                    <View style={styles.modalContainer_1}>
-                        <View style={styles.modalContainer_1_A}>
-                            <Text
-                                style={styles.modalContainer_1_A_Text}
-                                allowFontScaling={false}
-                            >
-                                Are you sure that you want to delete this allergy?
-                            </Text>
-                        </View>
-                        <View style={styles.modalContainer_1_B}>
-                            <TouchableOpacity onPress={() => { setModalVisible(false); setSelectedAllergyForDeletion(null); setMainState({ userTouch: true }) }}>
-                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
-                                    <Text
-                                        style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
-                                        allowFontScaling={false}
-                                    >
-                                        Close
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    handleUpdateUserAllergies(selectedAllergyForDeletion);
-                                    getAllergyData();
-                                    setModalVisible(false);
-                                    setMainState({ userTouch: true })
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'rgba(0, 0, 0, 0.75)'
+                    }}
+                >
+                    <View
+                        style={{
+                            // flex: 1,
+                            backgroundColor: '#1f1f27',
+                            margin: 20,
+                            zIndex: 999,
+                            borderRadius: 10,
+                            display: 'flex',
+                            // alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
+                        }}
+                    >
+                        <View
+                            style={{
+                                margin: HeightRatio(20),
+                                // alignSelf: 'center'
+                            }}
+                        >
+                            <View 
+                                style={{
+                                    flexDirection: 'row',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    // justifyContent: 'center'
                                 }}
                             >
-                                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
-                                    <Text
-                                        style={styles.modalButton_Text}
-                                        allowFontScaling={false}
-                                    >
-                                        Delete
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
+                                <Image
+                                    source={require('../../../../assets/favicon_0.png')}
+                                    style={{
+                                        height: HeightRatio(40),
+                                        width: HeightRatio(40),
+                                        // alignSelf: 'center'
+                                    }}
+                                />
+                                <Text style={{color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14)}}>
+                                    Baby Food Tracker
+                                </Text>
+                            </View>
+                            <View style={{ height: HeightRatio(10) }}></View>
+                            <View 
+                                style={{
+                                    padding: HeightRatio(10)
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        marginTop: HeightRatio(10)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Are you sure that you want to delete this allergy?
+                                </Text>
+                            </View>
+
+                            <View style={styles.modalContainer_1_B}>
+                                <TouchableOpacity onPress={() => { setModalVisible(false); setSelectedAllergyForDeletion(null); setMainState({ userTouch: true }) }}>
+                                    <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
+                                        <Text
+                                            style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
+                                            allowFontScaling={false}
+                                        >
+                                            Close
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        handleUpdateUserAllergies(selectedAllergyForDeletion);
+                                        getAllergyData();
+                                        setModalVisible(false);
+                                        setMainState({ userTouch: true })
+                                    }}
+                                >
+                                    <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
+                                        <Text
+                                            style={styles.modalButton_Text}
+                                            allowFontScaling={false}
+                                        >
+                                            Delete
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+
+
                         </View>
                     </View>
                 </View>

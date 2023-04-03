@@ -36,6 +36,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { DELETE_ENTRY } from '../../../utils/mutations';
 import { GET_USER_BY_ID } from '../../../utils/queries';
 import { MainStateContext } from '../../../App';
+import { CommonActions } from '@react-navigation/native';
 import {
     THEME_COLOR_POSITIVE,
     THEME_COLOR_POSITIVE_LOW_OPACITY,
@@ -66,7 +67,10 @@ const APIKeys = {
     google: "goog_caDqiYZPHvJIwlqyFoZDgTqOywO",
 };
 
-
+const resetActionPremium = CommonActions.reset({
+    index: 1,
+    routes: [{ name: 'Premium', params: {} }]
+});
 
 let localContainerHeight;
 
@@ -514,7 +518,7 @@ export const DailyScheduleSimplified = (props) => {
                                                 <Text
                                                     style={{
                                                         fontSize: HeightRatio(20),
-                                                        color: THEME_FONT_COLOR_BLACK,
+                                                        color: THEME_COLOR_ATTENTION,
                                                         fontFamily: "SofiaSansSemiCondensed-ExtraBold",
                                                     }}
                                                 >
@@ -619,10 +623,13 @@ export const DailyScheduleSimplified = (props) => {
                                                     onPress={() => {
                                                         setModalVisible(true);
                                                         setDeleteID(emotions[j].id);
-                                                        setMainState({
-                                                            triggerRefresh: false,
-                                                            userTouch: true
-                                                        })
+                                                        setTimeout(() => {
+                                                            setMainState({
+                                                                triggerRefresh: false,
+                                                                userTouch: true
+                                                            })
+                                                        }, 300)
+                                                        
 
                                                     }}
                                                     style={{
@@ -819,7 +826,7 @@ export const DailyScheduleSimplified = (props) => {
                                             }}
                                             allowFontScaling={false}
                                         >
-                                            Random insight...
+                                            Personalized insight...
                                         </Text>
                                     </View>
 
@@ -829,7 +836,12 @@ export const DailyScheduleSimplified = (props) => {
                         :
                         <>
                             <TouchableOpacity
-                                onPress={() => { setPremiumServiceModalVisible(true); setMainState({ userTouch: true }); }}
+                                // onPress={() => { setPremiumServiceModalVisible(true); setMainState({ userTouch: true }); }}
+                                onPress={() => { 
+                                    setMainState({ userTouch: true }); 
+                                    props.nav.dispatch(resetActionPremium)
+                                }}
+                                // resetActionPremium
                             >
                                 <LinearGradient
                                     colors={['#ec546d', '#d05bb6']}
@@ -1235,7 +1247,7 @@ export const DailyScheduleSimplified = (props) => {
                     <View style={styles.modalContainer_1}>
                         <View style={styles.modalContainer_1_A}>
                             {/* <GoogleProducts userID={props.userID} /> */}
-                            <Premium userID={props.userID} />
+                            <Premium userID={props.userID} nav={props.nav} />
                             <TouchableOpacity
                                 onPress={() => {
                                     setDisplaySubscriptionModal(false)
@@ -1365,7 +1377,7 @@ const styles = StyleSheet.create({
         // marginLeft: HeightRatio(10),
         padding: HeightRatio(5),
         borderRadius: HeightRatio(4),
-        backgroundColor: '#b894e9',
+        backgroundColor: '#583a86',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

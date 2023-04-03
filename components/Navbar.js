@@ -382,7 +382,7 @@ export const Navbar = (props) => {
                                     }}
                                     allowFontScaling={false}
                                 >
-                                    To use the Baby Food Tracker you must sign up and login. 
+                                    Thank you for downloading! To use the Baby Food Tracker you must sign up and login. 
                                 </Text>
                             </View>
 

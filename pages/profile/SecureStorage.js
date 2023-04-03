@@ -121,17 +121,17 @@ export const SecureStorage = () => {
         <View style={{}}>
           <Text
             style={{
-              color: THEME_FONT_COLOR_BLACK,
+              color: THEME_FONT_COLOR_WHITE,
               fontSize: HeightRatio(40),
-              fontFamily: 'SofiaSansSemiCondensed-Regular',
+              fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
               textAlign: 'center',
-              margin: HeightRatio(20)
+              margin: HeightRatio(20),
             }}
             allowFontScaling={false}>
             Set a Keycode for easy login!
           </Text>
           <>
-            <View style={{ marginTop: HeightRatio(30), flexDirection: 'row', alignSelf: 'center' }}>
+            <View style={{ marginTop: HeightRatio(10), flexDirection: 'row', alignSelf: 'center' }}>
               {count > 0 ?
                 <View style={{
                   backgroundColor: THEME_FONT_COLOR_WHITE,
@@ -156,7 +156,7 @@ export const SecureStorage = () => {
 
                 :
                 <View style={{
-                  backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
+                  // backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
                   height: HeightRatio(50),
                   width: windowWidth / 8,
                   margin: HeightRatio(5),
@@ -187,7 +187,7 @@ export const SecureStorage = () => {
 
                 :
                 <View style={{
-                  backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
+                  // backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
                   height: HeightRatio(50),
                   width: windowWidth / 8,
                   margin: HeightRatio(5),
@@ -218,7 +218,7 @@ export const SecureStorage = () => {
 
                 :
                 <View style={{
-                  backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
+                  // backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
                   height: HeightRatio(50),
                   width: windowWidth / 8,
                   margin: HeightRatio(5),
@@ -249,7 +249,7 @@ export const SecureStorage = () => {
 
                 :
                 <View style={{
-                  backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
+                  // backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
                   height: HeightRatio(50),
                   width: windowWidth / 8,
                   margin: HeightRatio(5),

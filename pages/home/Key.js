@@ -53,7 +53,7 @@ export const KeyScreen = ({ navigation }) => {
     const [keyArray, setKeyArray] = useState([]);
     const [count, setCount] = useState(0);
     const [pageLoadComplete, setPageLoadComplete] = useState(false);
-    
+
 
 
     async function getValueFor(key) {
@@ -67,9 +67,9 @@ export const KeyScreen = ({ navigation }) => {
         }
     }
 
-    
 
-    
+
+
 
     useEffect(() => {
         getValueFor('cosmicKey')
@@ -256,15 +256,20 @@ export const KeyScreen = ({ navigation }) => {
                             </View>
                         </View>
                         <View>
+                                <Text style={{color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(22)}} allowFontScaling={false}>
+                                    Having issues?
+                                </Text>
+                        </View>
+                        <View>
                             <TouchableOpacity
                                 onPress={() => {
                                     deleteKey('cosmicKey');
                                     navigation.dispatch(resetActionAuth);
                                 }}
                                 style={Styling.modalWordButton}>
-                                <View style={{ ...styles.forgotKey_Button, ...styles.button_Drop_Shadow }}>
-                                    <Text style={styles.forgotKey_Button_Text} allowFontScaling={false}>
-                                        Forgot Key?
+                                <View style={{ ...styles.forgotKey_Button, ...styles.button_Drop_Shadow, width: WidthRatio(100) }}>
+                                    <Text style={{...styles.forgotKey_Button_Text, fontSize: HeightRatio(20)}} allowFontScaling={false}>
+                                        Clear Key
                                     </Text>
                                 </View>
                             </TouchableOpacity>
@@ -307,7 +312,7 @@ const styles = StyleSheet.create({
         borderRadius: HeightRatio(10)
     },
     key_Empty: {
-        backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
+        // backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
         height: HeightRatio(50),
         width: windowWidth / 8,
         margin: HeightRatio(5),
