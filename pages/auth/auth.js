@@ -377,7 +377,7 @@ export const Auth = ({ navigation }) => {
                                   />
                                   <Text
                                     style={{
-                                      color: THEME_FONT_COLOR_WHITE,
+                                      color: THEME_FONT_COLOR_BLACK,
                                       fontSize: HeightRatio(20),
                                       textAlign: 'center',
                                       fontFamily: 'SofiaSansSemiCondensed-Regular',
@@ -395,11 +395,11 @@ export const Auth = ({ navigation }) => {
                                 >
                                   <FontAwesomeIcon
                                     icon={faSolid, faEnvelope}
-                                    style={{ color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(14), alignSelf: 'center' }}
+                                    style={{ color: THEME_FONT_COLOR_BLACK, margin: HeightRatio(14), alignSelf: 'center' }}
                                   />
                                   <Text
                                     style={{
-                                      color: THEME_FONT_COLOR_WHITE,
+                                      color: THEME_FONT_COLOR_BLACK,
                                       fontSize: HeightRatio(20),
                                       textAlign: 'center',
                                       fontFamily: 'SofiaSansSemiCondensed-Regular',
@@ -422,7 +422,7 @@ export const Auth = ({ navigation }) => {
                                   />
                                   <Text
                                     style={{
-                                      color: THEME_FONT_COLOR_WHITE,
+                                      color: THEME_FONT_COLOR_BLACK,
                                       fontSize: HeightRatio(20),
                                       textAlign: 'center',
                                       fontFamily: 'SofiaSansSemiCondensed-Regular',
@@ -440,11 +440,11 @@ export const Auth = ({ navigation }) => {
                                 >
                                   <FontAwesomeIcon
                                     icon={faSolid, faUser}
-                                    style={{ color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(14), alignSelf: 'center' }}
+                                    style={{ color: THEME_FONT_COLOR_BLACK, margin: HeightRatio(14), alignSelf: 'center' }}
                                   />
                                   <Text
                                     style={{
-                                      color: THEME_FONT_COLOR_WHITE,
+                                      color: THEME_FONT_COLOR_BLACK,
                                       fontSize: HeightRatio(20),
                                       textAlign: 'center',
                                       fontFamily: 'SofiaSansSemiCondensed-Regular',
@@ -467,7 +467,7 @@ export const Auth = ({ navigation }) => {
                                   />
                                   <Text
                                     style={{
-                                      color: THEME_FONT_COLOR_WHITE,
+                                      color: THEME_FONT_COLOR_BLACK,
                                       fontSize: HeightRatio(20),
                                       textAlign: 'center',
                                       fontFamily: 'SofiaSansSemiCondensed-Regular',
@@ -485,11 +485,11 @@ export const Auth = ({ navigation }) => {
                                 >
                                   <FontAwesomeIcon
                                     icon={faSolid, faLock}
-                                    style={{ color: THEME_FONT_COLOR_WHITE, margin: HeightRatio(14), alignSelf: 'center' }}
+                                    style={{ color: THEME_FONT_COLOR_BLACK, margin: HeightRatio(14), alignSelf: 'center' }}
                                   />
                                   <Text
                                     style={{
-                                      color: THEME_FONT_COLOR_WHITE,
+                                      color: THEME_FONT_COLOR_BLACK,
                                       fontSize: HeightRatio(20),
                                       textAlign: 'center',
                                       fontFamily: 'SofiaSansSemiCondensed-Regular',

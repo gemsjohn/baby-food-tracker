@@ -39,6 +39,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export const SelectedFoodDetails = (props) => {
+    console.log(props.item)
     const { mainState, setMainState } = useContext(MainStateContext);
     const options = [
         "Milliliters",
@@ -180,12 +181,48 @@ export const SelectedFoodDetails = (props) => {
             </View>
 
             <View style={{ flexDirection: 'row' }}>
-                <Text
-                    style={styles.header}
-                    allowFontScaling={false}
-                >
-                    Measurement
-                </Text>
+            <View style={{ flexDirection: 'column'}}>
+                    <Text
+                        style={styles.header}
+                        allowFontScaling={false}
+                    >
+                        Measurement
+                    </Text>
+                    {options.filter(option => props.item == 'BREAST MILK' ? option : null).map((option) => (
+                        <>
+                            {selectedItem == null && option == 'Minutes' &&
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setSelectedItem(option);
+                                        setMainState({
+                                            selectedFood_Measurement: option,
+                                            userTouch: true
+                                        })
+                                    }}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        padding: HeightRatio(10),
+                                        marginTop: HeightRatio(20),
+                                        width: WidthRatio(100),
+                                        height: WidthRatio(100),
+                                        borderRadius: HeightRatio(10),
+                                        backgroundColor: THEME_COLOR_POSITIVE
+                                    }}
+                                    key={option}
+                                >
+                                    <Text
+                                        style={{ ...styles.itemButton_Text, fontFamily: option == 'Custom' ? 'SofiaSansSemiCondensed-ExtraBold' : 'SofiaSansSemiCondensed-Regular' }}
+                                        allowFontScaling={false}
+                                    >
+                                        {option}
+                                    </Text>
+                                </TouchableOpacity>
+                            }
+                        </>
+                    ))}
+                </View>
                 <View style={{ marginTop: HeightRatio(10) }}>
                     {selectedItem != null ?
                         <View style={{ flexDirection: 'row' }}>
@@ -218,7 +255,7 @@ export const SelectedFoodDetails = (props) => {
                         </View>
                         :
                         <>
-                            {options.map((option) => (
+                            {options.filter(option => option !== 'Minutes').map((option) => (
                                 <TouchableOpacity
                                     onPress={() => {
                                         setSelectedItem(option);
@@ -238,6 +275,8 @@ export const SelectedFoodDetails = (props) => {
                                     </Text>
                                 </TouchableOpacity>
                             ))}
+
+
                         </>
                     }
                 </View>

@@ -61,7 +61,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { PDFGenerator } from '../pdf/PDFGenerator';
 import { Premium } from '../auxilliary/premium/Premium';
 import { Purchases } from 'react-native-purchases';
-import { GoogleProducts } from './premium/GoogProducts';
 
 const APIKeys = {
     google: "goog_caDqiYZPHvJIwlqyFoZDgTqOywO",
@@ -692,7 +691,7 @@ export const DailyScheduleSimplified = (props) => {
             setMainState({
                 triggerRefresh: false
             })
-        }, 100)
+        }, 200)
     }
 
     return (
@@ -769,7 +768,7 @@ export const DailyScheduleSimplified = (props) => {
                                 <>
                                     <View
                                         style={{
-                                            backgroundColor: '#1f1f27',
+                                            backgroundColor: THEME_COLOR_ATTENTION,
                                             width: '90%',
                                             height: HeightRatio(120),
                                             alignSelf: 'center',
@@ -783,15 +782,20 @@ export const DailyScheduleSimplified = (props) => {
                                     >
                                         <View
                                             style={{
-                                                backgroundColor: THEME_COLOR_POSITIVE,
-                                                padding: HeightRatio(8),
+                                                flexDirection: 'row',
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                justifyContent: 'center',
-                                                alignSelf: 'flex-start',
-                                                borderRadius: HeightRatio(10)
+                                                marginBottom: HeightRatio(10)
                                             }}
                                         >
+                                            <Image
+                                                source={require('../../../assets/favicon_0.png')}
+                                                style={{
+                                                    height: HeightRatio(30),
+                                                    width: HeightRatio(30),
+                                                    // alignSelf: 'center'
+                                                }}
+                                            />
                                             <Text
                                                 style={{
                                                     color: THEME_FONT_COLOR_BLACK,
@@ -799,6 +803,7 @@ export const DailyScheduleSimplified = (props) => {
                                                     fontSize: HeightRatio(20),
                                                     fontFamily: "SofiaSansSemiCondensed-ExtraBold",
                                                     // marginTop: HeightRatio(20)
+                                                    marginLeft: HeightRatio(10)
                                                 }}
                                                 allowFontScaling={false}
                                             >
@@ -807,15 +812,14 @@ export const DailyScheduleSimplified = (props) => {
                                         </View>
                                         <Text
                                             style={{
-                                                color: THEME_FONT_COLOR_WHITE,
-                                                // textAlign: 'center',
+                                                color: THEME_FONT_COLOR_BLACK,
                                                 fontSize: HeightRatio(20),
-                                                fontFamily: "SofiaSansSemiCondensed-ExtraBold",
-                                                // marginTop: HeightRatio(20)
+                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                marginLeft: HeightRatio(10)
                                             }}
                                             allowFontScaling={false}
                                         >
-                                            Random Insight
+                                            Random insight...
                                         </Text>
                                     </View>
 
@@ -885,14 +889,53 @@ export const DailyScheduleSimplified = (props) => {
                 transparent={true}
             >
                 <View style={styles.modalContainer_0}>
-                    <View style={styles.modalContainer_1}>
-                        <View style={styles.modalContainer_1_A}>
-                            <Text
-                                style={styles.modalContainer_1_A_Text}
-                                allowFontScaling={false}
+                    <View style={{...styles.modalContainer_1, alignItems: null}}>
+                    
+                        <View
+                            style={{
+                                margin: HeightRatio(20),
+                                // alignSelf: 'center'
+                            }}
+                        >
+                            <View 
+                                style={{
+                                    flexDirection: 'row',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    // justifyContent: 'center'
+                                }}
                             >
-                                Are you sure that you want to delete this entry?
-                            </Text>
+                                <Image
+                                    source={require('../../../assets/favicon_0.png')}
+                                    style={{
+                                        height: HeightRatio(40),
+                                        width: HeightRatio(40),
+                                        // alignSelf: 'center'
+                                    }}
+                                />
+                                <Text style={{color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14)}}>
+                                    Baby Food Tracker
+                                </Text>
+                            </View>
+                            <View style={{ height: HeightRatio(10) }}></View>
+                            <View 
+                                style={{
+                                    padding: HeightRatio(10)
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        marginTop: HeightRatio(10)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Are you sure that you want to delete this food entry?
+                                </Text>
+                            </View>
                         </View>
                         <View style={styles.modalContainer_1_B}>
                             <TouchableOpacity onPress={() => { setModalVisible(false); setMainState({ userTouch: true }); }}>
@@ -1079,7 +1122,7 @@ export const DailyScheduleSimplified = (props) => {
                                     </Text>
                                 </View>
                                 <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
-                                
+
                                 <View style={{ marginBottom: HeightRatio(20), alignSelf: 'center', backgroundColor: THEME_COLOR_ATTENTION, width: '100%', borderRadius: HeightRatio(10) }}>
                                     <Text
                                         style={{
@@ -1208,17 +1251,17 @@ export const DailyScheduleSimplified = (props) => {
                                     width: (windowWidth - WidthRatio(100)) / 2,
                                     margin: HeightRatio(10)
                                 }}>
-                                    <Text
-                                        style={{
-                                            color: THEME_FONT_COLOR_WHITE,
-                                            fontSize: HeightRatio(25),
-                                            alignSelf: 'center',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                        }}
-                                        allowFontScaling={false}
-                                    >
-                                        Close
-                                    </Text>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        fontSize: HeightRatio(25),
+                                        alignSelf: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Close
+                                </Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -1384,7 +1427,7 @@ const styles = StyleSheet.create({
     },
     modalContainer_0: {
         flex: 1,
-        backgroundColor: THEME_COLOR_BLACKOUT
+        backgroundColor: 'rgba(0, 0, 0, 0.75)'
     },
     modalContainer_1: {
         backgroundColor: 'rgba(31, 31, 39, 1.00)',

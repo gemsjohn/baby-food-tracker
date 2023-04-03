@@ -511,7 +511,7 @@ export const Add_Primary = (props) => {
                                     >
                                         {item.description.toUpperCase()}
                                     </Text>
-                                    <SelectedFoodDetails />
+                                    <SelectedFoodDetails item={item.description.toUpperCase()} />
                                 </View>
                             </>
                             :
@@ -705,8 +705,8 @@ export const Add_Primary = (props) => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        marginTop: HeightRatio(25),
-                        marginBottom: HeightRatio(5)
+                        // marginTop: HeightRatio(25),
+                        // marginBottom: HeightRatio(5)
                     }}>
                     <TouchableOpacity
                         onPress={() => {
@@ -964,7 +964,7 @@ export const Add_Primary = (props) => {
                     <View
                         style={{
                             ...styles.modalVisible_Container,
-                            height: windowHeight / 1.9,
+                            height: windowHeight / 1.7,
                             margin: HeightRatio(0)
                         }}
                     >
@@ -1041,7 +1041,7 @@ export const Add_Primary = (props) => {
                                                                         >
                                                                             {data.item}
                                                                         </Text>
-                                                                        <SelectedFoodDetails textInputValue={`${data.number}`} selectedItem={`${data.measurement}`} />
+                                                                        <SelectedFoodDetails textInputValue={`${data.number}`} selectedItem={`${data.measurement}`} item={`${data.item}`} />
                                                                     </View>
                                                                     <TouchableOpacity
                                                                         onPress={() => {
@@ -1136,9 +1136,13 @@ export const Add_Primary = (props) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() => {
+                                            setMainState({ userTouch: true, triggerRefresh: true })
                                             getNutritionValue(selectedItem == null && selectRecentlyUsedData.item != null ? selectRecentlyUsedData.item : selectedItem);
                                             setModalVisible(false);
-                                            setMainState({ userTouch: true })
+                                            
+                                            setTimeout(() => {
+                                                setMainState({ triggerRefresh: false })
+                                            }, 300)
 
                                         }}
                                     >
@@ -1429,7 +1433,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
-        margin: HeightRatio(10)
+        // margin: HeightRatio(10)
     },
     modalVisible_TextInput: {
         ...Styling.textInputStyle,

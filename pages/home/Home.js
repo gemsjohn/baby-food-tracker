@@ -47,7 +47,7 @@ import { GLOBAL_GRAPHQL_API_URL } from '../../App'
 import { convertDateFormat } from './auxilliary/ConvertDateFormat';
 import { SelectedFoodDetails } from './auxilliary/SelectedFoodDetails';
 import { useMutation, useQuery } from '@apollo/client';
-import { ADD_ENTRY, ADD_SUB_USER, DELETE_SUB_USER } from '../../utils/mutations';
+import { ADD_ENTRY, ADD_SUB_USER, DELETE_SUB_USER, UPDATE_PREMIUM } from '../../utils/mutations';
 import { GET_USER_BY_ID } from '../../utils/queries';
 // import { DailySchedule } from './auxilliary/DailySchedule';
 import { Loading } from '../../components/Loading';
@@ -82,12 +82,17 @@ import { Calories_Primary } from './auxilliary/calories/Calories_Primary';
 import { Add_Primary } from './auxilliary/add/Add_Primary';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions } from '@react-navigation/native';
+import Purchases, { PurchasesOffering } from 'react-native-purchases';
 
 
 const resetActionKey = CommonActions.reset({
     index: 1,
     routes: [{ name: 'Key', params: {} }]
 });
+
+const APIKeys = {
+    google: "goog_caDqiYZPHvJIwlqyFoZDgTqOywO",
+};
 
 
 export const HomeScreen = ({ navigation }) => {
@@ -111,7 +116,7 @@ export const HomeScreen = ({ navigation }) => {
     const [displayTop100Foods, setDisplayTop100Foods] = useState(false)
     const [metricsModalVisible, setMetricsModalVisible] = useState(false)
     const [displayChooseAnotherOptionModal, setDisplayChooseAnotherOptionModal] = useState(false)
-    const subuserIndex = useRef(userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium ? 0 : null)
+    const subuserIndex = useRef(userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium.status ? 0 : null)
     // const [handleTimeout, setHandleTimeout] = useState(false)
     const [deleteSubuserModalVisible, setDeleteSubuserModalVisible] = useState(false);
     const [deleteSubuserIndex, setDeleteSubuserIndex] = useState(null)
@@ -204,16 +209,79 @@ export const HomeScreen = ({ navigation }) => {
         }, 120000);
     };
 
+    const getTotalCalorieCount = async () => {
+        try {
+            const value = await AsyncStorage.getItem('@TotalCalorieCount')
+            if (value !== null) {
+                // value previously stored
+                setTotalCalorieCount(value)
+                setTimeout(() => {
+                    setLoading(false)
+                }, 100)
+            }
+        } catch (e) {
+            // error reading value
+        }
+    }
+
+    const [updatePremium] = useMutation(UPDATE_PREMIUM);
+    const intervalID = useRef(null);
+    const [checkCustomerInfoInitiated, setCheckCustomerInfoInitiated] = useState(false)
+
+    const handleRemovePremium = async () => {
+        console.log("# - Premium Service IS NOT available for this user.")
+        await updatePremium({
+            variables: {
+                status: false,
+                expiration: ''
+            }
+        });
+
+        setLoading(false)
+    }
+
+    const checkCustomerInfo = async () => {
+        let localUserID = await SecureStore.getItemAsync('userID');
+        Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+        Purchases.configure({ apiKey: APIKeys.google, appUserID: localUserID });
+
+        const customerInfo = await Purchases.getCustomerInfo();
+        console.log(customerInfo)
+
+        setTimeout(() => {
+            clearInterval(intervalID.current)
+            console.log("# - STOP Checking User Subscription")
+        }, 5000)
+
+        intervalID.current = setInterval(() => {
+            console.log("# - Checking User Subscription")
+            // if (customerInfo.activeSubscriptions.length <= 0) {
+            //     clearInterval(intervalID.current)
+            //     handleRemovePremium()
+            // } else {
+            //     console.log("# - Premium Service IS available for this user.")
+            // }
+
+
+            if(typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
+                // console.log(customerInfo.entitlements.active["Premium"])
+                console.log("# - Premium service access granted.")
+
+            } else {
+                handleRemovePremium()
+            }
+
+        }, 1000)
+    }
+
 
     useEffect(() => {
         setLoading(true)
+        checkCustomerInfo()
+        getTotalCalorieCount()
         setTimeout(() => {
             authState.current = mainState.current.authState
             userID.current = mainState.current.userID;
-
-            setTimeout(() => {
-                setLoading(false)
-            }, 500)
         }, 500)
 
         setInterval(() => {
@@ -246,25 +314,6 @@ export const HomeScreen = ({ navigation }) => {
     }, [currentDate])
 
 
-    const getTotalCalorieCount = async () => {
-        try {
-            const value = await AsyncStorage.getItem('@TotalCalorieCount')
-            if (value !== null) {
-                // value previously stored
-                setTotalCalorieCount(value)
-                setTimeout(() => {
-                    setLoading(false)
-                }, 100)
-            }
-        } catch (e) {
-            // error reading value
-        }
-    }
-
-    useEffect(() => {
-        getTotalCalorieCount()
-    }, [])
-
 
     const [addSubUserModalVisible, setAddSubUserModalVisible] = useState(true) //userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium ? false : true
     const [addSubUser] = useMutation(ADD_SUB_USER);
@@ -283,6 +332,8 @@ export const HomeScreen = ({ navigation }) => {
         setMainState({ triggerRefresh: false })
 
     }
+
+
 
 
     const [fontsLoaded] = useFonts({
@@ -310,7 +361,7 @@ export const HomeScreen = ({ navigation }) => {
         }
     }
 
-    const handleDeleteSubuser = async() => {
+    const handleDeleteSubuser = async () => {
         await deleteSubUser({
             variables: {
                 userid: userByID?.user._id,
@@ -325,7 +376,7 @@ export const HomeScreen = ({ navigation }) => {
                 triggerRefresh: false
             })
         }, 300)
-        
+
     }
 
 
@@ -339,6 +390,14 @@ export const HomeScreen = ({ navigation }) => {
                     {modalVisible && <View style={styles.modalVisible_Blackout} />}
                     {calendarModalVisible && <View style={styles.modalVisible_Blackout} />}
                     {metricsModalVisible && <View style={styles.modalVisible_Blackout} />}
+                    {addSubUserModalVisible && 
+                        <LinearGradient
+                            colors={['#8bccde', '#d05bb6']}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            style={styles.homePrimary_Container}
+                        />
+                    }
 
                     <View
                         style={styles.homePrimary_Container}
@@ -350,7 +409,7 @@ export const HomeScreen = ({ navigation }) => {
                             end={{ x: 1, y: 1 }}
                             style={styles.homePrimary_Container}
                         >
-                            <View style={styles.homePrimary_Date}>
+                            <View style={{...styles.homePrimary_Date}}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         handlePreviousDay();
@@ -414,18 +473,12 @@ export const HomeScreen = ({ navigation }) => {
 
                             {!refreshing && !refreshing_Nutrition ?
                                 <>
-                                    <Image
-                                        source={require('../../assets/pattern_1.png')}
-                                        style={styles.homePrimary_Pattern_1}
-                                    />
-
-
                                     <View style={{ flexDirection: 'row', marginTop: HeightRatio(20) }}>
                                         <Calories_Primary
                                             totalCalorieCount={totalCalorieCount}
                                         />
 
-                                        {userByID?.user.premium &&
+                                        {userByID?.user.premium.status &&
                                             <Metrics_Primary
                                                 subuser={userByID?.user.subuser[subuserIndex.current]}
                                                 currentDateReadable={currentDateReadable}
@@ -444,7 +497,7 @@ export const HomeScreen = ({ navigation }) => {
                                         containerHeight={HeightRatio(450)}
                                         from={"main"}
                                         subuser={userByID?.user.subuser[subuserIndex.current]}
-                                        premium={userByID?.user.premium}
+                                        premium={userByID?.user.premium.status}
                                     />
                                     <View style={{ flexDirection: 'row' }}>
 
@@ -547,7 +600,7 @@ export const HomeScreen = ({ navigation }) => {
                                         containerHeight={HeightRatio(250)}
                                         from={"calendar"}
                                         subuser={userByID?.user.subuser[subuserIndex.current]}
-                                        premium={userByID?.user.premium}
+                                        premium={userByID?.user.premium.status}
                                     />
 
 
@@ -622,218 +675,90 @@ export const HomeScreen = ({ navigation }) => {
                                     // justifyContent: 'center'
                                 }}
                             >
-                                {userByID?.user && userByID?.user.subuser.length == 0 && !userByID?.user.premium &&
-                                    <>
-                                        <View style={{ margin: 20, backgroundColor: 'rgba(0, 0, 0, 0.1)', borderRadius: HeightRatio(20), padding: HeightRatio(20) }}>
-                                            <Text
-                                                style={{
-                                                    color: THEME_FONT_COLOR_WHITE,
-                                                    alignSelf: 'center',
-                                                    fontSize: HeightRatio(50),
-                                                    margin: 20,
-                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                
+
+                                <>
+                                    <View style={{ backgroundColor: '#1f1f27', borderRadius: HeightRatio(20), padding: HeightRatio(20) }}>
+                                        <Text
+                                            style={{
+                                                color: THEME_FONT_COLOR_WHITE,
+                                                alignSelf: 'center',
+                                                fontSize: HeightRatio(50),
+                                                margin: 20,
+                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Add a Child
+                                        </Text>
+                                        <TextInput
+                                            type="text"
+                                            name="subuser"
+                                            placeholder="Child's name"
+                                            placeholderTextColor='white'
+                                            value={subuserInput}
+                                            onChangeText={setSubuserInput}
+                                            style={{
+                                                ...Styling.textInputStyle
+                                            }}
+                                            disableFullscreenUI={true}
+                                            allowFontScaling={false}
+                                        />
+
+
+                                        {subuserInput != "" && userByID?.user.premium.status ?
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    // setAddSubUserModalVisible(false);
+                                                    handleAddSubuser()
+
                                                 }}
-                                                allowFontScaling={false}
                                             >
-                                                Add a Child
-                                            </Text>
-                                            <TextInput
-                                                type="text"
-                                                name="subuser"
-                                                placeholder="Child's name"
-                                                placeholderTextColor='white'
-                                                value={subuserInput}
-                                                onChangeText={setSubuserInput}
-                                                style={{
-                                                    ...Styling.textInputStyle
-                                                }}
-                                                disableFullscreenUI={true}
-                                                allowFontScaling={false}
-                                            />
-
-
-                                            {subuserInput != "" &&
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        // setAddSubUserModalVisible(false);
-                                                        handleAddSubuser()
-
-                                                    }}
-                                                >
-                                                    <View style={{
-                                                        backgroundColor: THEME_COLOR_POSITIVE,
-                                                        ...styles.button_Drop_Shadow,
-                                                        display: 'flex',
-                                                        justifyContent: 'flex-start',
-                                                        padding: HeightRatio(20),
-                                                        borderRadius: HeightRatio(10),
-                                                        alignSelf: 'center',
-                                                        width: windowWidth - WidthRatio(50),
-                                                        margin: HeightRatio(10)
-                                                    }}>
-                                                        <Text
-                                                            style={{
-                                                                color: THEME_FONT_COLOR_BLACK,
-                                                                fontSize: HeightRatio(30),
-                                                                // fontWeight: 'bold',
-                                                                alignSelf: 'center',
-                                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                            }}
-                                                            allowFontScaling={false}
-                                                        >
-                                                            ADD
-                                                        </Text>
-                                                    </View>
-                                                </TouchableOpacity>
-                                            }
-                                        </View>
-                                        <View style={{ borderBottomWidth: 2, borderBottomColor: 'white', width: '90%', margin: 20, }} />
-                                    </>
-
-                                }
-
-                                {userByID?.user && userByID?.user.subuser.length == 0 && userByID?.user.premium &&
-                                    <>
-                                        <View style={{ margin: 20, backgroundColor: 'rgba(0, 0, 0, 0.1)', borderRadius: HeightRatio(20), padding: HeightRatio(20) }}>
-                                            <Text
-                                                style={{
-                                                    color: THEME_FONT_COLOR_WHITE,
+                                                <View style={{
+                                                    backgroundColor: THEME_COLOR_POSITIVE,
+                                                    ...styles.button_Drop_Shadow,
+                                                    display: 'flex',
+                                                    justifyContent: 'flex-start',
+                                                    padding: HeightRatio(20),
+                                                    borderRadius: HeightRatio(10),
                                                     alignSelf: 'center',
-                                                    fontSize: HeightRatio(50),
-                                                    margin: 20,
-                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                                }}
-                                                allowFontScaling={false}
-                                            >
-                                                Add a Child
-                                            </Text>
-                                            <TextInput
-                                                type="text"
-                                                name="subuser"
-                                                placeholder="Child's name"
-                                                placeholderTextColor='white'
-                                                value={subuserInput}
-                                                onChangeText={setSubuserInput}
-                                                style={{
-                                                    ...Styling.textInputStyle
-                                                }}
-                                                disableFullscreenUI={true}
-                                                allowFontScaling={false}
-                                            />
-
-
-                                            {subuserInput != "" &&
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        // setAddSubUserModalVisible(false);
-                                                        handleAddSubuser()
-
+                                                    width: windowWidth - WidthRatio(50),
+                                                    marginTop: HeightRatio(10)
+                                                }}>
+                                                    <Text
+                                                        style={{
+                                                            color: THEME_FONT_COLOR_BLACK,
+                                                            fontSize: HeightRatio(30),
+                                                            // fontWeight: 'bold',
+                                                            alignSelf: 'center',
+                                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                        }}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        ADD
+                                                    </Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                            :
+                                            <View style={{margin: HeightRatio(10)}}>
+                                                <Text
+                                                    style={{
+                                                        color: THEME_COLOR_ATTENTION,
+                                                        fontSize: HeightRatio(20),
+                                                        // fontWeight: 'bold',
+                                                        textAlign: 'center',
+                                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
                                                     }}
+                                                    allowFontScaling={false}
                                                 >
-                                                    <View style={{
-                                                        backgroundColor: THEME_COLOR_POSITIVE,
-                                                        ...styles.button_Drop_Shadow,
-                                                        display: 'flex',
-                                                        justifyContent: 'flex-start',
-                                                        padding: HeightRatio(20),
-                                                        borderRadius: HeightRatio(10),
-                                                        alignSelf: 'center',
-                                                        width: windowWidth - WidthRatio(50),
-                                                        margin: HeightRatio(10)
-                                                    }}>
-                                                        <Text
-                                                            style={{
-                                                                color: THEME_FONT_COLOR_BLACK,
-                                                                fontSize: HeightRatio(30),
-                                                                // fontWeight: 'bold',
-                                                                alignSelf: 'center',
-                                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                            }}
-                                                            allowFontScaling={false}
-                                                        >
-                                                            ADD
-                                                        </Text>
-                                                    </View>
-                                                </TouchableOpacity>
-                                            }
-                                        </View>
-                                        <View style={{ borderBottomWidth: 2, borderBottomColor: 'white', width: '90%', margin: 20, }} />
-                                    </>
+                                                    Premium users can add additional users.
+                                                </Text>
+                                            </View>
+                                        }
+                                    </View>
+                                    <View style={{ borderBottomWidth: 2, borderBottomColor: 'white', width: '90%', margin: 20, }} />
+                                </>
 
-                                }
-
-                                {userByID?.user && userByID?.user.subuser.length > 0 && userByID?.user.premium &&
-                                    <>
-                                        <View style={{ margin: 20, backgroundColor: 'rgba(0, 0, 0, 0.1)', borderRadius: HeightRatio(20), padding: HeightRatio(20) }}>
-                                            <Text
-                                                style={{
-                                                    color: THEME_FONT_COLOR_WHITE,
-                                                    alignSelf: 'center',
-                                                    fontSize: HeightRatio(50),
-                                                    margin: 20,
-                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                                }}
-                                                allowFontScaling={false}
-                                            >
-                                                Add a Child
-                                            </Text>
-                                            <TextInput
-                                                type="text"
-                                                name="subuser"
-                                                placeholder="Child's name"
-                                                placeholderTextColor='white'
-                                                value={subuserInput}
-                                                onChangeText={setSubuserInput}
-                                                style={{
-                                                    ...Styling.textInputStyle
-                                                }}
-                                                disableFullscreenUI={true}
-                                                allowFontScaling={false}
-                                            />
-
-
-                                            {subuserInput != "" &&
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        // setAddSubUserModalVisible(false);
-                                                        handleAddSubuser()
-
-                                                    }}
-                                                >
-                                                    <View style={{
-                                                        backgroundColor: THEME_COLOR_POSITIVE,
-                                                        ...styles.button_Drop_Shadow,
-                                                        display: 'flex',
-                                                        justifyContent: 'flex-start',
-                                                        padding: HeightRatio(20),
-                                                        borderRadius: HeightRatio(10),
-                                                        alignSelf: 'center',
-                                                        width: windowWidth - WidthRatio(50),
-                                                        margin: HeightRatio(10)
-                                                    }}>
-                                                        <Text
-                                                            style={{
-                                                                color: THEME_FONT_COLOR_BLACK,
-                                                                fontSize: HeightRatio(30),
-                                                                // fontWeight: 'bold',
-                                                                alignSelf: 'center',
-                                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                            }}
-                                                            allowFontScaling={false}
-                                                        >
-                                                            ADD
-                                                        </Text>
-                                                    </View>
-                                                </TouchableOpacity>
-                                            }
-                                        </View>
-                                        <View style={{ borderBottomWidth: 2, borderBottomColor: 'white', width: '90%', margin: 20, }} />
-                                    </>
-
-                                }
-
-
-                                {/* {userByID?.user && userByID?.user.subuser.length > 0 && userByID?.user.premium && */}
                                 <>
                                     <SafeAreaView
                                         style={{
@@ -842,145 +767,293 @@ export const HomeScreen = ({ navigation }) => {
                                         }}
                                     >
                                         <ScrollView style={styles.scrollView}>
-                                            <Text
-                                                style={{
-                                                    color: THEME_FONT_COLOR_WHITE,
-                                                    alignSelf: 'center',
-                                                    fontSize: HeightRatio(50),
-                                                    margin: 20,
-                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                                }}
-                                                allowFontScaling={false}
-                                            >
-                                                Select Child
-                                            </Text>
-                                            {userByID?.user.subuser.map((data, index) => (
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <TouchableOpacity
-                                                    onPress={() => {
-                                                        setAddSubUserModalVisible(false);
-                                                        setMainState({ userTouch: true })
-                                                        subuserIndex.current = index;
-                                                        onRefresh();
-                                                    }}
-                                                    key={index}
-                                                    style={{
-                                                        backgroundColor: THEME_COLOR_POSITIVE,
-                                                        ...styles.button_Drop_Shadow,
-                                                        display: 'flex',
-                                                        justifyContent: 'flex-start',
-                                                        padding: HeightRatio(20),
-                                                        borderRadius: HeightRatio(10),
-                                                        alignSelf: 'center',
-                                                        width: (windowWidth - WidthRatio(50)) * 0.8,
-                                                        margin: HeightRatio(10)
-                                                    }}
-                                                    >
-                                                    <Text
-                                                        style={{
-                                                        color: THEME_FONT_COLOR_BLACK,
-                                                        fontSize: HeightRatio(30),
-                                                        // fontWeight: 'bold',
-                                                        textAlign: 'center',
-                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                                        width: '90%'
+                                            {userByID?.user.premium.status ?
+                                            <>
+                                                {userByID?.user.subuser.map((data, index) => (
+                                                    <View style={{ flexDirection: 'row', margin: HeightRatio(10) }} key={index}>
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                setAddSubUserModalVisible(false);
+                                                                setMainState({ userTouch: true })
+                                                                subuserIndex.current = index;
+                                                                onRefresh();
+                                                            }}
 
-                                                        }}
-                                                        allowFontScaling={false}
-                                                        numberOfLines={1}
-                                                        ellipsizeMode={'tail'}
-                                                    >
-                                                        {data.subusername}
-                                                    </Text>
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity
-                                                    onPress={() => {
-                                                        // console.log("DELETE");
-                                                        setDeleteSubuserModalVisible(true);
-                                                        setDeleteSubuserIndex(index)
-                                                    }}
-                                                    style={{
-                                                        backgroundColor: THEME_COLOR_NEGATIVE,
-                                                        ...styles.button_Drop_Shadow,
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                        padding: HeightRatio(20),
-                                                        borderRadius: HeightRatio(10),
-                                                        alignSelf: 'center',
-                                                        width: (windowWidth - WidthRatio(50)) * 0.2,
-                                                        margin: HeightRatio(10)
-                                                    }}
-                                                    >
-                                                    <Text
-                                                        style={{
-                                                        color: THEME_FONT_COLOR_WHITE,
-                                                        fontSize: HeightRatio(30),
-                                                        // fontWeight: 'bold',
-                                                        alignSelf: 'center',
-                                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                        }}
-                                                        allowFontScaling={false}
-                                                    >
-                                                        X
-                                                    </Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                              
-                                            ))}
-                                            {userByID?.user && !userByID?.user.premium &&
-                                                <View style={{ margin: HeightRatio(20) }}>
-                                                    <Text
-                                                        style={{
-                                                            color: THEME_FONT_COLOR_BLACK,
-                                                            fontSize: HeightRatio(28),
-                                                            // fontWeight: 'bold',
-                                                            textAlign: 'center',
-                                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                        }}
-                                                        allowFontScaling={false}
-                                                    >
-                                                        *Premium users can add additional users.
-                                                    </Text>
-                                                </View>
+                                                            style={{
+                                                                backgroundColor: '#1f1f27',
+                                                                ...styles.button_Drop_Shadow,
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                // justifyContent: 'center',
+                                                                borderRadius: HeightRatio(20),
+                                                                padding: HeightRatio(25),
+                                                                alignSelf: 'center',
+                                                                width: (windowWidth - WidthRatio(50)),
+                                                                flexDirection: 'row'
+                                                            }}
+                                                        >
+                                                            <View
+                                                                style={{
+                                                                    flexDirection: 'row',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    // justifyContent: 'center'
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    source={require('../../assets/favicon_0.png')}
+                                                                    style={{
+                                                                        height: HeightRatio(40),
+                                                                        width: HeightRatio(40),
+                                                                        marginLeft: HeightRatio(10)
+                                                                    }}
+                                                                />
+                                                            </View>
+                                                            <View style={{ flexDirection: 'column' }}>
+                                                                <Text
+                                                                    style={{
+                                                                        color: THEME_FONT_COLOR_WHITE,
+                                                                        fontSize: HeightRatio(20),
+                                                                        // fontWeight: 'bold',
+                                                                        // textAlign: 'center',
+                                                                        marginLeft: HeightRatio(20),
+                                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                                        width: '90%'
+
+                                                                    }}
+                                                                    allowFontScaling={false}
+                                                                    numberOfLines={1}
+                                                                    ellipsizeMode={'tail'}
+                                                                >
+                                                                    {data.subusername}
+                                                                </Text>
+                                                                <Text
+                                                                    style={{
+                                                                        color: THEME_FONT_COLOR_WHITE,
+                                                                        fontSize: HeightRatio(15),
+                                                                        marginLeft: HeightRatio(20),
+                                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+
+                                                                    }}
+                                                                    allowFontScaling={false}
+                                                                    numberOfLines={1}
+                                                                    ellipsizeMode={'tail'}
+                                                                >
+                                                                    Update food tracker.
+                                                                </Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                // console.log("DELETE");
+                                                                setDeleteSubuserModalVisible(true);
+                                                                setDeleteSubuserIndex(index)
+                                                            }}
+                                                            style={{
+                                                                backgroundColor: THEME_COLOR_NEGATIVE,
+                                                                ...styles.button_Drop_Shadow,
+                                                                display: 'flex',
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                                padding: HeightRatio(10),
+                                                                borderRadius: HeightRatio(10),
+                                                                position: 'absolute', 
+                                                                right: 0
+                                                            }}
+                                                        >
+                                                            <FontAwesomeIcon
+                                                                icon={faSolid, faX}
+                                                                style={{ color: 'white' }}
+                                                                size={20}
+                                                            />
+                                                        </TouchableOpacity>
+                                                    </View>
+
+                                                ))}
+                                            </>
+                                            :
+                                            <>
+                                                {userByID?.user.subuser[0] &&
+                                                    <View style={{ flexDirection: 'row', margin: HeightRatio(10) }}>
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                setAddSubUserModalVisible(false);
+                                                                setMainState({ userTouch: true })
+                                                                subuserIndex.current = 0;
+                                                                onRefresh();
+                                                            }}
+
+                                                            style={{
+                                                                backgroundColor: '#1f1f27',
+                                                                ...styles.button_Drop_Shadow,
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                // justifyContent: 'center',
+                                                                borderRadius: HeightRatio(20),
+                                                                padding: HeightRatio(25),
+                                                                alignSelf: 'center',
+                                                                width: (windowWidth - WidthRatio(50)),
+                                                                flexDirection: 'row'
+                                                            }}
+                                                        >
+                                                            <View
+                                                                style={{
+                                                                    flexDirection: 'row',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    // justifyContent: 'center'
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    source={require('../../assets/favicon_0.png')}
+                                                                    style={{
+                                                                        height: HeightRatio(40),
+                                                                        width: HeightRatio(40),
+                                                                        marginLeft: HeightRatio(10)
+                                                                    }}
+                                                                />
+                                                            </View>
+                                                            <View style={{ flexDirection: 'column' }}>
+                                                                <Text
+                                                                    style={{
+                                                                        color: THEME_FONT_COLOR_WHITE,
+                                                                        fontSize: HeightRatio(20),
+                                                                        // fontWeight: 'bold',
+                                                                        // textAlign: 'center',
+                                                                        marginLeft: HeightRatio(20),
+                                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                                        width: '90%'
+
+                                                                    }}
+                                                                    allowFontScaling={false}
+                                                                    numberOfLines={1}
+                                                                    ellipsizeMode={'tail'}
+                                                                >
+                                                                    {userByID?.user.subuser[0].subusername}
+                                                                </Text>
+                                                                <Text
+                                                                    style={{
+                                                                        color: THEME_FONT_COLOR_WHITE,
+                                                                        fontSize: HeightRatio(15),
+                                                                        marginLeft: HeightRatio(20),
+                                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+
+                                                                    }}
+                                                                    allowFontScaling={false}
+                                                                    numberOfLines={1}
+                                                                    ellipsizeMode={'tail'}
+                                                                >
+                                                                    Update food tracker.
+                                                                </Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                // console.log("DELETE");
+                                                                setDeleteSubuserModalVisible(true);
+                                                                setDeleteSubuserIndex(index)
+                                                            }}
+                                                            style={{
+                                                                backgroundColor: THEME_COLOR_NEGATIVE,
+                                                                ...styles.button_Drop_Shadow,
+                                                                display: 'flex',
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                                padding: HeightRatio(10),
+                                                                borderRadius: HeightRatio(10),
+                                                                position: 'absolute', 
+                                                                right: 0
+                                                            }}
+                                                        >
+                                                            <FontAwesomeIcon
+                                                                icon={faSolid, faX}
+                                                                style={{ color: 'white' }}
+                                                                size={20}
+                                                            />
+                                                        </TouchableOpacity>
+                                                    </View>
+
+                                                }
+                                            </>
+
                                             }
+
                                         </ScrollView>
                                     </SafeAreaView>
 
+
                                 </>
-                                {/* } */}
                             </LinearGradient>
                         </View>
 
                     </Modal>
 
                     <Modal
-                            visible={deleteSubuserModalVisible}
-                            animationType="slide"
-                            transparent={true}
-                        >
-                            <View style={styles.modalContainer_0}>
-                                <View style={styles.modalContainer_1}>
-                                    <>
-                                    {userByID?.user && userByID?.user.subuser[deleteSubuserIndex] && userByID?.user.subuser[deleteSubuserIndex].subusername &&
-                                        <View style={styles.modalContainer_1_A}>
-                                            <Text
-                                                style={styles.modalContainer_1_A_Text}
-                                                allowFontScaling={false}
-                                            >
-                                                {userByID?.user.subuser[deleteSubuserIndex].subusername}
-                                            </Text>
-                                        </View>
-                                    }
-                                    </>
-                                    <View style={styles.modalContainer_1_A}>
+                        visible={deleteSubuserModalVisible}
+                        animationType="slide"
+                        transparent={true}
+                    >
+                        <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.75)'}}>
+                            <View
+                                style={{
+                                    // flex: 1,
+                                    backgroundColor: '#1f1f27',
+                                    margin: 20,
+                                    zIndex: 999,
+                                    borderRadius: 10,
+                                    display: 'flex',
+                                    // alignItems: 'center',
+                                    justifyContent: 'center',
+                                    position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        margin: HeightRatio(20),
+                                        // alignSelf: 'center'
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            // justifyContent: 'center'
+                                        }}
+                                    >
+                                        <Image
+                                            source={require('../../assets/favicon_0.png')}
+                                            style={{
+                                                height: HeightRatio(40),
+                                                width: HeightRatio(40),
+                                                // alignSelf: 'center'
+                                            }}
+                                        />
+                                        <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
+                                            Baby Food Tracker
+                                        </Text>
+                                    </View>
+                                    <View style={{ height: HeightRatio(10) }}></View>
+                                    <View
+                                        style={{
+                                            padding: HeightRatio(10)
+                                        }}
+                                    >
                                         <Text
-                                            style={styles.modalContainer_1_A_Text}
+                                            style={{
+                                                color: THEME_FONT_COLOR_WHITE,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                marginTop: HeightRatio(10)
+                                            }}
                                             allowFontScaling={false}
                                         >
                                             Are you sure you want to remove this child from the list?
                                         </Text>
+
                                     </View>
+
                                     <View style={styles.modalContainer_1_B}>
                                         <TouchableOpacity onPress={() => { setDeleteSubuserModalVisible(false); setMainState({ userTouch: true }); }}>
                                             <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
@@ -997,7 +1070,7 @@ export const HomeScreen = ({ navigation }) => {
                                                 setDeleteSubuserModalVisible(false);
                                                 handleDeleteSubuser()
                                                 setMainState({ userTouch: true })
-                                                
+
                                             }}
                                         >
                                             <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
@@ -1010,10 +1083,13 @@ export const HomeScreen = ({ navigation }) => {
                                             </View>
                                         </TouchableOpacity>
                                     </View>
+
+
                                 </View>
                             </View>
+                        </View>
 
-                        </Modal>
+                    </Modal>
 
 
                 </>
@@ -1157,7 +1233,7 @@ const styles = StyleSheet.create({
     homePrimary_Date_Current_Text: {
         color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(30),
-        fontFamily: 'SofiaSansSemiCondensed-Regular',
+        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
         marginLeft: HeightRatio(10),
         marginRight: HeightRatio(10)
     },
@@ -1166,7 +1242,7 @@ const styles = StyleSheet.create({
         borderRadius: HeightRatio(10),
         position: 'absolute',
         alignSelf: 'center',
-        top: HeightRatio(55),
+        top: HeightRatio(60),
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -1220,7 +1296,7 @@ const styles = StyleSheet.create({
         fontFamily: 'SofiaSansSemiCondensed-Regular',
     },
     modalVisible_Blackout: {
-        backgroundColor: THEME_COLOR_BLACKOUT,
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
         height: '100%', width: '100%',
         position: 'absolute', zIndex: 10
     },
@@ -1387,7 +1463,7 @@ const styles = StyleSheet.create({
                 elevation: 5,
             },
         }),
-    }, 
+    },
     modalContainer_0: {
         flex: 1,
         backgroundColor: THEME_COLOR_BLACKOUT

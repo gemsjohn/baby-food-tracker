@@ -12,7 +12,10 @@ export const GET_ME = gql`
     resetToken
     resetTokenExpiry
     currentVersion
-    premium
+    premium {
+      status
+      expiration
+    }
     subuser {
       _id
       subusername
@@ -90,7 +93,10 @@ export const GET_USER_BY_ID = gql`
       resetToken
       resetTokenExpiry
       currentVersion
-      premium
+      premium {
+        status
+        expiration
+      }
       subuser {
         _id
         subusername
@@ -168,7 +174,10 @@ export const GET_USERS = gql`
       resetToken
       resetTokenExpiry
       currentVersion
-      premium
+      premium {
+        status
+        expiration
+      }
       subuser {
         _id
         subusername

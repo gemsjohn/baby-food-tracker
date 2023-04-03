@@ -46,7 +46,8 @@ import {
     Image,
     RefreshControl,
     Keyboard,
-    StyleSheet
+    StyleSheet,
+    Linking
 } from 'react-native';
 import {
     faSolid,
@@ -56,7 +57,8 @@ import {
     faX,
     faToggleOn,
     faToggleOff,
-    faCircleMinus
+    faCircleMinus,
+    faGlasses
 } from '@fortawesome/free-solid-svg-icons'
 import { SecureStorage } from './SecureStorage';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -145,6 +147,17 @@ export const ProfileScreen = ({ navigation }) => {
 
     }, [])
 
+
+    const openGooglePlaySubscriptions = () => {
+        Linking.openURL('https://play.google.com/store/account/subscriptions');
+    }
+
+    
+
+    // setMainState({
+    //     tokens_display: false
+    // })
+
     const [fontsLoaded] = useFonts({
         'GochiHand_400Regular': require('../../assets/fonts/GochiHand-Regular.ttf'),
     });
@@ -164,7 +177,7 @@ export const ProfileScreen = ({ navigation }) => {
         <>
             {!loading ?
                 <>
-
+                    {displaySetUpCosmicKeyModal && <View style={{backgroundColor: THEME_COLOR_BACKDROP_DARK, height: '100%', width: '100%'}} />}
                     <View
                         style={{ ...Styling.container, backgroundColor: THEME_COLOR_BACKDROP_DARK }}
                         onLayout={onLayoutRootView}
@@ -197,7 +210,7 @@ export const ProfileScreen = ({ navigation }) => {
                                                     }}
                                                 />
                                                 <View style={{}}>
-                                                    <View style={{ flexDirection: 'column', marginTop: HeightRatio(20), alignSelf: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                    <View style={{ flexDirection: 'column', alignSelf: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                                         <View
                                                             style={{
                                                                 width: windowWidth,
@@ -205,130 +218,91 @@ export const ProfileScreen = ({ navigation }) => {
                                                                 flexDirection: 'row',
                                                                 justifyContent: 'center',
                                                                 alignItems: 'center',
-                                                                height: HeightRatio(80)
+                                                                height: HeightRatio(60),
+                                                                backgroundColor: '#1f1f27',
+                                                                marginBottom: HeightRatio(10)
                                                             }}
                                                         >
                                                             <Text
                                                                 style={{
                                                                     ...Styling.modalScoringVarText,
                                                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                                                    color: THEME_FONT_COLOR_BLACK
+                                                                    color: THEME_FONT_COLOR_WHITE
                                                                 }}
                                                                 allowFontScaling={false}>
                                                                 User Details
                                                             </Text>
                                                         </View>
-                                                        {/* <View style={{
-                                                            height: HeightRatio(50),
-                                                            width: HeightRatio(270),
-                                                            flexDirection: 'column',
-                                                        }}>
-                                                            <Text style={{
-                                                                color: '#ffff00',
-                                                                fontSize: HeightRatio(20),
-                                                                fontFamily: 'GochiHand_400Regular',
-                                                                textAlign: 'center',
-                                                                marginTop: HeightRatio(20)
-                                                            }} allowFontScaling={false}>
-                                                                TOKENS {userByID?.user.tokens}
-                                                            </Text>
-                                                        </View> */}
-
+                                                        
                                                         <UserDetails nav={navigation} />
                                                     </View>
 
-                                                    {/* <View
-                                                        style={{
-                                                            borderRadius: HeightRatio(20),
-                                                            padding: HeightRatio(15),
-                                                            width: windowWidth - WidthRatio(50),
-                                                            flexDirection: 'column',
-                                                            margin: HeightRatio(5),
-                                                            alignSelf: 'center',
-                                                            backgroundColor: 'rgba(0, 118, 255, 0.50)'
-                                                        }}
-
-                                                    >
-                                                        <View style={{ flexDirection: 'row' }}>
-                                                            <View style={{ flexDirection: 'column' }}>
-
-                                                                <Text
+                                                    {userByID?.user.premium.status &&
+                                                        <LinearGradient
+                                                            colors={['#ff3172', '#c30735']}
+                                                            start={{ x: 0, y: 0 }}
+                                                            end={{ x: 1, y: 1 }}
+                                                            style={{
+                                                                ...styles.button_Drop_Shadow,
+                                                                display: 'flex',
+                                                                justifyContent: 'flex-start',
+                                                                padding: HeightRatio(5),
+                                                                borderRadius: HeightRatio(100),
+                                                                alignSelf: 'center',
+                                                                width: windowWidth - WidthRatio(50),
+                                                                margin: HeightRatio(10)
+                                                            }}
+                                                        >
+                                                            <TouchableOpacity
+                                                                onPress={() => {
+                                                                    openGooglePlaySubscriptions();
+                                                                    setMainState({ userTouch: true })
+                                                                }}
+                                                                style={Styling.modalWordButton}>
+                                                                <View
                                                                     style={{
-                                                                        color: 'white',
-                                                                        fontSize: HeightRatio(28),
-                                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                                                        margin: HeightRatio(5)
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        justifyContent: 'center',
+                                                                        flexDirection: 'row'
                                                                     }}
-                                                                    allowFontScaling={false}
                                                                 >
-                                                                    Tokens
-                                                                </Text>
-
-                                                                <Text
-                                                                    style={{
-                                                                        color: '#ffff00',
-                                                                        // alignSelf: 'center', 
-                                                                        fontSize: HeightRatio(15),
-                                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                                                        margin: HeightRatio(10),
-                                                                        marginLeft: HeightRatio(20),
-                                                                        width: WidthRatio(150)
-                                                                    }}
-                                                                    numberOfLines={1}
-                                                                    ellipsizeMode='tail'
-                                                                    allowFontScaling={false}
-                                                                >
-                                                                    1234
-                                                                </Text>
-                                                            </View><TouchableOpacity
-                                                                onPress={() => setDisplayTokens(current => !current)}
-                                                                style={{}}
-                                                            >
-                                                                <View style={{
-                                                                    backgroundColor: 'rgba(0, 118, 255, 0.50)',
-                                                                    display: 'flex',
-                                                                    padding: HeightRatio(20),
-                                                                    borderRadius: HeightRatio(10),
-                                                                    alignSelf: 'center',
-                                                                    width: windowWidth / 3
-                                                                }}>
+                                                                    <View
+                                                                        style={{
+                                                                            height: HeightRatio(40),
+                                                                            width: HeightRatio(40),
+                                                                            borderRadius: HeightRatio(100),
+                                                                            borderWidth: 3,
+                                                                            borderColor: 'white',
+                                                                            display: 'flex',
+                                                                            alignItems: 'center',
+                                                                            justifyContent: 'center',
+                                                                            marginRight: HeightRatio(10),
+                                                                            marginLeft: HeightRatio(10)
+                                                                        }}
+                                                                    >
+                                                                        <FontAwesomeIcon
+                                                                            icon={faSolid, faGlasses}
+                                                                            style={{ color: THEME_FONT_COLOR_WHITE }}
+                                                                            size={25}
+                                                                        />
+                                                                    </View>
                                                                     <Text
                                                                         style={{
-                                                                            color: 'white',
-                                                                            fontSize: HeightRatio(30),
+                                                                            color: THEME_FONT_COLOR_WHITE,
+                                                                            fontSize: HeightRatio(24),
                                                                             alignSelf: 'center',
-                                                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold'
                                                                         }}
                                                                         allowFontScaling={false}
                                                                     >
-                                                                        Buy
+                                                                        Cancel Premium Service
                                                                     </Text>
                                                                 </View>
                                                             </TouchableOpacity>
-
-
-                                                        </View>
-
-
-                                                    </View> */}
-                                                    {/* {displaytokens &&
-                                                        <View style={{ margin: HeightRatio(10) }}>
-                                                            <Tokens from={'profile'} />
-                                                        </View>
-                                                    } */}
-                                                    {/* {displayTokens &&
-                                                        // <View style={{ position: 'absolute', top: 0 }}>
-                                                        //     <GoogleProducts from={'profile'} />
-                                                        // </View>
-                                                        <PurchaseFilter nav={navigation} />
-                                                    } */}
-
-
-                                                    <View style={{ flexDirection: 'column' }}>
-
-
-
-                                                    </View>
+                                                        </LinearGradient>
+                                                    }
+                                                    
                                                     <LinearGradient
                                                         colors={['#f64f69', '#b81aeb']}
                                                         start={{ x: 0, y: 0 }}

@@ -12,7 +12,10 @@ export const LOGIN_USER = gql`
         resetToken
         resetTokenExpiry
         currentVersion
-        premium
+        premium {
+          status
+          expiration
+        }
         subuser {
           _id
           subusername
@@ -82,7 +85,7 @@ export const LOGIN_USER = gql`
 `;
 
 export const ADD_USER = gql`
-  mutation Mutation($username: String!, $email: String!, $password: String!, $role: [String!], $premium: Boolean, $subuser: [String]) {
+  mutation AddUser($username: String!, $email: String!, $password: String!, $role: [String!], $premium: String, $subuser: [String]) {
     addUser(username: $username, email: $email, password: $password, role: $role, premium: $premium, subuser: $subuser) {
       token
       user {
@@ -93,10 +96,14 @@ export const ADD_USER = gql`
         resetToken
         resetTokenExpiry
         currentVersion
-        premium
+        premium {
+          status
+          expiration
+        }
         subuser {
           _id
           subusername
+          allergy
           tracker {
             _id
             date
@@ -155,7 +162,10 @@ export const ADD_USER = gql`
               allergy
             }
           }
-          allergy
+          meal {
+            _id
+            title
+          }
         }
       }
     }
@@ -172,7 +182,10 @@ export const UPDATE_USER = gql`
       resetToken
       resetTokenExpiry
       currentVersion
-      premium
+      premium {
+        status
+        expiration
+      }
       subuser {
         _id
         subusername
@@ -241,8 +254,8 @@ export const UPDATE_USER = gql`
 `;
 
 export const UPDATE_PREMIUM = gql`
-  mutation Mutation($premium: Boolean) {
-    updatePremium(premium: $premium) {
+  mutation UpdatePremium($status: Boolean, $expiration: String) {
+    updatePremium(status: $status, expiration: $expiration) {
       _id
       role
       username
@@ -250,10 +263,14 @@ export const UPDATE_PREMIUM = gql`
       resetToken
       resetTokenExpiry
       currentVersion
-      premium
+      premium {
+        status
+        expiration
+      }
       subuser {
         _id
         subusername
+        allergy
         tracker {
           _id
           date
@@ -312,7 +329,10 @@ export const UPDATE_PREMIUM = gql`
             allergy
           }
         }
-        allergy
+        meal {
+          _id
+          title
+        }
       }
     }
   }
@@ -328,7 +348,10 @@ export const UPDATE_USER_PASSWORD = gql`
       resetToken
       resetTokenExpiry
       currentVersion
-      premium
+      premium {
+        status
+        expiration
+      }
       subuser {
         _id
         subusername
@@ -408,7 +431,10 @@ export const REQUEST_RESET = gql`
       resetToken
       resetTokenExpiry
       currentVersion
-      premium
+      premium {
+        status
+        expiration
+      }
       subuser {
         _id
         subusername
@@ -486,7 +512,10 @@ export const RESET_PASSWORD = gql`
       resetToken
       resetTokenExpiry
       currentVersion
-      premium
+      premium {
+        status
+        expiration
+      }
       subuser {
         _id
         subusername
@@ -906,7 +935,10 @@ export const SEND_PDFCONTENT = gql`
       resetToken
       resetTokenExpiry
       currentVersion
-      premium
+      premium {
+        status
+        expiration
+      }
       subuser {
         _id
         subusername

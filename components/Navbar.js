@@ -194,7 +194,7 @@ export const Navbar = (props) => {
                             isTokenValid ? props.nav.dispatch(resetActionHome) : setDisplaySignUpModal(true);
                             setMainState({ userTouch: true })
                         }}
-                        style={{ backgroundColor: fromHome ? THEME_COLOR_POSITIVE : THEME_FONT_COLOR_BLACK, borderTopLeftRadius: HeightRatio(30) }}
+                        style={{ backgroundColor: fromHome ? THEME_COLOR_POSITIVE : '#1f1f27', borderTopLeftRadius: HeightRatio(30) }}
                     >
                         <View
                             style={{
@@ -235,7 +235,7 @@ export const Navbar = (props) => {
                                 })
                                 setMainState({ userTouch: true })
                             }}
-                            style={{ backgroundColor: fromProfile ? THEME_COLOR_POSITIVE : THEME_FONT_COLOR_BLACK, borderTopRightRadius: HeightRatio(30) }}
+                            style={{ backgroundColor: fromProfile ? THEME_COLOR_POSITIVE : '#1f1f27', borderTopRightRadius: HeightRatio(30) }}
                         >
                             <View
                                 style={{

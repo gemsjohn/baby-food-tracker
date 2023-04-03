@@ -33,6 +33,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { Styling, windowHeight, windowWidth, HeightRatio, WidthRatio } from '../../../../Styling';
+import { StatusBar } from 'expo-status-bar';
 import {
     THEME_COLOR_POSITIVE,
     THEME_COLOR_POSITIVE_LOW_OPACITY,
@@ -99,7 +100,7 @@ export const Metrics_Primary = (props) => {
                     </View>
                 </View>
             </TouchableOpacity>
-
+                            
             <Modal
                 visible={metricsModalVisible}
                 animationType="slide"

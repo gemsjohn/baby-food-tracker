@@ -26,6 +26,7 @@ import {
     THEME_COLOR_PURPLE_LOW_OPACITY,
     THEME_COLOR_BLACKOUT
 } from '../../COLOR';
+
 import { LinearGradient } from 'expo-linear-gradient';
 
 const resetActionHome = CommonActions.reset({
@@ -42,6 +43,8 @@ async function deleteKey(key) {
     await SecureStore.deleteItemAsync(key);
 }
 
+
+
 export const KeyScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
 
@@ -50,6 +53,8 @@ export const KeyScreen = ({ navigation }) => {
     const [keyArray, setKeyArray] = useState([]);
     const [count, setCount] = useState(0);
     const [pageLoadComplete, setPageLoadComplete] = useState(false);
+    
+
 
     async function getValueFor(key) {
         console.log("# - GET VALUE FOR COSMIC KEY")
@@ -61,6 +66,10 @@ export const KeyScreen = ({ navigation }) => {
             navigation.dispatch(resetActionAuth);
         }
     }
+
+    
+
+    
 
     useEffect(() => {
         getValueFor('cosmicKey')
@@ -131,17 +140,17 @@ export const KeyScreen = ({ navigation }) => {
     return (
         <>
             {pageLoadComplete ?
-            <LinearGradient
-                colors={['#8bccde', '#d05bb6']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.keyContainer}
-            >
-                <View
+                <LinearGradient
+                    colors={['#8bccde', '#d05bb6']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
                     style={styles.keyContainer}
-                    onLayout={onLayoutRootView}
                 >
-                    
+                    <View
+                        style={styles.keyContainer}
+                        onLayout={onLayoutRootView}
+                    >
+
                         <StatusBar
                             barStyle="default"
                             hidden={false}
@@ -250,7 +259,7 @@ export const KeyScreen = ({ navigation }) => {
                             <TouchableOpacity
                                 onPress={() => {
                                     deleteKey('cosmicKey');
-                                    navigation.dispatch(resetActionHome);
+                                    navigation.dispatch(resetActionAuth);
                                 }}
                                 style={Styling.modalWordButton}>
                                 <View style={{ ...styles.forgotKey_Button, ...styles.button_Drop_Shadow }}>
@@ -260,7 +269,7 @@ export const KeyScreen = ({ navigation }) => {
                                 </View>
                             </TouchableOpacity>
                         </View>
-                </View>
+                    </View>
                 </LinearGradient>
 
                 :
