@@ -8,7 +8,7 @@ import { MainStateContext } from '../App';
 import moment from 'moment';
 import { Styling, windowHeight, windowWidth, HeightRatio, WidthRatio } from '../Styling';
 import { GLOBAL_GRAPHQL_API_URL } from '../App';
-import { 
+import {
     THEME_COLOR_POSITIVE,
     THEME_COLOR_POSITIVE_LOW_OPACITY,
     THEME_COLOR_NEGATIVE,
@@ -38,6 +38,7 @@ export const Navbar = (props) => {
     const [fromProfile, setFromProfile] = useState(false);
     const [networkConnected, setNetworkConnected] = useState(true);
     const [displaySignUpModal, setDisplaySignUpModal] = useState(false);
+    const [displayUpdateWarning, setDisplayUpdateWarning] = useState(false)
 
 
     const authState = useRef(false);
@@ -109,6 +110,23 @@ export const Navbar = (props) => {
         routes: [{ name: 'Auth', params: {} }]
     });
 
+    const getAppVersion = async () => {
+        const appJson = require('../app.json');
+        const appVersion = appJson.expo;
+        console.log(appVersion.version)
+        console.log(userByID?.user.currentVersion)
+
+        if (userByID?.user.currentVersion != appVersion.version) {
+            console.log("UPDATE")
+            setDisplayUpdateWarning(true)
+        }
+
+    };
+    const routeUserToUpdate = () => {
+        Linking.openURL('https://play.google.com/store/apps/details?id=com.babyFoodTracker&hl=en-US&ah=s5VjDKb_zRK8O1XDIdWNZWKgKUo');
+    };
+
+
     useEffect(() => {
         refetch()
         if (props.from == 'home') {
@@ -135,11 +153,15 @@ export const Navbar = (props) => {
         userID.current = mainState.current.userID;
 
         pingServer()
+        getAppVersion()
     }, [])
 
     if (localKeyMoment != mainState.current.initialKeyMoment && mainState.current.bearerToken != null) {
         checkToken();
     }
+
+
+
 
     return (
         <>
@@ -185,7 +207,50 @@ export const Navbar = (props) => {
                             </Text>
                         </View>
                         :
-                        null
+                        <>
+                            {displayUpdateWarning ?
+                                <TouchableOpacity
+                                    style={{
+                                        position: 'absolute',
+                                        top: HeightRatio(-40),
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: THEME_COLOR_ATTENTION,
+                                        padding: HeightRatio(10),
+                                        borderRadius: HeightRatio(10)
+
+                                    }}
+                                    onPress={() => routeUserToUpdate()}
+                                >
+                                    <Image
+                                        source={require('../assets/favicon_0.png')}
+                                        style={{
+                                            height: HeightRatio(20),
+                                            width: HeightRatio(20),
+                                            marginLeft: HeightRatio(10),
+                                            marginRight: HeightRatio(10)
+                                        }}
+                                    />
+                                    <Text
+                                        style={{
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            color: THEME_FONT_COLOR_BLACK,
+                                            fontSize: HeightRatio(20),
+                                            alignSelf: 'center',
+                                        }}
+                                        allowFontScaling={false}
+                                        ellipsizeMode='tail'
+                                        numberOfLines={1}
+                                    >
+                                        New Update Available
+                                    </Text>
+                                </TouchableOpacity>
+                                :
+                                null
+                            }
+                        </>
                     }
 
                     {/* [[[HOME]]] */}
@@ -334,7 +399,7 @@ export const Navbar = (props) => {
                                 // alignSelf: 'center'
                             }}
                         >
-                            <View 
+                            <View
                                 style={{
                                     flexDirection: 'row',
                                     display: 'flex',
@@ -350,12 +415,12 @@ export const Navbar = (props) => {
                                         // alignSelf: 'center'
                                     }}
                                 />
-                                <Text style={{color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14)}}>
+                                <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
                                     Baby Food Tracker
                                 </Text>
                             </View>
                             <View style={{ height: HeightRatio(10) }}></View>
-                            <View 
+                            <View
                                 style={{
                                     padding: HeightRatio(10)
                                 }}
@@ -382,7 +447,7 @@ export const Navbar = (props) => {
                                     }}
                                     allowFontScaling={false}
                                 >
-                                    Thank you for downloading! To use the Baby Food Tracker you must sign up and login. 
+                                    Thank you for downloading! To use the Baby Food Tracker you must sign up and login.
                                 </Text>
                             </View>
 
@@ -404,17 +469,17 @@ export const Navbar = (props) => {
                                     width: (windowWidth - WidthRatio(100)) / 2,
                                     margin: HeightRatio(10)
                                 }}>
-                                    <Text
-                                        style={{
-                                            color: THEME_FONT_COLOR_WHITE,
-                                            fontSize: HeightRatio(25),
-                                            alignSelf: 'center',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                        }}
-                                        allowFontScaling={false}
-                                    >
-                                        Close
-                                    </Text>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        fontSize: HeightRatio(25),
+                                        alignSelf: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Close
+                                </Text>
                             </TouchableOpacity>
 
 

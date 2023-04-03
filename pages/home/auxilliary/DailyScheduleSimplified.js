@@ -60,7 +60,6 @@ import { usePullDailyContent } from './PullDailyContent';
 import { convertDateFormat } from './ConvertDateFormat';
 import { LinearGradient } from 'expo-linear-gradient';
 import { PDFGenerator } from '../pdf/PDFGenerator';
-import { Premium } from '../auxilliary/premium/Premium';
 import { Purchases } from 'react-native-purchases';
 
 const APIKeys = {
@@ -1237,50 +1236,6 @@ export const DailyScheduleSimplified = (props) => {
                 </View>
 
             </Modal>
-
-            <Modal
-                visible={displaySubscriptionModal}
-                animationType="slide"
-                transparent={true}
-            >
-                <View style={styles.modalContainer_0}>
-                    <View style={styles.modalContainer_1}>
-                        <View style={styles.modalContainer_1_A}>
-                            {/* <GoogleProducts userID={props.userID} /> */}
-                            <Premium userID={props.userID} nav={props.nav} />
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setDisplaySubscriptionModal(false)
-                                    setMainState({ userTouch: true })
-                                }}
-                                style={{
-                                    backgroundColor: THEME_COLOR_NEGATIVE,
-                                    display: 'flex',
-                                    justifyContent: 'flex-start',
-                                    padding: HeightRatio(10),
-                                    borderRadius: HeightRatio(10),
-                                    alignSelf: 'center',
-                                    width: (windowWidth - WidthRatio(100)) / 2,
-                                    margin: HeightRatio(10)
-                                }}>
-                                <Text
-                                    style={{
-                                        color: THEME_FONT_COLOR_WHITE,
-                                        fontSize: HeightRatio(25),
-                                        alignSelf: 'center',
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    Close
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-
-
 
         </>
     )
