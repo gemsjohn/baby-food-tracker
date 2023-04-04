@@ -207,39 +207,40 @@ export const Add_Primary = (props) => {
         setCurrentDateReadable(convertDateFormat(currentDate));
     }, [currentDate])
 
-    const handleSearch = async (input) => {
+    const handleSearch = async () => {
         setClearSuggestions(true)
         console.log(`Searching for: ${searchQuery}`);
+        setFoodData({itemId: searchQuery, description: searchQuery});
 
-        setDisplayLoading(true)
-        const data = {
-            search: input ? input : searchQuery
-        };
+        // setDisplayLoading(true)
+        // const data = {
+        //     search: input ? input : searchQuery
+        // };
 
-        const prompt = encodeURIComponent(JSON.stringify(data));
+        // const prompt = encodeURIComponent(JSON.stringify(data));
 
-        const config = {
-            method: "POST",
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            url: `${GLOBAL_GRAPHQL_API_URL}/query-usda/${prompt}`
-        }
+        // const config = {
+        //     method: "POST",
+        //     headers: {
+        //         Accept: 'application/json',
+        //         'Content-Type': 'application/json',
+        //     },
+        //     url: `${GLOBAL_GRAPHQL_API_URL}/query-nutritionix/${prompt}`
+        // }
 
-        axios(config)
-            .then((response) => {
-                if (response.data.result[0] === "ERROR") {
-                    console.log("ERROR")
-                } else {
-                    setFoodData(response.data.result);
-                    // console.log(response.data.result)
-                    setDisplayLoading(false)
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        // axios(config)
+        //     .then((response) => {
+        //         if (response.data.result[0] === "ERROR") {
+        //             console.log("ERROR")
+        //         } else {
+        //             setFoodData(response.data.result);
+        //             // console.log(response.data.result)
+        //             setDisplayLoading(false)
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //     });
     };
 
     const getNutritionValue = async (input) => {
@@ -267,12 +268,42 @@ export const Add_Primary = (props) => {
             recently_used = false
         }
         if (recently_used) {
-            const nutrients_JSON = JSON.stringify(recentFoodData[selectRecentlyUsed].nutrients);
-            const foodGroup_JSON = recentFoodData[selectRecentlyUsed].foodGroup;
+
+            let doesFoodExistsWithinDB;
+            let foodData;
+            let INPUTDESCRIPTION;
+            for (let i = 0; i < FOODDATA.foods.length; i++) {
+                console.log("===========")
+                console.log(FOODDATA.foods[i].item)
+                // console.log(input.description.toUpperCase())
+
+
+
+                if (input.description) {
+                    INPUTDESCRIPTION = input.description.toUpperCase()
+                } else if (recentFoodData[selectRecentlyUsed].item) {
+                    INPUTDESCRIPTION = recentFoodData[selectRecentlyUsed].item.toUpperCase();
+                }
+
+                console.log(INPUTDESCRIPTION)
+                console.log("===========")
+
+
+                if (FOODDATA.foods[i].item == INPUTDESCRIPTION) {
+                    console.log("MATCH")
+                    doesFoodExistsWithinDB = true;
+                    foodData = FOODDATA.foods[i];
+                    break;
+                } else {
+                    console.log("NO MATCH")
+                    doesFoodExistsWithinDB = false;
+                }
+            }
+            let filtered_fooddata_nutrients = JSON.stringify((foodData.nutrients))
 
             const updateUserEntry = async () => {
-                console.log(recentFoodData[selectRecentlyUsed].item)
-                console.log(typeof recentFoodData[selectRecentlyUsed].item)
+                // console.log(recentFoodData[selectRecentlyUsed].item)
+                // console.log(typeof recentFoodData[selectRecentlyUsed].item)
                 await addEntry({
                     variables: {
                         subuserid: `${props.subuser._id}`,
@@ -282,26 +313,13 @@ export const Add_Primary = (props) => {
                         item: `${recentFoodData[selectRecentlyUsed].item}`, // dif
                         amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
                         emotion: `${mainState.current.selectedFood_Emotion}`,
-                        nutrients: `${nutrients_JSON}`,
-                        foodGroup: `${foodGroup_JSON}`,
-                        allergy: `${mainState.current.selectedFood_Allergy}`
+                        nutrients: filtered_fooddata_nutrients,
+                        foodGroup: foodData.foodGroup,
+                        allergy: `${mainState.current.selectedFood_Allergy}`,
+                        foodInDb: true
                     }
                 });
 
-                // await addEntry({
-                //     variables: {
-                //         subuserid: `${props.subuser._id}`,
-                //         date: `${props.date}`,
-                //         schedule: `${mainState.current.selectedFood_Schedule}`,
-                //         time: `${mainState.current.selectedFood_Schedule_Custom_Time}`,
-                //         item: `${input.description}`,
-                //         amount: `${mainState.current.selectedFood_Quantity} ${mainState.current.selectedFood_Measurement}`,
-                //         emotion: `${mainState.current.selectedFood_Emotion}`,
-                //         nutrients: filtered_fooddata_nutrients,
-                //         foodGroup: foodData.foodGroup,
-                //         allergy: `${mainState.current.selectedFood_Allergy}`
-                //     }
-                // });
                 onRefresh();
             }
             updateUserEntry();
@@ -357,7 +375,9 @@ export const Add_Primary = (props) => {
                             emotion: `${mainState.current.selectedFood_Emotion}`,
                             nutrients: filtered_fooddata_nutrients,
                             foodGroup: foodData.foodGroup,
-                            allergy: `${mainState.current.selectedFood_Allergy}`
+                            allergy: `${mainState.current.selectedFood_Allergy}`,
+                            foodInDb: true
+                            
                         }
                     });
                     onRefresh();
@@ -416,7 +436,8 @@ export const Add_Primary = (props) => {
                                             emotion: `${mainState.current.selectedFood_Emotion}`,
                                             nutrients: `${nutrients_JSON}`,
                                             foodGroup: foodGroup_JSON,
-                                            allergy: `${mainState.current.selectedFood_Allergy}`
+                                            allergy: `${mainState.current.selectedFood_Allergy}`,
+                                            foodInDb: false
                                         }
                                     });
                                     onRefresh();
@@ -502,7 +523,7 @@ export const Add_Primary = (props) => {
                 {item.description != '' &&
                     <View
                         
-                        key={item.fdcId}
+                        key={item.itemId}
                     >
                         {displayDetails ?
                             <>
@@ -825,7 +846,7 @@ export const Add_Primary = (props) => {
                                     <TouchableOpacity
                                         onPress={() => {
                                             // setDisplayTop100Foods(true);
-                                            setSelectedItem({ description: 'Breast Milk', fdcId: 0 });
+                                            setSelectedItem({ description: 'Breast Milk', itemId: 'Breast Milk' });
                                             setClearSuggestions(true)
                                             setDisplayDetails(true);
                                             setMainState({ userTouch: true })
@@ -922,7 +943,7 @@ export const Add_Primary = (props) => {
                                     disableFullscreenUI={true}
                                     allowFontScaling={false}
                                 />
-                                <TouchableOpacity onPress={() => { handleSearch(); setMainState({ userTouch: true }) }}>
+                                <TouchableOpacity onPress={() => { setSelectedItem({ description: searchQuery, itemId: searchQuery }); setMainState({ userTouch: true }) }}>
                                     <View style={{ ...styles.modalVisible_Search_Button, ...styles.button_Drop_Shadow }}>
                                         <Text
                                             style={styles.modalVisible_Search_Button_Text}
@@ -985,9 +1006,10 @@ export const Add_Primary = (props) => {
                                                 <TouchableOpacity
                                                     // onPress={() => { setSelectRecentlyUsed(index); setSelectRecentlyUsedData(item); }}
                                                     onPress={() => {
-                                                        setSearchQuery(item.name)
                                                         setDisplayTop100Foods(false)
-                                                        handleSearch(item.name);
+                                                        setSelectedItem({ description: item.name, itemId: item.name }); 
+                                                        setClearSuggestions(true)
+                                                        setDisplayDetails(true);
                                                         setMainState({ userTouch: true })
                                                     }}
                                                     style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow, padding: null }}
@@ -999,7 +1021,7 @@ export const Add_Primary = (props) => {
                                             </View>
                                             
                                         )}
-                                        keyExtractor={(item, index) => index.toString()}
+                                        keyExtractor={(item, index) => index}
                                     />
                                 </SafeAreaView>
 
@@ -1155,7 +1177,7 @@ export const Add_Primary = (props) => {
                                                 <FlatList
                                                     data={selectedItem ? [selectedItem] : foodData}
                                                     renderItem={renderItem}
-                                                    keyExtractor={(item) => item.fdcId.toString()}
+                                                    keyExtractor={(item) => item.itemId}
                                                 />
                                             </>
                                         }

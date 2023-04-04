@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useContext, useCallback } from 'react';
-import { Alert, Text, View, TextInput, Image, TouchableOpacity, ScrollView, StatusBar, SafeAreaView, Dimensions, Button, Linking, ImageBackground, FlatList, PixelRatio, Modal, StyleSheet } from 'react-native';
+import { Alert, Text, View, TextInput, Image, TouchableOpacity, ScrollView, StatusBar, SafeAreaView, KeyboardAvoidingView, Dimensions, Button, Linking, ImageBackground, FlatList, PixelRatio, Modal, StyleSheet } from 'react-native';
 import { Styling, windowWidth, windowHeight, HeightRatio, WidthRatio } from '../../Styling';
 import { MainStateContext } from '../../App';
 import * as SecureStore from 'expo-secure-store';
@@ -8,7 +8,8 @@ import moment from 'moment';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_USER_BY_ID } from '../../utils/queries';
+import { EDIT_FOOD } from '../../utils/mutations';
+import { GET_USER_BY_ID, GET_FOOD } from '../../utils/queries';
 import {
     THEME_COLOR_POSITIVE,
     THEME_COLOR_POSITIVE_LOW_OPACITY,
@@ -26,7 +27,21 @@ import {
     THEME_COLOR_PURPLE_LOW_OPACITY,
     THEME_COLOR_BLACKOUT
 } from '../../COLOR';
-
+import {
+    faSolid,
+    faFlagCheckered,
+    faSliders,
+    faX,
+    faArrowRight,
+    faArrowLeft,
+    faPlus,
+    faBars,
+    faCheck,
+    faChartSimple,
+    faStar,
+    faTriangleExclamation
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { LinearGradient } from 'expo-linear-gradient';
 
 const resetActionProfile = CommonActions.reset({
@@ -101,10 +116,22 @@ const foodJson = [
 
 export const AdminScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
+    const [foodItem, setFoodItem] = useState('');
+    
+
+    const [editFoods] = useMutation(EDIT_FOOD);
+    const { data: foodByItem, refetch } = useQuery(GET_FOOD, {
+        variables: { item: foodItem }
+    });
+
+    // useEffect(() => {
+    //     console.log(foodByItem)
+    // }, [foodByItem])
 
     const FoodData = (props) => {
-        console.log(props.foodData[0].nutrients)
-        const [nutrients, setNutrients] = useState(props.foodData[0].nutrients);
+        const { __typename, ...nutrientsData } = props.foodData.nutrients;
+        const [nutrients, setNutrients] = useState(nutrientsData);
+        const [foodItemFoodGroup, setFoodItemFoodGroup] = useState('');
 
         const handleAmountChange = (key, amount) => {
             const updatedNutrients = { ...nutrients, [key]: { ...nutrients[key], amount } };
@@ -116,8 +143,36 @@ export const AdminScreen = ({ navigation }) => {
             setNutrients(updatedNutrients);
         };
 
-        const handleSave = () => {
+        const handleSave = async (category, amount, unit, foodGroup) => {
             // Call API to save changes to nutrients
+            let foodid = props.foodData._id;
+            let nutritioncategory = category;
+            let amount_local = amount;
+            let unit_local = unit;
+            let foodGroup_local = foodGroup;
+
+            // console.log("# - - - - - - - - - ")
+            // console.log("# - - - - - - - - - ")
+            // console.log(foodid)
+            // console.log("# - - - - - - - - - ")
+            // console.log(nutritioncategory)
+            // console.log("# - - - - - - - - - ")
+            // console.log(amount_local)
+            // console.log("# - - - - - - - - - ")
+            // console.log(unit_local)
+            // console.log("# - - - - - - - - - ")
+            // console.log(foodGroup)
+
+            await editFoods({
+                variables: {
+                    foodid: `${foodid}`,
+                    nutritioncategory: `${nutritioncategory}`,
+                    amount: `${amount_local}`,
+                    unit: `${unit_local}`,
+                    foodGroup: `${foodGroup_local}`
+                }
+            })
+            refetch({ item: foodItem })
         };
 
         useEffect(() => {
@@ -125,123 +180,168 @@ export const AdminScreen = ({ navigation }) => {
             handleUnitChange()
         }, [])
 
-        useEffect(() => {
-            console.log(nutrients)
-        }, [nutrients])
+        // useEffect(() => {
+        //     console.log(nutrients)
+        // }, [nutrients])
 
         return (
             <View>
-                <View
+                <TextInput
+                    type="text"
+                    name="foodItem"
+                    placeholder="Food Category"
+                    placeholderTextColor="white"
+                    value={foodItemFoodGroup}
+                    onChangeText={setFoodItemFoodGroup}
+                    style={Styling.textInputStyle}
+                    disableFullscreenUI={false}
+                    allowFontScaling={false}
+                />
+                <TouchableOpacity
                     style={{
-                        backgroundColor: 'black',
+                        backgroundColor: THEME_COLOR_POSITIVE,
+                        borderRadius: HeightRatio(10),
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         padding: HeightRatio(10),
-                        borderRadius: HeightRatio(5)
+                        margin: HeightRatio(10)
                     }}
+                    onPress={() => handleSave(null, null, null, foodItemFoodGroup)}
                 >
                     <Text
                         style={{
-                            color: 'white',
+                            color: THEME_FONT_COLOR_BLACK,
                             fontSize: HeightRatio(22),
+                            // textAlign: 'center',
                             fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
                         }}
                     >
-                        {props.foodData[0].item}
+                        Save
                     </Text>
-                </View>
+                </TouchableOpacity>
                 {Object.entries(nutrients).map(([key, value]) => (
                     <View
                         style={{
-                            width: windowWidth - HeightRatio(50),
-                            backgroundColor: 'rgba(0, 0, 0, 0.25)',
-                            padding: HeightRatio(10),
-                            margin: HeightRatio(4),
-                            borderRadius: HeightRatio(5)
+                            flexDirection: 'row',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: HeightRatio(130),
+                            margin: HeightRatio(5)
                         }}
                         key={key}
                     >
-                        <Text
+                        <View
                             style={{
-                                color: 'white',
-                                fontSize: HeightRatio(22),
-                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                            }}
-                        >
-                            {key.toUpperCase()}
-                        </Text>
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flexDirection: 'column', margin: HeightRatio(5) }}>
-                                <Text
-                                    style={{
-                                        color: THEME_FONT_COLOR_WHITE,
-                                        fontSize: HeightRatio(22),
-                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                    }}
-                                >
-                                    Amount
-                                </Text>
-                                <TextInput
-                                    value={String(value.amount)}
-                                    onChangeText={(amount) => handleAmountChange(key, Number(amount))}
-                                    style={{
-                                        borderWidth: 1,
-                                        borderColor: 'white',
-                                        width: windowWidth / 6,
-                                        borderRadius: HeightRatio(5),
-                                        padding: HeightRatio(4),
-                                        fontSize: HeightRatio(20),
-                                        color: 'white',
-                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                    }}
-                                />
-                            </View>
-                            <View style={{ flexDirection: 'column', margin: HeightRatio(5) }}>
-                                <Text
-                                    style={{
-                                        color: THEME_FONT_COLOR_WHITE,
-                                        fontSize: HeightRatio(22),
-                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                    }}
-                                >
-                                    Unit
-                                </Text>
-                                <TextInput
-                                    value={value.unit}
-
-                                    onChangeText={(unit) => handleUnitChange(key, unit)}
-                                    style={{
-                                        borderWidth: 1,
-                                        borderColor: 'white',
-                                        width: windowWidth / 6,
-                                        borderRadius: HeightRatio(5),
-                                        padding: HeightRatio(4),
-                                        fontSize: HeightRatio(20),
-                                        color: 'white',
-                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                    }}
-                                />
-                            </View>
-
-                        </View>
-                        <TouchableOpacity
-                            style={{
-                                backgroundColor: THEME_COLOR_POSITIVE,
+                                width: (windowWidth - HeightRatio(50)) * 0.8,
+                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
                                 padding: HeightRatio(10),
-                                borderRadius: HeightRatio(5),
-                                margin: HeightRatio(10)
+                                height: HeightRatio(130),
+                                borderTopLeftRadius: HeightRatio(10),
+                                borderBottomLeftRadius: HeightRatio(10)
                             }}
-                            onPress={handleSave}
+
                         >
+
                             <Text
                                 style={{
-                                    color: THEME_FONT_COLOR_BLACK,
+                                    color: THEME_COLOR_ATTENTION,
                                     fontSize: HeightRatio(22),
-                                    textAlign: 'center',
                                     fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                    margin: HeightRatio(5)
                                 }}
                             >
-                                Save
+                                {key.toUpperCase()}
                             </Text>
-                        </TouchableOpacity>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    display: 'flex',
+                                    alignItems: 'flex-end',
+                                }}
+                            >
+                                <View style={{ flexDirection: 'column', margin: HeightRatio(5) }}>
+                                    <Text
+                                        style={{
+                                            color: THEME_FONT_COLOR_WHITE,
+                                            fontSize: HeightRatio(22),
+                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        }}
+                                    >
+                                        Amount
+                                    </Text>
+                                    <TextInput
+                                        value={String(value.amount)}
+                                        onChangeText={(amount) => handleAmountChange(key, amount)}
+                                        style={{
+                                            ...Styling.textInputStyle,
+                                            width: windowWidth / 6,
+                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        }}
+                                        keyboardType='decimal-pad' // Allow decimal numbers with a decimal point
+                                    />
+
+
+                                </View>
+                                <View style={{ flexDirection: 'column', margin: HeightRatio(5) }}>
+                                    <Text
+                                        style={{
+                                            color: THEME_FONT_COLOR_WHITE,
+                                            fontSize: HeightRatio(22),
+                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        }}
+                                    >
+                                        Unit
+                                    </Text>
+                                    <TextInput
+                                        value={value.unit}
+
+                                        onChangeText={(unit) => handleUnitChange(key, unit)}
+                                        style={{
+                                            ...Styling.textInputStyle,
+                                            width: windowWidth / 6,
+                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        }}
+                                    />
+                                </View>
+
+
+
+                            </View>
+
+
+
+                        </View>
+                        <View
+                            style={{
+                                width: (windowWidth - HeightRatio(50)) * 0.2,
+                            }}
+                        >
+                            <TouchableOpacity
+                                style={{
+                                    backgroundColor: THEME_COLOR_POSITIVE,
+                                    height: HeightRatio(130),
+                                    borderTopRightRadius: HeightRatio(10),
+                                    borderBottomRightRadius: HeightRatio(10),
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                onPress={() => handleSave(key.toLowerCase(), value.amount, value.unit, props.foodData.foodGroup)}
+                            >
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        fontSize: HeightRatio(22),
+                                        // textAlign: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                    }}
+                                >
+                                    Save
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 ))}
                 <View style={{ height: HeightRatio(50) }} />
@@ -250,51 +350,7 @@ export const AdminScreen = ({ navigation }) => {
     };
     return (
         <>
-            <LinearGradient
-                colors={['#8bccde', '#d05bb6']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{ ...styles.keyContainer, flex: 1 }}
-            >
-                <View
-                    style={styles.keyContainer}
-                // onLayout={onLayoutRootView}
-                >
-
-                    <StatusBar
-                        barStyle="default"
-                        hidden={false}
-                        backgroundColor="transparent"
-                        translucent={true}
-                        networkActivityIndicatorVisible={true}
-                    />
-                    <Image
-                        source={require('../../assets/favicon_0.png')}
-                        style={styles.image_Favicon}
-                    />
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontSize: HeightRatio(15),
-
-                        }}
-                        allowFontScaling={false}
-                    >
-                        Admin
-                    </Text>
-
-                </View>
-                <SafeAreaView
-                    style={{
-                        // backgroundColor: 'red',
-                        height: windowHeight / 1.5
-                    }}
-                >
-                    <ScrollView>
-                        <FoodData foodData={foodJson} />
-                    </ScrollView>
-                </SafeAreaView>
-
+            <View style={{ ...styles.keyContainer, backgroundColor: '#1f1f27' }} behavior="padding">
                 <LinearGradient
                     colors={['#2990ef', '#b81aeb']}
                     start={{ x: 0, y: 0 }}
@@ -306,63 +362,81 @@ export const AdminScreen = ({ navigation }) => {
                         padding: HeightRatio(5),
                         borderRadius: HeightRatio(100),
                         alignSelf: 'center',
-                        width: windowWidth - WidthRatio(50),
-                        margin: HeightRatio(10)
+                        margin: HeightRatio(10),
+                        padding: HeightRatio(20),
+                        marginTop: HeightRatio(100)
                     }}
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            setMainState({ userTouch: true })
-                            navigation.dispatch(resetActionProfile)
+                            setMainState({ userTouch: true });
+                            navigation.dispatch(resetActionProfile);
                         }}
                         style={{
-                            ...Styling.modalWordButton,
                             marginTop: 0,
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
                         }}
                     >
-                        <Text
-                            style={{
-                                color: THEME_FONT_COLOR_WHITE,
-                                fontSize: HeightRatio(24),
-                                // fontWeight: 'bold',
-                                alignSelf: 'center',
-                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold'
-                            }}
-                            allowFontScaling={false}
-                        >
-                            PROFILE
-                        </Text>
+                        <FontAwesomeIcon
+                            icon={faSolid, faArrowLeft}
+                            style={{ color: THEME_FONT_COLOR_WHITE }}
+                            size={25}
+                        />
                     </TouchableOpacity>
                 </LinearGradient>
 
-            </LinearGradient>
+                <SafeAreaView style={{ height: '80%', marginBottom: 20, marginTop: 20 }}>
+                    <ScrollView style={{}} keyboardShouldPersistTaps={'always'} keyboardDismissMode="on-drag">
+                        <TextInput
+                            type="text"
+                            name="foodItem"
+                            placeholder="Food Item"
+                            placeholderTextColor="white"
+                            value={foodItem}
+                            onChangeText={setFoodItem}
+                            style={Styling.textInputStyle}
+                            disableFullscreenUI={true}
+                            allowFontScaling={false}
+                        />
+
+                        {foodByItem?.food &&
+                            <FoodData foodData={foodByItem?.food} />
+                        }
+                    </ScrollView>
+                </SafeAreaView>
+
+
+            </View>
+
+
+            <StatusBar
+                barStyle="default"
+                hidden={false}
+                backgroundColor="transparent"
+                translucent={true}
+                networkActivityIndicatorVisible={true}
+            />
         </>
-    )
+    );
+
 }
 
 const styles = StyleSheet.create({
     keyContainer: {
-        // flex: 1,
+        flex: 1,
         // backgroundColor: THEME_COLOR_BACKDROP_DARK,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },
     image_Favicon: {
-        height: HeightRatio(80),
-        width: HeightRatio(80),
+        height: HeightRatio(30),
+        width: HeightRatio(30),
         alignSelf: 'center'
     },
-    title_Text: {
-        color: THEME_FONT_COLOR_BLACK,
-        textAlign: 'center',
-        fontSize: HeightRatio(30),
-        fontFamily: 'SofiaSansSemiCondensed-Regular',
-        marginTop: HeightRatio(10)
-    },
+
     key_Full: {
         backgroundColor: THEME_FONT_COLOR_WHITE,
         height: HeightRatio(50),

@@ -116,6 +116,7 @@ export const HomeScreen = ({ navigation }) => {
             }
         }
 
+
     }, [userByID])
 
     useEffect(() => {
@@ -281,7 +282,7 @@ export const HomeScreen = ({ navigation }) => {
             const value = await AsyncStorage.getItem('@TotalCalorieCount')
             if (value !== null) {
                 setTotalCalorieCount(value)
-            }
+            }   
         } catch (e) {
             // error reading value
         }
@@ -289,7 +290,7 @@ export const HomeScreen = ({ navigation }) => {
 
     useEffect(() => {
         setLoading(true)
-        
+        checkCustomerInfo()
         getTotalCalorieCount()
 
         const interval_0 = setInterval(() => {
@@ -811,7 +812,7 @@ export const HomeScreen = ({ navigation }) => {
                                                     color: THEME_FONT_COLOR_WHITE
                                                 }}
                                             >
-                                                EXPIRATION: {premiumExpiration.toUpperCase()}
+                                                EXPIRATION: {premiumExpiration}
                                             </Text>
                                         </View>
                                     </View>

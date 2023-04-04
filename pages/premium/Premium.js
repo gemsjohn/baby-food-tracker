@@ -182,13 +182,13 @@ export const PremiumScreen = ({ navigation }) => {
                         {identifier == 'baby_food_tracker_premium_month' &&
                             <>
                                 <View style={{ ...styles.modalButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE }}>
-                                                <Text
-                                                    style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_WHITE }}
-                                                    allowFontScaling={false}
-                                                >
-                                            Close
-                                        </Text>
-                                    </View>
+                                    <Text
+                                        style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_WHITE }}
+                                        allowFontScaling={false}
+                                    >
+                                        Close
+                                    </Text>
+                                </View>
 
                             </>
                         }
@@ -203,13 +203,13 @@ export const PremiumScreen = ({ navigation }) => {
                         {identifier == 'baby_food_tracker_premium_month' &&
                             <>
                                 <View style={{ ...styles.modalButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_POSITIVE }}>
-                                                <Text
-                                                    style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
-                                                    allowFontScaling={false}
-                                                >
-                                            Continue
-                                        </Text>
-                                    </View>
+                                    <Text
+                                        style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
+                                        allowFontScaling={false}
+                                    >
+                                        Continue
+                                    </Text>
+                                </View>
 
                             </>
                         }
@@ -223,306 +223,316 @@ export const PremiumScreen = ({ navigation }) => {
     );
 
     return (
-        <LinearGradient
-            colors={['#8bccde', '#d05bb6']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.homePrimary_Container}
-        >
-            {!loading ?
-                <>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            margin: HeightRatio(20)
-                        }}
-                    >
-                        <Image
-                            source={require('../../assets/favicon_0.png')}
+        <>
+            <LinearGradient
+                colors={['#8bccde', '#d05bb6']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.homePrimary_Container}
+            >
+                {!loading ?
+                    <>
+                        <View
                             style={{
-                                height: HeightRatio(70),
-                                width: HeightRatio(70),
+                                flexDirection: 'row',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                margin: HeightRatio(20)
                             }}
-                        />
-                        <View style={{ margin: HeightRatio(10) }}>
-                            <Text
+                        >
+                            <Image
+                                source={require('../../assets/favicon_0.png')}
                                 style={{
-                                    color: THEME_FONT_COLOR_BLACK,
-                                    textAlign: 'left',
-                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                    fontSize: HeightRatio(30),
+                                    height: HeightRatio(70),
+                                    width: HeightRatio(70),
                                 }}
-                                allowFontScaling={false}
-                            >
-                                Premium Service
-                            </Text>
-                            <Text
-                                style={{
-                                    color: THEME_FONT_COLOR_WHITE,
-                                    textAlign: 'left',
-                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                    fontSize: HeightRatio(20),
-                                }}
-                                allowFontScaling={false}
-                            >
-                                $2.99/month
-                            </Text>
+                            />
+                            <View style={{ margin: HeightRatio(10) }}>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        textAlign: 'left',
+                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        fontSize: HeightRatio(30),
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Premium Service
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        fontSize: HeightRatio(20),
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    $2.99/month
+                                </Text>
+
+                            </View>
 
                         </View>
 
-                    </View>
-
-                    <View style={{}}>
-                        <View
-                            style={{
-                                display: 'flex',
-                            }}
-                        >
-                            {/* FEATURE 6 */}
-                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#2da94b', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
-                                <Text
-                                    style={{
-                                        textAlign: 'left',
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                        fontSize: HeightRatio(20),
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    Add and track multiple children
-                                </Text>
-                            </View>
-                            <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
-                            {/* FEATURE 1 */}
-                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
-                                <Text
-                                    style={{
-                                        textAlign: 'left',
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                        fontSize: HeightRatio(20),
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    Daily nutrition metrics (e.g. food group ratios)
-                                </Text>
-                            </View>
-                            <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
-
-                            {/* FEATURE 5 */}
-                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)) }}>
-                                <View style={{ backgroundColor: '#9966FF', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
-                                <Text
-                                    style={{
-                                        textAlign: 'left',
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                        fontSize: HeightRatio(20),
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    Additional nutrition data
-                                </Text>
-
-                            </View>
-                            <View style={{ display: 'flex', flexDirection: 'column', paddingLeft: HeightRatio(30) }}>
-                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                        <View style={{}}>
+                            <View
+                                style={{
+                                    display: 'flex',
+                                }}
+                            >
+                                {/* FEATURE 6 */}
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#2da94b', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                     <Text
                                         style={{
                                             textAlign: 'left',
-                                            fontSize: HeightRatio(18),
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            fontSize: HeightRatio(20),
                                         }}
                                         allowFontScaling={false}
                                     >
-                                        Iron
+                                        Add and track multiple children
                                     </Text>
                                 </View>
-                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
+                                {/* FEATURE 1 */}
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                     <Text
                                         style={{
                                             textAlign: 'left',
-                                            fontSize: HeightRatio(18),
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            fontSize: HeightRatio(20),
                                         }}
                                         allowFontScaling={false}
                                     >
-                                        Zinc
+                                        Daily nutrition metrics (e.g. food group ratios)
                                     </Text>
                                 </View>
-                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
+
+                                {/* FEATURE 5 */}
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)) }}>
+                                    <View style={{ backgroundColor: '#9966FF', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                     <Text
                                         style={{
                                             textAlign: 'left',
-                                            fontSize: HeightRatio(18),
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            fontSize: HeightRatio(20),
                                         }}
                                         allowFontScaling={false}
                                     >
-                                        Omega-3 Fatty Acids
+                                        Additional nutrition data
                                     </Text>
+
                                 </View>
-                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ display: 'flex', flexDirection: 'column', paddingLeft: HeightRatio(30) }}>
+                                    <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
+                                        <View style={{ backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                        <Text
+                                            style={{
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(18),
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Iron
+                                        </Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
+                                        <View style={{ backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                        <Text
+                                            style={{
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(18),
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Zinc
+                                        </Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
+                                        <View style={{ backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                        <Text
+                                            style={{
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(18),
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Omega-3 Fatty Acids
+                                        </Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
+                                        <View style={{ backgroundColor: 'white', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                        <Text
+                                            style={{
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(18),
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Vitamin D
+                                        </Text>
+                                    </View>
+
+                                </View>
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
+
+                                {/* FEATURE 4 */}
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#4BC0C0', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                     <Text
                                         style={{
                                             textAlign: 'left',
-                                            fontSize: HeightRatio(18),
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            fontSize: HeightRatio(20),
                                         }}
                                         allowFontScaling={false}
                                     >
-                                        Vitamin D
+                                        Allergy tracking
                                     </Text>
                                 </View>
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
 
-                            </View>
-                            <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
+                                <View style={{ marginBottom: HeightRatio(20), alignSelf: 'center', }}>
 
-                            {/* FEATURE 4 */}
-                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#4BC0C0', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
-                                <Text
-                                    style={{
-                                        textAlign: 'left',
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                        fontSize: HeightRatio(20),
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    Allergy tracking
-                                </Text>
-                            </View>
-                            <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
-
-                            <View style={{ marginBottom: HeightRatio(20), alignSelf: 'center', }}>
-
-                                {/* <Image
+                                    {/* <Image
                                     source={require('../../assets/developer_icon.png')}
                                     style={{ height: HeightRatio(100), width: windowWidth - HeightRatio(100), margin: HeightRatio(4) }}
                                 /> */}
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                        fontSize: HeightRatio(20),
-                                        color: THEME_FONT_COLOR_BLACK
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    Additional Services in Development
-                                </Text>
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                        fontSize: HeightRatio(15),
-                                        color: THEME_FONT_COLOR_BLACK
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    Available soon.
-                                </Text>
-                            </View>
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                            fontSize: HeightRatio(20),
+                                            color: THEME_FONT_COLOR_BLACK
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Additional Services in Development
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                            fontSize: HeightRatio(15),
+                                            color: THEME_FONT_COLOR_BLACK
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Available soon.
+                                    </Text>
+                                </View>
 
-                            {/* FEATURE 2 */}
-                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#36A2EB', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
-                                <Text
-                                    style={{
-                                        textAlign: 'left',
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                        fontSize: HeightRatio(20),
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    Personalized insights and recommendations
-                                </Text>
-                            </View>
-                            <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
+                                {/* FEATURE 2 */}
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#36A2EB', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                    <Text
+                                        style={{
+                                            textAlign: 'left',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            fontSize: HeightRatio(20),
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Personalized insights and recommendations
+                                    </Text>
+                                </View>
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
 
-                            {/* FEATURE 3 */}
-                            <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#FFCE56', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
-                                <Text
-                                    style={{
-                                        textAlign: 'left',
-                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                        fontSize: HeightRatio(20),
-                                    }}
-                                    allowFontScaling={false}
-                                >
-                                    Export nutritional data via Email
-                                </Text>
+                                {/* FEATURE 3 */}
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#FFCE56', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                    <Text
+                                        style={{
+                                            textAlign: 'left',
+                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            fontSize: HeightRatio(20),
+                                        }}
+                                        allowFontScaling={false}
+                                    >
+                                        Export nutritional data via Email
+                                    </Text>
+                                </View>
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
+
                             </View>
-                            <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
 
                         </View>
 
-                    </View>
-
-                    <FlatList
-                        data={packages}
-                        renderItem={({ item }) =>
-                            <View style={{ alignSelf: 'center' }}>
-                                <Item
-                                    title={item.product.title}
-                                    identifier={item.product.identifier}
-                                    description={item.product.description}
-                                    priceString={item.product.priceString}
-                                    purchasePackage={item}
-                                />
-                            </View>
-                        }
-                        keyExtractor={(item) => item.identifier}
-                    />
-                </>
-                :
-                <View
-                    stlye={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: HeightRatio(20)
-                    }}
-                >
+                        <FlatList
+                            data={packages}
+                            renderItem={({ item }) =>
+                                <View style={{ alignSelf: 'center' }}>
+                                    <Item
+                                        title={item.product.title}
+                                        identifier={item.product.identifier}
+                                        description={item.product.description}
+                                        priceString={item.product.priceString}
+                                        purchasePackage={item}
+                                    />
+                                </View>
+                            }
+                            keyExtractor={(item) => item.identifier}
+                        />
+                    </>
+                    :
                     <View
-                        style={{
-                            flexDirection: 'row',
+                        stlye={{
                             display: 'flex',
                             alignItems: 'center',
-                            // justifyContent: 'center'
+                            justifyContent: 'center',
+                            padding: HeightRatio(20)
                         }}
                     >
-                        <Image
-                            source={require('../../assets/favicon_0.png')}
+                        <View
                             style={{
-                                height: HeightRatio(40),
-                                width: HeightRatio(40),
+                                flexDirection: 'row',
+                                display: 'flex',
+                                alignItems: 'center',
+                                // justifyContent: 'center'
                             }}
+                        >
+                            <Image
+                                source={require('../../assets/favicon_0.png')}
+                                style={{
+                                    height: HeightRatio(40),
+                                    width: HeightRatio(40),
+                                }}
+                            />
+                            <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
+                                Baby Food Tracker
+                            </Text>
+                        </View>
+                        <ActivityIndicator
+                            size={70}
+                            color={THEME_COLOR_ATTENTION}
                         />
-                        <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
-                            Baby Food Tracker
+                        <Text
+                            style={{
+                                fontSize: HeightRatio(25),
+                                textAlign: 'center',
+                                fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                color: THEME_COLOR_ATTENTION
+                            }}
+                        >
+                            Loading subscription option. This can take a moment.
                         </Text>
                     </View>
-                    <ActivityIndicator
-                        size={70}
-                        color={THEME_COLOR_ATTENTION}
-                    />
-                    <Text
-                        style={{
-                            fontSize: HeightRatio(25),
-                            textAlign: 'center',
-                            fontFamily: 'SofiaSansSemiCondensed-Regular',
-                            color: THEME_COLOR_ATTENTION
-                        }}
-                    >
-                        Loading subscription option. This can take a moment.
-                    </Text>
-                </View>
-            }
-        </LinearGradient>
+                }
+            </LinearGradient>
+
+            <StatusBar
+                barStyle="default"
+                hidden={true}
+                backgroundColor="transparent"
+                translucent={true}
+                networkActivityIndicatorVisible={true}
+            />
+        </>
     )
 }
 

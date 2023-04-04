@@ -181,6 +181,7 @@ export const GET_USERS = gql`
       subuser {
         _id
         subusername
+        allergy
         tracker {
           _id
           date
@@ -193,24 +194,64 @@ export const GET_USERS = gql`
             item
             amount
             emotion
+            allergy
             nutrients {
-              calories
-              protein
-              fat
-              carbohydrates
-              fiber
-              sugar
-              iron
-              zinc
-              omega3
-              vitaminD
+              calories {
+                amount
+                unit
+              }
+              protein {
+                amount
+                unit
+              }
+              fat {
+                amount
+                unit
+              }
+              carbohydrates {
+                amount
+                unit
+              }
+              fiber {
+                amount
+                unit
+              }
+              sugar {
+                amount
+                unit
+              }
+              iron {
+                amount
+                unit
+              }
+              zinc {
+                amount
+                unit
+              }
+              omega3 {
+                amount
+                unit
+              }
+              vitaminD {
+                amount
+                unit
+              }
+              servingWeight {
+                amount
+                unit
+              }
             }
             foodGroup
-            allergy
+            
           }
         }
-        allergy
+        
+        meal {
+          _id
+          title
+        }
       }
+      
     }
   }
 `;
@@ -279,53 +320,114 @@ export const TRACKERS = gql`
 `;
 
 export const FOOD = gql`
-  query Query {
+  query Foods {
     foods {
       _id
       item
-      nutrients {
-            calories {
-              amount
-              unit
-            }
-            protein {
-              amount
-              unit
-            }
-            fat {
-              amount
-              unit
-            }
-            carbohydrates {
-              amount
-              unit
-            }
-            fiber {
-              amount
-              unit
-            }
-            sugar {
-              amount
-              unit
-            }
-            iron {
-              amount
-              unit
-            }
-            zinc {
-              amount
-              unit
-            }
-            omega3 {
-              amount
-              unit
-            }
-            vitaminD {
-              amount
-              unit
-            }
-          }
       foodGroup
+      nutrients {
+        servingWeight {
+          amount
+          unit
+        }
+        calories {
+          amount
+          unit
+        }
+        protein {
+          amount
+          unit
+        }
+        fat {
+          amount
+          unit
+        }
+        carbohydrates {
+          amount
+          unit
+        }
+        fiber {
+          amount
+          unit
+        }
+        sugar {
+          amount
+          unit
+        }
+        iron {
+          amount
+          unit
+        }
+        zinc {
+          amount
+          unit
+        }
+        omega3 {
+          amount
+          unit
+        }
+        vitaminD {
+          amount
+          unit
+        }
+        
+      }
+    }
+  }
+`;
+
+export const GET_FOOD = gql`
+  query Food($item: String) {
+    food(item: $item) {
+      _id
+      item
+      foodGroup
+      nutrients {
+        servingWeight {
+          amount
+          unit
+        }
+        calories {
+          amount
+          unit
+        }
+        protein {
+          amount
+          unit
+        }
+        fat {
+          amount
+          unit
+        }
+        carbohydrates {
+          amount
+          unit
+        }
+        fiber {
+          amount
+          unit
+        }
+        sugar {
+          amount
+          unit
+        }
+        iron {
+          amount
+          unit
+        }
+        zinc {
+          amount
+          unit
+        }
+        omega3 {
+          amount
+          unit
+        }
+        vitaminD {
+          amount
+          unit
+        }
+      }
     }
   }
 `;

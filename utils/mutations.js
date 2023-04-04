@@ -743,62 +743,66 @@ export const ADD_NUTRIENTS = gql`
 `;
 
 export const ADD_ENTRY = gql`
-  mutation Mutation($subuserid: String, $date: String, $schedule: String, $time: String, $item: String, $amount: String, $emotion: String, $nutrients: [String], $foodGroup: String, $allergy: String) {
-    addSubUserEntry(subuserid: $subuserid, date: $date, schedule: $schedule, time: $time, item: $item, amount: $amount, emotion: $emotion, nutrients: $nutrients, foodGroup: $foodGroup, allergy: $allergy) {
-      _id
-      subuserid
-      date
-      schedule
-      time
-      item
-      amount
-      emotion
-      nutrients {
-            calories {
-              amount
-              unit
-            }
-            protein {
-              amount
-              unit
-            }
-            fat {
-              amount
-              unit
-            }
-            carbohydrates {
-              amount
-              unit
-            }
-            fiber {
-              amount
-              unit
-            }
-            sugar {
-              amount
-              unit
-            }
-            iron {
-              amount
-              unit
-            }
-            zinc {
-              amount
-              unit
-            }
-            omega3 {
-              amount
-              unit
-            }
-            vitaminD {
-              amount
-              unit
-            }
-          }
-      foodGroup
-      allergy
+  mutation AddSubUserEntry($subuserid: String, $date: String, $schedule: String, $time: String, $item: String, $amount: String, $emotion: String, $nutrients: [String], $foodGroup: String, $allergy: String, $foodInDb: Boolean) {
+  addSubUserEntry(subuserid: $subuserid, date: $date, schedule: $schedule, time: $time, item: $item, amount: $amount, emotion: $emotion, nutrients: $nutrients, foodGroup: $foodGroup, allergy: $allergy, foodInDb: $foodInDb) {
+    _id
+    subuserid
+    date
+    schedule
+    time
+    item
+    amount
+    emotion
+    nutrients {
+      servingWeight {
+        amount
+        unit
+      }
+      calories {
+        amount
+        unit
+      }
+      protein {
+        amount
+        unit
+      }
+      fat {
+        amount
+        unit
+      }
+      carbohydrates {
+        amount
+        unit
+      }
+      fiber {
+        amount
+        unit
+      }
+      sugar {
+        amount
+        unit
+      }
+      iron {
+        amount
+        unit
+      }
+      zinc {
+        amount
+        unit
+      }
+      omega3 {
+        amount
+        unit
+      }
+      vitaminD {
+        amount
+        unit
+      }
     }
+    foodGroup
+    allergy
   }
+}
 `;
 
 export const DELETE_ENTRY = gql`
@@ -866,53 +870,53 @@ mutation Mutation($item: String, $nutrients: [String], $foodGroup: String) {
 `;
 
 export const EDIT_FOOD = gql`
-  mutation Mutation($foodid: String, $item: String, $nutritioncategory: String, $specificnutrientdetail: String, $foodGroup: String) {
-    editFood(foodid: $foodid, item: $item, nutritioncategory: $nutritioncategory, specificnutrientdetail: $specificnutrientdetail, foodGroup: $foodGroup) {
+  mutation EditFood($foodid: String, $nutritioncategory: String, $amount: String, $unit: String, $foodGroup: String) {
+    editFood(foodid: $foodid, nutritioncategory: $nutritioncategory, amount: $amount, unit: $unit, foodGroup: $foodGroup) {
       _id
       item
-      nutrients {
-            calories {
-              amount
-              unit
-            }
-            protein {
-              amount
-              unit
-            }
-            fat {
-              amount
-              unit
-            }
-            carbohydrates {
-              amount
-              unit
-            }
-            fiber {
-              amount
-              unit
-            }
-            sugar {
-              amount
-              unit
-            }
-            iron {
-              amount
-              unit
-            }
-            zinc {
-              amount
-              unit
-            }
-            omega3 {
-              amount
-              unit
-            }
-            vitaminD {
-              amount
-              unit
-            }
-          }
       foodGroup
+      nutrients {
+        calories {
+          amount
+          unit
+        }
+        protein {
+          amount
+          unit
+        }
+        fat {
+          amount
+          unit
+        }
+        carbohydrates {
+          amount
+          unit
+        }
+        fiber {
+          amount
+          unit
+        }
+        sugar {
+          amount
+          unit
+        }
+        iron {
+          amount
+          unit
+        }
+        zinc {
+          amount
+          unit
+        }
+        omega3 {
+          amount
+          unit
+        }
+        vitaminD {
+          amount
+          unit
+        }
+      }
     }
   }
 `;
