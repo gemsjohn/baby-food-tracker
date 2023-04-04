@@ -71,6 +71,11 @@ async function deleteKey(key) {
     await SecureStore.deleteItemAsync(key);
 }
 
+const resetActionAdmin = CommonActions.reset({
+    index: 1,
+    routes: [{ name: 'Admin', params: {} }]
+});
+
 export const ProfileScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
     const [displaySetUpCosmicKeyModal, setDisplaySetUpCosmicKeyModal] = useState(false);
@@ -409,7 +414,50 @@ export const ProfileScreen = ({ navigation }) => {
                                                             </Text>
                                                         </TouchableOpacity>
                                                     </LinearGradient>
-
+                                                    {userByID?.user.role[0] == 'Admin' &&
+                                                        <LinearGradient
+                                                            colors={['#2990ef', '#b81aeb']}
+                                                            start={{ x: 0, y: 0 }}
+                                                            end={{ x: 1, y: 1 }}
+                                                            style={{
+                                                                ...styles.button_Drop_Shadow,
+                                                                display: 'flex',
+                                                                justifyContent: 'flex-start',
+                                                                padding: HeightRatio(5),
+                                                                borderRadius: HeightRatio(100),
+                                                                alignSelf: 'center',
+                                                                width: windowWidth - WidthRatio(50),
+                                                                margin: HeightRatio(10)
+                                                            }}
+                                                        >
+                                                            <TouchableOpacity
+                                                                onPress={() => {
+                                                                    setMainState({ userTouch: true })
+                                                                    navigation.dispatch(resetActionAdmin)
+                                                                }}
+                                                                style={{
+                                                                    ...Styling.modalWordButton,
+                                                                    marginTop: 0,
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center'
+                                                                }}
+                                                            >
+                                                                <Text
+                                                                    style={{
+                                                                        color: THEME_FONT_COLOR_WHITE,
+                                                                        fontSize: HeightRatio(24),
+                                                                        // fontWeight: 'bold',
+                                                                        alignSelf: 'center',
+                                                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold'
+                                                                    }}
+                                                                    allowFontScaling={false}
+                                                                >
+                                                                    ADMIN
+                                                                </Text>
+                                                            </TouchableOpacity>
+                                                        </LinearGradient>
+                                                    }
 
                                                 </View>
 

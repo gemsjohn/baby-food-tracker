@@ -1191,11 +1191,6 @@ export const Add_Primary = (props) => {
                                                     setMainState({ userTouch: true, triggerRefresh: true })
                                                     getNutritionValue(selectedItem == null && selectRecentlyUsedData.item != null ? selectRecentlyUsedData.item : selectedItem);
                                                     setModalVisible(false);
-
-                                                    setTimeout(() => {
-                                                        setMainState({ triggerRefresh: false })
-                                                    }, 300)
-
                                                 }}
                                             >
                                                 <View

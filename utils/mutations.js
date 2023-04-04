@@ -802,8 +802,8 @@ export const ADD_ENTRY = gql`
 `;
 
 export const DELETE_ENTRY = gql`
-  mutation DeleteEntry($deleteEntryId: ID!, $subuserid: String) {
-    deleteEntry(id: $deleteEntryId, subuserid: $subuserid)
+  mutation DeleteEntry($deleteEntryId: ID!, $subuserid: String, $userid: String) {
+    deleteEntry(id: $deleteEntryId, subuserid: $subuserid, userid: $userid)
   }
 `;
 

@@ -9,12 +9,13 @@ import { HomeScreen } from './pages/home/Home';
 import { PremiumScreen } from './pages/premium/Premium';
 import { KeyScreen } from './pages/home/Key';
 import { ProfileScreen } from './pages/profile/Profile';
+import { AdminScreen } from './pages/admin/Admin';
 import { Auth } from './pages/auth/auth';
 import * as SecureStore from 'expo-secure-store';
 
 export const MainStateContext = createContext();
-export const GLOBAL_GRAPHQL_API_URL = "https://baby-food-tracker.herokuapp.com";
-// export const GLOBAL_GRAPHQL_API_URL = "http://192.168.1.198:3001";
+// export const GLOBAL_GRAPHQL_API_URL = "https://baby-food-tracker.herokuapp.com";
+export const GLOBAL_GRAPHQL_API_URL = "http://192.168.1.198:3001";
 
 
 const Stack = createNativeStackNavigator();
@@ -98,6 +99,14 @@ export default function App() {
               <Stack.Screen
                 name="Profile"
                 component={ProfileScreen}
+                options={{
+                  headerShown: false,
+                  orientation: 'portrait_up',
+                }}
+              />
+              <Stack.Screen
+                name="Admin"
+                component={AdminScreen}
                 options={{
                   headerShown: false,
                   orientation: 'portrait_up',

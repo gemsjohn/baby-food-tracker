@@ -72,7 +72,7 @@ export const Navbar = (props) => {
     }
 
     const pingServer = async () => {
-        console.log("# - Ping Server: " + GLOBAL_GRAPHQL_API_URL)
+        // console.log("# - Ping Server: " + GLOBAL_GRAPHQL_API_URL)
         try {
             const response = await fetch(`${GLOBAL_GRAPHQL_API_URL}/ping`, {
                 method: 'GET',
@@ -109,14 +109,18 @@ export const Navbar = (props) => {
         index: 1,
         routes: [{ name: 'Auth', params: {} }]
     });
+    const resetActionAdmin = CommonActions.reset({
+        index: 1,
+        routes: [{ name: 'Admin', params: {} }]
+    });
 
     const getAppVersion = async () => {
         const appJson = require('../app.json');
         const appVersion = appJson.expo;
-        console.log(appVersion.version)
-        console.log(userByID?.user.currentVersion)
+        // console.log(appVersion.version)
+        // console.log(userByID?.user.currentVersion)
 
-        if (userByID?.user.currentVersion != appVersion.version) {
+        if (userByID?.user && userByID?.user.currentVersion != appVersion.version) {
             console.log("UPDATE")
             setDisplayUpdateWarning(true)
         }

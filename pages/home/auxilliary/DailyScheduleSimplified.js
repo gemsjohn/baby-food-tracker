@@ -622,13 +622,8 @@ export const DailyScheduleSimplified = (props) => {
                                                     onPress={() => {
                                                         setModalVisible(true);
                                                         setDeleteID(emotions[j].id);
-                                                        setTimeout(() => {
-                                                            setMainState({
-                                                                triggerRefresh: false,
-                                                                userTouch: true
-                                                            })
-                                                        }, 300)
-                                                        
+                                                        setMainState({userTouch: true})
+
 
                                                     }}
                                                     style={{
@@ -682,22 +677,17 @@ export const DailyScheduleSimplified = (props) => {
     }, [calendarModalFoods, calendarModalEmotion, displayLunchNutrients])
 
     const handleDeleteEntry = async () => {
-        setMainState({
-            triggerRefresh: true
-        })
-
         await deleteEntry({
             variables: {
                 deleteEntryId: deleteID,
-                subuserid: props.subuser._id
+                subuserid: props.subuser._id,
+                userid: props.userID
             }
         })
-        refetch()
-        setTimeout(() => {
-            setMainState({
-                triggerRefresh: false
-            })
-        }, 200)
+        // refetch()
+        setMainState({
+            triggerRefresh: true
+        })
     }
 
     return (
@@ -836,11 +826,11 @@ export const DailyScheduleSimplified = (props) => {
                         <>
                             <TouchableOpacity
                                 // onPress={() => { setPremiumServiceModalVisible(true); setMainState({ userTouch: true }); }}
-                                onPress={() => { 
-                                    setMainState({ userTouch: true }); 
+                                onPress={() => {
+                                    setMainState({ userTouch: true });
                                     props.nav.dispatch(resetActionPremium)
                                 }}
-                                // resetActionPremium
+                            // resetActionPremium
                             >
                                 <LinearGradient
                                     colors={['#ec546d', '#d05bb6']}
@@ -900,15 +890,15 @@ export const DailyScheduleSimplified = (props) => {
                 transparent={true}
             >
                 <View style={styles.modalContainer_0}>
-                    <View style={{...styles.modalContainer_1, alignItems: null}}>
-                    
+                    <View style={{ ...styles.modalContainer_1, alignItems: null }}>
+
                         <View
                             style={{
                                 margin: HeightRatio(20),
                                 // alignSelf: 'center'
                             }}
                         >
-                            <View 
+                            <View
                                 style={{
                                     flexDirection: 'row',
                                     display: 'flex',
@@ -924,12 +914,12 @@ export const DailyScheduleSimplified = (props) => {
                                         // alignSelf: 'center'
                                     }}
                                 />
-                                <Text style={{color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14)}}>
+                                <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
                                     Baby Food Tracker
                                 </Text>
                             </View>
                             <View style={{ height: HeightRatio(10) }}></View>
-                            <View 
+                            <View
                                 style={{
                                     padding: HeightRatio(10)
                                 }}
@@ -961,10 +951,9 @@ export const DailyScheduleSimplified = (props) => {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => {
-                                    setModalVisible(false);
                                     handleDeleteEntry()
-                                    setMainState({ userTouch: true })
-
+                                    setMainState({ userTouch: true})
+                                    setModalVisible(false);
                                 }}
                             >
                                 <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>

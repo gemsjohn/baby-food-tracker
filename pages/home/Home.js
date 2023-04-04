@@ -43,9 +43,7 @@ import axios from 'axios'
 import * as SecureStore from 'expo-secure-store';
 import { Navbar } from '../../components/Navbar';
 import { MainStateContext } from '../../App';
-import { GLOBAL_GRAPHQL_API_URL } from '../../App'
 import { convertDateFormat } from './auxilliary/ConvertDateFormat';
-import { SelectedFoodDetails } from './auxilliary/SelectedFoodDetails';
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_ENTRY, ADD_SUB_USER, DELETE_SUB_USER, UPDATE_PREMIUM } from '../../utils/mutations';
 import { GET_USER_BY_ID } from '../../utils/queries';
@@ -53,7 +51,6 @@ import { GET_USER_BY_ID } from '../../utils/queries';
 import { Loading } from '../../components/Loading';
 import { Calendar } from 'react-native-calendars';
 import { usePullDailyContent } from './auxilliary/PullDailyContent';
-import { top_100 } from './auxilliary/TOP_100';
 import { useCheckUserTop100 } from './auxilliary/CheckUserTop100';
 import {
     THEME_COLOR_POSITIVE,
@@ -74,9 +71,6 @@ import {
     THEME_FONT_GREY
 } from '../../COLOR.js';
 import { DailyScheduleSimplified } from './auxilliary/DailyScheduleSimplified';
-import { FoodGroupMetrics } from './auxilliary/metrics/FoodGroupMetrics';
-import { AllergyTracking } from './auxilliary/metrics/AllergyTracking';
-import { SwipeableViews } from './auxilliary/metrics';
 import { Metrics_Primary } from './auxilliary/metrics/Metrics_Primary';
 import { Calories_Primary } from './auxilliary/calories/Calories_Primary';
 import { Add_Primary } from './auxilliary/add/Add_Primary';
@@ -90,12 +84,9 @@ const resetActionKey = CommonActions.reset({
     routes: [{ name: 'Key', params: {} }]
 });
 
-
-
 const APIKeys = {
     google: "goog_caDqiYZPHvJIwlqyFoZDgTqOywO",
 };
-
 
 export const HomeScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
@@ -103,27 +94,74 @@ export const HomeScreen = ({ navigation }) => {
         variables: { id: mainState.current.userID }
     });
 
+    // # - ESTABLISH USER DETAILS
+    const [premiumStatus, setPremiumStatus] = useState(null);
+    const [premiumExpiration, setPremiumExpiration] = useState(null);
+    const [subuserLength, setSubuserLength] = useState(null);
+    const [firstSubuser, setFirstSubuser] = useState(null)
+
+    // # - DATE
+    const formatString = 'DD/MM/YYYY';
+    const [currentDate, setCurrentDate] = useState(moment().format(formatString));
+    const [currentDateReadable, setCurrentDateReadable] = useState('')
+
+
+    useEffect(() => {
+        if (userByID?.user) {
+            setPremiumStatus(userByID?.user.premium.status)
+            setPremiumExpiration(userByID?.user.premium.expiration)
+            setSubuserLength(userByID.user.subuser.length)
+            if (userByID?.user.subuser.length > 0) {
+                setFirstSubuser(userByID?.user.subuser[0])
+            }
+        }
+
+    }, [userByID])
+
+    useEffect(() => {
+        // Check to see if the stored expiration date the same as the current date
+        function isIncluded(str1, str2) {
+            if (typeof str1 == 'string' && typeof str2 == 'string') {
+                return str1.includes(str2);
+            }
+        }
+
+        // Convert Date.now() to UTC
+        function convertToReadableTime(timestamp) {
+            const utcTime = moment.utc(timestamp);
+            const localTime = utcTime.local();
+            return localTime.format('MMMM Do YYYY, h:mm:ss a');
+        }
+
+        const test = isIncluded(premiumExpiration, currentDateReadable)
+        const test_2 = convertToReadableTime(Date.now())
+        console.log(test_2)
+
+    }, [premiumExpiration])
+
+
+    const [updatePremium] = useMutation(UPDATE_PREMIUM);
+    const intervalID = useRef(null);
+
     const [loading, setLoading] = useState(false);
-    const [displayUsername, setDisplayUsername] = useState(false);
-    const authState = useRef(false);
-    const userID = useRef(null);
-    const [refreshing, setRefreshing] = useState(false);
-    const [refreshing_Nutrition, setRefreshing_Nutrition] = useState(false);
-    const [recentFoodData, setRecentFoodData] = useState([])
-    const [clearSuggestions, setClearSuggestions] = useState(false)
-    const [selectRecentlyUsed, setSelectRecentlyUsed] = useState(null)
     const [totalCalorieCount, setTotalCalorieCount] = useState(null)
-    const [selectRecentlyUsedData, setSelectRecentlyUsedData] = useState(null)
-    const [selectedFoodDataEntrered, setSelectedFoodDataEntrered] = useState(false);
-    const [displayTop100Foods, setDisplayTop100Foods] = useState(false)
-    const [metricsModalVisible, setMetricsModalVisible] = useState(false)
-    const [displayChooseAnotherOptionModal, setDisplayChooseAnotherOptionModal] = useState(false)
     const subuserIndex = useRef(userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium.status ? 0 : null)
-    // const [handleTimeout, setHandleTimeout] = useState(false)
     const [deleteSubuserModalVisible, setDeleteSubuserModalVisible] = useState(false);
     const [deleteSubuserIndex, setDeleteSubuserIndex] = useState(null)
+    const [addSubUserModalVisible, setAddSubUserModalVisible] = useState(true) //userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium ? false : true
+    const [addSubUser] = useMutation(ADD_SUB_USER);
+    const [deleteSubUser] = useMutation(DELETE_SUB_USER);
 
+
+    const [subuserInput, setSubuserInput] = useState('')
     const handleTimeout = useRef(false)
+
+
+
+    //  # - Calendar
+    const [calendarModalVisible, setCalendarModalVisible] = useState(false);
+    const [selectedCalendarModalDate, setSelectedCalendarModalDate] = useState('');
+    const [selectedDateFromCalendar, setSelectedDateFromCalendar] = useState(null)
 
     const onRefresh = useCallback(() => {
         setLoading(true)
@@ -134,34 +172,15 @@ export const HomeScreen = ({ navigation }) => {
     }, []);
 
 
-    // # - DATE
-    const formatString = 'DD/MM/YYYY';
-    const [currentDate, setCurrentDate] = useState(moment().format(formatString));
-    const [currentDateReadable, setCurrentDateReadable] = useState('')
+    const { calendarModalCalorieTotal, calendarModalDate, calendarModalFoods, calendarModalEmotion } = usePullDailyContent(`${convertDateFormat(selectedDateFromCalendar)}`);
 
-    //  # - Calendar
-    const [calendarModalVisible, setCalendarModalVisible] = useState(false);
-    const [selectedCalendarModalDate, setSelectedCalendarModalDate] = useState('');
-    const [selectedDateFromCalendar, setSelectedDateFromCalendar] = useState(null)
 
     const onDateSelect = (day) => {
         const selectedDate = moment(day.dateString).format(formatString); // convert date to desired format
         setSelectedCalendarModalDate(day.dateString);
         setSelectedDateFromCalendar(selectedDate);
-        // setCurrentDate(selectedDate); // update current date with formatted date
     };
 
-    const { calendarModalCalorieTotal, calendarModalDate, calendarModalFoods, calendarModalEmotion } = usePullDailyContent(`${convertDateFormat(selectedDateFromCalendar)}`);
-    const { top_100_Filtered } = useCheckUserTop100(userByID?.user);
-
-
-    // # - ADD FOOD
-    const [searchQuery, setSearchQuery] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
-    const [foodData, setFoodData] = useState([]);
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [displayDetails, setDisplayDetails] = useState(false);
-    const [displayLoading, setDisplayLoading] = useState(false);
 
     const handlePreviousDay = () => {
         setCurrentDate(moment(currentDate, formatString).subtract(1, 'days').format(formatString));
@@ -171,11 +190,12 @@ export const HomeScreen = ({ navigation }) => {
         setCurrentDate(moment(currentDate, formatString).add(1, 'days').format(formatString));
     }
 
-
+    useEffect(() => {
+        setCurrentDateReadable(convertDateFormat(currentDate));
+    }, [currentDate])
 
     const lastTouchTimeRef = useRef(Date.now());
     const touchTimerRef = useRef(null);
-    const handleTouchCalled = useRef(false);
 
     const handleTouch = () => {
         console.log("handleTouch");
@@ -211,36 +231,21 @@ export const HomeScreen = ({ navigation }) => {
         }, 120000);
     };
 
-    const getTotalCalorieCount = async () => {
-        try {
-            const value = await AsyncStorage.getItem('@TotalCalorieCount')
-            if (value !== null) {
-                // value previously stored
-                setTotalCalorieCount(value)
-                setTimeout(() => {
-                    setLoading(false)
-                }, 100)
-            }
-        } catch (e) {
-            // error reading value
-        }
-    }
 
-    const [updatePremium] = useMutation(UPDATE_PREMIUM);
-    const intervalID = useRef(null);
-    const [checkCustomerInfoInitiated, setCheckCustomerInfoInitiated] = useState(false)
 
-    const handleRemovePremium = async () => {
-        console.log("# - Premium Service IS NOT available for this user.")
-        await updatePremium({
-            variables: {
-                status: false,
-                expiration: ''
-            }
-        });
 
-        setLoading(false)
-    }
+
+    // const handleRemovePremium = async () => {
+    //     console.log("# - Premium Service IS NOT available for this user.")
+    //     await updatePremium({
+    //         variables: {
+    //             status: false,
+    //             expiration: ''
+    //         }
+    //     });
+
+    //     setLoading(false)
+    // }
 
     const checkCustomerInfo = async () => {
         let localUserID = await SecureStore.getItemAsync('userID');
@@ -250,79 +255,75 @@ export const HomeScreen = ({ navigation }) => {
         const customerInfo = await Purchases.getCustomerInfo();
         console.log(customerInfo)
 
-        setTimeout(() => {
-            clearInterval(intervalID.current)
-            console.log("# - STOP Checking User Subscription")
-        }, 5000)
+        if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
+            // console.log(customerInfo.entitlements.active["Premium"])
+            console.log("# - Premium service access granted.")
+            await updatePremium({
+                variables: {
+                    status: true,
+                    expiration: `${customerInfo.allExpirationDates.baby_food_tracker_premium_month}`
+                }
+            });
 
-        intervalID.current = setInterval(() => {
-            console.log("# - Checking User Subscription")
-            // if (customerInfo.activeSubscriptions.length <= 0) {
-            //     clearInterval(intervalID.current)
-            //     handleRemovePremium()
-            // } else {
-            //     console.log("# - Premium Service IS available for this user.")
-            // }
-
-
-            if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
-                // console.log(customerInfo.entitlements.active["Premium"])
-                console.log("# - Premium service access granted.")
-
-            } else {
-                handleRemovePremium()
-            }
-
-        }, 1000)
+        } else {
+            console.log("# - Premium service access revoked.")
+            await updatePremium({
+                variables: {
+                    status: false,
+                    expiration: ''
+                }
+            });
+        }
     }
 
+    const getTotalCalorieCount = async () => {
+        try {
+            const value = await AsyncStorage.getItem('@TotalCalorieCount')
+            if (value !== null) {
+                setTotalCalorieCount(value)
+            }
+        } catch (e) {
+            // error reading value
+        }
+    }
 
     useEffect(() => {
         setLoading(true)
-        checkCustomerInfo()
+        
         getTotalCalorieCount()
-        setTimeout(() => {
-            authState.current = mainState.current.authState
-            userID.current = mainState.current.userID;
-        }, 500)
 
-        setInterval(() => {
+        const interval_0 = setInterval(() => {
             getTotalCalorieCount()
 
             if (mainState.current.triggerRefresh) {
+                console.log("# - TRIGGER REFRESH")
                 refetch()
-                setRefreshing(true)
+                setLoading(true)
                 setCalendarModalVisible(false)
-            } else {
-                setRefreshing(false)
+                setTimeout(() => {
+                    setMainState({
+                        triggerRefresh: false
+                    })
+                }, 1000)
+            }
+            if (!mainState.current.triggerRefresh) {
+                setLoading(false)
+                setMainState({
+                    triggerRefresh: null
+                })
             }
 
-
-            if (mainState.current.triggerRefresh || mainState.current.userTouch) {
-                handleTouchCalled.current = false;
-                setMainState({ userTouch: false })
-            } else {
-                if (handleTouchCalled.current == false) {
-                    handleTouchCalled.current = true;
-                    // handleTouch()
-                }
-            }
         }, 200)
+
+        const interval_1 = setInterval(() => {
+            checkCustomerInfo()
+        }, 60000)
+
+        return () => {
+            clearInterval(interval_0)
+            clearInterval(interval_1)
+        }
     }, [])
-
-
-    useEffect(() => {
-        setCurrentDateReadable(convertDateFormat(currentDate));
-    }, [currentDate])
-
-
-
-    const [addSubUserModalVisible, setAddSubUserModalVisible] = useState(true) //userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium ? false : true
-    const [addSubUser] = useMutation(ADD_SUB_USER);
-    const [deleteSubUser] = useMutation(DELETE_SUB_USER);
-
-
-    const [subuserInput, setSubuserInput] = useState('')
 
     const handleAddSubuser = async () => {
         setMainState({ triggerRefresh: true })
@@ -332,10 +333,24 @@ export const HomeScreen = ({ navigation }) => {
             }
         });
         setMainState({ triggerRefresh: false })
-
     }
 
-
+    const handleDeleteSubuser = async () => {
+        await deleteSubUser({
+            variables: {
+                userid: userByID?.user._id,
+                subuserid: userByID?.user.subuser[deleteSubuserIndex]._id
+            }
+        });
+        setMainState({
+            triggerRefresh: true
+        })
+        setTimeout(() => {
+            setMainState({
+                triggerRefresh: false
+            })
+        }, 300)
+    }
 
 
     const [fontsLoaded] = useFonts({
@@ -354,44 +369,15 @@ export const HomeScreen = ({ navigation }) => {
         return null;
     }
 
-    const storeCustomScheduleTime = async () => {
-        try {
-            const jsonValue = JSON.stringify(null);
-            await AsyncStorage.setItem('@storeCustomScheduleTime', jsonValue)
-        } catch (e) {
-            // saving error
-        }
-    }
 
-    const handleDeleteSubuser = async () => {
-        await deleteSubUser({
-            variables: {
-                userid: userByID?.user._id,
-                subuserid: userByID?.user.subuser[deleteSubuserIndex]._id
-            }
-        });
-        setMainState({
-            triggerRefresh: true
-        })
-        setTimeout(() => {
-            setMainState({
-                triggerRefresh: false
-            })
-        }, 300)
 
-    }
 
 
     return (
         <>
             {!loading ?
                 <>
-                    {refreshing || refreshing_Nutrition &&
-                        <Loading />
-                    }
-                    {modalVisible && <View style={styles.modalVisible_Blackout} />}
                     {calendarModalVisible && <View style={styles.modalVisible_Blackout} />}
-                    {metricsModalVisible && <View style={styles.modalVisible_Blackout} />}
                     {addSubUserModalVisible &&
                         <LinearGradient
                             colors={['#8bccde', '#d05bb6']}
@@ -473,49 +459,39 @@ export const HomeScreen = ({ navigation }) => {
                                 </TouchableOpacity>
                             </View>
 
-                            {!refreshing && !refreshing_Nutrition ?
-                                <>
-                                    <View style={{ flexDirection: 'row', marginTop: HeightRatio(20) }}>
-                                        <Calories_Primary
-                                            totalCalorieCount={totalCalorieCount}
-                                        />
+                            <View style={{ flexDirection: 'row', marginTop: HeightRatio(20) }}>
+                                <Calories_Primary
+                                    totalCalorieCount={totalCalorieCount}
+                                />
 
-                                        {userByID?.user.premium.status &&
-                                            <Metrics_Primary
-                                                subuser={userByID?.user.subuser[subuserIndex.current]}
-                                                currentDateReadable={currentDateReadable}
-                                            />
-                                        }
-
-                                        <Add_Primary
-                                            date={currentDateReadable}
-                                            subuser={userByID?.user.subuser[subuserIndex.current]}
-                                        />
-                                    </View>
-
-                                    <DailyScheduleSimplified
-                                        date={currentDateReadable}
-                                        userID={userByID?.user._id}
-                                        containerHeight={HeightRatio(450)}
-                                        from={"main"}
+                                {premiumStatus &&
+                                    <Metrics_Primary
                                         subuser={userByID?.user.subuser[subuserIndex.current]}
-                                        premium={userByID?.user.premium.status}
-                                        nav={navigation}
+                                        currentDateReadable={currentDateReadable}
                                     />
-                                    <View style={{ flexDirection: 'row' }}>
+                                }
+
+                                <Add_Primary
+                                    date={currentDateReadable}
+                                    subuser={userByID?.user.subuser[subuserIndex.current]}
+                                />
+                            </View>
+
+                            <DailyScheduleSimplified
+                                date={currentDateReadable}
+                                userID={userByID?.user._id}
+                                containerHeight={HeightRatio(450)}
+                                from={"main"}
+                                subuser={userByID?.user.subuser[subuserIndex.current]}
+                                premium={premiumStatus}
+                                nav={navigation}
+                            />
+                            <View style={{ flexDirection: 'row' }}>
 
 
-                                    </View>
+                            </View>
 
-                                </>
-                                :
-                                <View
-                                    style={styles.homePrimary_Container}
-                                // onLayout={onLayoutRootView}
-                                >
-                                    <Loading />
-                                </View>
-                            }
+
                         </LinearGradient>
                     </View>
 
@@ -588,14 +564,6 @@ export const HomeScreen = ({ navigation }) => {
                                                 {calendarModalDate}
                                             </Text>
                                         </View>
-                                        {/* <View style={{ ...styles.homePrimary_TotalCalories, backgroundColor: THEME_TRANSPARENT, }}>
-                                            <Text
-                                                style={{ ...styles.homePrimary_TotalCalories_Text, fontSize: HeightRatio(20), color: THEME_FONT_COLOR_WHITE }}
-                                                allowFontScaling={false}
-                                            >
-                                                {calendarModalCalorieTotal} CALORIES
-                                            </Text>
-                                        </View> */}
                                     </View>
                                     <DailyScheduleSimplified
                                         date={calendarModalDate}
@@ -603,7 +571,7 @@ export const HomeScreen = ({ navigation }) => {
                                         containerHeight={HeightRatio(250)}
                                         from={"calendar"}
                                         subuser={userByID?.user.subuser[subuserIndex.current]}
-                                        premium={userByID?.user.premium.status}
+                                        premium={premiumStatus}
                                         nav={navigation}
                                     />
 
@@ -675,12 +643,8 @@ export const HomeScreen = ({ navigation }) => {
                                 style={{
                                     ...styles.homePrimary_Container,
                                     display: 'flex',
-                                    // alignItems: 'center',
-                                    // justifyContent: 'center'
                                 }}
                             >
-
-
                                 <>
                                     <View style={{ backgroundColor: '#1f1f27', borderRadius: HeightRatio(20), padding: HeightRatio(20) }}>
                                         <Text
@@ -712,12 +676,10 @@ export const HomeScreen = ({ navigation }) => {
 
                                         {subuserInput != "" &&
                                             <>
-                                                {userByID?.user.premium.status || !userByID?.user.premium.status && userByID.user.subuser.length <= 0 &&
+                                                {premiumStatus &&
                                                     <TouchableOpacity
                                                         onPress={() => {
-                                                            // setAddSubUserModalVisible(false);
                                                             handleAddSubuser()
-
                                                         }}
                                                     >
                                                         <View style={{
@@ -735,7 +697,6 @@ export const HomeScreen = ({ navigation }) => {
                                                                 style={{
                                                                     color: THEME_FONT_COLOR_BLACK,
                                                                     fontSize: HeightRatio(30),
-                                                                    // fontWeight: 'bold',
                                                                     alignSelf: 'center',
                                                                     fontFamily: 'SofiaSansSemiCondensed-Regular'
                                                                 }}
@@ -746,14 +707,44 @@ export const HomeScreen = ({ navigation }) => {
                                                         </View>
                                                     </TouchableOpacity>
                                                 }
-                                                {!userByID?.user.premium.status &&
+                                                {!premiumStatus && subuserLength <= 0 &&
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            handleAddSubuser()
+                                                        }}
+                                                    >
+                                                        <View style={{
+                                                            backgroundColor: THEME_COLOR_POSITIVE,
+                                                            ...styles.button_Drop_Shadow,
+                                                            display: 'flex',
+                                                            justifyContent: 'flex-start',
+                                                            padding: HeightRatio(20),
+                                                            borderRadius: HeightRatio(10),
+                                                            alignSelf: 'center',
+                                                            width: windowWidth - WidthRatio(50),
+                                                            marginTop: HeightRatio(10)
+                                                        }}>
+                                                            <Text
+                                                                style={{
+                                                                    color: THEME_FONT_COLOR_BLACK,
+                                                                    fontSize: HeightRatio(30),
+                                                                    alignSelf: 'center',
+                                                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                                }}
+                                                                allowFontScaling={false}
+                                                            >
+                                                                ADD
+                                                            </Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                }
+                                                {!premiumStatus &&
 
                                                     <View style={{ margin: HeightRatio(10) }}>
                                                         <Text
                                                             style={{
                                                                 color: THEME_COLOR_ATTENTION,
                                                                 fontSize: HeightRatio(20),
-                                                                // fontWeight: 'bold',
                                                                 textAlign: 'center',
                                                                 fontFamily: 'SofiaSansSemiCondensed-Regular'
                                                             }}
@@ -773,14 +764,65 @@ export const HomeScreen = ({ navigation }) => {
                                 </>
 
                                 <>
+                                    <View
+                                        style={{
+                                            flexDirection: 'column',
+                                            backgroundColor: 'blue',
+                                            padding: HeightRatio(10),
+                                            borderRadius: HeightRatio(10)
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                margin: HeightRatio(10)
+
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: HeightRatio(20),
+                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                    color: THEME_FONT_COLOR_WHITE
+                                                }}
+                                            >
+                                                PREMIUM: &nbsp;
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: HeightRatio(20),
+                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                    color: premiumStatus ? THEME_COLOR_POSITIVE : THEME_COLOR_NEGATIVE
+                                                }}
+                                            >
+                                                {premiumStatus ? 'ACTIVE' : 'INACTIVE'}
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                margin: HeightRatio(10)
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: HeightRatio(20),
+                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                    color: THEME_FONT_COLOR_WHITE
+                                                }}
+                                            >
+                                                EXPIRATION: {premiumExpiration.toUpperCase()}
+                                            </Text>
+                                        </View>
+                                    </View>
                                     <SafeAreaView
                                         style={{
                                             ...styles.container,
-                                            height: HeightRatio(480)
+                                            height: HeightRatio(430),
                                         }}
                                     >
                                         <ScrollView style={styles.scrollView}>
-                                            {userByID?.user.premium.status ?
+                                            {premiumStatus ?
                                                 <>
                                                     {userByID?.user.subuser.map((data, index) => (
                                                         <View style={{ flexDirection: 'row', margin: HeightRatio(10) }} key={index}>
@@ -797,7 +839,6 @@ export const HomeScreen = ({ navigation }) => {
                                                                     ...styles.button_Drop_Shadow,
                                                                     display: 'flex',
                                                                     alignItems: 'center',
-                                                                    // justifyContent: 'center',
                                                                     borderRadius: HeightRatio(20),
                                                                     padding: HeightRatio(25),
                                                                     alignSelf: 'center',
@@ -810,7 +851,6 @@ export const HomeScreen = ({ navigation }) => {
                                                                         flexDirection: 'row',
                                                                         display: 'flex',
                                                                         alignItems: 'center',
-                                                                        // justifyContent: 'center'
                                                                     }}
                                                                 >
                                                                     <Image
@@ -827,8 +867,6 @@ export const HomeScreen = ({ navigation }) => {
                                                                         style={{
                                                                             color: THEME_FONT_COLOR_WHITE,
                                                                             fontSize: HeightRatio(20),
-                                                                            // fontWeight: 'bold',
-                                                                            // textAlign: 'center',
                                                                             marginLeft: HeightRatio(20),
                                                                             fontFamily: 'SofiaSansSemiCondensed-Regular',
                                                                             width: '90%'
@@ -858,7 +896,6 @@ export const HomeScreen = ({ navigation }) => {
                                                             </TouchableOpacity>
                                                             <TouchableOpacity
                                                                 onPress={() => {
-                                                                    // console.log("DELETE");
                                                                     setDeleteSubuserModalVisible(true);
                                                                     setDeleteSubuserIndex(index)
                                                                 }}
@@ -886,7 +923,7 @@ export const HomeScreen = ({ navigation }) => {
                                                 </>
                                                 :
                                                 <>
-                                                    {userByID?.user.subuser[0] &&
+                                                    {firstSubuser &&
                                                         <View style={{ flexDirection: 'row', margin: HeightRatio(10) }}>
                                                             <TouchableOpacity
                                                                 onPress={() => {
@@ -901,7 +938,6 @@ export const HomeScreen = ({ navigation }) => {
                                                                     ...styles.button_Drop_Shadow,
                                                                     display: 'flex',
                                                                     alignItems: 'center',
-                                                                    // justifyContent: 'center',
                                                                     borderRadius: HeightRatio(20),
                                                                     padding: HeightRatio(25),
                                                                     alignSelf: 'center',
@@ -914,7 +950,6 @@ export const HomeScreen = ({ navigation }) => {
                                                                         flexDirection: 'row',
                                                                         display: 'flex',
                                                                         alignItems: 'center',
-                                                                        // justifyContent: 'center'
                                                                     }}
                                                                 >
                                                                     <Image
@@ -931,8 +966,6 @@ export const HomeScreen = ({ navigation }) => {
                                                                         style={{
                                                                             color: THEME_FONT_COLOR_WHITE,
                                                                             fontSize: HeightRatio(20),
-                                                                            // fontWeight: 'bold',
-                                                                            // textAlign: 'center',
                                                                             marginLeft: HeightRatio(20),
                                                                             fontFamily: 'SofiaSansSemiCondensed-Regular',
                                                                             width: '90%'
@@ -942,7 +975,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                         numberOfLines={1}
                                                                         ellipsizeMode={'tail'}
                                                                     >
-                                                                        {userByID?.user.subuser[0].subusername}
+                                                                        {firstSubuser.subusername}
                                                                     </Text>
                                                                     <Text
                                                                         style={{
@@ -962,7 +995,6 @@ export const HomeScreen = ({ navigation }) => {
                                                             </TouchableOpacity>
                                                             <TouchableOpacity
                                                                 onPress={() => {
-                                                                    // console.log("DELETE");
                                                                     setDeleteSubuserModalVisible(true);
                                                                     setDeleteSubuserIndex(0)
                                                                 }}
@@ -998,7 +1030,6 @@ export const HomeScreen = ({ navigation }) => {
                                 </>
                             </LinearGradient>
                         </View>
-
                     </Modal>
 
                     <Modal
@@ -1009,13 +1040,11 @@ export const HomeScreen = ({ navigation }) => {
                         <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.75)' }}>
                             <View
                                 style={{
-                                    // flex: 1,
                                     backgroundColor: '#1f1f27',
                                     margin: 20,
                                     zIndex: 999,
                                     borderRadius: 10,
                                     display: 'flex',
-                                    // alignItems: 'center',
                                     justifyContent: 'center',
                                     position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
                                 }}
@@ -1023,7 +1052,6 @@ export const HomeScreen = ({ navigation }) => {
                                 <View
                                     style={{
                                         margin: HeightRatio(20),
-                                        // alignSelf: 'center'
                                     }}
                                 >
                                     <View
@@ -1031,7 +1059,6 @@ export const HomeScreen = ({ navigation }) => {
                                             flexDirection: 'row',
                                             display: 'flex',
                                             alignItems: 'center',
-                                            // justifyContent: 'center'
                                         }}
                                     >
                                         <Image
@@ -1039,7 +1066,6 @@ export const HomeScreen = ({ navigation }) => {
                                             style={{
                                                 height: HeightRatio(40),
                                                 width: HeightRatio(40),
-                                                // alignSelf: 'center'
                                             }}
                                         />
                                         <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
@@ -1101,9 +1127,8 @@ export const HomeScreen = ({ navigation }) => {
                                 </View>
                             </View>
                         </View>
-
                     </Modal>
-
+                    <Navbar nav={navigation} auth={mainState.current.authState} position={'absolute'} from={'home'} />
 
                 </>
                 :
@@ -1113,9 +1138,7 @@ export const HomeScreen = ({ navigation }) => {
                     <Loading />
                 </View>
             }
-            {!modalVisible &&
-                <Navbar nav={navigation} auth={mainState.current.authState} position={'absolute'} from={'home'} />
-            }
+
             <StatusBar
                 barStyle="default"
                 hidden={true}
