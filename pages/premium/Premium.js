@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { Platform, Text, View, FlatList, Alert, TouchableOpacity, Modal, Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { Platform, Text, View, FlatList, Alert, TouchableOpacity, Modal, Image, ActivityIndicator, StyleSheet, StatusBar } from 'react-native';
 import Purchases, { PurchasesOffering } from 'react-native-purchases';
 import { HeightRatio, WidthRatio, windowHeight, windowWidth } from '../../Styling';
 import { MainStateContext } from '../../App';

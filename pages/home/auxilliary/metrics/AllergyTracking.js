@@ -133,7 +133,7 @@ export const AllergyTracking = (props) => {
                 <SafeAreaView
                     style={{
                         ...styles.container,
-                        // backgroundColor: '#ddeafc',
+                        // backgroundColor: 'red',
                         height: HeightRatio(250)
                     }}
                 >

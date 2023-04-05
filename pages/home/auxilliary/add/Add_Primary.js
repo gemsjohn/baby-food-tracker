@@ -957,6 +957,19 @@ export const Add_Primary = (props) => {
                         }
 
                         {displayTop100Foods &&
+                        <>
+                            <Text
+                                style={{
+                                    ...styles.renderItem_Search_Result_Container_Text,
+                                    color: THEME_FONT_COLOR_BLACK,
+                                    fontSize: HeightRatio(20),
+                                    fontFamily: "SofiaSansSemiCondensed-Regular",
+                                    textAlign: 'center',
+                                }}
+                                allowFontScaling={false}
+                            >
+                                Scroll to the bottom to see tried foods.
+                            </Text>
                             <View
                                 style={{
                                     ...styles.modalVisible_Container,
@@ -966,7 +979,7 @@ export const Add_Primary = (props) => {
                                 <SafeAreaView
                                     style={{
                                         alignSelf: 'center',
-                                        height: '90%',
+                                        height: '85%',
                                     }}
                                 >
                                     <FlatList
@@ -1031,7 +1044,7 @@ export const Add_Primary = (props) => {
                                         style={{
                                             ...styles.modalVisible_FullButton,
                                             ...styles.button_Drop_Shadow,
-                                            marginTop: HeightRatio(30)
+                                            marginTop: HeightRatio(10)
                                         }}
                                     >
                                         <Text
@@ -1043,13 +1056,15 @@ export const Add_Primary = (props) => {
                                     </View>
                                 </TouchableOpacity>
                             </View>
+                        </>
                         }
 
                         {!displayTop100Foods &&
                             <View
                                 style={{
                                     ...styles.modalVisible_Container,
-                                    height: windowHeight / 1.7,
+                                    height: windowHeight / 1.6,
+                                    // backgroundColor: 'red'
                                 }}
                             >
 
@@ -1497,7 +1512,7 @@ const styles = StyleSheet.create({
         // backgroundColor: 'rgba(31, 31, 39, 1.00)',
         zIndex: 999,
         width: windowWidth - HeightRatio(10),
-        padding: HeightRatio(20),
+        padding: HeightRatio(10),
         borderRadius: HeightRatio(10),
         display: 'flex',
         alignItems: 'center',
@@ -1520,7 +1535,7 @@ const styles = StyleSheet.create({
         borderRadius: HeightRatio(10),
         alignSelf: 'center',
         width: windowWidth - WidthRatio(100),
-        margin: HeightRatio(10)
+        // margin: HeightRatio(10)
     },
     modalVisible_Search_Button_Text: {
         color: THEME_FONT_COLOR_BLACK,

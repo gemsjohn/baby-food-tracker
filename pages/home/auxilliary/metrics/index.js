@@ -66,12 +66,12 @@ export const SwipeableViews = (props) => {
             title: "Food Group"
 
         },
-        {
-            content:
-                <View key={2} style={[styles.view, { backgroundColor: 'blue' }]} />,
-            title: "Insights"
+        // {
+        //     content:
+        //         <View key={2} style={[styles.view, { backgroundColor: 'blue' }]} />,
+        //     title: "Insights"
 
-        },
+        // },
         {
             content:
                 <View key={1} style={styles.view}>

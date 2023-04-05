@@ -47,6 +47,7 @@ export const SelectedFoodDetails = (props) => {
         "Teaspoons",
         "Tablespoons",
         "Cups",
+        "Servings",
         "Minutes"
     ]
     const options_time = [
@@ -164,7 +165,16 @@ export const SelectedFoodDetails = (props) => {
 
     return (
         <View style={styles.container}>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ 
+                    flexDirection: 'row', 
+                    padding: HeightRatio(10), 
+                    margin: HeightRatio(10), 
+                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                    width: '100%',
+                    alignSelf: 'center',
+                    borderRadius: HeightRatio(10) 
+                }}
+            >
                 <Text
                     style={styles.header}
                     allowFontScaling={false}
@@ -180,7 +190,17 @@ export const SelectedFoodDetails = (props) => {
                 />
             </View>
 
-            <View style={{ flexDirection: 'row' }}>
+            <View 
+                style={{ 
+                    flexDirection: 'row',
+                    padding: HeightRatio(10), 
+                    margin: HeightRatio(10), 
+                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                    width: '100%',
+                    alignSelf: 'center',
+                    borderRadius: HeightRatio(10)  
+                }}
+            >
                 <View style={{ flexDirection: 'column' }}>
                     <Text
                         style={styles.header}
@@ -295,7 +315,18 @@ export const SelectedFoodDetails = (props) => {
                 </View>
             </View>
 
-            <View style={{ flexDirection: 'row' }}>
+            <View 
+                style={{ 
+                    flexDirection: 'column',
+                    padding: HeightRatio(10), 
+                    margin: HeightRatio(10), 
+                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                    width: '100%',
+                    alignSelf: 'center',
+                    borderRadius: HeightRatio(10)  
+                }}
+            >
+                <View style={{ flexDirection: 'row'}}>
                 <View style={{ flexDirection: 'column' }}>
                     <Text
                         style={styles.header}
@@ -321,7 +352,7 @@ export const SelectedFoodDetails = (props) => {
                                         width: WidthRatio(100),
                                         height: WidthRatio(100),
                                         borderRadius: HeightRatio(10),
-                                        backgroundColor: '#fdffbb'
+                                        backgroundColor: THEME_COLOR_ATTENTION
                                     }}
 
                                 >
@@ -405,18 +436,30 @@ export const SelectedFoodDetails = (props) => {
                         </>
                     }
                 </View>
+                </View>
+                <View style={{ marginTop: HeightRatio(10) }}>
+                    {selectedTime != null && selectedTime == 'Custom' &&
+                        <View style={{}}>
+                            <CustomTimePicker />
+                        </View>
+                    }
+                </View>
 
             </View>
-            <View style={{ marginTop: HeightRatio(10) }}>
-                {selectedTime != null && selectedTime == 'Custom' &&
-                    <View style={{}}>
-                        <CustomTimePicker />
-                    </View>
-                }
-            </View>
+            
 
 
-            <View style={{ flexDirection: 'row' }}>
+            <View 
+                style={{ 
+                    flexDirection: 'row',
+                    padding: HeightRatio(10), 
+                    margin: HeightRatio(10), 
+                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                    width: '100%',
+                    alignSelf: 'center',
+                    borderRadius: HeightRatio(10)  
+                }}
+            >
                 <Text
                     style={styles.header}
                     allowFontScaling={false}
@@ -490,7 +533,17 @@ export const SelectedFoodDetails = (props) => {
                     }
                 </View>
             </View>
-            <View style={{ flexDirection: 'row' }}>
+            <View 
+                style={{ 
+                    flexDirection: 'row',
+                    padding: HeightRatio(10), 
+                    margin: HeightRatio(10), 
+                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                    width: '100%',
+                    alignSelf: 'center',
+                    borderRadius: HeightRatio(10)  
+                }}
+            >
                 <Text
                     style={styles.header}
                     allowFontScaling={false}
@@ -575,7 +628,7 @@ const styles = StyleSheet.create({
         width: windowWidth - HeightRatio(100),
     },
     header: {
-        color: THEME_FONT_COLOR_BLACK,
+        color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(25),
         fontFamily: 'SofiaSansSemiCondensed-Regular',
         width: WidthRatio(125),
@@ -588,7 +641,7 @@ const styles = StyleSheet.create({
         fontSize: HeightRatio(20),
         fontFamily: 'SofiaSansSemiCondensed-Regular',
         height: HeightRatio(50),
-        width: WidthRatio(140),
+        width: WidthRatio(100),
         margin: 0,
         marginTop: HeightRatio(10),
         borderRadius: HeightRatio(10),
@@ -600,7 +653,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         padding: HeightRatio(10),
         margin: HeightRatio(4),
-        width: WidthRatio(140),
+        width: WidthRatio(110),
         borderRadius: HeightRatio(10),
         backgroundColor: THEME_COLOR_POSITIVE,
     },
@@ -611,7 +664,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         padding: HeightRatio(10),
         margin: HeightRatio(4),
-        width: WidthRatio(140),
+        width: WidthRatio(110),
         borderRadius: HeightRatio(10),
         backgroundColor: THEME_COLOR_ATTENTION,
     },
@@ -622,7 +675,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         padding: HeightRatio(10),
         margin: HeightRatio(4),
-        width: WidthRatio(140),
+        width: WidthRatio(110),
         borderRadius: HeightRatio(10),
         backgroundColor: THEME_ALT_COLOR_0,
     },
@@ -633,7 +686,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         padding: HeightRatio(10),
         margin: HeightRatio(4),
-        width: WidthRatio(140),
+        width: WidthRatio(110),
         borderRadius: HeightRatio(10),
         backgroundColor: THEME_ALT_COLOR_1,
     },
@@ -644,7 +697,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         padding: HeightRatio(10),
         margin: HeightRatio(4),
-        width: WidthRatio(140),
+        width: WidthRatio(110),
         borderRadius: HeightRatio(10),
         backgroundColor: THEME_ALT_COLOR_2,
     },

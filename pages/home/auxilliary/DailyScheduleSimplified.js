@@ -815,7 +815,7 @@ export const DailyScheduleSimplified = (props) => {
                                             }}
                                             allowFontScaling={false}
                                         >
-                                            Personalized insight...
+                                            Personalized insight's are under development and will populate here!
                                         </Text>
                                     </View>
 

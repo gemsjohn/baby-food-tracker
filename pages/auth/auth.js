@@ -883,7 +883,7 @@ export const Auth = ({ navigation }) => {
                                       <View style={{ width: windowWidth, alignSelf: 'center' }}>
                                         <Text
                                           style={{
-                                            color: THEME_COLOR_NEGATIVE,
+                                            color: THEME_COLOR_ATTENTION,
                                             alignSelf: 'center',
                                             fontSize: HeightRatio(30),
                                             // margin: HeightRatio(10),
@@ -964,16 +964,16 @@ export const Auth = ({ navigation }) => {
                                             allowFontScaling={false}
                                           />
                                           {promptResetPassword_0 == promptResetPassword_1 && promptResetPassword_0 != '' && promptResetPassword_1 != '' &&
-                                            <View style={{ alignSelf: 'center' }}>
-                                              <Text style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(25), fontStyle: 'SofiaSansSemiCondensed-Regular' }}
+                                            <View style={{ width: windowWidth - HeightRatio(10) }}>
+                                              <Text style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(25), fontFamily: 'SofiaSansSemiCondensed-Regular', textAlign: 'center' }}
                                                 allowFontScaling={false}>
                                                 Passwords match!
                                               </Text>
                                             </View>
                                           }
                                           {promptResetPassword_0 != promptResetPassword_1 && promptResetPassword_0 != '' && promptResetPassword_1 != '' &&
-                                            <View style={{ alignSelf: 'center' }}>
-                                              <Text style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(25), fontStyle: 'SofiaSansSemiCondensed-Regular' }}
+                                            <View style={{ width: windowWidth - HeightRatio(10) }}>
+                                              <Text style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(25), fontFamily: 'SofiaSansSemiCondensed-Regular', textAlign: 'center' }}
                                                 allowFontScaling={false}>
                                                 Passwords do not match!
                                               </Text>
@@ -1021,54 +1021,102 @@ export const Auth = ({ navigation }) => {
                                           setDisplayResetSuccessModal(!displayResetSuccessModal);
                                         }}
                                       >
-                                        <View style={styles.centeredView}>
-                                          <View style={styles.modalView}>
-                                            {/* TOP ROW */}
+                                        <View
+                                          style={{
+                                            flex: 1,
+                                            backgroundColor: 'rgba(0, 0, 0, 0.75)'
+                                          }}
+                                        >
+                                          <View
+                                            style={{
+                                              // flex: 1,
+                                              backgroundColor: '#1f1f27',
+                                              margin: 20,
+                                              zIndex: 999,
+                                              borderRadius: 10,
+                                              display: 'flex',
+                                              // alignItems: 'center',
+                                              justifyContent: 'center',
+                                              position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
+                                            }}
+                                          >
                                             <View
                                               style={{
-                                                backgroundColor: THEME_COLOR_NEGATIVE,
-                                                alignSelf: 'center',
-                                                borderRadius: HeightRatio(16),
-                                                position: 'absolute',
-                                                zIndex: 10,
-                                                top: 0,
-                                                right: 0
+                                                margin: HeightRatio(20),
+                                                // alignSelf: 'center'
                                               }}
                                             >
-                                              <TouchableOpacity
-                                                onPress={() => { setDisplayResetSuccessModal(!displayResetSuccessModal); setDisplayForgotPasswordContent(false); }}
+                                              <View
                                                 style={{
-                                                  borderRadius: HeightRatio(20),
-                                                  height: HeightRatio(100),
-                                                  width: HeightRatio(100),
-                                                  ...styles.button_Drop_Shadow,
+                                                  flexDirection: 'row',
+                                                  display: 'flex',
+                                                  alignItems: 'center',
+                                                  // justifyContent: 'center'
                                                 }}
                                               >
-                                                <FontAwesomeIcon
-                                                  icon={faSolid, faX}
+                                                <Image
+                                                  source={require('../../assets/favicon_0.png')}
                                                   style={{
-                                                    color: THEME_FONT_COLOR_BLACK,
-                                                    justifyContent: 'center',
-                                                    alignSelf: 'center',
-                                                    marginTop: HeightRatio(30)
+                                                    height: HeightRatio(40),
+                                                    width: HeightRatio(40),
+                                                    // alignSelf: 'center'
                                                   }}
                                                 />
+                                                <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
+                                                  Baby Food Tracker
+                                                </Text>
+                                              </View>
+                                              <View style={{ height: HeightRatio(10) }}></View>
+                                              <View
+                                                style={{
+                                                  padding: HeightRatio(10)
+                                                }}
+                                              >
+                                                <Text
+                                                  style={{
+                                                    color: THEME_FONT_COLOR_WHITE,
+                                                    textAlign: 'left',
+                                                    fontSize: HeightRatio(20),
+                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                    marginTop: HeightRatio(10)
+                                                  }}
+                                                  allowFontScaling={false}
+                                                >
+                                                  Reset successful, try to Login! &#128077;
+                                                </Text>
+                                              </View>
+
+                                              <TouchableOpacity
+                                                onPress={() => {
+                                                  setDisplayResetSuccessModal(!displayResetSuccessModal);
+                                                  setDisplayForgotPasswordContent(false);
+                                                  setMainState({ userTouch: true })
+                                                }}
+                                                style={{
+                                                  backgroundColor: THEME_COLOR_NEGATIVE,
+                                                  display: 'flex',
+                                                  justifyContent: 'flex-start',
+                                                  padding: HeightRatio(10),
+                                                  borderRadius: HeightRatio(10),
+                                                  alignSelf: 'center',
+                                                  width: (windowWidth - WidthRatio(100)) / 2,
+                                                  margin: HeightRatio(10)
+                                                }}>
+                                                <Text
+                                                  style={{
+                                                    color: THEME_FONT_COLOR_WHITE,
+                                                    fontSize: HeightRatio(25),
+                                                    alignSelf: 'center',
+                                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                  }}
+                                                  allowFontScaling={false}
+                                                >
+                                                  Close
+                                                </Text>
                                               </TouchableOpacity>
+
+
                                             </View>
-                                            {/* MIDDLE ROW */}
-                                            <Text style={{
-                                              ...Styling.modalText,
-                                              fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                            }}>Reset successful, try to Login!</Text>
-                                            <TouchableOpacity
-                                              style={[Styling.button, Styling.buttonClose], { ...styles.button_Drop_Shadow, }}
-                                              onPress={() => { setDisplayResetSuccessModal(!displayResetSuccessModal); setDisplayForgotPasswordContent(false); }}
-                                            >
-                                              <Text
-                                                style={{ ...Styling.textStyle, fontFamily: 'SofiaSansSemiCondensed-Regular', }}
-                                                allowFontScaling={false}
-                                              >Cool</Text>
-                                            </TouchableOpacity>
                                           </View>
                                         </View>
                                       </Modal>
