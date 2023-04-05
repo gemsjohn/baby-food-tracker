@@ -30,7 +30,8 @@ import {
     faCheck,
     faChartSimple,
     faStar,
-    faTriangleExclamation
+    faTriangleExclamation,
+    faArrowsRotate
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -77,6 +78,7 @@ import { Add_Primary } from './auxilliary/add/Add_Primary';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions } from '@react-navigation/native';
 import Purchases, { PurchasesOffering } from 'react-native-purchases';
+import { GLOBAL_GRAPHQL_API_URL } from '../../App';
 
 
 const resetActionKey = CommonActions.reset({
@@ -98,7 +100,8 @@ export const HomeScreen = ({ navigation }) => {
     const [premiumStatus, setPremiumStatus] = useState(null);
     const [premiumExpiration, setPremiumExpiration] = useState(null);
     const [subuserLength, setSubuserLength] = useState(null);
-    const [firstSubuser, setFirstSubuser] = useState(null)
+    // const [firstSubuser, setFirstSubuser] = useState(null)
+    const [networkConnected, setNetworkConnected] = useState(true);
 
     // # - DATE
     const formatString = 'DD/MM/YYYY';
@@ -107,13 +110,16 @@ export const HomeScreen = ({ navigation }) => {
 
 
     useEffect(() => {
+        console.log("#CHECK 1")
         if (userByID?.user) {
+            console.log("#CHECK 2")
+
             setPremiumStatus(userByID?.user.premium.status)
             setPremiumExpiration(userByID?.user.premium.expiration)
             setSubuserLength(userByID.user.subuser.length)
-            if (userByID?.user.subuser.length > 0) {
-                setFirstSubuser(userByID?.user.subuser[0])
-            }
+            // if (userByID?.user.subuser.length > 0) {
+            //     setFirstSubuser(userByID?.user.subuser[0])
+            // }
         }
 
 
@@ -164,8 +170,28 @@ export const HomeScreen = ({ navigation }) => {
     const [selectedCalendarModalDate, setSelectedCalendarModalDate] = useState('');
     const [selectedDateFromCalendar, setSelectedDateFromCalendar] = useState(null)
 
+    const pingServer = async () => {
+        console.log("# - Ping Server: " + GLOBAL_GRAPHQL_API_URL)
+        try {
+            const response = await fetch(`${GLOBAL_GRAPHQL_API_URL}/ping`, {
+                method: 'GET',
+            });
+            if (response.ok) {
+                setNetworkConnected(true)
+                return true;
+            } else {
+                setNetworkConnected(false)
+                return false;
+            }
+        } catch (error) {
+            setNetworkConnected(false)
+            return false;
+        }
+    }
+
     const onRefresh = useCallback(() => {
         setLoading(true)
+        pingServer()
         refetch();
         setTimeout(() => {
             setLoading(false)
@@ -231,22 +257,6 @@ export const HomeScreen = ({ navigation }) => {
 
         }, 120000);
     };
-
-
-
-
-
-    // const handleRemovePremium = async () => {
-    //     console.log("# - Premium Service IS NOT available for this user.")
-    //     await updatePremium({
-    //         variables: {
-    //             status: false,
-    //             expiration: ''
-    //         }
-    //     });
-
-    //     setLoading(false)
-    // }
 
     const checkCustomerInfo = async () => {
         let localUserID = await SecureStore.getItemAsync('userID');
@@ -765,55 +775,115 @@ export const HomeScreen = ({ navigation }) => {
                                 </>
 
                                 <>
-                                    <View
-                                        style={{
-                                            flexDirection: 'column',
-                                            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                    {!networkConnected &&
+                                        <View style={{
+                                            // position: 'absolute',
+                                            // top: HeightRatio(-40),
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            backgroundColor: THEME_COLOR_NEGATIVE,
                                             padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(10)
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                flexDirection: 'row',
-                                                margin: HeightRatio(4)
+                                            borderRadius: HeightRatio(10),
+                                            margin: HeightRatio(10)
 
-                                            }}
-                                        >
-                                            <Text
+                                        }}>
+                                            <Text 
                                                 style={{
+                                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                    color: THEME_FONT_COLOR_WHITE,
                                                     fontSize: HeightRatio(20),
-                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                                    color: THEME_FONT_COLOR_WHITE
+                                                    alignSelf: 'center',
                                                 }}
+                                                allowFontScaling={false}
                                             >
-                                                PREMIUM: &nbsp;
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontSize: HeightRatio(20),
-                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                                    color: premiumStatus ? THEME_COLOR_POSITIVE : THEME_COLOR_NEGATIVE
-                                                }}
-                                            >
-                                                {premiumStatus ? 'ACTIVE' : 'INACTIVE'}
+                                                Network Error
                                             </Text>
                                         </View>
-                                        <View
+                                    }
+                                    <View 
+                                        style={{
+                                            flexDirection: 'row',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            alignSelf: 'center'
+                                        }}
+                                    >
+                                        {/* refetch */}
+                                        <TouchableOpacity
+                                            onPress={() => onRefresh()}
                                             style={{
-                                                flexDirection: 'row',
-                                                margin: HeightRatio(4)
+                                                height: HeightRatio(50),
+                                                width: HeightRatio(50),
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                                borderRadius: HeightRatio(10),
+                                                margin: HeightRatio(10)
                                             }}
                                         >
-                                            <Text
+                                            <FontAwesomeIcon
+                                                icon={faSolid, faArrowsRotate}
+                                                style={{ color: THEME_FONT_COLOR_WHITE }}
+                                                size={25}
+                                            />
+                                        </TouchableOpacity>
+                                        <View
+                                            style={{
+                                                flexDirection: 'column',
+                                                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                                padding: HeightRatio(10),
+                                                borderRadius: HeightRatio(10)
+                                            }}
+                                        >
+                                            <View
                                                 style={{
-                                                    fontSize: HeightRatio(20),
-                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                                    color: THEME_FONT_COLOR_WHITE
+                                                    flexDirection: 'row',
+                                                    margin: HeightRatio(4)
+
                                                 }}
                                             >
-                                                EXPIRATION: {premiumExpiration}
-                                            </Text>
+                                                <Text
+                                                    style={{
+                                                        fontSize: HeightRatio(20),
+                                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                        color: THEME_FONT_COLOR_WHITE
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    PREMIUM: &nbsp;
+                                                </Text>
+                                                <Text
+                                                    style={{
+                                                        fontSize: HeightRatio(20),
+                                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                        color: premiumStatus ? THEME_COLOR_POSITIVE : THEME_COLOR_NEGATIVE
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    {premiumStatus ? 'ACTIVE' : 'INACTIVE'}
+                                                </Text>
+                                            </View>
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    margin: HeightRatio(4)
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        fontSize: HeightRatio(20),
+                                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                        color: THEME_FONT_COLOR_WHITE
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    EXPIRATION: {premiumExpiration}
+                                                </Text>
+                                            </View>
                                         </View>
                                     </View>
                                     <SafeAreaView
@@ -905,7 +975,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                 }}
                                                                 disabled={index != 0 && premiumStatus ? false : true}
                                                                 style={{
-                                                                    backgroundColor: index != 0 && premiumStatus ? '#1f1f27' :  '#4d4d56',
+                                                                    backgroundColor: index != 0 && premiumStatus ? '#1f1f27' : '#4d4d56',
                                                                     ...styles.button_Drop_Shadow,
                                                                     display: 'flex',
                                                                     alignItems: 'center',
@@ -966,528 +1036,531 @@ export const HomeScreen = ({ navigation }) => {
                                                             </TouchableOpacity>
                                                         )}
                                                     </View>
-                                                    ))}
-                                                    </>
+                                                ))}
+                                            </>
 
-                                                            </ScrollView>
+                                        </ScrollView>
                                     </SafeAreaView>
 
 
                                 </>
-                                        </LinearGradient>
-                                    </View>
-                                </Modal>
+                            </LinearGradient>
+                        </View>
+                    </Modal>
 
-                                <Modal
-                                    visible={deleteSubuserModalVisible}
-                                    animationType="slide"
-                                    transparent={true}
+                    <Modal
+                        visible={deleteSubuserModalVisible}
+                        animationType="slide"
+                        transparent={true}
+                    >
+                        <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.75)' }}>
+                            <View
+                                style={{
+                                    backgroundColor: '#1f1f27',
+                                    margin: 20,
+                                    zIndex: 999,
+                                    borderRadius: 10,
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        margin: HeightRatio(20),
+                                    }}
                                 >
-                                    <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.75)' }}>
-                                        <View
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <Image
+                                            source={require('../../assets/favicon_0.png')}
                                             style={{
-                                                backgroundColor: '#1f1f27',
-                                                margin: 20,
-                                                zIndex: 999,
-                                                borderRadius: 10,
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
+                                                height: HeightRatio(40),
+                                                width: HeightRatio(40),
+                                            }}
+                                        />
+                                        <Text
+                                            style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}
+                                            allowFontScaling={false}
+                                        >
+                                            Baby Food Tracker
+                                        </Text>
+                                    </View>
+                                    <View style={{ height: HeightRatio(10) }}></View>
+                                    <View
+                                        style={{
+                                            padding: HeightRatio(10)
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: THEME_FONT_COLOR_WHITE,
+                                                textAlign: 'left',
+                                                fontSize: HeightRatio(20),
+                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                marginTop: HeightRatio(10)
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Are you sure you want to remove this child from the list?
+                                        </Text>
+
+                                    </View>
+
+                                    <View style={styles.modalContainer_1_B}>
+                                        <TouchableOpacity onPress={() => { setDeleteSubuserModalVisible(false); setMainState({ userTouch: true }); }}>
+                                            <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
+                                                <Text
+                                                    style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    Close
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                setDeleteSubuserModalVisible(false);
+                                                handleDeleteSubuser()
+                                                setMainState({ userTouch: true })
+
                                             }}
                                         >
-                                            <View
-                                                style={{
-                                                    margin: HeightRatio(20),
-                                                }}
-                                            >
-                                                <View
-                                                    style={{
-                                                        flexDirection: 'row',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                    }}
+                                            <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
+                                                <Text
+                                                    style={styles.modalButton_Text}
+                                                    allowFontScaling={false}
                                                 >
-                                                    <Image
-                                                        source={require('../../assets/favicon_0.png')}
-                                                        style={{
-                                                            height: HeightRatio(40),
-                                                            width: HeightRatio(40),
-                                                        }}
-                                                    />
-                                                    <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
-                                                        Baby Food Tracker
-                                                    </Text>
-                                                </View>
-                                                <View style={{ height: HeightRatio(10) }}></View>
-                                                <View
-                                                    style={{
-                                                        padding: HeightRatio(10)
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            color: THEME_FONT_COLOR_WHITE,
-                                                            textAlign: 'left',
-                                                            fontSize: HeightRatio(20),
-                                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                                            marginTop: HeightRatio(10)
-                                                        }}
-                                                        allowFontScaling={false}
-                                                    >
-                                                        Are you sure you want to remove this child from the list?
-                                                    </Text>
-
-                                                </View>
-
-                                                <View style={styles.modalContainer_1_B}>
-                                                    <TouchableOpacity onPress={() => { setDeleteSubuserModalVisible(false); setMainState({ userTouch: true }); }}>
-                                                        <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
-                                                            <Text
-                                                                style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
-                                                                allowFontScaling={false}
-                                                            >
-                                                                Close
-                                                            </Text>
-                                                        </View>
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity
-                                                        onPress={() => {
-                                                            setDeleteSubuserModalVisible(false);
-                                                            handleDeleteSubuser()
-                                                            setMainState({ userTouch: true })
-
-                                                        }}
-                                                    >
-                                                        <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
-                                                            <Text
-                                                                style={styles.modalButton_Text}
-                                                                allowFontScaling={false}
-                                                            >
-                                                                Remove
-                                                            </Text>
-                                                        </View>
-                                                    </TouchableOpacity>
-                                                </View>
-
-
+                                                    Remove
+                                                </Text>
                                             </View>
-                                        </View>
+                                        </TouchableOpacity>
                                     </View>
-                                </Modal>
-                                <Navbar nav={navigation} auth={mainState.current.authState} position={'absolute'} from={'home'} />
 
-                            </>
-                            :
-                            <View
-                                style={styles.homePrimary_Container}
-                            >
-                                <Loading />
+
+                                </View>
                             </View>
+                        </View>
+                    </Modal>
+                    <Navbar nav={navigation} auth={mainState.current.authState} position={'absolute'} from={'home'} />
+
+                </>
+                :
+                <View
+                    style={styles.homePrimary_Container}
+                >
+                    <Loading />
+                </View>
             }
 
-                            <StatusBar
-                                barStyle="default"
-                                hidden={true}
-                                backgroundColor="transparent"
-                                translucent={true}
-                                networkActivityIndicatorVisible={true}
-                            />
-                        </>
+            <StatusBar
+                barStyle="default"
+                hidden={true}
+                backgroundColor="transparent"
+                translucent={true}
+                networkActivityIndicatorVisible={true}
+            />
+        </>
 
-                        )
+    )
 }
 
-                        const styles = StyleSheet.create({
-                            table: {
-                            padding: 10,
-                        marginBottom: 10,
+const styles = StyleSheet.create({
+    table: {
+        padding: 10,
+        marginBottom: 10,
     },
-                        row: {
-                            flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginBottom: 5,
-                        width: windowWidth - HeightRatio(100)
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 5,
+        width: windowWidth - HeightRatio(100)
     },
-                        cell: {
-                            flex: 1,
-                        textAlign: 'left',
+    cell: {
+        flex: 1,
+        textAlign: 'left',
 
     },
-                        container: {
-                            height: '80%'
+    container: {
+        height: '80%'
 
     },
-                        scrollView: {
-                            width: '80%',
-                        alignSelf: 'center'
+    scrollView: {
+        width: '80%',
+        alignSelf: 'center'
     },
-                        renderItem_Search_Results: {
-                            backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
-                        borderRadius: HeightRatio(10),
-                        margin: HeightRatio(4),
-                        width: windowWidth - HeightRatio(80),
-                        alignSelf: 'center',
-                        display: 'flex',
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexDirection: 'row',
-                        padding: HeightRatio(10)
+    renderItem_Search_Results: {
+        backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
+        borderRadius: HeightRatio(10),
+        margin: HeightRatio(4),
+        width: windowWidth - HeightRatio(80),
+        alignSelf: 'center',
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: 'row',
+        padding: HeightRatio(10)
     },
-                        renderItem_Search_Result_Container: {
-                            display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        flexDirection: 'row',
-                        padding: HeightRatio(8),
-                        width: windowWidth - HeightRatio(140),
+    renderItem_Search_Result_Container: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexDirection: 'row',
+        padding: HeightRatio(8),
+        width: windowWidth - HeightRatio(140),
     },
-                        renderItem_Search_Result_Container_Text: {
-                            color: THEME_FONT_COLOR_WHITE,
-                        fontSize: HeightRatio(25),
-                        fontFamily: "SofiaSansSemiCondensed-Regular",
-                        display: 'flex',
-                        flexWrap: 'wrap',
+    renderItem_Search_Result_Container_Text: {
+        color: THEME_FONT_COLOR_WHITE,
+        fontSize: HeightRatio(25),
+        fontFamily: "SofiaSansSemiCondensed-Regular",
+        display: 'flex',
+        flexWrap: 'wrap',
     },
-                        renderItem_Search_Result_Container_Plus: {
-                            backgroundColor: THEME_COLOR_ATTENTION,
-                        borderRadius: HeightRatio(10),
-                        // height: HeightRatio(40),
-                        // width: HeightRatio(40),
-                        display: 'flex',
-                        alignItems: "center",
-                        justifyContent: "center",
+    renderItem_Search_Result_Container_Plus: {
+        backgroundColor: THEME_COLOR_ATTENTION,
+        borderRadius: HeightRatio(10),
+        // height: HeightRatio(40),
+        // width: HeightRatio(40),
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
     },
-                        renderItem_Search_Result_Container_Plus_Text: {
-                            color: THEME_FONT_COLOR_BLACK,
-                        fontSize: HeightRatio(30),
-                        fontFamily: "SofiaSansSemiCondensed-ExtraBold"
+    renderItem_Search_Result_Container_Plus_Text: {
+        color: THEME_FONT_COLOR_BLACK,
+        fontSize: HeightRatio(30),
+        fontFamily: "SofiaSansSemiCondensed-ExtraBold"
     },
-                        updatingScreen_Container: {
-                            backgroundColor: THEME_COLOR_BLACK_HIGH_OPACITY,
-                        position: 'absolute',
-                        zIndex: 100,
-                        height: windowHeight,
-                        width: windowWidth,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
+    updatingScreen_Container: {
+        backgroundColor: THEME_COLOR_BLACK_HIGH_OPACITY,
+        position: 'absolute',
+        zIndex: 100,
+        height: windowHeight,
+        width: windowWidth,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
-                        updatingScreen_Container_Text: {
-                            color: THEME_COLOR_ATTENTION,
-                        textAlign: 'center',
-                        fontSize: HeightRatio(50),
-                        fontFamily: "SofiaSansSemiCondensed-ExtraBold",
-                        marginTop: HeightRatio(10)
+    updatingScreen_Container_Text: {
+        color: THEME_COLOR_ATTENTION,
+        textAlign: 'center',
+        fontSize: HeightRatio(50),
+        fontFamily: "SofiaSansSemiCondensed-ExtraBold",
+        marginTop: HeightRatio(10)
     },
-                        homePrimary_Container: {
-                            flex: 1,
-                        backgroundColor: THEME_COLOR_BACKDROP_DARK,
-                        display: 'flex',
-                        alignItems: 'center',
-                        width: windowWidth
+    homePrimary_Container: {
+        flex: 1,
+        backgroundColor: THEME_COLOR_BACKDROP_DARK,
+        display: 'flex',
+        alignItems: 'center',
+        width: windowWidth
     },
-                        homePrimary_Date: {
-                            width: windowWidth,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: HeightRatio(80)
+    homePrimary_Date: {
+        width: windowWidth,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: HeightRatio(80)
     },
-                        homePrimary_Date_Arrow: {
-                            height: '100%',
-                        width: HeightRatio(90),
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: windowWidth * 0.2,
+    homePrimary_Date_Arrow: {
+        height: '100%',
+        width: HeightRatio(90),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: windowWidth * 0.2,
         // backgroundColor: THEME_COLOR_PURPLE_LOW_OPACITY,
     },
-                        homePrimary_Date_Current: {
-                            flexDirection: 'column',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: '100%',
-                        width: windowWidth / 1.5,
+    homePrimary_Date_Current: {
+        flexDirection: 'column',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        width: windowWidth / 1.5,
         // backgroundColor: THEME_COLOR_PURPLE_LOW_OPACITY,
     },
-                        homePrimary_Date_Current_Text: {
-                            color: THEME_FONT_COLOR_BLACK,
-                        fontSize: HeightRatio(30),
-                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                        marginLeft: HeightRatio(10),
-                        marginRight: HeightRatio(10)
+    homePrimary_Date_Current_Text: {
+        color: THEME_FONT_COLOR_BLACK,
+        fontSize: HeightRatio(30),
+        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+        marginLeft: HeightRatio(10),
+        marginRight: HeightRatio(10)
     },
-                        homePrimary_Date_Return_Button: {
-                            backgroundColor: THEME_COLOR_NEGATIVE,
-                        borderRadius: HeightRatio(10),
-                        position: 'absolute',
-                        alignSelf: 'center',
-                        top: HeightRatio(60),
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: HeightRatio(4),
-                        paddingLeft: HeightRatio(10),
-                        paddingRight: HeightRatio(10)
+    homePrimary_Date_Return_Button: {
+        backgroundColor: THEME_COLOR_NEGATIVE,
+        borderRadius: HeightRatio(10),
+        position: 'absolute',
+        alignSelf: 'center',
+        top: HeightRatio(60),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: HeightRatio(4),
+        paddingLeft: HeightRatio(10),
+        paddingRight: HeightRatio(10)
     },
-                        homePrimary_Date_Return_Button_Text: {
-                            color: THEME_FONT_COLOR_WHITE,
-                        fontSize: HeightRatio(20),
-                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+    homePrimary_Date_Return_Button_Text: {
+        color: THEME_FONT_COLOR_WHITE,
+        fontSize: HeightRatio(20),
+        fontFamily: 'SofiaSansSemiCondensed-Regular',
     },
-                        homePrimary_Pattern_1: {
-                            height: '100%',
-                        width: '100%',
-                        opacity: 0.02,
-                        position: 'absolute',
-                        zIndex: -10
+    homePrimary_Pattern_1: {
+        height: '100%',
+        width: '100%',
+        opacity: 0.02,
+        position: 'absolute',
+        zIndex: -10
     },
-                        homePrimary_TotalCalories: {
-                            alignSelf: 'center',
-                        backgroundColor: THEME_COLOR_ATTENTION,
-                        margin: HeightRatio(5),
-                        borderRadius: 10,
-                        padding: HeightRatio(10),
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexDirection: 'row'
+    homePrimary_TotalCalories: {
+        alignSelf: 'center',
+        backgroundColor: THEME_COLOR_ATTENTION,
+        margin: HeightRatio(5),
+        borderRadius: 10,
+        padding: HeightRatio(10),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row'
     },
-                        homePrimary_TotalCalories_Text: {
-                            color: THEME_FONT_COLOR_BLACK,
-                        fontSize: HeightRatio(30),
-                        textAlign: 'center',
-                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+    homePrimary_TotalCalories_Text: {
+        color: THEME_FONT_COLOR_BLACK,
+        fontSize: HeightRatio(30),
+        textAlign: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
     },
-                        homePrimary_Add_Button: {
-                            backgroundColor: THEME_COLOR_POSITIVE,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        // padding: HeightRatio(20),
-                        borderRadius: HeightRatio(10),
-                        alignSelf: 'center',
-                        margin: HeightRatio(4)
+    homePrimary_Add_Button: {
+        backgroundColor: THEME_COLOR_POSITIVE,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        // padding: HeightRatio(20),
+        borderRadius: HeightRatio(10),
+        alignSelf: 'center',
+        margin: HeightRatio(4)
     },
-                        homePrimary_Add_Button_Text: {
-                            color: THEME_FONT_COLOR_BLACK,
-                        fontSize: HeightRatio(20),
-                        textAlign: 'center',
-                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+    homePrimary_Add_Button_Text: {
+        color: THEME_FONT_COLOR_BLACK,
+        fontSize: HeightRatio(20),
+        textAlign: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-Regular',
     },
-                        modalVisible_Blackout: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                        height: '100%', width: '100%',
-                        position: 'absolute', zIndex: 10
+    modalVisible_Blackout: {
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        height: '100%', width: '100%',
+        position: 'absolute', zIndex: 10
     },
-                        modalVisible_Container: {
-                            backgroundColor: 'rgba(31, 31, 39, 1.00)',
-                        zIndex: 999,
-                        width: windowWidth - HeightRatio(10),
-                        padding: HeightRatio(20),
-                        borderRadius: HeightRatio(10),
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        alignSelf: 'center',
-                        margin: HeightRatio(10)
+    modalVisible_Container: {
+        backgroundColor: 'rgba(31, 31, 39, 1.00)',
+        zIndex: 999,
+        width: windowWidth - HeightRatio(10),
+        padding: HeightRatio(20),
+        borderRadius: HeightRatio(10),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        margin: HeightRatio(10)
     },
-                        modalVisible_TextInput: {
-                            ...Styling.textInputStyle,
-                            marginTop: HeightRatio(20),
-                        height: HeightRatio(70),
-                        fontSize: HeightRatio(30),
-                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+    modalVisible_TextInput: {
+        ...Styling.textInputStyle,
+        marginTop: HeightRatio(20),
+        height: HeightRatio(70),
+        fontSize: HeightRatio(30),
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
     },
-                        modalVisible_Search_Button: {
-                            backgroundColor: THEME_COLOR_POSITIVE,
-                        display: 'flex',
-                        justifyContent: 'flex-start',
-                        padding: HeightRatio(10),
-                        borderRadius: HeightRatio(10),
-                        alignSelf: 'center',
-                        width: windowWidth - WidthRatio(100),
-                        margin: HeightRatio(10)
+    modalVisible_Search_Button: {
+        backgroundColor: THEME_COLOR_POSITIVE,
+        display: 'flex',
+        justifyContent: 'flex-start',
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(10),
+        alignSelf: 'center',
+        width: windowWidth - WidthRatio(100),
+        margin: HeightRatio(10)
     },
-                        modalVisible_Search_Button_Text: {
-                            color: THEME_FONT_COLOR_BLACK,
-                        fontSize: HeightRatio(25),
-                        alignSelf: 'center',
-                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+    modalVisible_Search_Button_Text: {
+        color: THEME_FONT_COLOR_BLACK,
+        fontSize: HeightRatio(25),
+        alignSelf: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
     },
-                        modalVisible_Title_Container: {
-                            display: 'flex',
-                        justifyContent: 'flex-start',
-                        padding: HeightRatio(5),
-                        alignSelf: 'center',
-                        width: windowWidth - WidthRatio(100),
+    modalVisible_Title_Container: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        padding: HeightRatio(5),
+        alignSelf: 'center',
+        width: windowWidth - WidthRatio(100),
         // marginTop: HeightRatio(10),
     },
-                        modalVisible_Title_Container_Text: {
-                            color: THEME_FONT_COLOR_WHITE,
-                        fontSize: HeightRatio(25),
-                        alignSelf: 'center',
-                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold'
+    modalVisible_Title_Container_Text: {
+        color: THEME_FONT_COLOR_WHITE,
+        fontSize: HeightRatio(25),
+        alignSelf: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-ExtraBold'
     },
-                        modalVisible_recentFoodData_Map_Container_0: {
-                            backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
-                        borderRadius: HeightRatio(10),
-                        margin: HeightRatio(4),
-                        width: windowWidth - HeightRatio(80),
-                        alignSelf: 'center',
-                        display: 'flex',
-                        alignItems: "center",
-                        justifyContent: "center",
+    modalVisible_recentFoodData_Map_Container_0: {
+        backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,
+        borderRadius: HeightRatio(10),
+        margin: HeightRatio(4),
+        width: windowWidth - HeightRatio(80),
+        alignSelf: 'center',
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
     },
-                        modalVisible_recentFoodData_Map_Container_1: {
-                            width: windowWidth - HeightRatio(120),
-                        alignSelf: 'center'
+    modalVisible_recentFoodData_Map_Container_1: {
+        width: windowWidth - HeightRatio(120),
+        alignSelf: 'center'
     },
-                        modalVisible_recentFoodData_Map_Container_2: {
-                            display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        flexDirection: 'row',
-                        padding: HeightRatio(8),
+    modalVisible_recentFoodData_Map_Container_2: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexDirection: 'row',
+        padding: HeightRatio(8),
     },
-                        modalVisible_recentFoodData_Map_Text_Bold: {
-                            color: THEME_FONT_COLOR_WHITE,
-                        fontSize: HeightRatio(20),
-                        fontFamily: "SofiaSansSemiCondensed-ExtraBold",
-                        width: WidthRatio(200)
+    modalVisible_recentFoodData_Map_Text_Bold: {
+        color: THEME_FONT_COLOR_WHITE,
+        fontSize: HeightRatio(20),
+        fontFamily: "SofiaSansSemiCondensed-ExtraBold",
+        width: WidthRatio(200)
     },
-                        modalVisible_recentFoodData_Map_Text_Regular: {
-                            color: THEME_FONT_COLOR_WHITE,
-                        fontSize: HeightRatio(20),
-                        fontFamily: "SofiaSansSemiCondensed-Regular"
+    modalVisible_recentFoodData_Map_Text_Regular: {
+        color: THEME_FONT_COLOR_WHITE,
+        fontSize: HeightRatio(20),
+        fontFamily: "SofiaSansSemiCondensed-Regular"
     },
-                        modalVisible_recentFoodData_Map_Plus: {
-                            backgroundColor: THEME_COLOR_ATTENTION,
-                        borderRadius: HeightRatio(10),
-                        // height: HeightRatio(40),
-                        // width: HeightRatio(40),
-                        display: 'flex',
-                        alignItems: "center",
-                        justifyContent: "center",
+    modalVisible_recentFoodData_Map_Plus: {
+        backgroundColor: THEME_COLOR_ATTENTION,
+        borderRadius: HeightRatio(10),
+        // height: HeightRatio(40),
+        // width: HeightRatio(40),
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
     },
-                        modalVisible_recentFoodData_Map_Plus_Text: {
-                            color: THEME_FONT_COLOR_BLACK,
-                        fontSize: HeightRatio(30),
-                        fontFamily: "SofiaSansSemiCondensed-ExtraBold"
+    modalVisible_recentFoodData_Map_Plus_Text: {
+        color: THEME_FONT_COLOR_BLACK,
+        fontSize: HeightRatio(30),
+        fontFamily: "SofiaSansSemiCondensed-ExtraBold"
     },
-                        modalVisible_recentFoodData_Map_Container_0_RecentlyUsed_Text: {
-                            color: THEME_FONT_COLOR_WHITE,
-                        fontSize: HeightRatio(25),
-                        fontFamily: "SofiaSansSemiCondensed-Regular",
-                        textAlign: 'center',
-                        width: '80%',
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        margin: HeightRatio(5)
+    modalVisible_recentFoodData_Map_Container_0_RecentlyUsed_Text: {
+        color: THEME_FONT_COLOR_WHITE,
+        fontSize: HeightRatio(25),
+        fontFamily: "SofiaSansSemiCondensed-Regular",
+        textAlign: 'center',
+        width: '80%',
+        display: 'flex',
+        flexWrap: 'wrap',
+        margin: HeightRatio(5)
     },
-                        modalVisible_faX: {
-                            height: HeightRatio(30),
-                        width: HeightRatio(30),
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        position: 'absolute',
-                        zIndex: 1000,
-                        top: HeightRatio(5),
-                        right: HeightRatio(5),
-                        borderRadius: HeightRatio(10),
-                        backgroundColor: THEME_COLOR_NEGATIVE
+    modalVisible_faX: {
+        height: HeightRatio(30),
+        width: HeightRatio(30),
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        zIndex: 1000,
+        top: HeightRatio(5),
+        right: HeightRatio(5),
+        borderRadius: HeightRatio(10),
+        backgroundColor: THEME_COLOR_NEGATIVE
     },
-                        modalVisible_FullButton: {
-                            backgroundColor: THEME_COLOR_NEGATIVE,
-                        display: 'flex',
-                        justifyContent: 'flex-start',
-                        padding: HeightRatio(10),
-                        borderRadius: HeightRatio(10),
-                        alignSelf: 'center',
-                        width: (windowWidth - WidthRatio(100)),
+    modalVisible_FullButton: {
+        backgroundColor: THEME_COLOR_NEGATIVE,
+        display: 'flex',
+        justifyContent: 'flex-start',
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(10),
+        alignSelf: 'center',
+        width: (windowWidth - WidthRatio(100)),
         // marginBottom: HeightRatio(10)
     },
-                        modalVisible_HalfButton: {
-                            display: 'flex',
-                        justifyContent: 'flex-start',
-                        padding: HeightRatio(10),
-                        borderRadius: HeightRatio(10),
-                        alignSelf: 'center',
-                        width: (windowWidth - WidthRatio(100)) / 2,
-                        margin: HeightRatio(10)
+    modalVisible_HalfButton: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(10),
+        alignSelf: 'center',
+        width: (windowWidth - WidthRatio(100)) / 2,
+        margin: HeightRatio(10)
     },
-                        modalVisible_Button_Text: {
-                            color: THEME_FONT_COLOR_BLACK,
-                        fontSize: HeightRatio(25),
-                        alignSelf: 'center',
-                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+    modalVisible_Button_Text: {
+        color: THEME_FONT_COLOR_BLACK,
+        fontSize: HeightRatio(25),
+        alignSelf: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
     },
-                        loading_Container: {
-                            flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: HeightRatio(505),
-                        backgroundColor: THEME_COLOR_BACKDROP_DARK
+    loading_Container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: HeightRatio(505),
+        backgroundColor: THEME_COLOR_BACKDROP_DARK
     },
-                        button_Drop_Shadow: {
-                            padding: 10,
-                        borderRadius: 5,
-                        ...Platform.select({
-                            ios: {
-                            shadowColor: '#000',
-                        shadowOffset: {width: 0, height: 2 },
-                        shadowOpacity: 0.3,
-                        shadowRadius: 2,
+    button_Drop_Shadow: {
+        padding: 10,
+        borderRadius: 5,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.3,
+                shadowRadius: 2,
             },
-                        android: {
-                            elevation: 5,
+            android: {
+                elevation: 5,
             },
         }),
     },
-                        modalContainer_0: {
-                            flex: 1,
-                        backgroundColor: THEME_COLOR_BLACKOUT
+    modalContainer_0: {
+        flex: 1,
+        backgroundColor: THEME_COLOR_BLACKOUT
     },
-                        modalContainer_1: {
-                            backgroundColor: 'rgba(31, 31, 39, 1.00)',
-                        margin: 20,
-                        zIndex: 999,
-                        borderRadius: 10,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        position: 'absolute',
-                        bottom: HeightRatio(30),
-                        left: 0,
-                        right: 0
+    modalContainer_1: {
+        backgroundColor: 'rgba(31, 31, 39, 1.00)',
+        margin: 20,
+        zIndex: 999,
+        borderRadius: 10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: HeightRatio(30),
+        left: 0,
+        right: 0
     },
-                        modalContainer_1_A: {
-                            margin: HeightRatio(20),
-                        alignSelf: 'center'
+    modalContainer_1_A: {
+        margin: HeightRatio(20),
+        alignSelf: 'center'
     },
-                        modalContainer_1_A_Text: {
-                            color: THEME_FONT_COLOR_WHITE,
-                        fontSize: HeightRatio(30),
+    modalContainer_1_A_Text: {
+        color: THEME_FONT_COLOR_WHITE,
+        fontSize: HeightRatio(30),
     },
-                        modalContainer_1_B: {
-                            flexDirection: 'row',
-                        alignSelf: 'center'
+    modalContainer_1_B: {
+        flexDirection: 'row',
+        alignSelf: 'center'
     },
-                        modalButton: {
-                            display: 'flex',
-                        justifyContent: 'flex-start',
-                        padding: HeightRatio(10),
-                        borderRadius: HeightRatio(10),
-                        alignSelf: 'center',
-                        width: (windowWidth - WidthRatio(100)) / 2,
-                        margin: HeightRatio(10)
+    modalButton: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        padding: HeightRatio(10),
+        borderRadius: HeightRatio(10),
+        alignSelf: 'center',
+        width: (windowWidth - WidthRatio(100)) / 2,
+        margin: HeightRatio(10)
     },
-                        modalButton_Text: {
-                            color: THEME_FONT_COLOR_WHITE,
-                        fontSize: HeightRatio(25),
-                        alignSelf: 'center',
-                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+    modalButton_Text: {
+        color: THEME_FONT_COLOR_WHITE,
+        fontSize: HeightRatio(25),
+        alignSelf: 'center',
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
     },
 });

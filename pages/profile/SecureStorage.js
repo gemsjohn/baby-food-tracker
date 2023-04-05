@@ -262,7 +262,10 @@ export const SecureStorage = () => {
             </View>
 
             {warning &&
-              <Text style={{ color: THEME_COLOR_NEGATIVE, fontSize: HeightRatio(20), alignSelf: 'center', marginTop: 20 }}>
+              <Text 
+                style={{ color: THEME_COLOR_NEGATIVE, fontSize: HeightRatio(20), alignSelf: 'center', marginTop: 20 }}
+                allowFontScaling={false}
+              >
                 Must be 4 #'s!
               </Text>
             }
@@ -355,11 +358,14 @@ export const SecureStorage = () => {
         </View>
         :
         <View style={{ alignSelf: 'center' }}>
-          <Text style={{
-            color: THEME_FONT_COLOR_WHITE,
-            fontSize: HeightRatio(100),
-            fontFamily: 'GochiHand_400Regular',
-          }}>
+          <Text 
+            style={{
+              color: THEME_FONT_COLOR_WHITE,
+              fontSize: HeightRatio(100),
+              fontFamily: 'GochiHand_400Regular',
+            }}
+            allowFontScaling={false}
+          >
             &nbsp; Saved &nbsp;
           </Text>
         </View>

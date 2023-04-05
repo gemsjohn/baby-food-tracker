@@ -34,9 +34,51 @@ import {
     THEME_COLOR_BLACKOUT
 } from '../COLOR';
 import { LinearGradient } from 'expo-linear-gradient';
+import Purchases, { PurchasesOffering } from 'react-native-purchases';
+import { useMutation, useQuery } from '@apollo/client';
+import { UPDATE_PREMIUM } from '../utils/mutations';
+import * as SecureStore from 'expo-secure-store';
 
+const APIKeys = {
+    google: "goog_caDqiYZPHvJIwlqyFoZDgTqOywO",
+};
 
 export const Loading = () => {
+    const [updatePremium] = useMutation(UPDATE_PREMIUM);
+
+    const checkCustomerInfo = async () => {
+        let localUserID = await SecureStore.getItemAsync('userID');
+        Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+        Purchases.configure({ apiKey: APIKeys.google, appUserID: localUserID });
+
+        const customerInfo = await Purchases.getCustomerInfo();
+        // console.log(customerInfo)
+
+        if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
+            // console.log(customerInfo.entitlements.active["Premium"])
+            console.log("# - Premium service access granted.")
+            await updatePremium({
+                variables: {
+                    status: true,
+                    expiration: `${customerInfo.allExpirationDates.baby_food_tracker_premium_month}`
+                }
+            });
+
+        } else {
+            console.log("# - Premium service access revoked.")
+            await updatePremium({
+                variables: {
+                    status: false,
+                    expiration: ''
+                }
+            });
+        }
+    }
+
+    useEffect(() => {
+        checkCustomerInfo()
+    }, [])
+
     const [fontsLoaded] = useFonts({
         'GochiHand_400Regular': require('../assets/fonts/GochiHand-Regular.ttf'),
         'SofiaSansSemiCondensed-Regular': require('../assets/fonts/SofiaSansSemiCondensed-Regular.ttf'),

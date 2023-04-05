@@ -84,6 +84,9 @@ export const FoodGroupMetrics = (props) => {
     const [dairyCal, setDairyCal] = useState([])
     const [dairyCalTotal, setDairyCalTotal] = useState(null)
 
+    const [formulaCal, setFormulaCal] = useState([])
+    const [formulaCalTotal, setFormulaCalTotal] = useState(null)
+
 
 
     const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
@@ -128,6 +131,7 @@ export const FoodGroupMetrics = (props) => {
         setProteinCal([])
         setGrainCal([])
         setDairyCal([])
+        setFormulaCal([])
 
         for (let i = 0; i < tracker.length; i++) {
             let entry = tracker[i].entry[0]
@@ -147,6 +151,9 @@ export const FoodGroupMetrics = (props) => {
             }
             if (entry.foodGroup == "dairy") {
                 setDairyCal(prev => [...prev, entry.nutrients.calories.amount])
+            }
+            if (entry.foodGroup == "formula") {
+                setFormulaCal(prev => [...prev, entry.nutrients.calories.amount])
             }
         }
 
@@ -207,6 +214,16 @@ export const FoodGroupMetrics = (props) => {
         setDairyCalTotal(sum)
     }, [dairyCal])
 
+    useEffect(() => {
+        let sum = 0;
+
+        for (let i = 0; i < formulaCal.length; i++) {
+            sum += formulaCal[i];
+        }
+
+        setFormulaCalTotal(sum)
+    }, [formulaCal])
+
     const data = [
         {
             name: 'Fruit',
@@ -243,13 +260,20 @@ export const FoodGroupMetrics = (props) => {
             legendFontColor: 'white',
             legendFontSize: 12,
         },
+        {
+            name: 'Formula',
+            calories: formulaCalTotal,
+            color: 'white',
+            legendFontColor: 'white',
+            legendFontSize: 12,
+        },
     ];
 
 
     return (
         <View style={styles.chartContainer}>
-            <Text style={styles.chartLabel}>Daily Food Groups ( Calories )</Text>
-            {fruitCalTotal + vegetableCalTotal + proteinCalTotal + grainCalTotal + dairyCalTotal > 0 ?
+            <Text style={styles.chartLabel} allowFontScaling={false}>Daily Food Groups ( Calories )</Text>
+            {fruitCalTotal + vegetableCalTotal + proteinCalTotal + grainCalTotal + dairyCalTotal + formulaCalTotal > 0 ?
                 <PieChart
                     data={data}
                     width={400}
@@ -287,6 +311,7 @@ export const FoodGroupMetrics = (props) => {
                             fontFamily: "SofiaSansSemiCondensed-Regular",
                             textAlign: 'center',
                         }}
+                        allowFontScaling={false}
                     >
                         Currently, you do not have any daily entries. Add a daily entry to see data.
                     </Text>

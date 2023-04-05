@@ -144,12 +144,12 @@ export const PremiumScreen = ({ navigation }) => {
     const checkCustomerInfo = async (input) => {
 
         const customerInfo = await Purchases.getCustomerInfo();
-        console.log("- - - - - - - - - ")
-        console.log("- - - - - - - - - ")
-        console.log(input)
-        console.log("- - - - - - - - - ")
+        // console.log("- - - - - - - - - ")
+        // console.log("- - - - - - - - - ")
+        // console.log(input)
+        // console.log("- - - - - - - - - ")
         // console.log(customerInfo)
-        console.log(customerInfo.allExpirationDates.baby_food_tracker_premium_month)
+        // console.log(customerInfo.allExpirationDates.baby_food_tracker_premium_month)
 
         setTimeout(() => {
             clearInterval(intervalID.current)
@@ -480,48 +480,77 @@ export const PremiumScreen = ({ navigation }) => {
                         />
                     </>
                     :
+                    <>
                     <View
-                        stlye={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: HeightRatio(20)
-                        }}
-                    >
-                        <View
                             style={{
                                 flexDirection: 'row',
                                 display: 'flex',
                                 alignItems: 'center',
-                                // justifyContent: 'center'
+                                justifyContent: 'center',
+                                margin: HeightRatio(20)
                             }}
                         >
                             <Image
                                 source={require('../../assets/favicon_0.png')}
                                 style={{
-                                    height: HeightRatio(40),
-                                    width: HeightRatio(40),
+                                    height: HeightRatio(70),
+                                    width: HeightRatio(70),
                                 }}
                             />
-                            <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
-                                Baby Food Tracker
-                            </Text>
+                            <View style={{ margin: HeightRatio(10) }}>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        textAlign: 'left',
+                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        fontSize: HeightRatio(30),
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Premium Service
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        fontSize: HeightRatio(20),
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    $2.99/month
+                                </Text>
+
+                            </View>
+
                         </View>
-                        <ActivityIndicator
-                            size={70}
-                            color={THEME_COLOR_ATTENTION}
-                        />
-                        <Text
+                        <View
                             style={{
-                                fontSize: HeightRatio(25),
-                                textAlign: 'center',
-                                fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                color: THEME_COLOR_ATTENTION
+                                flexDirection: 'column',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                margin: HeightRatio(20)
                             }}
                         >
-                            Loading subscription option. This can take a moment.
-                        </Text>
-                    </View>
+                            <ActivityIndicator
+                                size={70}
+                                color={THEME_COLOR_POSITIVE}
+                            />
+                            <Text
+                                style={{
+                                    fontSize: HeightRatio(25),
+                                    textAlign: 'center',
+                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                    color: THEME_FONT_COLOR_BLACK,
+                                    marginTop: HeightRatio(20)
+                                }}
+                                allowFontScaling={false}
+                            >
+                                Loading subscription option.
+                            </Text>
+                        </View>
+                    </>
                 }
             </LinearGradient>
 

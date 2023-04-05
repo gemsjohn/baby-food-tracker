@@ -127,6 +127,7 @@ export const AllergyTracking = (props) => {
                         margin: HeightRatio(10),
                         marginLeft: 0
                     }}
+                    allowFontScaling={false}
                 >
                     Allergies
                 </Text>
@@ -160,6 +161,7 @@ export const AllergyTracking = (props) => {
                                                     fontFamily: "SofiaSansSemiCondensed-Regular",
                                                     textAlign: 'center',
                                                 }}
+                                                allowFontScaling={false}
                                             >
                                                 {data}
                                             </Text>
@@ -204,6 +206,7 @@ export const AllergyTracking = (props) => {
                                         fontFamily: "SofiaSansSemiCondensed-Regular",
                                         textAlign: 'center',
                                     }}
+                                    allowFontScaling={false}
                                 >
                                     Currently, you do not have any recorded allergies.
                                 </Text>

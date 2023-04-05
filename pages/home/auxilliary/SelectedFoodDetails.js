@@ -39,7 +39,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export const SelectedFoodDetails = (props) => {
-    console.log(props.item)
     const { mainState, setMainState } = useContext(MainStateContext);
     const options = [
         "Milliliters",
@@ -78,6 +77,8 @@ export const SelectedFoodDetails = (props) => {
     const [selectedReaction, setSelectedReaction] = useState(null)
     const [customTime, setCustomTime] = useState('');
     const intervalID = useRef(null)
+    const scrollViewRef = useRef();
+    // const [scrollPosition, setScrollPosition] = useState(0);
 
     // console.log(selectedEmotion)
     // console.log(options_emotion[0])
@@ -163,6 +164,31 @@ export const SelectedFoodDetails = (props) => {
 
     }
 
+    useEffect(() => {
+        if (textInputValue) {
+            setMainState({
+                selectedFood_Quantity: textInputValue,
+                userTouch: true
+            })
+            handleNextSectionPress()
+        } else {
+            setMainState({
+                selectedFood_Quantity: null,
+                userTouch: true
+            })
+            handleNextSectionPress()
+        }
+    }, [textInputValue])
+
+    const handleNextSectionPress = () => {
+        // Scroll to the next section
+        setMainState({
+            addFood_trigger_update: true,
+        })
+    };
+
+   
+
     return (
         <View style={styles.container}>
             <View style={{ 
@@ -218,6 +244,7 @@ export const SelectedFoodDetails = (props) => {
                                             selectedFood_Measurement: option,
                                             userTouch: true
                                         })
+                                        handleNextSectionPress()
                                     }}
                                     style={{
                                         display: 'flex',
@@ -262,6 +289,7 @@ export const SelectedFoodDetails = (props) => {
                                         selectedFood_Measurement: null,
                                         userTouch: true
                                     })
+                                    handleNextSectionPress()
 
                                 }}
                                 style={{
@@ -296,6 +324,7 @@ export const SelectedFoodDetails = (props) => {
                                             selectedFood_Measurement: option,
                                             userTouch: true
                                         })
+                                        handleNextSectionPress()
                                     }}
                                     style={styles.itemButton}
                                     key={option}
@@ -341,7 +370,11 @@ export const SelectedFoodDetails = (props) => {
                                     onPress={() => {
                                         setSelectedTime(option);
                                         handleScheduleTime(option)
-                                        setMainState({ userTouch: true })
+                                        setMainState({
+                                            selectedFood_Schedule: option,
+                                            userTouch: true
+                                        })
+                                        handleNextSectionPress()
                                     }}
                                     style={{
                                         display: 'flex',
@@ -387,6 +420,7 @@ export const SelectedFoodDetails = (props) => {
                                         selectedFood_Schedule_Custom_Time: null,
                                         userTouch: true
                                     })
+                                    handleNextSectionPress()
                                 }}
                                 style={{
                                     backgroundColor: THEME_COLOR_NEGATIVE,
@@ -418,7 +452,11 @@ export const SelectedFoodDetails = (props) => {
                                             onPress={() => {
                                                 setSelectedTime(option);
                                                 handleScheduleTime(option)
-                                                setMainState({ userTouch: true })
+                                                setMainState({
+                                                    selectedFood_Schedule: option,
+                                                    userTouch: true
+                                                })
+                                                handleNextSectionPress()
                                             }}
                                             style={styles.itemButton_AltColor}
 
@@ -485,6 +523,7 @@ export const SelectedFoodDetails = (props) => {
                                         selectedFood_Allergy: null,
                                         userTouch: true
                                     })
+                                    handleNextSectionPress()
                                 }}
                                 style={{
                                     backgroundColor: THEME_COLOR_NEGATIVE,
@@ -517,6 +556,7 @@ export const SelectedFoodDetails = (props) => {
                                             selectedFood_Allergy: option,
                                             userTouch: true
                                         })
+                                        handleNextSectionPress()
                                     }}
                                     style={styles.itemButton_AltColor_1}
                                     key={option}
@@ -569,6 +609,7 @@ export const SelectedFoodDetails = (props) => {
                                         selectedFood_Emotion: null,
                                         userTouch: true
                                     })
+                                    handleNextSectionPress()
                                 }}
                                 style={{
                                     backgroundColor: THEME_COLOR_NEGATIVE,
@@ -601,6 +642,7 @@ export const SelectedFoodDetails = (props) => {
                                             selectedFood_Emotion: option,
                                             userTouch: true
                                         })
+                                        handleNextSectionPress()
                                     }}
                                     style={styles.itemButton_AltColor_3}
                                     key={option}
@@ -617,7 +659,7 @@ export const SelectedFoodDetails = (props) => {
                     }
                 </View>
             </View>
-            <View style={{ height: HeightRatio(50) }} />
+            <View style={{ height: HeightRatio(10) }} />
         </View>
     );
 };
@@ -638,7 +680,7 @@ const styles = StyleSheet.create({
     textInput_Quantity: {
         ...Styling.textInputStyle,
         color: 'white',
-        fontSize: HeightRatio(20),
+        fontSize: HeightRatio(26),
         fontFamily: 'SofiaSansSemiCondensed-Regular',
         height: HeightRatio(50),
         width: WidthRatio(100),

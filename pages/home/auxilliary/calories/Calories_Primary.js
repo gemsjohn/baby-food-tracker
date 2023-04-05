@@ -63,7 +63,10 @@ export const Calories_Primary = (props) => {
                 flexDirection: 'column'
             }}
         >
-            <Text style={styles.homePrimary_TotalCalories_Text}>
+            <Text 
+                style={styles.homePrimary_TotalCalories_Text}
+                allowFontScaling={false}
+            >
                 {props.totalCalorieCount}
             </Text>
             <Text
