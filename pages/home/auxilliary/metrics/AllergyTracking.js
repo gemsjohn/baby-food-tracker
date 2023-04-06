@@ -64,12 +64,6 @@ export const AllergyTracking = (props) => {
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedAllergyForDeletion, setSelectedAllergyForDeletion] = useState(null)
     const [updateUserAllergies] = useMutation(UPDATE_USER_ALLERGIES);
-
-
-    // const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
-    //     variables: { id: mainState.current.userID }
-    // });
-
     const getAllergyData = () => {
         setAllergyArray([])
         console.log("# - getAllergyData()")

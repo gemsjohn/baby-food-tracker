@@ -19,8 +19,6 @@ import {
     StatusBar
 } from 'react-native';
 import { HeightRatio, windowWidth } from '../../../../Styling';
-import { useMutation, useQuery } from '@apollo/client';
-import { GET_USER_BY_ID } from '../../../../utils/queries';
 import {
     THEME_COLOR_POSITIVE,
     THEME_COLOR_POSITIVE_LOW_OPACITY,
@@ -87,14 +85,7 @@ export const FoodGroupMetrics = (props) => {
     const [formulaCal, setFormulaCal] = useState([])
     const [formulaCalTotal, setFormulaCalTotal] = useState(null)
 
-
-
-    // const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
-    //     variables: { id: mainState.current.userID }
-    // });
-
     const getTrackerEntryByDate = (date) => {
-        // refetch()
         setMatchingDate([])
 
         if (props.subuser && props.subuser.tracker != []) {
@@ -107,9 +98,6 @@ export const FoodGroupMetrics = (props) => {
 
     }
     useEffect(() => {
-        console.log('# --------------------------------------')
-        console.log('# - Date: ' + props.date)
-        console.log("# - Clear everything")
         setFruitCal([])
         setVegetableCal([])
         setProteinCal([])
@@ -229,42 +217,42 @@ export const FoodGroupMetrics = (props) => {
             name: 'Fruit',
             calories: fruitCalTotal,
             color: '#FF6384',
-            legendFontColor: 'white',
+            legendFontColor: '#ffffff',
             legendFontSize: 12,
         },
         {
             name: 'Vegetable',
             calories: vegetableCalTotal,
             color: '#36A2EB',
-            legendFontColor: 'white',
+            legendFontColor: '#ffffff',
             legendFontSize: 12,
         },
         {
             name: 'Protein',
             calories: proteinCalTotal,
             color: '#FFCE56',
-            legendFontColor: 'white',
+            legendFontColor: '#ffffff',
             legendFontSize: 12,
         },
         {
             name: 'Grain',
             calories: grainCalTotal,
             color: '#4BC0C0',
-            legendFontColor: 'white',
+            legendFontColor: '#ffffff',
             legendFontSize: 12,
         },
         {
             name: 'Dairy',
             calories: dairyCalTotal,
             color: '#9966FF',
-            legendFontColor: 'white',
+            legendFontColor: '#ffffff',
             legendFontSize: 12,
         },
         {
             name: 'Formula',
             calories: formulaCalTotal,
             color: '#ffffff',
-            legendFontColor: 'white',
+            legendFontColor: '#ffffff',
             legendFontSize: 12,
         },
     ];
@@ -273,11 +261,9 @@ export const FoodGroupMetrics = (props) => {
     return (
         <View style={styles.chartContainer}>
             <Text 
-                style={styles.chartLabel} 
+                style={styles.chartLabel}
                 allowFontScaling={false}
-            >
-                Daily Food Groups ( Calories )
-            </Text>
+            >Daily Food Groups ( Calories )</Text>
             {fruitCalTotal + vegetableCalTotal + proteinCalTotal + grainCalTotal + dairyCalTotal + formulaCalTotal > 0 ?
                 <PieChart
                     data={data}
@@ -324,5 +310,4 @@ export const FoodGroupMetrics = (props) => {
             }
         </View>
     );
-};
-
+}

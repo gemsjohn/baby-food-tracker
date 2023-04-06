@@ -21,21 +21,6 @@ import {
     THEME_COLOR_BLACKOUT,
     THEME_FONT_GREY
 } from '../../../../COLOR'
-import {
-    faSolid,
-    faFlagCheckered,
-    faSliders,
-    faX,
-    faArrowRight,
-    faArrowLeft,
-    faPlus,
-    faBars,
-    faCheck,
-    faChartSimple,
-    faStar,
-    faTriangleExclamation
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
 export const SwipeableViews = (props) => {
     const [activeView, setActiveView] = useState(0);
