@@ -37,20 +37,17 @@ import {
     THEME_COLOR_BLACKOUT,
     THEME_FONT_GREY
 } from '../../../COLOR'
-import { PieChart } from 'react-native-chart-kit';
 import { MainStateContext } from '../../../App';
+import { BarChart } from './BoxChart';
 
-const chartConfig = {
-    backgroundGradientFrom: '#ffffff',
-    backgroundGradientTo: '#ffffff',
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    strokeWidth: 2,
-};
+// const chartConfig = {
+//     backgroundGradientFrom: '#ffffff',
+//     backgroundGradientTo: '#ffffff',
+//     color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+//     strokeWidth: 2,
+// };
 
 const styles = StyleSheet.create({
-    chartContainer: {
-        marginVertical: 8,
-    },
     chartLabel: {
         textAlign: 'center',
         marginBottom: 8,
@@ -60,6 +57,8 @@ const styles = StyleSheet.create({
         fontFamily: 'SofiaSansSemiCondensed-Regular'
     },
 });
+
+
 
 export const FoodGroupMetrics = (props) => {
     const { mainState, setMainState } = useContext(MainStateContext);
@@ -213,54 +212,40 @@ export const FoodGroupMetrics = (props) => {
 
     const data = [
         {
-            name: 'Fruit',
-            calories: fruitCalTotal,
+            label: 'Fruit',
+            value: fruitCalTotal,
             color: '#FF6384',
-            legendFontColor: '#000000',
-            legendFontSize: 12,
         },
         {
-            name: 'Vegetable',
-            calories: vegetableCalTotal,
+            label: 'Vegetable',
+            value: vegetableCalTotal,
             color: '#36A2EB',
-            legendFontColor: '#000000',
-            legendFontSize: 12,
         },
         {
-            name: 'Protein',
-            calories: proteinCalTotal,
+            label: 'Protein',
+            value: proteinCalTotal,
             color: '#FFCE56',
-            legendFontColor: '#000000',
-            legendFontSize: 12,
         },
         {
-            name: 'Grain',
-            calories: grainCalTotal,
+            label: 'Grain',
+            value: grainCalTotal,
             color: '#4BC0C0',
-            legendFontColor: '#000000',
-            legendFontSize: 12,
         },
         {
-            name: 'Dairy',
-            calories: dairyCalTotal,
+            label: 'Dairy',
+            value: dairyCalTotal,
             color: '#9966FF',
-            legendFontColor: '#000000',
-            legendFontSize: 12,
         },
         {
-            name: 'Formula',
-            calories: formulaCalTotal,
+            label: 'Formula',
+            value: formulaCalTotal,
             color: '#ffffff',
-            legendFontColor: '#000000',
-            legendFontSize: 12,
         },
     ];
 
-    
-
 
     return (
-        <View style={styles.chartContainer}>
+        <View style={{}}>
             <Text 
                 style={styles.chartLabel}
                 allowFontScaling={false}
@@ -268,17 +253,22 @@ export const FoodGroupMetrics = (props) => {
                 Daily Food Groups ( Calories )
             </Text>
             {fruitCalTotal + vegetableCalTotal + proteinCalTotal + grainCalTotal + dairyCalTotal + formulaCalTotal > 0 ?
-                <PieChart
-                    data={data}
-                    width={400}
-                    height={200}
-                    chartConfig={chartConfig}
-                    accessor="calories"
-                    backgroundColor="transparent"
-                    paddingLeft="15"
-                    center={[0, 0]}
-                    absolute={true}
-                />
+                // <PieChart
+                //     data={data}
+                //     width={400}
+                //     height={200}
+                //     chartConfig={chartConfig}
+                //     accessor="calories"
+                //     backgroundColor="transparent"
+                //     paddingLeft="15"
+                //     center={[0, 0]}
+                //     absolute={true}
+                // />
+                <View style={{  }}>
+                    <BarChart
+                        data={data}
+                    />
+                </View>
                 :
                 <View
                     style={{

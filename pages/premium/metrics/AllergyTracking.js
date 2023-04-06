@@ -229,13 +229,13 @@ export const AllergyTracking = (props) => {
                             }}
                         >
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
                                         fontFamily: 'SofiaSansSemiCondensed-Regular',
                                         fontSize: HeightRatio(20),
-                                        color: THEME_FONT_COLOR_WHITE
+                                        color: THEME_FONT_COLOR_BLACK
                                     }}
                                     allowFontScaling={false}
                                 >
@@ -243,13 +243,13 @@ export const AllergyTracking = (props) => {
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
                                         fontFamily: 'SofiaSansSemiCondensed-Regular',
                                         fontSize: HeightRatio(20),
-                                        color: THEME_FONT_COLOR_WHITE
+                                        color: THEME_FONT_COLOR_BLACK
                                     }}
                                     allowFontScaling={false}
                                 >
@@ -257,13 +257,13 @@ export const AllergyTracking = (props) => {
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
                                         fontFamily: 'SofiaSansSemiCondensed-Regular',
                                         fontSize: HeightRatio(20),
-                                        color: THEME_FONT_COLOR_WHITE
+                                        color: THEME_FONT_COLOR_BLACK
                                     }}
                                     allowFontScaling={false}
                                 >
@@ -271,13 +271,13 @@ export const AllergyTracking = (props) => {
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
                                         fontFamily: 'SofiaSansSemiCondensed-Regular',
                                         fontSize: HeightRatio(20),
-                                        color: THEME_FONT_COLOR_WHITE
+                                        color: THEME_FONT_COLOR_BLACK
                                     }}
                                     allowFontScaling={false}
                                 >
@@ -287,13 +287,13 @@ export const AllergyTracking = (props) => {
                         </View>
                         <View style={{ flexDirection: 'column', width: windowWidth / 3 }}>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
                                         fontFamily: 'SofiaSansSemiCondensed-Regular',
                                         fontSize: HeightRatio(20),
-                                        color: THEME_FONT_COLOR_WHITE
+                                        color: THEME_FONT_COLOR_BLACK
                                     }}
                                     allowFontScaling={false}
                                 >
@@ -301,13 +301,13 @@ export const AllergyTracking = (props) => {
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
                                         fontFamily: 'SofiaSansSemiCondensed-Regular',
                                         fontSize: HeightRatio(20),
-                                        color: THEME_FONT_COLOR_WHITE
+                                        color: THEME_FONT_COLOR_BLACK
                                     }}
                                     allowFontScaling={false}
                                 >
@@ -315,13 +315,13 @@ export const AllergyTracking = (props) => {
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
                                         fontFamily: 'SofiaSansSemiCondensed-Regular',
                                         fontSize: HeightRatio(20),
-                                        color: THEME_FONT_COLOR_WHITE
+                                        color: THEME_FONT_COLOR_BLACK
                                     }}
                                     allowFontScaling={false}
                                 >
@@ -329,13 +329,13 @@ export const AllergyTracking = (props) => {
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
                                         fontFamily: 'SofiaSansSemiCondensed-Regular',
                                         fontSize: HeightRatio(20),
-                                        color: THEME_FONT_COLOR_WHITE
+                                        color: THEME_FONT_COLOR_BLACK
                                     }}
                                     allowFontScaling={false}
                                 >
