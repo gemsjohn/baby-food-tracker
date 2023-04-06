@@ -263,7 +263,7 @@ export const FoodGroupMetrics = (props) => {
         {
             name: 'Formula',
             calories: formulaCalTotal,
-            color: 'white',
+            color: '#ffffff',
             legendFontColor: 'white',
             legendFontSize: 12,
         },
@@ -272,7 +272,12 @@ export const FoodGroupMetrics = (props) => {
 
     return (
         <View style={styles.chartContainer}>
-            <Text style={styles.chartLabel} allowFontScaling={false}>Daily Food Groups ( Calories )</Text>
+            <Text 
+                style={styles.chartLabel} 
+                allowFontScaling={false}
+            >
+                Daily Food Groups ( Calories )
+            </Text>
             {fruitCalTotal + vegetableCalTotal + proteinCalTotal + grainCalTotal + dairyCalTotal + formulaCalTotal > 0 ?
                 <PieChart
                     data={data}
