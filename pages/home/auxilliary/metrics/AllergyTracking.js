@@ -20,7 +20,6 @@ import {
 } from 'react-native';
 import { HeightRatio, WidthRatio, windowWidth, windowHeight } from '../../../../Styling';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_USER_BY_ID } from '../../../../utils/queries';
 import { UPDATE_USER_ALLERGIES } from '../../../../utils/mutations';
 import {
     THEME_COLOR_POSITIVE,
@@ -55,7 +54,6 @@ import {
     faTriangleExclamation
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { PieChart } from 'react-native-chart-kit';
 import { MainStateContext } from '../../../../App';
 
 
@@ -68,14 +66,13 @@ export const AllergyTracking = (props) => {
     const [updateUserAllergies] = useMutation(UPDATE_USER_ALLERGIES);
 
 
-    const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
-        variables: { id: mainState.current.userID }
-    });
+    // const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
+    //     variables: { id: mainState.current.userID }
+    // });
 
     const getAllergyData = () => {
         setAllergyArray([])
         console.log("# - getAllergyData()")
-        refetch()
         if (props.subuser) {
             for (let i = 0; i < props.subuser.allergy.length; i++) {
                 const allergy = props.subuser.allergy[i];

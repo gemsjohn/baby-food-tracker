@@ -152,7 +152,9 @@ export const HomeScreen = ({ navigation }) => {
 
     const [loading, setLoading] = useState(false);
     const [totalCalorieCount, setTotalCalorieCount] = useState(null)
-    const subuserIndex = useRef(userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium.status ? 0 : null)
+    // const subuserIndex = useRef(userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium.status ? 0 : null)
+    const subuserIndex = useRef(0)
+
     const [deleteSubuserModalVisible, setDeleteSubuserModalVisible] = useState(false);
     const [deleteSubuserIndex, setDeleteSubuserIndex] = useState(null)
     const [addSubUserModalVisible, setAddSubUserModalVisible] = useState(true) //userByID?.user && userByID?.user.subuser.length > 0 && !userByID?.user.premium ? false : true
@@ -848,7 +850,7 @@ export const HomeScreen = ({ navigation }) => {
                                             >
                                                 <Text
                                                     style={{
-                                                        fontSize: HeightRatio(20),
+                                                        fontSize: HeightRatio(16),
                                                         fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
                                                         color: THEME_FONT_COLOR_WHITE
                                                     }}
@@ -858,7 +860,7 @@ export const HomeScreen = ({ navigation }) => {
                                                 </Text>
                                                 <Text
                                                     style={{
-                                                        fontSize: HeightRatio(20),
+                                                        fontSize: HeightRatio(16),
                                                         fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
                                                         color: premiumStatus ? THEME_COLOR_POSITIVE : THEME_COLOR_NEGATIVE
                                                     }}
@@ -875,7 +877,7 @@ export const HomeScreen = ({ navigation }) => {
                                             >
                                                 <Text
                                                     style={{
-                                                        fontSize: HeightRatio(20),
+                                                        fontSize: HeightRatio(16),
                                                         fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
                                                         color: THEME_FONT_COLOR_WHITE
                                                     }}

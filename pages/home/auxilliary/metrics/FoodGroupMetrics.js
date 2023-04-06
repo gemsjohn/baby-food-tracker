@@ -89,12 +89,12 @@ export const FoodGroupMetrics = (props) => {
 
 
 
-    const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
-        variables: { id: mainState.current.userID }
-    });
+    // const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
+    //     variables: { id: mainState.current.userID }
+    // });
 
     const getTrackerEntryByDate = (date) => {
-        refetch()
+        // refetch()
         setMatchingDate([])
 
         if (props.subuser && props.subuser.tracker != []) {
