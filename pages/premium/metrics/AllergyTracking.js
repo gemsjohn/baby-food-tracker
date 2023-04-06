@@ -66,7 +66,6 @@ export const AllergyTracking = (props) => {
     const [updateUserAllergies] = useMutation(UPDATE_USER_ALLERGIES);
     const getAllergyData = () => {
         setAllergyArray([])
-        console.log("# - getAllergyData()")
         if (props.subuser) {
             for (let i = 0; i < props.subuser.allergy.length; i++) {
                 const allergy = props.subuser.allergy[i];
@@ -79,7 +78,6 @@ export const AllergyTracking = (props) => {
 
     }
     useEffect(() => {
-        console.log('# --------------------------------------')
         setAllergyArray([])
         getAllergyData()
     }, [])

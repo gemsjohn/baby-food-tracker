@@ -487,14 +487,8 @@ export const HomeScreen = ({ navigation }) => {
                                 />
 
                                 {premiumStatus &&
-                                    // <Metrics
-                                    //     subuser={userByID?.user.subuser[subuserIndex.current]}
-                                    //     currentDateReadable={currentDateReadable}
-                                    // />
-
                                     <TouchableOpacity
                                         onPress={() => {
-                                            // setMetricsModalVisible(true);
                                             navigation.dispatch(resetActionMetrics)
                                             setMainState({ userTouch: true })
                                         }}

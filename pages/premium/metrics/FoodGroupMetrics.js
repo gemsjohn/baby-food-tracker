@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
 });
 
 export const FoodGroupMetrics = (props) => {
-    console.log(props.subuser)
     const { mainState, setMainState } = useContext(MainStateContext);
     const [matchingDate, setMatchingDate] = useState([]);
 
