@@ -18,9 +18,9 @@ import {
     ActivityIndicator,
     StatusBar
 } from 'react-native';
-import { HeightRatio, WidthRatio, windowWidth, windowHeight } from '../../../../Styling';
+import { HeightRatio, WidthRatio, windowWidth, windowHeight } from '../../../Styling';
 import { useMutation, useQuery } from '@apollo/client';
-import { UPDATE_USER_ALLERGIES } from '../../../../utils/mutations';
+import { UPDATE_USER_ALLERGIES } from '../../../utils/mutations';
 import {
     THEME_COLOR_POSITIVE,
     THEME_COLOR_POSITIVE_LOW_OPACITY,
@@ -38,7 +38,7 @@ import {
     THEME_COLOR_PURPLE_LOW_OPACITY,
     THEME_COLOR_BLACKOUT,
     THEME_FONT_GREY
-} from '../../../../COLOR'
+} from '../../../COLOR'
 import {
     faSolid,
     faFlagCheckered,
@@ -54,7 +54,7 @@ import {
     faTriangleExclamation
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { MainStateContext } from '../../../../App';
+import { MainStateContext } from '../../../App';
 
 
 
@@ -109,19 +109,6 @@ export const AllergyTracking = (props) => {
                     justifyContent: 'center'
                 }}
             >
-                <Text
-                    style={{
-                        color: THEME_FONT_COLOR_WHITE,
-                        fontSize: HeightRatio(30),
-                        fontFamily: "SofiaSansSemiCondensed-ExtraBold",
-                        textAlign: 'center',
-                        margin: HeightRatio(10),
-                        marginLeft: 0
-                    }}
-                    allowFontScaling={false}
-                >
-                    Allergies
-                </Text>
                 <SafeAreaView
                     style={{
                         ...styles.container,
@@ -192,8 +179,8 @@ export const AllergyTracking = (props) => {
                             >
                                 <Text
                                     style={{
-                                        color: THEME_FONT_COLOR_WHITE,
-                                        fontSize: HeightRatio(30),
+                                        color: THEME_FONT_COLOR_BLACK,
+                                        fontSize: HeightRatio(24),
                                         fontFamily: "SofiaSansSemiCondensed-Regular",
                                         textAlign: 'center',
                                     }}
@@ -206,12 +193,19 @@ export const AllergyTracking = (props) => {
                     </ScrollView>
                 </SafeAreaView>
 
-                <View>
+                <View
+                    style={{
+                        width: windowWidth - HeightRatio(15),
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
                     <Text
                         style={{
-                            color: THEME_FONT_COLOR_WHITE,
+                            color: THEME_FONT_COLOR_BLACK,
                             fontSize: HeightRatio(24),
-                            fontFamily: "SofiaSansSemiCondensed-ExtraBold",
+                            fontFamily: "SofiaSansSemiCondensed-Regular",
                             textAlign: 'left',
                             margin: HeightRatio(10),
                             marginLeft: 0
@@ -220,8 +214,22 @@ export const AllergyTracking = (props) => {
                     >
                         What foods most often cause a food allergy?
                     </Text>
-                    <View style={{flexDirection: 'row', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                        <View style={{flexDirection: 'column', width: windowWidth/2}}>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            width: windowWidth - HeightRatio(15),
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            // backgroundColor: 'red'
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                width: windowWidth / 3,
+                            }}
+                        >
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
                                 <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
@@ -279,7 +287,7 @@ export const AllergyTracking = (props) => {
                                 </Text>
                             </View>
                         </View>
-                        <View style={{flexDirection: 'column'}}>
+                        <View style={{ flexDirection: 'column', width: windowWidth / 3 }}>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
                                 <View style={{ backgroundColor: '#FF6384', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
@@ -371,7 +379,7 @@ export const AllergyTracking = (props) => {
                                 // alignSelf: 'center'
                             }}
                         >
-                            <View 
+                            <View
                                 style={{
                                     flexDirection: 'row',
                                     display: 'flex',
@@ -380,19 +388,19 @@ export const AllergyTracking = (props) => {
                                 }}
                             >
                                 <Image
-                                    source={require('../../../../assets/favicon_0.png')}
+                                    source={require('../../../assets/favicon_0.png')}
                                     style={{
                                         height: HeightRatio(40),
                                         width: HeightRatio(40),
                                         // alignSelf: 'center'
                                     }}
                                 />
-                                <Text style={{color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14)}}>
+                                <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
                                     Baby Food Tracker
                                 </Text>
                             </View>
                             <View style={{ height: HeightRatio(10) }}></View>
-                            <View 
+                            <View
                                 style={{
                                     padding: HeightRatio(10)
                                 }}

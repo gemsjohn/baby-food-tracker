@@ -24,6 +24,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_PREMIUM } from '../../utils/mutations';
 import { GET_USER_BY_ID } from '../../utils/queries';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Navbar } from '../../components/Navbar';
 
 import {
     faSolid,
@@ -553,7 +554,7 @@ export const PremiumScreen = ({ navigation }) => {
                     </>
                 }
             </LinearGradient>
-
+            <Navbar nav={navigation} auth={mainState.current.authState} position={'absolute'} from={'premium'} />
             <StatusBar
                 barStyle="default"
                 hidden={true}

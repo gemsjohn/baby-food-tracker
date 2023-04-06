@@ -84,7 +84,7 @@ export const Add_Primary = (props) => {
     const [selectedFoodDataEntrered, setSelectedFoodDataEntrered] = useState(false);
     const [displayTop100Foods, setDisplayTop100Foods] = useState(false)
     const [displayFormulaOptions, setDisplayFormulaOptions] = useState(false)
-    const [metricsModalVisible, setMetricsModalVisible] = useState(false)
+    // const [metricsModalVisible, setMetricsModalVisible] = useState(false)
     const [displayChooseAnotherOptionModal, setDisplayChooseAnotherOptionModal] = useState(false)
 
     const onRefresh = useCallback(() => {

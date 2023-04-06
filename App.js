@@ -7,6 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
 import { HomeScreen } from './pages/home/Home';
 import { PremiumScreen } from './pages/premium/Premium';
+import { MetricsScreen } from './pages/premium/Metrics';
 import { KeyScreen } from './pages/home/Key';
 import { ProfileScreen } from './pages/profile/Profile';
 import { AdminScreen } from './pages/admin/Admin';
@@ -81,6 +82,15 @@ export default function App() {
                 <Stack.Screen
                   name="Premium"
                   component={PremiumScreen}
+                  options={{
+                    headerShown: false,
+                    orientation: 'portrait_up',
+                    
+                  }}
+                />
+                <Stack.Screen
+                  name="Metrics"
+                  component={MetricsScreen}
                   options={{
                     headerShown: false,
                     orientation: 'portrait_up',

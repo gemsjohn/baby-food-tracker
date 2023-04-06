@@ -72,7 +72,6 @@ import {
     THEME_FONT_GREY
 } from '../../COLOR.js';
 import { DailyScheduleSimplified } from './auxilliary/DailyScheduleSimplified';
-import { Metrics_Primary } from './auxilliary/metrics/Metrics_Primary';
 import { Calories_Primary } from './auxilliary/calories/Calories_Primary';
 import { Add_Primary } from './auxilliary/add/Add_Primary';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -84,6 +83,11 @@ import { GLOBAL_GRAPHQL_API_URL } from '../../App';
 const resetActionKey = CommonActions.reset({
     index: 1,
     routes: [{ name: 'Key', params: {} }]
+});
+
+const resetActionMetrics = CommonActions.reset({
+    index: 1,
+    routes: [{ name: 'Metrics', params: {} }]
 });
 
 const APIKeys = {
@@ -221,6 +225,11 @@ export const HomeScreen = ({ navigation }) => {
 
     useEffect(() => {
         setCurrentDateReadable(convertDateFormat(currentDate));
+        setMainState({
+            currentDateReadable: convertDateFormat(currentDate)
+        })
+ 
+
     }, [currentDate])
 
     const lastTouchTimeRef = useRef(Date.now());
@@ -478,10 +487,52 @@ export const HomeScreen = ({ navigation }) => {
                                 />
 
                                 {premiumStatus &&
-                                    <Metrics_Primary
-                                        subuser={userByID?.user.subuser[subuserIndex.current]}
-                                        currentDateReadable={currentDateReadable}
-                                    />
+                                    // <Metrics
+                                    //     subuser={userByID?.user.subuser[subuserIndex.current]}
+                                    //     currentDateReadable={currentDateReadable}
+                                    // />
+
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            // setMetricsModalVisible(true);
+                                            navigation.dispatch(resetActionMetrics)
+                                            setMainState({ userTouch: true })
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                ...styles.homePrimary_Add_Button,
+                                                ...styles.button_Drop_Shadow,
+                                                width: windowWidth / 5,
+                                                height: windowWidth / 5
+
+                                            }}
+                                        >
+                                            <View
+                                                style={{ flexDirection: 'column' }}
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faSolid, faChartSimple}
+                                                    style={{ color: THEME_FONT_COLOR_BLACK, alignSelf: 'center' }}
+                                                    size={25}
+                                                />
+                                                <Text
+                                                    style={{
+                                                        ...styles.renderItem_Search_Result_Container_Text,
+                                                        color: THEME_FONT_COLOR_BLACK,
+                                                        fontSize: HeightRatio(20),
+                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                        marginTop: HeightRatio(10)
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    Metrics
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+
+
                                 }
 
                                 <Add_Primary
@@ -791,7 +842,7 @@ export const HomeScreen = ({ navigation }) => {
                                             margin: HeightRatio(10)
 
                                         }}>
-                                            <Text 
+                                            <Text
                                                 style={{
                                                     fontFamily: 'SofiaSansSemiCondensed-Regular',
                                                     color: THEME_FONT_COLOR_WHITE,
@@ -804,7 +855,7 @@ export const HomeScreen = ({ navigation }) => {
                                             </Text>
                                         </View>
                                     }
-                                    <View 
+                                    <View
                                         style={{
                                             flexDirection: 'row',
                                             display: 'flex',
@@ -904,6 +955,9 @@ export const HomeScreen = ({ navigation }) => {
                                                                     setAddSubUserModalVisible(false);
                                                                     setMainState({ userTouch: true })
                                                                     subuserIndex.current = index;
+                                                                    setMainState({
+                                                                        subuserIndex: index
+                                                                    })
                                                                     onRefresh();
                                                                 }}
 
@@ -968,74 +1022,95 @@ export const HomeScreen = ({ navigation }) => {
                                                                 </View>
                                                             </TouchableOpacity>
                                                         ) : (
-                                                            <TouchableOpacity
-                                                                onPress={() => {
-                                                                    setAddSubUserModalVisible(false);
-                                                                    setMainState({ userTouch: true })
-                                                                    subuserIndex.current = index;
-                                                                    onRefresh();
-                                                                }}
-                                                                disabled={index != 0 && premiumStatus ? false : true}
-                                                                style={{
-                                                                    backgroundColor: index != 0 && premiumStatus ? '#1f1f27' : '#4d4d56',
-                                                                    ...styles.button_Drop_Shadow,
-                                                                    display: 'flex',
-                                                                    alignItems: 'center',
-                                                                    borderRadius: HeightRatio(20),
-                                                                    padding: HeightRatio(25),
-                                                                    alignSelf: 'center',
-                                                                    width: (windowWidth - WidthRatio(50)),
-                                                                    flexDirection: 'row'
-                                                                }}
-                                                            >
-                                                                <View
+                                                            <View style={{ flexDirection: 'column' }}>
+                                                                
+                                                                <TouchableOpacity
+                                                                    onPress={() => {
+                                                                        setAddSubUserModalVisible(false);
+                                                                        setMainState({ userTouch: true })
+                                                                        subuserIndex.current = index;
+                                                                        setMainState({
+                                                                            subuserIndex: index
+                                                                        })
+                                                                        onRefresh();
+                                                                    }}
+                                                                    disabled={index != 0 && premiumStatus ? false : true}
                                                                     style={{
-                                                                        flexDirection: 'row',
+                                                                        backgroundColor: index != 0 && premiumStatus ? '#1f1f27' : '#4d4d56',
+                                                                        ...styles.button_Drop_Shadow,
                                                                         display: 'flex',
                                                                         alignItems: 'center',
+                                                                        borderRadius: HeightRatio(20),
+                                                                        padding: HeightRatio(25),
+                                                                        alignSelf: 'center',
+                                                                        width: (windowWidth - WidthRatio(50)),
+                                                                        flexDirection: 'row'
                                                                     }}
                                                                 >
-                                                                    <Image
-                                                                        source={require('../../assets/favicon_0.png')}
+                                                                    <View
                                                                         style={{
-                                                                            height: HeightRatio(40),
-                                                                            width: HeightRatio(40),
-                                                                            marginLeft: HeightRatio(10)
+                                                                            flexDirection: 'row',
+                                                                            display: 'flex',
+                                                                            alignItems: 'center',
                                                                         }}
-                                                                    />
-                                                                </View>
-                                                                <View style={{ flexDirection: 'column' }}>
-                                                                    <Text
-                                                                        style={{
-                                                                            color: THEME_FONT_COLOR_WHITE,
-                                                                            fontSize: HeightRatio(20),
-                                                                            marginLeft: HeightRatio(20),
-                                                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                                                            width: '90%'
-
-                                                                        }}
-                                                                        allowFontScaling={false}
-                                                                        numberOfLines={1}
-                                                                        ellipsizeMode={'tail'}
                                                                     >
-                                                                        {data.subusername}
-                                                                    </Text>
-                                                                    <Text
-                                                                        style={{
-                                                                            color: THEME_FONT_COLOR_WHITE,
-                                                                            fontSize: HeightRatio(15),
-                                                                            marginLeft: HeightRatio(20),
-                                                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                                        <Image
+                                                                            source={require('../../assets/favicon_0.png')}
+                                                                            style={{
+                                                                                height: HeightRatio(40),
+                                                                                width: HeightRatio(40),
+                                                                                marginLeft: HeightRatio(10)
+                                                                            }}
+                                                                        />
+                                                                    </View>
+                                                                    <View style={{ flexDirection: 'column' }}>
+                                                                        <Text
+                                                                            style={{
+                                                                                color: THEME_FONT_COLOR_WHITE,
+                                                                                fontSize: HeightRatio(20),
+                                                                                marginLeft: HeightRatio(20),
+                                                                                fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                                                width: '90%'
 
-                                                                        }}
-                                                                        allowFontScaling={false}
-                                                                        numberOfLines={1}
-                                                                        ellipsizeMode={'tail'}
-                                                                    >
-                                                                        Update food tracker.
-                                                                    </Text>
-                                                                </View>
-                                                            </TouchableOpacity>
+                                                                            }}
+                                                                            allowFontScaling={false}
+                                                                            numberOfLines={1}
+                                                                            ellipsizeMode={'tail'}
+                                                                        >
+                                                                            {data.subusername}
+                                                                        </Text>
+                                                                        {premiumStatus ?
+                                                                            <Text
+                                                                                style={{
+                                                                                    color: THEME_FONT_COLOR_WHITE,
+                                                                                    fontSize: HeightRatio(15),
+                                                                                    marginLeft: HeightRatio(20),
+                                                                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+
+                                                                                }}
+                                                                                allowFontScaling={false}
+                                                                                numberOfLines={1}
+                                                                                ellipsizeMode={'tail'}
+                                                                            >
+                                                                                Update food tracker.
+                                                                            </Text>
+                                                                            :
+                                                                            <Text
+                                                                                style={{
+                                                                                    color: THEME_COLOR_ATTENTION,
+                                                                                    fontSize: HeightRatio(20),
+                                                                                    marginLeft: HeightRatio(20),
+                                                                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+
+                                                                                }}
+                                                                            >
+                                                                                Premium required
+                                                                            </Text>
+                                                                        }
+                                                                    </View>
+                                                                </TouchableOpacity>
+                                                                
+                                                            </View>
                                                         )}
                                                     </View>
                                                 ))}

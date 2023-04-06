@@ -18,7 +18,7 @@ import {
     ActivityIndicator,
     StatusBar
 } from 'react-native';
-import { HeightRatio, windowWidth } from '../../../../Styling';
+import { HeightRatio, windowWidth } from '../../../Styling';
 import {
     THEME_COLOR_POSITIVE,
     THEME_COLOR_POSITIVE_LOW_OPACITY,
@@ -36,11 +36,9 @@ import {
     THEME_COLOR_PURPLE_LOW_OPACITY,
     THEME_COLOR_BLACKOUT,
     THEME_FONT_GREY
-} from '../../../../COLOR'
+} from '../../../COLOR'
 import { PieChart } from 'react-native-chart-kit';
-import { MainStateContext } from '../../../../App';
-
-
+import { MainStateContext } from '../../../App';
 
 const chartConfig = {
     backgroundGradientFrom: '#ffffff',
@@ -56,14 +54,15 @@ const styles = StyleSheet.create({
     chartLabel: {
         textAlign: 'center',
         marginBottom: 8,
-        color: THEME_FONT_COLOR_WHITE,
-        fontSize: HeightRatio(30),
+        color: THEME_FONT_COLOR_BLACK,
+        fontSize: HeightRatio(24),
         alignSelf: 'center',
-        fontFamily: 'SofiaSansSemiCondensed-ExtraBold'
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
     },
 });
 
 export const FoodGroupMetrics = (props) => {
+    console.log(props.subuser)
     const { mainState, setMainState } = useContext(MainStateContext);
     const [matchingDate, setMatchingDate] = useState([]);
 
@@ -103,7 +102,8 @@ export const FoodGroupMetrics = (props) => {
         setProteinCal([])
         setGrainCal([])
         setDairyCal([])
-
+        setFormulaCal([])
+        
         getTrackerEntryByDate(props.date)
     }, [props.date])
 
@@ -217,45 +217,47 @@ export const FoodGroupMetrics = (props) => {
             name: 'Fruit',
             calories: fruitCalTotal,
             color: '#FF6384',
-            legendFontColor: '#ffffff',
+            legendFontColor: '#000000',
             legendFontSize: 12,
         },
         {
             name: 'Vegetable',
             calories: vegetableCalTotal,
             color: '#36A2EB',
-            legendFontColor: '#ffffff',
+            legendFontColor: '#000000',
             legendFontSize: 12,
         },
         {
             name: 'Protein',
             calories: proteinCalTotal,
             color: '#FFCE56',
-            legendFontColor: '#ffffff',
+            legendFontColor: '#000000',
             legendFontSize: 12,
         },
         {
             name: 'Grain',
             calories: grainCalTotal,
             color: '#4BC0C0',
-            legendFontColor: '#ffffff',
+            legendFontColor: '#000000',
             legendFontSize: 12,
         },
         {
             name: 'Dairy',
             calories: dairyCalTotal,
             color: '#9966FF',
-            legendFontColor: '#ffffff',
+            legendFontColor: '#000000',
             legendFontSize: 12,
         },
         {
             name: 'Formula',
             calories: formulaCalTotal,
             color: '#ffffff',
-            legendFontColor: '#ffffff',
+            legendFontColor: '#000000',
             legendFontSize: 12,
         },
     ];
+
+    
 
 
     return (
@@ -263,7 +265,9 @@ export const FoodGroupMetrics = (props) => {
             <Text 
                 style={styles.chartLabel}
                 allowFontScaling={false}
-            >Daily Food Groups ( Calories )</Text>
+            >
+                Daily Food Groups ( Calories )
+            </Text>
             {fruitCalTotal + vegetableCalTotal + proteinCalTotal + grainCalTotal + dairyCalTotal + formulaCalTotal > 0 ?
                 <PieChart
                     data={data}
@@ -288,7 +292,7 @@ export const FoodGroupMetrics = (props) => {
                     }}
                 >
                     <Image
-                        source={require('../../../../assets/favicon_0.png')}
+                        source={require('../../../assets/favicon_0.png')}
                         style={{
                             height: HeightRatio(200),
                             width: HeightRatio(200),
