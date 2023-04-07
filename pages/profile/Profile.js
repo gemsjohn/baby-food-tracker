@@ -583,7 +583,7 @@ export const ProfileScreen = ({ navigation }) => {
 
             <StatusBar
                 barStyle="default"
-                hidden={true}
+                hidden={false}
                 backgroundColor="transparent"
                 translucent={true}
                 networkActivityIndicatorVisible={true}

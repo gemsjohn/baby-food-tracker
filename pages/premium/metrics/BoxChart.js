@@ -23,7 +23,7 @@ import {
 export const BarChart = (props) => {
   const maxValue = 250;
   const barWidth = 30;
-  const blockMargin = HeightRatio(4);
+  const blockMargin = WidthRatio(3);
 
   return (
     <>
@@ -51,14 +51,14 @@ export const BarChart = (props) => {
               </View>
 
               <View style={{ flexDirection: 'row', width: WidthRatio(190)}}>
-                {[...Array(Math.floor(Math.max(0, item.value*0.25)))].map((_, index) => (
+                {[...Array(Math.floor(Math.max(0, item.value*0.1)))].map((_, index) => (
                   <View
                     key={index}
                     style={[
                       { backgroundColor: item.color },
                       { height: barWidth },
                       { marginRight: blockMargin },
-                      { width: HeightRatio(4) },
+                      { width: WidthRatio(3) },
                     ]}
                   />
                 ))}

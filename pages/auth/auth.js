@@ -320,7 +320,7 @@ export const Auth = ({ navigation }) => {
     Purchases.configure({ apiKey: APIKeys.google, appUserID: localUserID });
 
     const customerInfo = await Purchases.getCustomerInfo();
-    // console.log(customerInfo)
+    console.log(customerInfo)
 
     if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
       // console.log(customerInfo.entitlements.active["Premium"])
@@ -1363,7 +1363,7 @@ export const Auth = ({ navigation }) => {
 
       <StatusBar
         barStyle="default"
-        hidden={true}
+        hidden={false}
         backgroundColor="transparent"
         translucent={true}
         networkActivityIndicatorVisible={true}

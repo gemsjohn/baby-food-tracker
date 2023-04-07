@@ -72,9 +72,12 @@ export const CustomTimePicker = () => {
     
 
     return (
-        <View style={{ flexDirection: 'column', backgroundColor: successColor ? 'rgba(0, 255, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)', borderRadius: HeightRatio(10), padding: HeightRatio(10) }}>
+        <View style={{ flexDirection: 'column', backgroundColor: successColor ? THEME_COLOR_POSITIVE : 'rgba(255, 255, 255, 0.1)', borderRadius: HeightRatio(10), padding: HeightRatio(10) }}>
             <Text
-                style={styles.header}
+                style={{
+                    ...styles.header,
+                    color: successColor ? THEME_FONT_COLOR_BLACK : THEME_FONT_COLOR_WHITE
+                }}
                 allowFontScaling={false}
             >
                 Enter custom time:
@@ -82,7 +85,7 @@ export const CustomTimePicker = () => {
             <View style={{ flexDirection: 'row' }}>
                 <TextInput
                     placeholder="Hour"
-                    placeholderTextColor="white"
+                    placeholderTextColor="black"
                     value={hour}
                     onChangeText={handleHourChange}
                     keyboardType="number-pad"
@@ -91,7 +94,7 @@ export const CustomTimePicker = () => {
                 />
                 <TextInput
                     placeholder="Minute"
-                    placeholderTextColor="white"
+                    placeholderTextColor="black"
                     value={minute}
                     onChangeText={handleMinuteChange}
                     keyboardType="number-pad"
@@ -100,7 +103,7 @@ export const CustomTimePicker = () => {
                 />
                 <TextInput
                     placeholder="AM/PM"
-                    placeholderTextColor="white"
+                    placeholderTextColor="black"
                     value={amPm}
                     onChangeText={handleAmPmChange}
                     autoCapitalize="characters"
@@ -141,9 +144,9 @@ const styles = StyleSheet.create({
         paddingLeft: null,
         height: HeightRatio(50),
         width: WidthRatio(70),
-        fontSize: HeightRatio(15),
+        fontSize: HeightRatio(20),
         fontFamily: 'SofiaSansSemiCondensed-Regular',
-        color: 'white'
+        color: 'black'
     },
     header: {
         color: 'white',

@@ -61,6 +61,35 @@ export const KeyScreen = ({ navigation }) => {
     const [count, setCount] = useState(0);
     const [pageLoadComplete, setPageLoadComplete] = useState(false);
 
+    const checkCustomerInfo = async (localUserID) => {
+        // let localUserID = await SecureStore.getItemAsync('userID');
+        Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+        Purchases.configure({ apiKey: APIKeys.google, appUserID: localUserID });
+
+        const customerInfo = await Purchases.getCustomerInfo();
+        console.log(customerInfo)
+
+        if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
+            // console.log(customerInfo.entitlements.active["Premium"])
+            console.log("# - Premium service access granted.")
+            await updatePremium({
+                variables: {
+                    status: true,
+                    expiration: `${customerInfo.allExpirationDates.baby_food_tracker_premium_month}`
+                }
+            });
+
+        } else {
+            console.log("# - Premium service access revoked.")
+            await updatePremium({
+                variables: {
+                    status: false,
+                    expiration: ''
+                }
+            });
+        }
+    }
+
 
 
     async function getValueFor(key) {
@@ -130,34 +159,7 @@ export const KeyScreen = ({ navigation }) => {
         setCount(prev => prev + 1)
     };
 
-    const checkCustomerInfo = async (localUserID) => {
-        // let localUserID = await SecureStore.getItemAsync('userID');
-        Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
-        Purchases.configure({ apiKey: APIKeys.google, appUserID: localUserID });
-
-        const customerInfo = await Purchases.getCustomerInfo();
-        // console.log(customerInfo)
-
-        if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
-            // console.log(customerInfo.entitlements.active["Premium"])
-            console.log("# - Premium service access granted.")
-            await updatePremium({
-                variables: {
-                    status: true,
-                    expiration: `${customerInfo.allExpirationDates.baby_food_tracker_premium_month}`
-                }
-            });
-
-        } else {
-            console.log("# - Premium service access revoked.")
-            await updatePremium({
-                variables: {
-                    status: false,
-                    expiration: ''
-                }
-            });
-        }
-    }
+    
 
     
 
@@ -321,6 +323,13 @@ export const KeyScreen = ({ navigation }) => {
                 :
                 <View style={{ backgroundColor: 'black' }} />
             }
+            <StatusBar
+                barStyle="default"
+                hidden={false}
+                backgroundColor="transparent"
+                translucent={true}
+                networkActivityIndicatorVisible={true}
+            />
         </>
     )
 }

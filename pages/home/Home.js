@@ -228,7 +228,7 @@ export const HomeScreen = ({ navigation }) => {
         setMainState({
             currentDateReadable: convertDateFormat(currentDate)
         })
- 
+
 
     }, [currentDate])
 
@@ -269,34 +269,34 @@ export const HomeScreen = ({ navigation }) => {
         }, 120000);
     };
 
-    // const checkCustomerInfo = async () => {
-    //     let localUserID = await SecureStore.getItemAsync('userID');
-    //     Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
-    //     Purchases.configure({ apiKey: APIKeys.google, appUserID: localUserID });
+    const checkCustomerInfo = async () => {
+        let localUserID = await SecureStore.getItemAsync('userID');
+        Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+        Purchases.configure({ apiKey: APIKeys.google, appUserID: localUserID });
 
-    //     const customerInfo = await Purchases.getCustomerInfo();
-    //     // console.log(customerInfo)
+        const customerInfo = await Purchases.getCustomerInfo();
+        console.log(customerInfo)
 
-    //     if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
-    //         // console.log(customerInfo.entitlements.active["Premium"])
-    //         console.log("# - Premium service access granted.")
-    //         await updatePremium({
-    //             variables: {
-    //                 status: true,
-    //                 expiration: `${customerInfo.allExpirationDates.baby_food_tracker_premium_month}`
-    //             }
-    //         });
+        if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
+            // console.log(customerInfo.entitlements.active["Premium"])
+            console.log("# - Premium service access granted.")
+            await updatePremium({
+                variables: {
+                    status: true,
+                    expiration: `${customerInfo.allExpirationDates.baby_food_tracker_premium_month}`
+                }
+            });
 
-    //     } else {
-    //         console.log("# - Premium service access revoked.")
-    //         await updatePremium({
-    //             variables: {
-    //                 status: false,
-    //                 expiration: ''
-    //             }
-    //         });
-    //     }
-    // }
+        } else {
+            console.log("# - Premium service access revoked.")
+            await updatePremium({
+                variables: {
+                    status: false,
+                    expiration: ''
+                }
+            });
+        }
+    }
 
     const getTotalCalorieCount = async () => {
         try {
@@ -310,7 +310,7 @@ export const HomeScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
-        setLoading(true)
+        // setLoading(true)
         // checkCustomerInfo()
         getTotalCalorieCount()
 
@@ -399,624 +399,271 @@ export const HomeScreen = ({ navigation }) => {
         <>
             {!loading ?
                 <>
-                    {calendarModalVisible && <View style={styles.modalVisible_Blackout} />}
-                    {addSubUserModalVisible &&
-                        <LinearGradient
-                            colors={['#ecece6', '#ecece6']}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 1 }}
-                            style={styles.homePrimary_Container}
-                        />
-                    }
-
-                    <View
-                        style={styles.homePrimary_Container}
-                        onLayout={onLayoutRootView}
-                    >
-                        <LinearGradient
-                            colors={['#ecece6', '#ecece6']}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 1 }}
-                            style={styles.homePrimary_Container}
-                        >
-                            <View style={{ ...styles.homePrimary_Date }}>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        handlePreviousDay();
-                                        setMainState({ userTouch: true })
-                                    }}
-                                    style={styles.homePrimary_Date_Arrow}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faSolid, faArrowLeft}
-                                        style={{ color: THEME_FONT_COLOR_BLACK }}
-                                        size={25}
-                                    />
-                                </TouchableOpacity>
-                                <View style={styles.homePrimary_Date_Current}>
-                                    <TouchableOpacity
-                                        onPress={() => { setCalendarModalVisible(true); setMainState({ userTouch: true }) }}
-                                    >
-                                        <Text
-                                            style={styles.homePrimary_Date_Current_Text}
-                                            allowFontScaling={false}
-                                        >
-                                            {currentDateReadable}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    {currentDate != moment().format(formatString) &&
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                setCurrentDate(moment().format(formatString));
-                                                setMainState({ userTouch: true })
-                                            }}
-                                            style={{
-                                                ...styles.homePrimary_Date_Return_Button,
-                                                ...styles.button_Drop_Shadow
-                                            }}
-                                        >
-                                            <Text
-                                                style={styles.homePrimary_Date_Return_Button_Text}
-                                                allowFontScaling={false}
-                                            >
-                                                Return to Today
-                                            </Text>
-                                        </TouchableOpacity>
-                                    }
-                                </View>
-
-
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        handleNextDay();
-                                        setMainState({ userTouch: true })
-                                    }}
-                                    style={styles.homePrimary_Date_Arrow}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faSolid, faArrowRight}
-                                        style={{ color: THEME_FONT_COLOR_BLACK }}
-                                        size={25}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-
-                            <View style={{ flexDirection: 'row', marginTop: HeightRatio(20) }}>
-                                <Calories_Primary
-                                    totalCalorieCount={totalCalorieCount}
-                                />
-
-                                {premiumStatus &&
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            navigation.dispatch(resetActionMetrics)
-                                            setMainState({ userTouch: true })
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                ...styles.homePrimary_Add_Button,
-                                                ...styles.button_Drop_Shadow,
-                                                width: windowWidth / 5,
-                                                height: windowWidth / 5
-
-                                            }}
-                                        >
-                                            <View
-                                                style={{ flexDirection: 'column' }}
-                                            >
-                                                <FontAwesomeIcon
-                                                    icon={faSolid, faChartSimple}
-                                                    style={{ color: THEME_FONT_COLOR_BLACK, alignSelf: 'center' }}
-                                                    size={25}
-                                                />
-                                                <Text
-                                                    style={{
-                                                        ...styles.renderItem_Search_Result_Container_Text,
-                                                        color: THEME_FONT_COLOR_BLACK,
-                                                        fontSize: HeightRatio(16),
-                                                        fontFamily: "SofiaSansSemiCondensed-Regular",
-                                                        marginTop: HeightRatio(10)
-                                                    }}
-                                                    allowFontScaling={false}
-                                                >
-                                                    Premium
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    </TouchableOpacity>
-                                }
-
-                                <Add_Primary
-                                    date={currentDateReadable}
-                                    subuser={userByID?.user.subuser[subuserIndex.current]}
-                                />
-                            </View>
-
-                            <DailyScheduleSimplified
-                                date={currentDateReadable}
-                                userID={userByID?.user._id}
-                                containerHeight={HeightRatio(450)}
-                                from={"main"}
-                                subuser={userByID?.user.subuser[subuserIndex.current]}
-                                premium={premiumStatus}
-                                nav={navigation}
-                            />
-                            <View style={{ flexDirection: 'row' }}>
-
-
-                            </View>
-
-
-                        </LinearGradient>
-                    </View>
-
-
-                    <Modal
-                        visible={calendarModalVisible}
-                        animationType="slide"
-                        transparent={true}
-                        style={{
-                            width: windowWidth,
-                        }}
-                    >
-                        <View style={styles.modalVisible_Container}>
-                            <Calendar
-                                onDayPress={(day) => onDateSelect(day)}
-                                markedDates={{ [selectedCalendarModalDate]: { selected: true } }}
-                                theme={{
-                                    calendarBackground: 'rgba(31, 31, 39, 1.00)',
-                                    textMonthFontSize: HeightRatio(20),
-                                    monthTextColor: THEME_FONT_COLOR_WHITE,
-                                    arrowColor: THEME_FONT_COLOR_WHITE,
-                                    selectedDayBackgroundColor: THEME_COLOR_POSITIVE,
-                                    selectedDayTextColor: THEME_FONT_COLOR_BLACK,
-                                    todayTextColor: THEME_COLOR_POSITIVE,
-                                    dayTextColor: THEME_COLOR_POSITIVE_LOW_OPACITY,
-                                    textDisabledColor: THEME_FONT_COLOR_WHITE_LOW_OPACITY,
-                                    textDayFontFamily: 'SofiaSansSemiCondensed-Regular',
-                                    textDayFontSize: HeightRatio(15),
-
-                                }}
-                                style={{
-                                    width: windowWidth - HeightRatio(40)
-                                }}
-                            />
-                            {!selectedCalendarModalDate &&
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setCalendarModalVisible(false);
-                                        setSelectedCalendarModalDate('');
-                                        setMainState({ userTouch: true })
-                                    }}
-                                >
-                                    <View style={{ ...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow }}>
-                                        <Text
-                                            style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
-                                            allowFontScaling={false}
-                                        >
-                                            Close
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity>
-                            }
-                        </View>
-                        {selectedCalendarModalDate &&
-                            <View style={styles.modalVisible_Container}>
-                                <View
-                                    style={{
-                                        height: HeightRatio(300)
-                                    }}
-                                >
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <View style={styles.homePrimary_TotalCalories}>
-                                            <Text
-                                                style={{
-                                                    ...styles.homePrimary_TotalCalories_Text,
-                                                    fontSize: HeightRatio(20),
-                                                }}
-                                                allowFontScaling={false}
-                                            >
-                                                {calendarModalDate}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                    <DailyScheduleSimplified
-                                        date={calendarModalDate}
-                                        userID={userByID?.user._id}
-                                        containerHeight={HeightRatio(250)}
-                                        from={"calendar"}
-                                        subuser={userByID?.user.subuser[subuserIndex.current]}
-                                        premium={premiumStatus}
-                                        nav={navigation}
-                                    />
-
-
-                                </View>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            setCalendarModalVisible(false);
-                                            setSelectedCalendarModalDate('');
-                                            setLoading(true)
-                                            setTimeout(() => {
-                                                setLoading(false)
-                                            }, 500)
-                                            setMainState({ userTouch: true })
-                                        }}
-                                    >
-                                        <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE }}>
-                                            <Text
-                                                style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
-                                                allowFontScaling={false}
-                                            >
-                                                Close
-                                            </Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            setCurrentDate(selectedDateFromCalendar);
-                                            setCalendarModalVisible(false);
-                                            setSelectedCalendarModalDate('');
-                                            setMainState({ userTouch: true })
-                                        }}
-                                    >
-                                        <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_POSITIVE }}>
-                                            <Text
-                                                style={styles.modalVisible_Button_Text}
-                                                allowFontScaling={false}
-                                            >
-                                                Go
-                                            </Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        }
-                    </Modal>
-
-                    <Modal
-                        visible={addSubUserModalVisible}
-                        animationType="slide"
-                        transparent={true}
-                        style={{
-                            ...styles.homePrimary_Container
-                        }}
-                    >
-                        <View
-                            style={{
-                                ...styles.homePrimary_Container,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}
-                        >
-                            <LinearGradient
-                                // colors={['#8bccde', '#d05bb6']}
-                                colors={['#ecece6', '#ecece6']}
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 1 }}
+                    {addSubUserModalVisible ?
+                        <>
+                            <View
                                 style={{
                                     ...styles.homePrimary_Container,
                                     display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
                                 }}
                             >
-                                <>
-                                    <View style={{ backgroundColor: '#1f1f27', borderRadius: HeightRatio(20), padding: HeightRatio(20) }}>
-                                        <Text
-                                            style={{
-                                                color: THEME_FONT_COLOR_WHITE,
-                                                alignSelf: 'center',
-                                                fontSize: HeightRatio(50),
-                                                margin: 20,
-                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                            }}
-                                            allowFontScaling={false}
-                                        >
-                                            Add a Child
-                                        </Text>
-                                        <TextInput
-                                            type="text"
-                                            name="subuser"
-                                            placeholder="Child's name"
-                                            placeholderTextColor='white'
-                                            value={subuserInput}
-                                            onChangeText={setSubuserInput}
-                                            style={{
-                                                ...Styling.textInputStyle
-                                            }}
-                                            disableFullscreenUI={true}
-                                            allowFontScaling={false}
-                                        />
-
-
-                                        {subuserInput != "" &&
-                                            <>
-                                                {premiumStatus &&
-                                                    <TouchableOpacity
-                                                        onPress={() => {
-                                                            handleAddSubuser()
-                                                        }}
-                                                    >
-                                                        <View style={{
-                                                            backgroundColor: THEME_COLOR_POSITIVE,
-                                                            ...styles.button_Drop_Shadow,
-                                                            display: 'flex',
-                                                            justifyContent: 'flex-start',
-                                                            padding: HeightRatio(20),
-                                                            borderRadius: HeightRatio(10),
-                                                            alignSelf: 'center',
-                                                            width: windowWidth - WidthRatio(50),
-                                                            marginTop: HeightRatio(10)
-                                                        }}>
-                                                            <Text
-                                                                style={{
-                                                                    color: THEME_FONT_COLOR_BLACK,
-                                                                    fontSize: HeightRatio(30),
-                                                                    alignSelf: 'center',
-                                                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                                }}
-                                                                allowFontScaling={false}
-                                                            >
-                                                                ADD
-                                                            </Text>
-                                                        </View>
-                                                    </TouchableOpacity>
-                                                }
-                                                {!premiumStatus && subuserLength <= 0 &&
-                                                    <TouchableOpacity
-                                                        onPress={() => {
-                                                            handleAddSubuser()
-                                                        }}
-                                                    >
-                                                        <View style={{
-                                                            backgroundColor: THEME_COLOR_POSITIVE,
-                                                            ...styles.button_Drop_Shadow,
-                                                            display: 'flex',
-                                                            justifyContent: 'flex-start',
-                                                            padding: HeightRatio(20),
-                                                            borderRadius: HeightRatio(10),
-                                                            alignSelf: 'center',
-                                                            width: windowWidth - WidthRatio(50),
-                                                            marginTop: HeightRatio(10)
-                                                        }}>
-                                                            <Text
-                                                                style={{
-                                                                    color: THEME_FONT_COLOR_BLACK,
-                                                                    fontSize: HeightRatio(30),
-                                                                    alignSelf: 'center',
-                                                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                                }}
-                                                                allowFontScaling={false}
-                                                            >
-                                                                ADD
-                                                            </Text>
-                                                        </View>
-                                                    </TouchableOpacity>
-                                                }
-                                                {!premiumStatus &&
-
-                                                    <View style={{ margin: HeightRatio(10) }}>
-                                                        <Text
-                                                            style={{
-                                                                color: THEME_COLOR_ATTENTION,
-                                                                fontSize: HeightRatio(20),
-                                                                textAlign: 'center',
-                                                                fontFamily: 'SofiaSansSemiCondensed-Regular'
-                                                            }}
-                                                            allowFontScaling={false}
-                                                        >
-                                                            Premium users can add additional children.
-                                                        </Text>
-                                                    </View>
-                                                }
-                                            </>
-
-                                        }
-
-
-                                    </View>
-                                    <View style={{ borderBottomWidth: 2, borderBottomColor: 'white', width: '90%', margin: 20, }} />
-                                </>
-
-                                <>
-                                    {!networkConnected &&
-                                        <View style={{
-                                            // position: 'absolute',
-                                            // top: HeightRatio(-40),
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            backgroundColor: THEME_COLOR_NEGATIVE,
-                                            padding: HeightRatio(10),
-                                            borderRadius: HeightRatio(10),
-                                            margin: HeightRatio(10)
-
-                                        }}>
+                                <LinearGradient
+                                    // colors={['#8bccde', '#d05bb6']}
+                                    colors={['#ecece6', '#ecece6']}
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 1 }}
+                                    style={{
+                                        ...styles.homePrimary_Container,
+                                        display: 'flex',
+                                    }}
+                                >
+                                    <>
+                                        <View style={{ backgroundColor: '#1f1f27', borderRadius: HeightRatio(20), padding: HeightRatio(20), marginTop: HeightRatio(30) }}>
                                             <Text
                                                 style={{
-                                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
                                                     color: THEME_FONT_COLOR_WHITE,
-                                                    fontSize: HeightRatio(20),
                                                     alignSelf: 'center',
+                                                    fontSize: HeightRatio(50),
+                                                    margin: 20,
+                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
                                                 }}
                                                 allowFontScaling={false}
                                             >
-                                                Network Error
+                                                Add a Child
                                             </Text>
+                                            <TextInput
+                                                type="text"
+                                                name="subuser"
+                                                placeholder="Child's name"
+                                                placeholderTextColor='white'
+                                                value={subuserInput}
+                                                onChangeText={setSubuserInput}
+                                                style={{
+                                                    ...Styling.textInputStyle
+                                                }}
+                                                disableFullscreenUI={true}
+                                                allowFontScaling={false}
+                                            />
+
+
+                                            {subuserInput != "" &&
+                                                <>
+                                                    {premiumStatus &&
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                handleAddSubuser()
+                                                            }}
+                                                        >
+                                                            <View style={{
+                                                                backgroundColor: THEME_COLOR_POSITIVE,
+                                                                ...styles.button_Drop_Shadow,
+                                                                display: 'flex',
+                                                                justifyContent: 'flex-start',
+                                                                padding: HeightRatio(20),
+                                                                borderRadius: HeightRatio(10),
+                                                                alignSelf: 'center',
+                                                                width: windowWidth - WidthRatio(50),
+                                                                marginTop: HeightRatio(10)
+                                                            }}>
+                                                                <Text
+                                                                    style={{
+                                                                        color: THEME_FONT_COLOR_BLACK,
+                                                                        fontSize: HeightRatio(30),
+                                                                        alignSelf: 'center',
+                                                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                                    }}
+                                                                    allowFontScaling={false}
+                                                                >
+                                                                    ADD
+                                                                </Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                    }
+                                                    {!premiumStatus && subuserLength <= 0 &&
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                handleAddSubuser()
+                                                            }}
+                                                        >
+                                                            <View style={{
+                                                                backgroundColor: THEME_COLOR_POSITIVE,
+                                                                ...styles.button_Drop_Shadow,
+                                                                display: 'flex',
+                                                                justifyContent: 'flex-start',
+                                                                padding: HeightRatio(20),
+                                                                borderRadius: HeightRatio(10),
+                                                                alignSelf: 'center',
+                                                                width: windowWidth - WidthRatio(50),
+                                                                marginTop: HeightRatio(10)
+                                                            }}>
+                                                                <Text
+                                                                    style={{
+                                                                        color: THEME_FONT_COLOR_BLACK,
+                                                                        fontSize: HeightRatio(30),
+                                                                        alignSelf: 'center',
+                                                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                                    }}
+                                                                    allowFontScaling={false}
+                                                                >
+                                                                    ADD
+                                                                </Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                    }
+                                                    {!premiumStatus &&
+
+                                                        <View style={{ margin: HeightRatio(10) }}>
+                                                            <Text
+                                                                style={{
+                                                                    color: THEME_COLOR_ATTENTION,
+                                                                    fontSize: HeightRatio(20),
+                                                                    textAlign: 'center',
+                                                                    fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                                                }}
+                                                                allowFontScaling={false}
+                                                            >
+                                                                Premium users can add additional children.
+                                                            </Text>
+                                                        </View>
+                                                    }
+                                                </>
+
+                                            }
+
+
                                         </View>
-                                    }
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            alignSelf: 'center'
-                                        }}
-                                    >
-                                        {/* refetch */}
-                                        <TouchableOpacity
-                                            onPress={() => onRefresh()}
+                                        <View style={{ borderBottomWidth: 2, borderBottomColor: 'white', width: '90%', margin: 20, }} />
+                                    </>
+
+                                    <>
+                                        {!networkConnected &&
+                                            <View style={{
+                                                // position: 'absolute',
+                                                // top: HeightRatio(-40),
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                backgroundColor: THEME_COLOR_NEGATIVE,
+                                                padding: HeightRatio(10),
+                                                borderRadius: HeightRatio(10),
+                                                margin: HeightRatio(10)
+
+                                            }}>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                        color: THEME_FONT_COLOR_WHITE,
+                                                        fontSize: HeightRatio(20),
+                                                        alignSelf: 'center',
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    Network Error
+                                                </Text>
+                                            </View>
+                                        }
+                                        <View
                                             style={{
-                                                height: HeightRatio(50),
-                                                width: HeightRatio(50),
+                                                flexDirection: 'row',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                                                borderRadius: HeightRatio(10),
-                                                margin: HeightRatio(10)
+                                                alignSelf: 'center'
                                             }}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faSolid, faArrowsRotate}
-                                                style={{ color: THEME_FONT_COLOR_WHITE }}
-                                                size={25}
-                                            />
-                                        </TouchableOpacity>
-                                        <View
-                                            style={{
-                                                flexDirection: 'column',
-                                                // backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                                                padding: HeightRatio(10),
-                                                borderRadius: HeightRatio(10)
-                                            }}
-                                        >
+                                            {/* refetch */}
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    checkCustomerInfo();
+                                                    onRefresh();
+                                                     
+                                                }}
+                                                style={{
+                                                    height: HeightRatio(50),
+                                                    width: HeightRatio(50),
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                                    borderRadius: HeightRatio(10),
+                                                    margin: HeightRatio(10)
+                                                }}
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faSolid, faArrowsRotate}
+                                                    style={{ color: THEME_FONT_COLOR_WHITE }}
+                                                    size={25}
+                                                />
+                                            </TouchableOpacity>
                                             <View
                                                 style={{
-                                                    flexDirection: 'row',
-                                                    margin: HeightRatio(4)
+                                                    flexDirection: 'column',
+                                                    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                                    padding: HeightRatio(10),
+                                                    borderRadius: HeightRatio(10)
+                                                }}
+                                            >
+                                                <View
+                                                    style={{
+                                                        flexDirection: 'row',
+                                                        margin: HeightRatio(4)
 
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontSize: HeightRatio(16),
-                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                                        color: THEME_FONT_COLOR_BLACK
                                                     }}
-                                                    allowFontScaling={false}
                                                 >
-                                                    Premium: &nbsp;
-                                                </Text>
-                                                <Text
+                                                    <Text
+                                                        style={{
+                                                            fontSize: HeightRatio(16),
+                                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                            color: THEME_FONT_COLOR_BLACK
+                                                        }}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        Premium: &nbsp;
+                                                    </Text>
+                                                    <Text
+                                                        style={{
+                                                            fontSize: HeightRatio(16),
+                                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                            color: premiumStatus ? 'green' : 'red'
+                                                        }}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        {premiumStatus ? 'ACTIVE' : 'INACTIVE'}
+                                                    </Text>
+                                                </View>
+                                                <View
                                                     style={{
-                                                        fontSize: HeightRatio(16),
-                                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                                        color: premiumStatus ? 'green' : 'red'
+                                                        flexDirection: 'row',
+                                                        margin: HeightRatio(4)
                                                     }}
-                                                    allowFontScaling={false}
                                                 >
-                                                    {premiumStatus ? 'ACTIVE' : 'INACTIVE'}
-                                                </Text>
-                                            </View>
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    margin: HeightRatio(4)
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontSize: HeightRatio(16),
-                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                                        color: THEME_FONT_COLOR_BLACK
-                                                    }}
-                                                    allowFontScaling={false}
-                                                >
-                                                    EXPIRATION: {premiumExpiration}
-                                                </Text>
+                                                    <Text
+                                                        style={{
+                                                            fontSize: HeightRatio(16),
+                                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                            color: THEME_FONT_COLOR_BLACK
+                                                        }}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        EXPIRATION: {premiumExpiration}
+                                                    </Text>
+                                                </View>
                                             </View>
                                         </View>
-                                    </View>
-                                    <SafeAreaView
-                                        style={{
-                                            ...styles.container,
-                                            height: HeightRatio(430),
-                                        }}
-                                    >
-                                        <ScrollView style={styles.scrollView}>
-                                            <>
-                                                {userByID?.user.subuser.map((data, index) => (
-                                                    <View style={{ flexDirection: 'row', margin: HeightRatio(10) }} key={index}>
-                                                        {index === 0 ? (
-                                                            <TouchableOpacity
-                                                                onPress={() => {
-                                                                    setAddSubUserModalVisible(false);
-                                                                    setMainState({ userTouch: true })
-                                                                    subuserIndex.current = index;
-                                                                    setMainState({
-                                                                        subuserIndex: index
-                                                                    })
-                                                                    onRefresh();
-                                                                }}
-
-                                                                style={{
-                                                                    backgroundColor: '#1f1f27',
-                                                                    ...styles.button_Drop_Shadow,
-                                                                    display: 'flex',
-                                                                    alignItems: 'center',
-                                                                    borderRadius: HeightRatio(20),
-                                                                    padding: HeightRatio(25),
-                                                                    alignSelf: 'center',
-                                                                    width: (windowWidth - WidthRatio(50)),
-                                                                    flexDirection: 'row'
-                                                                }}
-                                                            >
-                                                                <View
-                                                                    style={{
-                                                                        flexDirection: 'row',
-                                                                        display: 'flex',
-                                                                        alignItems: 'center',
-                                                                    }}
-                                                                >
-                                                                    <Image
-                                                                        source={require('../../assets/favicon_0.png')}
-                                                                        style={{
-                                                                            height: HeightRatio(40),
-                                                                            width: HeightRatio(40),
-                                                                            marginLeft: HeightRatio(10)
-                                                                        }}
-                                                                    />
-                                                                </View>
-                                                                <View style={{ flexDirection: 'column' }}>
-                                                                    <Text
-                                                                        style={{
-                                                                            color: THEME_FONT_COLOR_WHITE,
-                                                                            fontSize: HeightRatio(20),
-                                                                            marginLeft: HeightRatio(20),
-                                                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                                                            width: '90%'
-
-                                                                        }}
-                                                                        allowFontScaling={false}
-                                                                        numberOfLines={1}
-                                                                        ellipsizeMode={'tail'}
-                                                                    >
-                                                                        {data.subusername}
-                                                                    </Text>
-                                                                    <Text
-                                                                        style={{
-                                                                            color: THEME_FONT_COLOR_WHITE,
-                                                                            fontSize: HeightRatio(15),
-                                                                            marginLeft: HeightRatio(20),
-                                                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
-
-                                                                        }}
-                                                                        allowFontScaling={false}
-                                                                        numberOfLines={1}
-                                                                        ellipsizeMode={'tail'}
-                                                                    >
-                                                                        Update food tracker.
-                                                                    </Text>
-                                                                </View>
-                                                            </TouchableOpacity>
-                                                        ) : (
-                                                            <View style={{ flexDirection: 'column' }}>
-                                                                
+                                        <SafeAreaView
+                                            style={{
+                                                ...styles.container,
+                                                height: HeightRatio(430),
+                                            }}
+                                        >
+                                            <ScrollView style={styles.scrollView}>
+                                                <>
+                                                    {userByID?.user.subuser.map((data, index) => (
+                                                        <View style={{ flexDirection: 'row', margin: HeightRatio(10) }} key={index}>
+                                                            {index === 0 ? (
                                                                 <TouchableOpacity
                                                                     onPress={() => {
                                                                         setAddSubUserModalVisible(false);
@@ -1027,9 +674,9 @@ export const HomeScreen = ({ navigation }) => {
                                                                         })
                                                                         onRefresh();
                                                                     }}
-                                                                    disabled={index != 0 && premiumStatus ? false : true}
+
                                                                     style={{
-                                                                        backgroundColor: index != 0 && premiumStatus ? '#1f1f27' : '#4d4d56',
+                                                                        backgroundColor: '#1f1f27',
                                                                         ...styles.button_Drop_Shadow,
                                                                         display: 'flex',
                                                                         alignItems: 'center',
@@ -1072,165 +719,543 @@ export const HomeScreen = ({ navigation }) => {
                                                                         >
                                                                             {data.subusername}
                                                                         </Text>
-                                                                        {premiumStatus ?
+                                                                        <Text
+                                                                            style={{
+                                                                                color: THEME_FONT_COLOR_WHITE,
+                                                                                fontSize: HeightRatio(15),
+                                                                                marginLeft: HeightRatio(20),
+                                                                                fontFamily: 'SofiaSansSemiCondensed-Regular',
+
+                                                                            }}
+                                                                            allowFontScaling={false}
+                                                                            numberOfLines={1}
+                                                                            ellipsizeMode={'tail'}
+                                                                        >
+                                                                            Update food tracker.
+                                                                        </Text>
+                                                                    </View>
+                                                                </TouchableOpacity>
+                                                            ) : (
+                                                                <View style={{ flexDirection: 'column' }}>
+
+                                                                    <TouchableOpacity
+                                                                        onPress={() => {
+                                                                            setAddSubUserModalVisible(false);
+                                                                            setMainState({ userTouch: true })
+                                                                            subuserIndex.current = index;
+                                                                            setMainState({
+                                                                                subuserIndex: index
+                                                                            })
+                                                                            onRefresh();
+                                                                        }}
+                                                                        disabled={index != 0 && premiumStatus ? false : true}
+                                                                        style={{
+                                                                            backgroundColor: index != 0 && premiumStatus ? '#1f1f27' : '#4d4d56',
+                                                                            ...styles.button_Drop_Shadow,
+                                                                            display: 'flex',
+                                                                            alignItems: 'center',
+                                                                            borderRadius: HeightRatio(20),
+                                                                            padding: HeightRatio(25),
+                                                                            alignSelf: 'center',
+                                                                            width: (windowWidth - WidthRatio(50)),
+                                                                            flexDirection: 'row'
+                                                                        }}
+                                                                    >
+                                                                        <View
+                                                                            style={{
+                                                                                flexDirection: 'row',
+                                                                                display: 'flex',
+                                                                                alignItems: 'center',
+                                                                            }}
+                                                                        >
+                                                                            <Image
+                                                                                source={require('../../assets/favicon_0.png')}
+                                                                                style={{
+                                                                                    height: HeightRatio(40),
+                                                                                    width: HeightRatio(40),
+                                                                                    marginLeft: HeightRatio(10)
+                                                                                }}
+                                                                            />
+                                                                        </View>
+                                                                        <View style={{ flexDirection: 'column' }}>
                                                                             <Text
                                                                                 style={{
                                                                                     color: THEME_FONT_COLOR_WHITE,
-                                                                                    fontSize: HeightRatio(15),
+                                                                                    fontSize: HeightRatio(20),
                                                                                     marginLeft: HeightRatio(20),
-                                                                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                                                    width: '90%'
 
                                                                                 }}
                                                                                 allowFontScaling={false}
                                                                                 numberOfLines={1}
                                                                                 ellipsizeMode={'tail'}
                                                                             >
-                                                                                Update food tracker.
+                                                                                {data.subusername}
                                                                             </Text>
-                                                                            :
-                                                                            <Text
-                                                                                style={{
-                                                                                    color: THEME_COLOR_ATTENTION,
-                                                                                    fontSize: HeightRatio(20),
-                                                                                    marginLeft: HeightRatio(20),
-                                                                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                                            {premiumStatus ?
+                                                                                <Text
+                                                                                    style={{
+                                                                                        color: THEME_FONT_COLOR_WHITE,
+                                                                                        fontSize: HeightRatio(15),
+                                                                                        marginLeft: HeightRatio(20),
+                                                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
 
-                                                                                }}
-                                                                            >
-                                                                                Premium required
-                                                                            </Text>
-                                                                        }
-                                                                    </View>
-                                                                </TouchableOpacity>
-                                                                
-                                                            </View>
-                                                        )}
+                                                                                    }}
+                                                                                    allowFontScaling={false}
+                                                                                    numberOfLines={1}
+                                                                                    ellipsizeMode={'tail'}
+                                                                                >
+                                                                                    Update food tracker.
+                                                                                </Text>
+                                                                                :
+                                                                                <Text
+                                                                                    style={{
+                                                                                        color: THEME_COLOR_ATTENTION,
+                                                                                        fontSize: HeightRatio(20),
+                                                                                        marginLeft: HeightRatio(20),
+                                                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+
+                                                                                    }}
+                                                                                >
+                                                                                    Premium required
+                                                                                </Text>
+                                                                            }
+                                                                        </View>
+                                                                    </TouchableOpacity>
+
+                                                                </View>
+                                                            )}
+                                                            <TouchableOpacity
+                                                                onPress={() => {
+                                                                    setDeleteSubuserIndex(index)
+                                                                    setDeleteSubuserModalVisible(true)
+                                                                    setMainState({
+                                                                        userTouch: true
+                                                                    })
+
+                                                                }}
+                                                                style={{
+                                                                    backgroundColor: THEME_COLOR_NEGATIVE,
+                                                                    display: 'flex',
+                                                                    justifyContent: 'center',
+                                                                    alignItems: 'center',
+                                                                    padding: HeightRatio(4),
+                                                                    borderRadius: HeightRatio(10),
+                                                                    height: HeightRatio(30),
+                                                                    width: HeightRatio(30),
+                                                                    position: 'absolute',
+                                                                    top: HeightRatio(-2),
+                                                                    right: HeightRatio(-2),
+
+                                                                }}
+                                                            >
+                                                                <FontAwesomeIcon
+                                                                    icon={faSolid, faX}
+                                                                    style={{ color: 'white' }}
+                                                                    size={14}
+                                                                />
+                                                            </TouchableOpacity>
+
+                                                        </View>
+                                                    ))}
+                                                </>
+
+                                            </ScrollView>
+                                        </SafeAreaView>
+
+
+                                    </>
+                                </LinearGradient>
+                            </View>
+                            <Modal
+                                visible={deleteSubuserModalVisible}
+                                animationType="slide"
+                                transparent={true}
+                            >
+                                <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.75)' }}>
+                                    <View
+                                        style={{
+                                            backgroundColor: '#1f1f27',
+                                            margin: 20,
+                                            zIndex: 999,
+                                            borderRadius: 10,
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                margin: HeightRatio(20),
+                                            }}
+                                        >
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                <Image
+                                                    source={require('../../assets/favicon_0.png')}
+                                                    style={{
+                                                        height: HeightRatio(40),
+                                                        width: HeightRatio(40),
+                                                    }}
+                                                />
+                                                <Text
+                                                    style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    Baby Food Tracker
+                                                </Text>
+                                            </View>
+                                            <View style={{ height: HeightRatio(10) }}></View>
+                                            <View
+                                                style={{
+                                                    padding: HeightRatio(10)
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        color: THEME_FONT_COLOR_WHITE,
+                                                        textAlign: 'left',
+                                                        fontSize: HeightRatio(20),
+                                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                        marginTop: HeightRatio(10)
+                                                    }}
+                                                    allowFontScaling={false}
+                                                >
+                                                    Are you sure you want to remove {deleteSubuserModalVisible ? userByID?.user.subuser[deleteSubuserIndex].subusername : 'this child'} from the list?
+                                                </Text>
+
+                                            </View>
+
+                                            <View style={styles.modalContainer_1_B}>
+                                                <TouchableOpacity onPress={() => { setDeleteSubuserModalVisible(false); setMainState({ userTouch: true }); }}>
+                                                    <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
+                                                        <Text
+                                                            style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            Close
+                                                        </Text>
                                                     </View>
-                                                ))}
-                                            </>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        setDeleteSubuserModalVisible(false);
+                                                        handleDeleteSubuser()
+                                                        setMainState({ userTouch: true })
 
-                                        </ScrollView>
-                                    </SafeAreaView>
+                                                    }}
+                                                >
+                                                    <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
+                                                        <Text
+                                                            style={styles.modalButton_Text}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            Remove
+                                                        </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            </View>
 
 
-                                </>
-                            </LinearGradient>
-                        </View>
-                    </Modal>
+                                        </View>
+                                    </View>
+                                </View>
+                            </Modal>
+                        </>
+                        :
+                        <>
+                            {calendarModalVisible && <View style={styles.modalVisible_Blackout} />}
 
-                    <Modal
-                        visible={deleteSubuserModalVisible}
-                        animationType="slide"
-                        transparent={true}
-                    >
-                        <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.75)' }}>
                             <View
+                                style={styles.homePrimary_Container}
+                                onLayout={onLayoutRootView}
+                            >
+                                <LinearGradient
+                                    colors={['#ecece6', '#ecece6']}
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 1 }}
+                                    style={styles.homePrimary_Container}
+                                >
+                                    <View style={{ ...styles.homePrimary_Date }}>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                handlePreviousDay();
+                                                setMainState({ userTouch: true })
+                                            }}
+                                            style={styles.homePrimary_Date_Arrow}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faSolid, faArrowLeft}
+                                                style={{ color: THEME_FONT_COLOR_BLACK }}
+                                                size={25}
+                                            />
+                                        </TouchableOpacity>
+                                        <View style={styles.homePrimary_Date_Current}>
+                                            <TouchableOpacity
+                                                onPress={() => { setCalendarModalVisible(true); setMainState({ userTouch: true }) }}
+                                            >
+                                                <Text
+                                                    style={styles.homePrimary_Date_Current_Text}
+                                                    allowFontScaling={false}
+                                                >
+                                                    {currentDateReadable}
+                                                </Text>
+                                            </TouchableOpacity>
+                                            {currentDate != moment().format(formatString) &&
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        setCurrentDate(moment().format(formatString));
+                                                        setMainState({ userTouch: true })
+                                                    }}
+                                                    style={{
+                                                        ...styles.homePrimary_Date_Return_Button,
+                                                        ...styles.button_Drop_Shadow
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={styles.homePrimary_Date_Return_Button_Text}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        Return to Today
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            }
+                                        </View>
+
+
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                handleNextDay();
+                                                setMainState({ userTouch: true })
+                                            }}
+                                            style={styles.homePrimary_Date_Arrow}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faSolid, faArrowRight}
+                                                style={{ color: THEME_FONT_COLOR_BLACK }}
+                                                size={25}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    <View style={{ flexDirection: 'row', marginTop: HeightRatio(20) }}>
+                                        <Calories_Primary
+                                            totalCalorieCount={totalCalorieCount}
+                                        />
+
+                                        {premiumStatus &&
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    navigation.dispatch(resetActionMetrics)
+                                                    setMainState({ userTouch: true })
+                                                }}
+                                            >
+                                                <View
+                                                    style={{
+                                                        ...styles.homePrimary_Add_Button,
+                                                        ...styles.button_Drop_Shadow,
+                                                        width: windowWidth / 5,
+                                                        height: windowWidth / 5
+
+                                                    }}
+                                                >
+                                                    <View
+                                                        style={{ flexDirection: 'column' }}
+                                                    >
+                                                        <FontAwesomeIcon
+                                                            icon={faSolid, faChartSimple}
+                                                            style={{ color: THEME_FONT_COLOR_BLACK, alignSelf: 'center' }}
+                                                            size={25}
+                                                        />
+                                                        <Text
+                                                            style={{
+                                                                ...styles.renderItem_Search_Result_Container_Text,
+                                                                color: THEME_FONT_COLOR_BLACK,
+                                                                fontSize: HeightRatio(16),
+                                                                fontFamily: "SofiaSansSemiCondensed-Regular",
+                                                                marginTop: HeightRatio(10)
+                                                            }}
+                                                            allowFontScaling={false}
+                                                        >
+                                                            Premium
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                            </TouchableOpacity>
+                                        }
+
+                                        <Add_Primary
+                                            date={currentDateReadable}
+                                            subuser={userByID?.user.subuser[subuserIndex.current]}
+                                        />
+                                    </View>
+
+                                    <DailyScheduleSimplified
+                                        date={currentDateReadable}
+                                        userID={userByID?.user._id}
+                                        containerHeight={HeightRatio(450)}
+                                        from={"main"}
+                                        subuser={userByID?.user.subuser[subuserIndex.current]}
+                                        premium={premiumStatus}
+                                        nav={navigation}
+                                    />
+                                    <View style={{ flexDirection: 'row' }}>
+
+
+                                    </View>
+
+
+                                </LinearGradient>
+                            </View>
+
+
+                            <Modal
+                                visible={calendarModalVisible}
+                                animationType="slide"
+                                transparent={true}
                                 style={{
-                                    backgroundColor: '#1f1f27',
-                                    margin: 20,
-                                    zIndex: 999,
-                                    borderRadius: 10,
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
+                                    width: windowWidth,
                                 }}
                             >
-                                <View
-                                    style={{
-                                        margin: HeightRatio(20),
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <Image
-                                            source={require('../../assets/favicon_0.png')}
-                                            style={{
-                                                height: HeightRatio(40),
-                                                width: HeightRatio(40),
-                                            }}
-                                        />
-                                        <Text
-                                            style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}
-                                            allowFontScaling={false}
-                                        >
-                                            Baby Food Tracker
-                                        </Text>
-                                    </View>
-                                    <View style={{ height: HeightRatio(10) }}></View>
-                                    <View
-                                        style={{
-                                            padding: HeightRatio(10)
-                                        }}
-                                    >
-                                        <Text
-                                            style={{
-                                                color: THEME_FONT_COLOR_WHITE,
-                                                textAlign: 'left',
-                                                fontSize: HeightRatio(20),
-                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                                marginTop: HeightRatio(10)
-                                            }}
-                                            allowFontScaling={false}
-                                        >
-                                            Are you sure you want to remove this child from the list?
-                                        </Text>
+                                <View style={styles.modalVisible_Container}>
+                                    <Calendar
+                                        onDayPress={(day) => onDateSelect(day)}
+                                        markedDates={{ [selectedCalendarModalDate]: { selected: true } }}
+                                        theme={{
+                                            calendarBackground: 'rgba(31, 31, 39, 1.00)',
+                                            textMonthFontSize: HeightRatio(20),
+                                            monthTextColor: THEME_FONT_COLOR_WHITE,
+                                            arrowColor: THEME_FONT_COLOR_WHITE,
+                                            selectedDayBackgroundColor: THEME_COLOR_POSITIVE,
+                                            selectedDayTextColor: THEME_FONT_COLOR_BLACK,
+                                            todayTextColor: THEME_COLOR_POSITIVE,
+                                            dayTextColor: THEME_COLOR_POSITIVE_LOW_OPACITY,
+                                            textDisabledColor: THEME_FONT_COLOR_WHITE_LOW_OPACITY,
+                                            textDayFontFamily: 'SofiaSansSemiCondensed-Regular',
+                                            textDayFontSize: HeightRatio(15),
 
-                                    </View>
-
-                                    <View style={styles.modalContainer_1_B}>
-                                        <TouchableOpacity onPress={() => { setDeleteSubuserModalVisible(false); setMainState({ userTouch: true }); }}>
-                                            <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
+                                        }}
+                                        style={{
+                                            width: windowWidth - HeightRatio(40)
+                                        }}
+                                    />
+                                    {!selectedCalendarModalDate &&
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                setCalendarModalVisible(false);
+                                                setSelectedCalendarModalDate('');
+                                                setMainState({ userTouch: true })
+                                            }}
+                                        >
+                                            <View style={{ ...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow }}>
                                                 <Text
-                                                    style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
+                                                    style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
                                                     allowFontScaling={false}
                                                 >
                                                     Close
                                                 </Text>
                                             </View>
                                         </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                setDeleteSubuserModalVisible(false);
-                                                handleDeleteSubuser()
-                                                setMainState({ userTouch: true })
-
+                                    }
+                                </View>
+                                {selectedCalendarModalDate &&
+                                    <View style={styles.modalVisible_Container}>
+                                        <View
+                                            style={{
+                                                height: HeightRatio(300)
                                             }}
                                         >
-                                            <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_NEGATIVE }}>
-                                                <Text
-                                                    style={styles.modalButton_Text}
-                                                    allowFontScaling={false}
-                                                >
-                                                    Remove
-                                                </Text>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={styles.homePrimary_TotalCalories}>
+                                                    <Text
+                                                        style={{
+                                                            ...styles.homePrimary_TotalCalories_Text,
+                                                            fontSize: HeightRatio(20),
+                                                        }}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        {calendarModalDate}
+                                                    </Text>
+                                                </View>
                                             </View>
-                                        </TouchableOpacity>
+                                            <DailyScheduleSimplified
+                                                date={calendarModalDate}
+                                                userID={userByID?.user._id}
+                                                containerHeight={HeightRatio(250)}
+                                                from={"calendar"}
+                                                subuser={userByID?.user.subuser[subuserIndex.current]}
+                                                premium={premiumStatus}
+                                                nav={navigation}
+                                            />
+
+
+                                        </View>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    setCalendarModalVisible(false);
+                                                    setSelectedCalendarModalDate('');
+                                                    setLoading(true)
+                                                    setTimeout(() => {
+                                                        setLoading(false)
+                                                    }, 500)
+                                                    setMainState({ userTouch: true })
+                                                }}
+                                            >
+                                                <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_NEGATIVE }}>
+                                                    <Text
+                                                        style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        Close
+                                                    </Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    setCurrentDate(selectedDateFromCalendar);
+                                                    setCalendarModalVisible(false);
+                                                    setSelectedCalendarModalDate('');
+                                                    setMainState({ userTouch: true })
+                                                }}
+                                            >
+                                                <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_POSITIVE }}>
+                                                    <Text
+                                                        style={styles.modalVisible_Button_Text}
+                                                        allowFontScaling={false}
+                                                    >
+                                                        Go
+                                                    </Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
+                                }
+                            </Modal>
 
 
-                                </View>
-                            </View>
-                        </View>
-                    </Modal>
+
+
+                        </>
+                    }
                     <Navbar nav={navigation} auth={mainState.current.authState} position={'absolute'} from={'home'} />
 
                 </>
                 :
-                <View
-                    style={styles.homePrimary_Container}
-                >
+                <View style={styles.homePrimary_Container}>
                     <Loading />
                 </View>
             }
 
             <StatusBar
                 barStyle="default"
-                hidden={true}
+                hidden={false}
                 backgroundColor="transparent"
                 translucent={true}
                 networkActivityIndicatorVisible={true}
@@ -1327,7 +1352,8 @@ const styles = StyleSheet.create({
         backgroundColor: THEME_COLOR_BACKDROP_DARK,
         display: 'flex',
         alignItems: 'center',
-        width: windowWidth
+        height: windowHeight,
+        width: windowWidth,
     },
     homePrimary_Date: {
         width: windowWidth,
