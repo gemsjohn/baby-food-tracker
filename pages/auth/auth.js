@@ -331,7 +331,8 @@ export const Auth = ({ navigation }) => {
             onLayout={onLayoutRootView}
           >
             <LinearGradient
-              colors={['#8bccde', '#d05bb6']}
+              // colors={['#8bccde', '#d05bb6']}
+              colors={['#ecece6', '#ecece6']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={{ ...Styling.container }}
@@ -345,9 +346,9 @@ export const Auth = ({ navigation }) => {
                         <>
                           <Text
                             style={{
-                              color: THEME_FONT_COLOR_WHITE,
+                              color: THEME_FONT_COLOR_BLACK,
                               alignSelf: 'center',
-                              fontSize: HeightRatio(100),
+                              fontSize: HeightRatio(50),
                               marginTop: HeightRatio(20),
                               fontFamily: 'SofiaSansSemiCondensed-Regular',
                             }}
@@ -539,7 +540,7 @@ export const Auth = ({ navigation }) => {
                             type="text"
                             name="email"
                             placeholder="Email"
-                            placeholderTextColor='white'
+                            placeholderTextColor='black'
                             value={promptEmailInput}
                             onChangeText={setPromptEmailInput}
                             style={Styling.textInputStyle}
@@ -550,7 +551,7 @@ export const Auth = ({ navigation }) => {
                             type="text"
                             name="username"
                             placeholder="Username"
-                            placeholderTextColor='white'
+                            placeholderTextColor='black'
                             value={promptUsernameInput}
                             onChangeText={setPromptUsernameInput}
                             style={Styling.textInputStyle}
@@ -561,7 +562,7 @@ export const Auth = ({ navigation }) => {
                             type="password"
                             name="password"
                             placeholder="Password"
-                            placeholderTextColor='white'
+                            placeholderTextColor='black'
                             value={promptPasswordInput}
                             onChangeText={setPromptPasswordInput}
                             secureTextEntry={true}
@@ -691,9 +692,9 @@ export const Auth = ({ navigation }) => {
                             <View>
                               <Text
                                 style={{
-                                  color: THEME_FONT_COLOR_WHITE,
+                                  color: THEME_FONT_COLOR_BLACK,
                                   alignSelf: 'center',
-                                  fontSize: HeightRatio(100),
+                                  fontSize: HeightRatio(50),
                                   margin: 20,
                                   fontFamily: 'SofiaSansSemiCondensed-Regular',
                                 }}
@@ -705,7 +706,7 @@ export const Auth = ({ navigation }) => {
                                 type="text"
                                 name="username"
                                 placeholder="Username"
-                                placeholderTextColor='white'
+                                placeholderTextColor='black'
                                 value={promptInput_0}
                                 onChangeText={setPromptInput_0}
                                 style={Styling.textInputStyle}
@@ -716,7 +717,7 @@ export const Auth = ({ navigation }) => {
                                 type="password"
                                 name="password"
                                 placeholder="Password"
-                                placeholderTextColor='white'
+                                placeholderTextColor='black'
                                 value={promptInput_1}
                                 onChangeText={setPromptInput_1}
                                 secureTextEntry={true}
@@ -842,7 +843,7 @@ export const Auth = ({ navigation }) => {
                                         type="text"
                                         name="resetemail"
                                         placeholder="Enter Email"
-                                        placeholderTextColor='white'
+                                        placeholderTextColor='black'
                                         value={promptResetEmail}
                                         onChangeText={setPromptResetEmail}
                                         allowFontScaling={false}
@@ -926,7 +927,7 @@ export const Auth = ({ navigation }) => {
                                           type="text"
                                           name="resetoken"
                                           placeholder="Enter Reset Token"
-                                          placeholderTextColor='white'
+                                          placeholderTextColor='black'
                                           value={promptResetToken}
                                           onChangeText={setPromptResetToken}
                                           style={Styling.textInputStyle}
@@ -938,7 +939,7 @@ export const Auth = ({ navigation }) => {
                                             type="password"
                                             name="resetpassword_0"
                                             placeholder="New Password"
-                                            placeholderTextColor='white'
+                                            placeholderTextColor='black'
                                             value={promptResetPassword_0}
                                             onChangeText={setPromptResetPassword_0}
                                             secureTextEntry={true}
@@ -954,7 +955,7 @@ export const Auth = ({ navigation }) => {
                                             type="password"
                                             name="resetpassword_1"
                                             placeholder='Confirm Password'
-                                            placeholderTextColor='white'
+                                            placeholderTextColor='black'
                                             value={promptResetPassword_1}
                                             onChangeText={setPromptResetPassword_1}
                                             secureTextEntry={true}

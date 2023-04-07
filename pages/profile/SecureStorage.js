@@ -121,9 +121,9 @@ export const SecureStorage = () => {
         <View style={{}}>
           <Text
             style={{
-              color: THEME_FONT_COLOR_WHITE,
-              fontSize: HeightRatio(40),
-              fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+              color: THEME_FONT_COLOR_BLACK,
+              fontSize: HeightRatio(30),
+              fontFamily: 'SofiaSansSemiCondensed-Regular',
               textAlign: 'center',
               margin: HeightRatio(20),
             }}
@@ -360,8 +360,8 @@ export const SecureStorage = () => {
         <View style={{ alignSelf: 'center' }}>
           <Text 
             style={{
-              color: THEME_FONT_COLOR_WHITE,
-              fontSize: HeightRatio(100),
+              color: THEME_FONT_COLOR_BLACK,
+              fontSize: HeightRatio(50),
               fontFamily: 'GochiHand_400Regular',
             }}
             allowFontScaling={false}

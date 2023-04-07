@@ -188,7 +188,8 @@ export const ProfileScreen = ({ navigation }) => {
                         onLayout={onLayoutRootView}
                     >
                         <LinearGradient
-                            colors={['#8bccde', '#d05bb6']}
+                            // colors={['#8bccde', '#d05bb6']}
+                            colors={['#ecece6', '#ecece6']}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 1 }}
                             style={{ ...Styling.container }}
@@ -224,15 +225,16 @@ export const ProfileScreen = ({ navigation }) => {
                                                                 justifyContent: 'center',
                                                                 alignItems: 'center',
                                                                 height: HeightRatio(60),
-                                                                backgroundColor: '#1f1f27',
-                                                                marginBottom: HeightRatio(10)
+                                                                // backgroundColor: '#1f1f27',
+                                                                marginBottom: HeightRatio(10),
+                                                                marginTop: HeightRatio(20)
                                                             }}
                                                         >
                                                             <Text
                                                                 style={{
                                                                     ...Styling.modalScoringVarText,
-                                                                    fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                                                    color: THEME_FONT_COLOR_WHITE
+                                                                    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                                    color: THEME_FONT_COLOR_BLACK
                                                                 }}
                                                                 allowFontScaling={false}>
                                                                 User Details
@@ -528,7 +530,7 @@ export const ProfileScreen = ({ navigation }) => {
                     setDisplaySetUpCosmicKeyModal(!displaySetUpCosmicKeyModal);
                 }}
             >
-                <View style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: THEME_COLOR_BACKDROP_DARK }}>
+                <View style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#ecece6' }}>
                     <View style={{ padding: HeightRatio(20) }}>
                         <View style={{ flexDirection: 'column' }}>
 

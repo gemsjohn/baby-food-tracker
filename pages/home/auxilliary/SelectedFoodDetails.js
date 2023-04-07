@@ -195,7 +195,7 @@ export const SelectedFoodDetails = (props) => {
                     flexDirection: 'row', 
                     padding: HeightRatio(10), 
                     margin: HeightRatio(10), 
-                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
                     width: '100%',
                     alignSelf: 'center',
                     borderRadius: HeightRatio(10) 
@@ -221,7 +221,7 @@ export const SelectedFoodDetails = (props) => {
                     flexDirection: 'row',
                     padding: HeightRatio(10), 
                     margin: HeightRatio(10), 
-                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
                     width: '100%',
                     alignSelf: 'center',
                     borderRadius: HeightRatio(10)  
@@ -316,27 +316,60 @@ export const SelectedFoodDetails = (props) => {
                         </View>
                         :
                         <>
-                            {options.filter(option => option !== 'Minutes').map((option) => (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setSelectedItem(option);
-                                        setMainState({
-                                            selectedFood_Measurement: option,
-                                            userTouch: true
-                                        })
-                                        handleNextSectionPress()
-                                    }}
-                                    style={styles.itemButton}
-                                    key={option}
-                                >
-                                    <Text
-                                        style={styles.itemButton_Text}
-                                        allowFontScaling={false}
+                            {
+                                props.item === "SIMILAC" || 
+                                props.item === "EARTH'S BEST" ||
+                                props.item === "BOBBIE" ||
+                                props.item === "ENFAMIL" ||
+                                props.item === "UP&UP GENTLE" ?
+                                <>
+                                {options.filter(option => option === 'Servings').map((option) => (
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setSelectedItem(option);
+                                            setMainState({
+                                                selectedFood_Measurement: option,
+                                                userTouch: true
+                                            })
+                                            handleNextSectionPress()
+                                        }}
+                                        style={styles.itemButton}
+                                        key={option}
                                     >
-                                        {option}
-                                    </Text>
-                                </TouchableOpacity>
-                            ))}
+                                        <Text
+                                            style={styles.itemButton_Text}
+                                            allowFontScaling={false}
+                                        >
+                                            {option}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))}
+                                </>
+                            :
+                                <>
+                                {options.filter(option => option !== 'Minutes').map((option) => (
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setSelectedItem(option);
+                                            setMainState({
+                                                selectedFood_Measurement: option,
+                                                userTouch: true
+                                            })
+                                            handleNextSectionPress()
+                                        }}
+                                        style={styles.itemButton}
+                                        key={option}
+                                    >
+                                        <Text
+                                            style={styles.itemButton_Text}
+                                            allowFontScaling={false}
+                                        >
+                                            {option}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))}
+                                </>
+                            }
 
 
                         </>
@@ -349,7 +382,7 @@ export const SelectedFoodDetails = (props) => {
                     flexDirection: 'column',
                     padding: HeightRatio(10), 
                     margin: HeightRatio(10), 
-                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
                     width: '100%',
                     alignSelf: 'center',
                     borderRadius: HeightRatio(10)  
@@ -492,7 +525,7 @@ export const SelectedFoodDetails = (props) => {
                     flexDirection: 'row',
                     padding: HeightRatio(10), 
                     margin: HeightRatio(10), 
-                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
                     width: '100%',
                     alignSelf: 'center',
                     borderRadius: HeightRatio(10)  
@@ -578,7 +611,7 @@ export const SelectedFoodDetails = (props) => {
                     flexDirection: 'row',
                     padding: HeightRatio(10), 
                     margin: HeightRatio(10), 
-                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
                     width: '100%',
                     alignSelf: 'center',
                     borderRadius: HeightRatio(10)  

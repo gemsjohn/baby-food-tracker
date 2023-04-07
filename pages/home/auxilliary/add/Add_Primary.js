@@ -47,6 +47,7 @@ import { ADD_ENTRY } from '../../../../utils/mutations';
 import { GET_USER_BY_ID, FOOD } from '../../../../utils/queries';
 import { useCheckUserTop100 } from '../../auxilliary/CheckUserTop100';
 import { LinearGradient } from 'expo-linear-gradient';
+import { top_100 } from '../TOP_100';
 
 import {
     THEME_COLOR_POSITIVE,
@@ -67,6 +68,8 @@ import {
     THEME_FONT_GREY
 } from '../../../../COLOR.js';
 import { Loading } from '../../../../components/Loading';
+
+const API_URL = 'https://trackapi.nutritionix.com/v2/search/instant';
 
 export const Add_Primary = (props) => {
     const { mainState, setMainState } = useContext(MainStateContext);
@@ -630,6 +633,95 @@ export const Add_Primary = (props) => {
         );
     };
 
+    // Search Query, suggested items
+    const [query, setQuery] = useState('');
+    const [results, setResults] = useState([]);
+
+    const searchFood = async (query) => {
+        try {
+            const response = await fetch(`${API_URL}?query=${query}`, {
+                headers: {
+                    'x-app-id': '58d89f93',
+                    'x-app-key': '88f09634d980469bf97b362e01c0696e',
+                },
+            });
+            const json = await response.json();
+            setResults(json.common);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
+    const renderSearchQuery = ({ item }) => {
+    const isFoodInData = top_100.some(food => food.name === item.food_name);
+    const textStyle = isFoodInData ? styles.modalVisible_recentFoodData_Map_Text_Bold : styles.modalVisible_recentFoodData_Map_Text;
+
+    return (
+        <View style={{ ...styles.modalVisible_recentFoodData_Map_Container_0, backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY, }}>
+        <View style={styles.modalVisible_recentFoodData_Map_Container_1}>
+            <View style={styles.modalVisible_recentFoodData_Map_Container_2}>
+            <View style={{ flexDirection: 'column' }}>
+                <View
+                    style={{flexDirection: 'column'}}
+                >
+                    <Text
+                        style={styles.modalVisible_recentFoodData_Map_Text_Bold}
+                        allowFontScaling={false}
+                    >
+                        {item.food_name}
+                    </Text>
+                    {isFoodInData &&
+                        <View
+                            style={{
+                                backgroundColor: THEME_COLOR_ATTENTION,
+                                borderRadius: HeightRatio(5),
+                                padding: HeightRatio(4),
+                                width: WidthRatio(60),
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                margin: HeightRatio(4)
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    ...styles.renderItem_Search_Result_Container_Text,
+                                    color: THEME_FONT_COLOR_BLACK,
+                                    fontSize: HeightRatio(18),
+                                    fontFamily: "GochiHand_400Regular",
+                                }}
+                                allowFontScaling={false}
+                            >
+                                TOP 100
+                            </Text>
+                        </View>
+                    }
+                </View>
+            </View>
+            <TouchableOpacity
+                onPress={() => {
+                    setMainState({ userTouch: true });
+                    setSelectedItem({ description: item.food_name, itemId: item.food_name });
+                    setClearSuggestions(true);
+                    setDisplayDetails(true);
+                }}
+                style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow, padding: null }}
+            >
+                <Text
+                style={styles.modalVisible_recentFoodData_Map_Plus_Text}
+                allowFontScaling={false}
+                >
+                +
+                </Text>
+            </TouchableOpacity>
+            </View>
+        </View>
+        </View>
+    );
+    }
+
+
 
     const [fontsLoaded] = useFonts({
         'GochiHand_400Regular': require('../../../../assets/fonts/GochiHand-Regular.ttf'),
@@ -798,7 +890,8 @@ export const Add_Primary = (props) => {
                     }}
                 >
                     <LinearGradient
-                        colors={['#8bccde', '#d05bb6']}
+                        // colors={['#8bccde', '#d05bb6']}
+                        colors={['#ecece6', '#ecece6']}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
                         style={{
@@ -1042,6 +1135,7 @@ export const Add_Primary = (props) => {
                             <View
                                 style={{
                                     ...styles.modalVisible_Container,
+                                    // backgroundColor: 'rgba(0, 0, 0, 0.5)'
                                     // marginTop: 0,
                                 }}
                             >
@@ -1049,14 +1143,24 @@ export const Add_Primary = (props) => {
                                     type="text"
                                     name="search"
                                     placeholder="Search for food"
-                                    placeholderTextColor="white"
+                                    placeholderTextColor="black"
+                                    // value={searchQuery}
+                                    // onChangeText={setSearchQuery}
+                                    // onChangeText={(text) => {
+                                    //     setQuery(text);
+                                    //     searchFood(text);
+                                    // }}
+                                    onChangeText={(text) => {
+                                        setSearchQuery(text);
+                                        searchFood(text);
+                                    }}
                                     value={searchQuery}
-                                    onChangeText={setSearchQuery}
                                     onSubmitEditing={handleSearch}
                                     style={styles.modalVisible_TextInput}
                                     disableFullscreenUI={true}
                                     allowFontScaling={false}
                                 />
+                                {/* <SearchFood /> */}
                                 <TouchableOpacity onPress={() => { setSelectedItem({ description: searchQuery, itemId: searchQuery }); setDisplayDetails(true); setMainState({ userTouch: true }) }}>
                                     <View style={{ ...styles.modalVisible_Search_Button, ...styles.button_Drop_Shadow }}>
                                         <Text
@@ -1068,6 +1172,28 @@ export const Add_Primary = (props) => {
                                     </View>
                                 </TouchableOpacity>
                             </View>
+                        }
+
+                        {searchQuery != '' && !displayDetails &&
+                        <>
+                            <View style={{ height: HeightRatio(445) }}>
+                                <FlatList
+                                    data={results}
+                                    renderItem={renderSearchQuery}
+                                    keyExtractor={(item) => item.food_name}
+                                />
+                            </View>
+                            <TouchableOpacity onPress={() => { setModalVisible(false); setDisplayLoading(false); setMainState({ userTouch: true }) }}>
+                                <View style={{ ...styles.modalVisible_FullButton, ...styles.button_Drop_Shadow, marginTop: HeightRatio(15) }}>
+                                    <Text
+                                        style={{ ...styles.modalVisible_Button_Text, color: THEME_FONT_COLOR_WHITE }}
+                                        allowFontScaling={false}
+                                    >
+                                        Close
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                            </>
                         }
 
                         {displayTop100Foods && !displayFormulaOptions &&
@@ -1142,7 +1268,7 @@ export const Add_Primary = (props) => {
                                                         }}
                                                         style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow, padding: null }}
                                                     >
-                                                        <Text 
+                                                        <Text
                                                             style={styles.modalVisible_recentFoodData_Map_Plus_Text}
                                                             allowFontScaling={false}
                                                         >
@@ -1240,7 +1366,7 @@ export const Add_Primary = (props) => {
                                                         }}
                                                         style={{ ...styles.modalVisible_recentFoodData_Map_Plus, ...styles.button_Drop_Shadow, padding: null }}
                                                     >
-                                                        <Text 
+                                                        <Text
                                                             style={styles.modalVisible_recentFoodData_Map_Plus_Text}
                                                             allowFontScaling={false}
                                                         >
@@ -1807,7 +1933,7 @@ const styles = StyleSheet.create({
         color: THEME_FONT_COLOR_WHITE,
         fontSize: HeightRatio(25),
         alignSelf: 'center',
-        fontFamily: 'SofiaSansSemiCondensed-ExtraBold'
+        fontFamily: 'SofiaSansSemiCondensed-Regular'
     },
     modalVisible_recentFoodData_Map_Container_0: {
         // backgroundColor: THEME_COLOR_BLACK_LOW_OPACITY,

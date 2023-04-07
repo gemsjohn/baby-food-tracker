@@ -227,7 +227,8 @@ export const UserDetails = (props) => {
                     }}
                 >
                     <LinearGradient
-                            colors={['#3b8ba6', '#2991ea']}
+                            // colors={['#3b8ba6', '#2991ea']}
+                            colors={['#1f1f27', '#1f1f27']}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 1 }}
                             style={{

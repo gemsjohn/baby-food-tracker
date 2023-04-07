@@ -3,46 +3,46 @@ import { View, Text, StyleSheet } from 'react-native';
 import { HeightRatio, WidthRatio, windowWidth } from '../../../Styling';
 
 export const BarChart = (props) => {
-  const maxValue = 500;
+  const maxValue = 250;
   const barWidth = 30;
 
   return (
     <>
-    <View style={styles.container}>
-        
-      <View style={styles.chart}>
-        {props.data.map((item, index) => (
-          <View key={index} style={[styles.barContainer, { bottom: index * barWidth * 1.5 }]}>
-            <View
-              style={{
-                margin: HeightRatio(20),
-                width: WidthRatio(70),
-              }}
-            >
-              <Text
-                style={styles.label}
-              >
-                {item.label}
-              </Text>
-              <Text
-                style={styles.sublabel}
-              >
-                {item.value} Calories
-              </Text>
-            </View>
+      <View style={styles.container}>
 
-            <View
-              style={[
-                styles.bar,
-                { backgroundColor: item.color },
-                { width: (item.value / maxValue) * 200 },
-                { height: barWidth },
-              ]}
-            />
-          </View>
-        ))}
+        <View style={styles.chart}>
+          {props.data.map((item, index) => (
+            <View key={index} style={[styles.barContainer, { bottom: index * barWidth * 1.5 }]}>
+              <View
+                style={{
+                  margin: HeightRatio(20),
+                  width: WidthRatio(70),
+                }}
+              >
+                <Text
+                  style={styles.label}
+                >
+                  {item.label}
+                </Text>
+                <Text
+                  style={styles.sublabel}
+                >
+                  {item.value} Calories
+                </Text>
+              </View>
+
+              <View
+                style={[
+                  styles.bar,
+                  { backgroundColor: item.color },
+                  { width: (item.value / maxValue) * WidthRatio(250) },
+                  { height: barWidth },
+                ]}
+              />
+            </View>
+          ))}
+        </View>
       </View>
-    </View>
     </>
   );
 };
@@ -69,7 +69,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     marginBottom: HeightRatio(50),
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    // backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#1f1f27',
     borderRadius: HeightRatio(10)
   },
   bar: {
@@ -77,12 +78,14 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   label: {
-    fontSize: HeightRatio(20),
-    fontWeight: 'bold',
+    color: THEME_FONT_COLOR_WHITE,
+    fontSize: HeightRatio(25),
+    fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
   },
   sublabel: {
-    fontSize: HeightRatio(15),
-    fontWeight: 'bold',
+    color: THEME_COLOR_ATTENTION,
+    fontSize: HeightRatio(20),
+    fontFamily: 'SofiaSansSemiCondensed-Regular',
   },
   xAxis: {
     width: windowWidth - HeightRatio(150),

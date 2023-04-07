@@ -402,7 +402,7 @@ export const HomeScreen = ({ navigation }) => {
                     {calendarModalVisible && <View style={styles.modalVisible_Blackout} />}
                     {addSubUserModalVisible &&
                         <LinearGradient
-                            colors={['#8bccde', '#d05bb6']}
+                            colors={['#ecece6', '#ecece6']}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 1 }}
                             style={styles.homePrimary_Container}
@@ -414,7 +414,7 @@ export const HomeScreen = ({ navigation }) => {
                         onLayout={onLayoutRootView}
                     >
                         <LinearGradient
-                            colors={['#8bccde', '#d05bb6']}
+                            colors={['#ecece6', '#ecece6']}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 1 }}
                             style={styles.homePrimary_Container}
@@ -486,7 +486,7 @@ export const HomeScreen = ({ navigation }) => {
                                     totalCalorieCount={totalCalorieCount}
                                 />
 
-                                {premiumStatus &&
+                                {/* {premiumStatus && */}
                                     <TouchableOpacity
                                         onPress={() => {
                                             navigation.dispatch(resetActionMetrics)
@@ -527,7 +527,7 @@ export const HomeScreen = ({ navigation }) => {
                                     </TouchableOpacity>
 
 
-                                }
+                                {/* } */}
 
                                 <Add_Primary
                                     date={currentDateReadable}
@@ -695,7 +695,8 @@ export const HomeScreen = ({ navigation }) => {
                             }}
                         >
                             <LinearGradient
-                                colors={['#8bccde', '#d05bb6']}
+                                // colors={['#8bccde', '#d05bb6']}
+                                colors={['#ecece6', '#ecece6']}
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 1 }}
                                 style={{
@@ -867,7 +868,7 @@ export const HomeScreen = ({ navigation }) => {
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
                                                 borderRadius: HeightRatio(10),
                                                 margin: HeightRatio(10)
                                             }}
@@ -881,7 +882,7 @@ export const HomeScreen = ({ navigation }) => {
                                         <View
                                             style={{
                                                 flexDirection: 'column',
-                                                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                                // backgroundColor: 'rgba(0, 0, 0, 0.5)',
                                                 padding: HeightRatio(10),
                                                 borderRadius: HeightRatio(10)
                                             }}
@@ -896,18 +897,18 @@ export const HomeScreen = ({ navigation }) => {
                                                 <Text
                                                     style={{
                                                         fontSize: HeightRatio(16),
-                                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                                        color: THEME_FONT_COLOR_WHITE
+                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                        color: THEME_FONT_COLOR_BLACK
                                                     }}
                                                     allowFontScaling={false}
                                                 >
-                                                    PREMIUM: &nbsp;
+                                                    Premium: &nbsp;
                                                 </Text>
                                                 <Text
                                                     style={{
                                                         fontSize: HeightRatio(16),
                                                         fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                                        color: premiumStatus ? THEME_COLOR_POSITIVE : THEME_COLOR_NEGATIVE
+                                                        color: premiumStatus ? 'green' : 'red'
                                                     }}
                                                     allowFontScaling={false}
                                                 >
@@ -923,8 +924,8 @@ export const HomeScreen = ({ navigation }) => {
                                                 <Text
                                                     style={{
                                                         fontSize: HeightRatio(16),
-                                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
-                                                        color: THEME_FONT_COLOR_WHITE
+                                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                        color: THEME_FONT_COLOR_BLACK
                                                     }}
                                                     allowFontScaling={false}
                                                 >
@@ -989,7 +990,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                             color: THEME_FONT_COLOR_WHITE,
                                                                             fontSize: HeightRatio(20),
                                                                             marginLeft: HeightRatio(20),
-                                                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                                            fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
                                                                             width: '90%'
 
                                                                         }}
@@ -1063,7 +1064,7 @@ export const HomeScreen = ({ navigation }) => {
                                                                                 color: THEME_FONT_COLOR_WHITE,
                                                                                 fontSize: HeightRatio(20),
                                                                                 marginLeft: HeightRatio(20),
-                                                                                fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
                                                                                 width: '90%'
 
                                                                             }}

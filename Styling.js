@@ -205,8 +205,8 @@ export const Styling = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.85)',
   },
   textInputStyle: {
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    color: 'white',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    color: 'black',
     fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
     fontSize: HeightRatio(24),
     display: 'flex',
@@ -214,7 +214,7 @@ export const Styling = StyleSheet.create({
     padding: HeightRatio(14),
     paddingLeft: HeightRatio(20),
     borderBottomWidth: 2,
-    borderBottomColor: 'white',
+    borderBottomColor: 'black',
     borderRadius: HeightRatio(10),
     alignSelf: 'center',
     margin: HeightRatio(8),
@@ -321,7 +321,7 @@ export const Styling = StyleSheet.create({
   },
   modalScoringVarText: {
     color: 'white',
-    fontSize: HeightRatio(40),
+    fontSize: HeightRatio(30),
     // fontWeight: 'bold',
   },
   row: {

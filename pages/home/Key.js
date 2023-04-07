@@ -141,7 +141,8 @@ export const KeyScreen = ({ navigation }) => {
         <>
             {pageLoadComplete ?
                 <LinearGradient
-                    colors={['#8bccde', '#d05bb6']}
+                    // colors={['#8bccde', '#d05bb6']}
+                    colors={['#ecece6', '#ecece6']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                     style={styles.keyContainer}
@@ -256,7 +257,7 @@ export const KeyScreen = ({ navigation }) => {
                             </View>
                         </View>
                         <View>
-                                <Text style={{color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(22)}} allowFontScaling={false}>
+                                <Text style={{color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(22)}} allowFontScaling={false}>
                                     Having issues?
                                 </Text>
                         </View>

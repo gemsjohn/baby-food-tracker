@@ -253,17 +253,6 @@ export const FoodGroupMetrics = (props) => {
                 Daily Food Groups ( Calories )
             </Text>
             {fruitCalTotal + vegetableCalTotal + proteinCalTotal + grainCalTotal + dairyCalTotal + formulaCalTotal > 0 ?
-                // <PieChart
-                //     data={data}
-                //     width={400}
-                //     height={200}
-                //     chartConfig={chartConfig}
-                //     accessor="calories"
-                //     backgroundColor="transparent"
-                //     paddingLeft="15"
-                //     center={[0, 0]}
-                //     absolute={true}
-                // />
                 <View style={{  }}>
                     <BarChart
                         data={data}
