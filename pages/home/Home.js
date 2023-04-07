@@ -269,34 +269,34 @@ export const HomeScreen = ({ navigation }) => {
         }, 120000);
     };
 
-    const checkCustomerInfo = async () => {
-        let localUserID = await SecureStore.getItemAsync('userID');
-        Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
-        Purchases.configure({ apiKey: APIKeys.google, appUserID: localUserID });
+    // const checkCustomerInfo = async () => {
+    //     let localUserID = await SecureStore.getItemAsync('userID');
+    //     Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+    //     Purchases.configure({ apiKey: APIKeys.google, appUserID: localUserID });
 
-        const customerInfo = await Purchases.getCustomerInfo();
-        // console.log(customerInfo)
+    //     const customerInfo = await Purchases.getCustomerInfo();
+    //     // console.log(customerInfo)
 
-        if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
-            // console.log(customerInfo.entitlements.active["Premium"])
-            console.log("# - Premium service access granted.")
-            await updatePremium({
-                variables: {
-                    status: true,
-                    expiration: `${customerInfo.allExpirationDates.baby_food_tracker_premium_month}`
-                }
-            });
+    //     if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
+    //         // console.log(customerInfo.entitlements.active["Premium"])
+    //         console.log("# - Premium service access granted.")
+    //         await updatePremium({
+    //             variables: {
+    //                 status: true,
+    //                 expiration: `${customerInfo.allExpirationDates.baby_food_tracker_premium_month}`
+    //             }
+    //         });
 
-        } else {
-            console.log("# - Premium service access revoked.")
-            await updatePremium({
-                variables: {
-                    status: false,
-                    expiration: ''
-                }
-            });
-        }
-    }
+    //     } else {
+    //         console.log("# - Premium service access revoked.")
+    //         await updatePremium({
+    //             variables: {
+    //                 status: false,
+    //                 expiration: ''
+    //             }
+    //         });
+    //     }
+    // }
 
     const getTotalCalorieCount = async () => {
         try {
@@ -311,7 +311,7 @@ export const HomeScreen = ({ navigation }) => {
 
     useEffect(() => {
         setLoading(true)
-        checkCustomerInfo()
+        // checkCustomerInfo()
         getTotalCalorieCount()
 
         const interval_0 = setInterval(() => {
@@ -337,13 +337,13 @@ export const HomeScreen = ({ navigation }) => {
 
         }, 200)
 
-        const interval_1 = setInterval(() => {
-            checkCustomerInfo()
-        }, 60000)
+        // const interval_1 = setInterval(() => {
+        //     checkCustomerInfo()
+        // }, 60000)
 
         return () => {
             clearInterval(interval_0)
-            clearInterval(interval_1)
+            // clearInterval(interval_1)
         }
     }, [])
 
@@ -486,7 +486,7 @@ export const HomeScreen = ({ navigation }) => {
                                     totalCalorieCount={totalCalorieCount}
                                 />
 
-                                {/* {premiumStatus && */}
+                                {premiumStatus &&
                                     <TouchableOpacity
                                         onPress={() => {
                                             navigation.dispatch(resetActionMetrics)
@@ -514,20 +514,18 @@ export const HomeScreen = ({ navigation }) => {
                                                     style={{
                                                         ...styles.renderItem_Search_Result_Container_Text,
                                                         color: THEME_FONT_COLOR_BLACK,
-                                                        fontSize: HeightRatio(20),
+                                                        fontSize: HeightRatio(16),
                                                         fontFamily: "SofiaSansSemiCondensed-Regular",
                                                         marginTop: HeightRatio(10)
                                                     }}
                                                     allowFontScaling={false}
                                                 >
-                                                    Metrics
+                                                    Premium
                                                 </Text>
                                             </View>
                                         </View>
                                     </TouchableOpacity>
-
-
-                                {/* } */}
+                                }
 
                                 <Add_Primary
                                     date={currentDateReadable}

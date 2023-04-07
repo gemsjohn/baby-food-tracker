@@ -18,7 +18,7 @@ import {
     ActivityIndicator,
     StatusBar
 } from 'react-native';
-import { HeightRatio, windowWidth } from '../../../Styling';
+import { HeightRatio, WidthRatio, windowWidth } from '../../../Styling';
 import {
     THEME_COLOR_POSITIVE,
     THEME_COLOR_POSITIVE_LOW_OPACITY,
@@ -49,11 +49,9 @@ import { BarChart } from './BoxChart';
 
 const styles = StyleSheet.create({
     chartLabel: {
-        textAlign: 'center',
-        marginBottom: 8,
+        marginLeft: WidthRatio(30),
         color: THEME_FONT_COLOR_BLACK,
         fontSize: HeightRatio(24),
-        alignSelf: 'center',
         fontFamily: 'SofiaSansSemiCondensed-Regular'
     },
 });
@@ -246,12 +244,6 @@ export const FoodGroupMetrics = (props) => {
 
     return (
         <View style={{}}>
-            <Text 
-                style={styles.chartLabel}
-                allowFontScaling={false}
-            >
-                Daily Food Groups ( Calories )
-            </Text>
             {fruitCalTotal + vegetableCalTotal + proteinCalTotal + grainCalTotal + dairyCalTotal + formulaCalTotal > 0 ?
                 <View style={{  }}>
                     <BarChart

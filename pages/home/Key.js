@@ -28,6 +28,8 @@ import {
 } from '../../COLOR';
 
 import { LinearGradient } from 'expo-linear-gradient';
+import Purchases, { PurchasesOffering } from 'react-native-purchases';
+import { UPDATE_PREMIUM } from '../../utils/mutations';
 
 const resetActionHome = CommonActions.reset({
     index: 1,
@@ -39,6 +41,10 @@ const resetActionAuth = CommonActions.reset({
     routes: [{ name: 'Auth', params: {} }]
 });
 
+const APIKeys = {
+    google: "goog_caDqiYZPHvJIwlqyFoZDgTqOywO",
+};
+
 async function deleteKey(key) {
     await SecureStore.deleteItemAsync(key);
 }
@@ -47,6 +53,7 @@ async function deleteKey(key) {
 
 export const KeyScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
+    const [updatePremium] = useMutation(UPDATE_PREMIUM);
 
     const [key, setKey] = useState(null);
     const [keyPress, setKeyPress] = useState('');
@@ -98,6 +105,8 @@ export const KeyScreen = ({ navigation }) => {
             authState: updatedLocalAuthState,
             initialKeyMoment: moment()
         })
+        checkCustomerInfo(localUserID)
+
     }
 
 
@@ -120,6 +129,37 @@ export const KeyScreen = ({ navigation }) => {
         setKeyArray(current => [...current, value])
         setCount(prev => prev + 1)
     };
+
+    const checkCustomerInfo = async (localUserID) => {
+        // let localUserID = await SecureStore.getItemAsync('userID');
+        Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+        Purchases.configure({ apiKey: APIKeys.google, appUserID: localUserID });
+
+        const customerInfo = await Purchases.getCustomerInfo();
+        // console.log(customerInfo)
+
+        if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
+            // console.log(customerInfo.entitlements.active["Premium"])
+            console.log("# - Premium service access granted.")
+            await updatePremium({
+                variables: {
+                    status: true,
+                    expiration: `${customerInfo.allExpirationDates.baby_food_tracker_premium_month}`
+                }
+            });
+
+        } else {
+            console.log("# - Premium service access revoked.")
+            await updatePremium({
+                variables: {
+                    status: false,
+                    expiration: ''
+                }
+            });
+        }
+    }
+
+    
 
 
     const [fontsLoaded] = useFonts({

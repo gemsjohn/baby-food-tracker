@@ -182,9 +182,9 @@ export const ProfileScreen = ({ navigation }) => {
         <>
             {!loading ?
                 <>
-                    {displaySetUpCosmicKeyModal && <View style={{backgroundColor: THEME_COLOR_BACKDROP_DARK, height: '100%', width: '100%'}} />}
+                    {displaySetUpCosmicKeyModal && <View style={{backgroundColor: '#ecece6', height: '100%', width: '100%'}} />}
                     <View
-                        style={{ ...Styling.container, backgroundColor: THEME_COLOR_BACKDROP_DARK }}
+                        style={{ ...Styling.container, backgroundColor: '#ecece6' }}
                         onLayout={onLayoutRootView}
                     >
                         <LinearGradient

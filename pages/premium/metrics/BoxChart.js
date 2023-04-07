@@ -1,10 +1,29 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { HeightRatio, WidthRatio, windowWidth } from '../../../Styling';
+import {
+  THEME_COLOR_POSITIVE,
+  THEME_COLOR_POSITIVE_LOW_OPACITY,
+  THEME_COLOR_NEGATIVE,
+  THEME_COLOR_BACKDROP_DARK,
+  THEME_COLOR_BACKDROP_LIGHT,
+  THEME_COLOR_BLACK_LOW_OPACITY,
+  THEME_COLOR_BLACK_HIGH_OPACITY,
+  THEME_FONT_COLOR_WHITE,
+  THEME_FONT_COLOR_WHITE_LOW_OPACITY,
+  THEME_FONT_COLOR_BLACK,
+  THEME_COLOR_ATTENTION,
+  THEME_TRANSPARENT,
+  THEME_COLOR_PURPLE,
+  THEME_COLOR_PURPLE_LOW_OPACITY,
+  THEME_COLOR_BLACKOUT,
+  THEME_FONT_GREY
+} from '../../../COLOR'
 
 export const BarChart = (props) => {
   const maxValue = 250;
   const barWidth = 30;
+  const blockMargin = HeightRatio(4);
 
   return (
     <>
@@ -16,7 +35,7 @@ export const BarChart = (props) => {
               <View
                 style={{
                   margin: HeightRatio(20),
-                  width: WidthRatio(70),
+                  width: WidthRatio(80),
                 }}
               >
                 <Text
@@ -31,14 +50,20 @@ export const BarChart = (props) => {
                 </Text>
               </View>
 
-              <View
-                style={[
-                  styles.bar,
-                  { backgroundColor: item.color },
-                  { width: (item.value / maxValue) * WidthRatio(250) },
-                  { height: barWidth },
-                ]}
-              />
+              <View style={{ flexDirection: 'row', width: WidthRatio(190)}}>
+                {[...Array(Math.floor(Math.max(0, item.value*0.25)))].map((_, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      { backgroundColor: item.color },
+                      { height: barWidth },
+                      { marginRight: blockMargin },
+                      { width: HeightRatio(4) },
+                    ]}
+                  />
+                ))}
+              </View>
+
             </View>
           ))}
         </View>
@@ -77,6 +102,7 @@ const styles = StyleSheet.create({
     borderRadius: HeightRatio(4),
     marginRight: 10,
   },
+  
   label: {
     color: THEME_FONT_COLOR_WHITE,
     fontSize: HeightRatio(25),

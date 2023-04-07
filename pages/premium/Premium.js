@@ -149,21 +149,23 @@ export const PremiumScreen = ({ navigation }) => {
         // console.log("- - - - - - - - - ")
         // console.log(input)
         // console.log("- - - - - - - - - ")
-        // console.log(customerInfo)
+        console.log(customerInfo)
         // console.log(customerInfo.allExpirationDates.baby_food_tracker_premium_month)
 
         setTimeout(() => {
             clearInterval(intervalID.current)
             console.log("# - STOP Checking User Subscription")
             setCheckCustomerInfoInitiated(false)
-        }, 5000)
+        }, 10000)
 
         intervalID.current = setInterval(() => {
             // setCheckCustomerInfoInitiated(true)
             console.log("# - Checking User Subscription")
             for (let i = 0; i < customerInfo.activeSubscriptions.length; i++) {
                 if (customerInfo.activeSubscriptions[i] === "baby_food_tracker_premium_month" && !handlerUpdateToPremiumCalled.current) {
+                    clearInterval(intervalID.current);
                     handleUpdateToPremium(customerInfo.allExpirationDates.baby_food_tracker_premium_month)
+                    
                 }
             }
 

@@ -393,17 +393,17 @@ export const DailyScheduleSimplified = (props) => {
             return (
                 <View style={styles.scheduleButton_subContent_NutritionDetails_Map_Container}>
                     <View style={{ width: WidthRatio(140) }}>
-                        <Text 
-                            style={{ ...styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text, width: WidthRatio(120) }} 
-                            allowFontScaling={false} 
-                            numberOfLines={1} 
+                        <Text
+                            style={{ ...styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text, width: WidthRatio(120) }}
+                            allowFontScaling={false}
+                            numberOfLines={1}
                             ellipsizeMode="tail"
                         >
                             {title}
                         </Text>
                     </View>
-                    <Text 
-                        style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text} 
+                    <Text
+                        style={styles.scheduleButton_subContent_NutritionDetails_Map_Container_Text}
                         allowFontScaling={false}
                     >
                         {amount} {unit}
@@ -786,7 +786,7 @@ export const DailyScheduleSimplified = (props) => {
                                 <>
                                     <View
                                         style={{
-                                            backgroundColor: THEME_COLOR_ATTENTION,
+                                            backgroundColor: '#1f1f27',
                                             width: '90%',
                                             height: HeightRatio(120),
                                             alignSelf: 'center',
@@ -816,7 +816,7 @@ export const DailyScheduleSimplified = (props) => {
                                             />
                                             <Text
                                                 style={{
-                                                    color: THEME_FONT_COLOR_BLACK,
+                                                    color: THEME_FONT_COLOR_WHITE,
                                                     // textAlign: 'center',
                                                     fontSize: HeightRatio(20),
                                                     fontFamily: "SofiaSansSemiCondensed-ExtraBold",
@@ -830,7 +830,7 @@ export const DailyScheduleSimplified = (props) => {
                                         </View>
                                         <Text
                                             style={{
-                                                color: THEME_FONT_COLOR_BLACK,
+                                                color: THEME_FONT_COLOR_WHITE,
                                                 fontSize: HeightRatio(20),
                                                 fontFamily: "SofiaSansSemiCondensed-Regular",
                                                 marginLeft: HeightRatio(10)
@@ -858,14 +858,31 @@ export const DailyScheduleSimplified = (props) => {
                                     colors={['#ec546d', '#d05bb6']}
                                     start={{ x: 0, y: 0 }}
                                     end={{ x: 1, y: 1 }}
-                                    style={{
-                                        ...styles.renderItem_Search_Results,
-                                        ...styles.button_Drop_Shadow,
-                                        borderRadius: HeightRatio(50),
-                                        backgroundColor: '#feda9a',
-                                        width: WidthRatio(300),
-                                        padding: HeightRatio(15)
+                                    // style={{
+                                    //     ...styles.renderItem_Search_Results,
+                                    //     ...styles.button_Drop_Shadow,
+                                    //     borderRadius: HeightRatio(50),
+                                    //     backgroundColor: '#feda9a',
+                                    //     width: WidthRatio(300),
+                                    //     padding: HeightRatio(15)
 
+                                    // }}
+                                    style={{
+                                        backgroundColor: '#1f1f27',
+                                        width: '90%',
+                                        height: HeightRatio(120),
+                                        alignSelf: 'center',
+                                        borderRadius: HeightRatio(10),
+                                        display: 'flex',
+                                        // alignItems: 'center',
+                                        // justifyContent: 'center',
+                                        padding: HeightRatio(20),
+                                        marginTop: HeightRatio(8),
+                                        flexDirection: 'row',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        // ...styles.button_Drop_Shadow,
                                     }}
                                 >
                                     <View
@@ -936,7 +953,7 @@ export const DailyScheduleSimplified = (props) => {
                                         // alignSelf: 'center'
                                     }}
                                 />
-                                <Text 
+                                <Text
                                     style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}
                                     allowFontScaling={false}
                                 >

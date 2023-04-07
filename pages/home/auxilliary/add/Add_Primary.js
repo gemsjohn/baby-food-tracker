@@ -804,7 +804,7 @@ export const Add_Primary = (props) => {
                             style={{
                                 ...styles.renderItem_Search_Result_Container_Text,
                                 color: THEME_FONT_COLOR_BLACK,
-                                fontSize: HeightRatio(20),
+                                fontSize: HeightRatio(16),
                                 fontFamily: "SofiaSansSemiCondensed-Regular",
                                 textAlign: 'center',
                                 marginTop: HeightRatio(10)
@@ -863,6 +863,7 @@ export const Add_Primary = (props) => {
                     <Text
                         style={{
                             ...styles.homePrimary_Add_Button_Text,
+                            fontSize: HeightRatio(16),
                             marginTop: HeightRatio(10)
                         }}
                         allowFontScaling={false}
@@ -1161,7 +1162,7 @@ export const Add_Primary = (props) => {
                                     allowFontScaling={false}
                                 />
                                 {/* <SearchFood /> */}
-                                <TouchableOpacity onPress={() => { setSelectedItem({ description: searchQuery, itemId: searchQuery }); setDisplayDetails(true); setMainState({ userTouch: true }) }}>
+                                {/* <TouchableOpacity onPress={() => { setSelectedItem({ description: searchQuery, itemId: searchQuery }); setDisplayDetails(true); setMainState({ userTouch: true }) }}>
                                     <View style={{ ...styles.modalVisible_Search_Button, ...styles.button_Drop_Shadow }}>
                                         <Text
                                             style={styles.modalVisible_Search_Button_Text}
@@ -1170,7 +1171,7 @@ export const Add_Primary = (props) => {
                                             Search
                                         </Text>
                                     </View>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                             </View>
                         }
 

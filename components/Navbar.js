@@ -221,7 +221,7 @@ export const Navbar = (props) => {
                                         flexDirection: 'row',
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        backgroundColor: '#1f1f27',
+                                        backgroundColor: THEME_COLOR_ATTENTION,
                                         padding: HeightRatio(10),
                                         borderRadius: HeightRatio(10)
 
@@ -240,7 +240,7 @@ export const Navbar = (props) => {
                                     <Text
                                         style={{
                                             fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                            color: THEME_FONT_COLOR_WHITE,
+                                            color: THEME_FONT_COLOR_BLACK,
                                             fontSize: HeightRatio(20),
                                             alignSelf: 'center',
                                         }}

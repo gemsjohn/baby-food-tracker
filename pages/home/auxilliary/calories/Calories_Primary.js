@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     },
     homePrimary_TotalCalories_Text: {
         color: THEME_FONT_COLOR_BLACK,
-        fontSize: HeightRatio(30),
+        fontSize: HeightRatio(25),
         textAlign: 'center',
         fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
     },

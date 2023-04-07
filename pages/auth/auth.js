@@ -33,6 +33,8 @@ import {
   THEME_COLOR_BLACKOUT
 } from '../../COLOR';
 import { LinearGradient } from 'expo-linear-gradient';
+import Purchases, { PurchasesOffering } from 'react-native-purchases';
+import { UPDATE_PREMIUM } from '../../utils/mutations';
 
 const resetActionProfile = CommonActions.reset({
   index: 1,
@@ -47,8 +49,14 @@ async function deleteKey(key) {
   await SecureStore.deleteItemAsync(key);
 }
 
+const APIKeys = {
+  google: "goog_caDqiYZPHvJIwlqyFoZDgTqOywO",
+};
+
 export const Auth = ({ navigation }) => {
   const { mainState, setMainState } = useContext(MainStateContext);
+  const [updatePremium] = useMutation(UPDATE_PREMIUM);
+
   // const [authState, setAuthState] = useState(false);
   const [displayLoading, setDisplayLoading] = useState(false);
   const [newUser, setNewUser] = useState(true);
@@ -153,6 +161,8 @@ export const Auth = ({ navigation }) => {
         save('authState', 'true');
 
         checkToken(`Bearer ${data.login.token}`)
+
+        checkCustomerInfo(decoded?.data._id)
       }
     } catch (e) {
       setNavigateToProfile(false)
@@ -304,6 +314,35 @@ export const Auth = ({ navigation }) => {
 
   }, [])
 
+  const checkCustomerInfo = async (localUserID) => {
+    // let localUserID = await SecureStore.getItemAsync('userID');
+    Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+    Purchases.configure({ apiKey: APIKeys.google, appUserID: localUserID });
+
+    const customerInfo = await Purchases.getCustomerInfo();
+    // console.log(customerInfo)
+
+    if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
+      // console.log(customerInfo.entitlements.active["Premium"])
+      console.log("# - Premium service access granted.")
+      await updatePremium({
+        variables: {
+          status: true,
+          expiration: `${customerInfo.allExpirationDates.baby_food_tracker_premium_month}`
+        }
+      });
+
+    } else {
+      console.log("# - Premium service access revoked.")
+      await updatePremium({
+        variables: {
+          status: false,
+          expiration: ''
+        }
+      });
+    }
+  }
+
   const [fontsLoaded] = useFonts({
     'GochiHand_400Regular': require('../../assets/fonts/GochiHand-Regular.ttf'),
     'SofiaSansSemiCondensed-Regular': require('../../assets/fonts/SofiaSansSemiCondensed-Regular.ttf'),
@@ -327,7 +366,7 @@ export const Auth = ({ navigation }) => {
       {!navigateToProfile && !loading ?
         <>
           <View
-            style={{ ...Styling.container, backgroundColor: THEME_COLOR_BACKDROP_DARK }}
+            style={{ ...Styling.container, backgroundColor: '#1f1f27' }}
             onLayout={onLayoutRootView}
           >
             <LinearGradient
@@ -1314,7 +1353,7 @@ export const Auth = ({ navigation }) => {
 
         :
         <View
-          style={{ ...Styling.container, backgroundColor: THEME_COLOR_BACKDROP_DARK }}
+          style={{ ...Styling.container, backgroundColor: '#1f1f27' }}
         />
       }
       {displayNavbar &&
@@ -1324,7 +1363,7 @@ export const Auth = ({ navigation }) => {
 
       <StatusBar
         barStyle="default"
-        hidden={false}
+        hidden={true}
         backgroundColor="transparent"
         translucent={true}
         networkActivityIndicatorVisible={true}

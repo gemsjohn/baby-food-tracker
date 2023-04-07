@@ -121,7 +121,7 @@ export const AllergyTracking = (props) => {
                                     <View style={{ flexDirection: 'row', margin: HeightRatio(10), alignSelf: 'center' }} key={index}>
                                         <View
                                             style={{
-                                                backgroundColor: THEME_COLOR_ATTENTION,
+                                                backgroundColor: '#1f1f27',
                                                 padding: HeightRatio(10),
                                                 borderRadius: HeightRatio(10),
                                                 borderTopRightRadius: 0,
@@ -132,8 +132,8 @@ export const AllergyTracking = (props) => {
                                         >
                                             <Text
                                                 style={{
-                                                    color: THEME_FONT_COLOR_BLACK,
-                                                    fontSize: HeightRatio(30),
+                                                    color: THEME_FONT_COLOR_WHITE,
+                                                    fontSize: HeightRatio(24),
                                                     fontFamily: "SofiaSansSemiCondensed-Regular",
                                                     textAlign: 'center',
                                                 }}
@@ -229,7 +229,7 @@ export const AllergyTracking = (props) => {
                             }}
                         >
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#1f1f27', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
@@ -243,7 +243,7 @@ export const AllergyTracking = (props) => {
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#1f1f27', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
@@ -257,7 +257,7 @@ export const AllergyTracking = (props) => {
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#1f1f27', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
@@ -271,7 +271,7 @@ export const AllergyTracking = (props) => {
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#1f1f27', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
@@ -287,7 +287,7 @@ export const AllergyTracking = (props) => {
                         </View>
                         <View style={{ flexDirection: 'column', width: windowWidth / 3 }}>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#1f1f27', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
@@ -301,7 +301,7 @@ export const AllergyTracking = (props) => {
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#1f1f27', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
@@ -315,7 +315,7 @@ export const AllergyTracking = (props) => {
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#1f1f27', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
@@ -329,7 +329,7 @@ export const AllergyTracking = (props) => {
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                <View style={{ backgroundColor: '#ffffff', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                <View style={{ backgroundColor: '#1f1f27', height: HeightRatio(10), width: HeightRatio(10), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
                                 <Text
                                     style={{
                                         textAlign: 'left',
