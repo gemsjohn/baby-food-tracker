@@ -400,6 +400,35 @@ export const PremiumScreen = ({ navigation }) => {
                                 </View>
                                 <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
 
+                                {/* FEATURE 3 */}
+                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
+                                    <View style={{ backgroundColor: '#FFCE56', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
+                                    <View style={{flexDirection: 'column'}}>
+                                        <Text
+                                            style={{
+                                                color: THEME_FONT_COLOR_BLACK,
+                                                textAlign: 'left',
+                                                fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                                fontSize: HeightRatio(20),
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Beta Feature
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                textAlign: 'left',
+                                                fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                                fontSize: HeightRatio(20),
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Export food entry data via Email
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
+
                                 <View style={{ marginBottom: HeightRatio(20), alignSelf: 'center', }}>
 
                                     {/* <Image
@@ -446,21 +475,7 @@ export const PremiumScreen = ({ navigation }) => {
                                 </View>
                                 <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
 
-                                {/* FEATURE 3 */}
-                                <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', width: (windowWidth - WidthRatio(120)), }}>
-                                    <View style={{ backgroundColor: '#FFCE56', height: HeightRatio(20), width: HeightRatio(20), borderRadius: HeightRatio(4), margin: HeightRatio(10) }} />
-                                    <Text
-                                        style={{
-                                            textAlign: 'left',
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                            fontSize: HeightRatio(20),
-                                        }}
-                                        allowFontScaling={false}
-                                    >
-                                        Export nutritional data via Email
-                                    </Text>
-                                </View>
-                                <View style={{ borderBottomWidth: 1, borderBottomColor: THEME_COLOR_POSITIVE, width: windowWidth - HeightRatio(100), margin: HeightRatio(10) }} />
+                                
 
                             </View>
 
