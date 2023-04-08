@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { View, Text, Button, Share, StyleSheet, TouchableOpacity, TextInput, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, Button, Share, StyleSheet, TouchableOpacity, TextInput, SafeAreaView, ScrollView, Modal, Image } from 'react-native';
 import { useMutation, useQuery } from '@apollo/client';
 import { SEND_PDFCONTENT } from '../../utils/mutations';
 import { GET_USER_BY_ID } from '../../utils/queries';
@@ -66,32 +66,77 @@ export const ExportScreen = ({ navigation }) => {
     const [alternateEmail, setAlternateEmail] = useState(false)
     const [selectedCalendarModalDate, setSelectedCalendarModalDate] = useState('');
     const [selectedDateFromCalendar, setSelectedDateFromCalendar] = useState(null)
-
+    const [selectedDateFromCalendarEmailFormat, setSelectedDateFromCalendarEmailFormat] = useState(null)
     const { calendarModalCalorieTotal, calendarModalDate, calendarModalFoods, calendarModalEmotion } = usePullDailyContent(`${convertDateFormat(selectedDateFromCalendar)}`);
-
+    const [displayExportModal, setDisplayExportModal] = useState(true)
     const formatString = 'DD/MM/YYYY';
-    const [currentDate, setCurrentDate] = useState(moment().format(formatString));
+    const formatString_AlternateFormat = 'DDMMMYYYY';
+
     const [sendPDFContent] = useMutation(SEND_PDFCONTENT)
-    const htmlContent = `
-        <html>
-        <head>
-            <title>My Simple HTML Page</title>
-        </head>
-        <body>
-            <h1>Hello, world!</h1>
-            <p>This is a very simple HTML page.</p>
-        </body>
-        </html>
-    `;
-    
-    const handleShareContent = async () => {
+
+    const setupHTMLContent = () => {
+        let tableContent = '';
+        if (userByID?.user && userByID?.user.subuser[mainState.current.subuserIndex]) {
+            for (let i = 0; i < userByID?.user.subuser[mainState.current.subuserIndex].tracker.length; i++) {
+                if (userByID?.user.subuser[mainState.current.subuserIndex].tracker[i].date == convertDateFormat(selectedDateFromCalendar)) {
+                    const emotion = `${userByID?.user.subuser[mainState.current.subuserIndex].tracker[i].entry[0].emotion}`;
+                    const item = `${userByID?.user.subuser[mainState.current.subuserIndex].tracker[i].entry[0].item}`;
+                    const amount = userByID?.user.subuser[mainState.current.subuserIndex].tracker[i].entry[0].amount;
+                    const schedule = userByID?.user.subuser[mainState.current.subuserIndex].tracker[i].entry[0].schedule;
+                    const allergy = userByID?.user.subuser[mainState.current.subuserIndex].tracker[i].entry[0].allergy;
+
+                    tableContent += `
+                <tr>
+                  <td style="text-align: left; border: 1px solid white; padding: 10">${emotion}</td>
+                  <td style="text-align: left; border: 1px solid white; padding: 10">${item}</td>
+                  <td style="text-align: left; border: 1px solid white; padding: 10">${amount}</td>
+                  <td style="text-align: left; border: 1px solid white; padding: 10">${schedule}</td>
+                  <td style="text-align: left; border: 1px solid white; padding: 10">${allergy}</td>
+                </tr>
+              `;
+                }
+            }
+        }
+        const htmlContent = `
+        
+            <h1>Baby Food Tracker Export</h1>
+            <p>Selected Date: ${convertDateFormat(selectedDateFromCalendar)}</p>
+            <p>Child: ${userByID?.user.subuser[mainState.current.subuserIndex].subusername}</p>
+
+            <table style="border-collapse: collapse;">
+                <thead>
+                <tr>
+                    <th style="text-align: left; border: 1px solid white; padding: 10">Emotion</th>
+                    <th style="text-align: left; border: 1px solid white; padding: 10">Item</th>
+                    <th style="text-align: left; border: 1px solid white; padding: 10">Amount</th>
+                    <th style="text-align: left; border: 1px solid white; padding: 10">Schedule</th>
+                    <th style="text-align: left; border: 1px solid white; padding: 10">Allergy</th>
+                </tr>
+                </thead>
+                <tbody>
+                ${tableContent}
+                </tbody>
+            </table>
+
+            <p>Note: You may have to show the quoted text above to see the exported table.</p>
+            <p>Keep in mind that this feature is in beta. The data will improve. In the near future, some services may require a nominal fee or a Premium subscription.</p>
+
+        `;
+
+
+
+        handleShareContent(htmlContent);
+    };
+
+
+    const handleShareContent = async (input) => {
         console.log("# - handleShareContent")
         try {
             if (currentEmail) {
                 await sendPDFContent({
                     variables: {
                         email: `${emailOnFile.current}`,
-                        html: htmlContent
+                        html: input
 
                     }
                 })
@@ -100,7 +145,7 @@ export const ExportScreen = ({ navigation }) => {
                 await sendPDFContent({
                     variables: {
                         email: `${emailInput}`,
-                        html: htmlContent
+                        html: input
 
                     }
                 })
@@ -126,6 +171,7 @@ export const ExportScreen = ({ navigation }) => {
 
     const onDateSelect = (day) => {
         const selectedDate = moment(day.dateString).format(formatString); // convert date to desired format
+
         setSelectedCalendarModalDate(day.dateString);
         setSelectedDateFromCalendar(selectedDate);
     };
@@ -312,40 +358,33 @@ export const ExportScreen = ({ navigation }) => {
                                 }}
                                 allowFontScaling={false}
                             >
-                                Export: {selectedDateFromCalendar}
+                                Export: {convertDateFormat(selectedDateFromCalendar)}
                             </Text>
-                            <Text
-                                style={{
-                                    ...styles.modalVisible_Button_Text,
-                                    margin: HeightRatio(4),
-                                    fontSize: HeightRatio(15)
-                                }}
-                                allowFontScaling={false}
-                            >
-                                DD/MM/YYYY
-                            </Text>
-                            <Text
-                                style={{
-                                    ...styles.modalVisible_Button_Text,
-                                    margin: HeightRatio(4),
-                                    fontSize: HeightRatio(15),
-                                    alignSelf: 'flex-start',
-                                    marginLeft: HeightRatio(50)
 
-                                }}
-                                allowFontScaling={false}
-                            >
-                                Sample data
-                            </Text>
-                            <DailyScheduleSimplified
-                                date={calendarModalDate}
-                                userID={userByID?.user._id}
-                                containerHeight={HeightRatio(250)}
-                                from={"export"}
-                                subuser={userByID?.user.subuser[mainState.current.subuserIndex]}
-                                premium={false}
-                                nav={navigation}
-                            />
+                            <View style={{ marginTop: HeightRatio(20) }}>
+                                <Text
+                                    style={{
+                                        ...styles.modalVisible_Button_Text,
+                                        margin: HeightRatio(4),
+                                        fontSize: HeightRatio(15),
+                                        alignSelf: 'flex-start',
+                                        marginLeft: HeightRatio(30)
+
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Sample data
+                                </Text>
+                                <DailyScheduleSimplified
+                                    date={calendarModalDate}
+                                    userID={userByID?.user._id}
+                                    containerHeight={HeightRatio(250)}
+                                    from={"export"}
+                                    subuser={userByID?.user.subuser[mainState.current.subuserIndex]}
+                                    premium={false}
+                                    nav={navigation}
+                                />
+                            </View>
 
                             {/* <TouchableOpacity
                                 onPress={() => {
@@ -369,8 +408,19 @@ export const ExportScreen = ({ navigation }) => {
                         <View
                             style={{
                                 width: windowWidth,
+                                // marginTop: HeightRatio(10)
                             }}
                         >
+                            <Text
+                                style={{
+                                    color: 'black',
+                                    fontSize: HeightRatio(30),
+                                    margin: WidthRatio(10),
+                                    textAlign: 'center'
+                                }}
+                            >
+                                Choose a recipient email!
+                            </Text>
                             <View
                                 style={{
                                     flexDirection: 'column',
@@ -516,7 +566,9 @@ export const ExportScreen = ({ navigation }) => {
                             {currentEmail || validEmail && alternateEmail ?
                                 <TouchableOpacity
                                     onPress={() => {
-                                        handleShareContent(); setMainState({ userTouch: true })
+                                        // handleShareContent(); 
+                                        setupHTMLContent()
+                                        setMainState({ userTouch: true })
                                     }}
 
                                 >
@@ -528,7 +580,8 @@ export const ExportScreen = ({ navigation }) => {
                                         borderRadius: HeightRatio(5),
                                         alignSelf: 'center',
                                         width: windowWidth - WidthRatio(50),
-                                        margin: HeightRatio(10)
+                                        margin: HeightRatio(10),
+                                        ...styles.button_Drop_Shadow
                                     }}>
 
                                         <Text
@@ -564,7 +617,8 @@ export const ExportScreen = ({ navigation }) => {
                                     borderRadius: HeightRatio(5),
                                     alignSelf: 'center',
                                     width: windowWidth - WidthRatio(50),
-                                    margin: HeightRatio(10)
+                                    margin: HeightRatio(10),
+                                    ...styles.button_Drop_Shadow
                                 }}>
 
                                     <Text
@@ -598,6 +652,186 @@ export const ExportScreen = ({ navigation }) => {
                 </View>
             </TouchableOpacity> */}
             </View>
+
+            <Modal
+                animationType="none"
+                transparent={true}
+                visible={displayExportModal}
+                onRequestClose={() => {
+                    setDisplayExportModal(!displayExportModal);
+
+                }}
+            >
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'rgba(0, 0, 0, 0.75)'
+                    }}
+                >
+                    <View
+                        style={{
+                            // flex: 1,
+                            backgroundColor: '#1f1f27',
+                            margin: 20,
+                            zIndex: 999,
+                            borderRadius: 10,
+                            display: 'flex',
+                            // alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
+                        }}
+                    >
+                        <View
+                            style={{
+                                margin: HeightRatio(20),
+                                // alignSelf: 'center'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    // justifyContent: 'center'
+                                }}
+                            >
+                                <Image
+                                    source={require('../../assets/favicon_0.png')}
+                                    style={{
+                                        height: HeightRatio(40),
+                                        width: HeightRatio(40),
+                                        // alignSelf: 'center'
+                                    }}
+                                />
+                                <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
+                                    Baby Food Tracker
+                                </Text>
+                            </View>
+                            <View style={{ height: HeightRatio(10) }}></View>
+                            <View
+                                style={{
+                                    padding: HeightRatio(10)
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        marginTop: HeightRatio(10)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Export Beta Feature! &#128640;
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: THEME_COLOR_ATTENTION,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        margin: HeightRatio(5)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    FOR NOW
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        margin: HeightRatio(5)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                   You can freely export core entry data for a selected day.
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: THEME_COLOR_ATTENTION,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        margin: HeightRatio(5)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    FUTURE
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        margin: HeightRatio(5)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    The data will include nutritional details.
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        margin: HeightRatio(5)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Day, week, and month options will be available for premium users. 
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        margin: HeightRatio(5)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Freemium users can pay a nominal price for the export. But for now, this feature is FREE!                        
+                                </Text>
+                            </View>
+
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setDisplayExportModal(!displayExportModal);
+                                    setMainState({ userTouch: true })
+                                }}
+                                style={{
+                                    backgroundColor: THEME_COLOR_NEGATIVE,
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    padding: HeightRatio(10),
+                                    borderRadius: HeightRatio(10),
+                                    alignSelf: 'center',
+                                    width: (windowWidth - WidthRatio(100)) / 2,
+                                    margin: HeightRatio(10)
+                                }}>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        fontSize: HeightRatio(25),
+                                        alignSelf: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Close
+                                </Text>
+                            </TouchableOpacity>
+
+
+                        </View>
+                    </View>
+                </View>
+            </Modal>
 
             <Navbar nav={navigation} auth={mainState.current.authState} position={'absolute'} from={'home'} />
 
