@@ -162,6 +162,8 @@ export const Auth = ({ navigation }) => {
 
         checkToken(`Bearer ${data.login.token}`)
 
+        console.log("# - FROM AUTH")
+        console.log(decoded?.data._id)
         checkCustomerInfo(decoded?.data._id)
       }
     } catch (e) {

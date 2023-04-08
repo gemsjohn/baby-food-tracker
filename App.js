@@ -11,12 +11,13 @@ import { MetricsScreen } from './pages/premium/Metrics';
 import { KeyScreen } from './pages/home/Key';
 import { ProfileScreen } from './pages/profile/Profile';
 import { AdminScreen } from './pages/admin/Admin';
+import { ExportScreen } from './pages/export/Export';
 import { Auth } from './pages/auth/auth';
 import * as SecureStore from 'expo-secure-store';
 
 export const MainStateContext = createContext();
-export const GLOBAL_GRAPHQL_API_URL = "https://baby-food-tracker.herokuapp.com";
-// export const GLOBAL_GRAPHQL_API_URL = "http://192.168.1.198:3001";
+// export const GLOBAL_GRAPHQL_API_URL = "https://baby-food-tracker.herokuapp.com";
+export const GLOBAL_GRAPHQL_API_URL = "http://192.168.1.198:3001";
 
 
 const Stack = createNativeStackNavigator();
@@ -52,14 +53,14 @@ export default function App() {
       <ApolloProvider client={apolloClient}>
         <MainStateContext.Provider
           value={{ mainState: mainStateRef, setMainState }}>
-          <NavigationContainer 
-            // onStateChange={(state) => { console.log('New state is', state.routes); }}
+          <NavigationContainer
+          // onStateChange={(state) => { console.log('New state is', state.routes); }}
           >
             <Stack.Navigator
               initialRouteName={"Key"}
               screenOptions={{
                 headerShown: false,
-                
+                orientation: 'portrait_up',
               }}
             >
               <Stack.Screen
@@ -70,40 +71,40 @@ export default function App() {
                   orientation: 'portrait_up',
                 }}
               />
-                <Stack.Screen
-                  name="Home"
-                  component={HomeScreen}
-                  options={{
-                    headerShown: false,
-                    orientation: 'portrait_up',
-                    
-                  }}
-                />
-                <Stack.Screen
-                  name="Premium"
-                  component={PremiumScreen}
-                  options={{
-                    headerShown: false,
-                    orientation: 'portrait_up',
-                    
-                  }}
-                />
-                <Stack.Screen
-                  name="Metrics"
-                  component={MetricsScreen}
-                  options={{
-                    headerShown: false,
-                    orientation: 'portrait_up',
-                    
-                  }}
-                />
+              <Stack.Screen
+                name="Home"
+                component={HomeScreen}
+                options={{
+                  headerShown: false,
+                  orientation: 'portrait_up',
+
+                }}
+              />
+              <Stack.Screen
+                name="Premium"
+                component={PremiumScreen}
+                options={{
+                  headerShown: false,
+                  orientation: 'portrait_up',
+
+                }}
+              />
+              <Stack.Screen
+                name="Metrics"
+                component={MetricsScreen}
+                options={{
+                  headerShown: false,
+                  orientation: 'portrait_up',
+
+                }}
+              />
               <Stack.Screen
                 name="Key"
                 component={KeyScreen}
                 options={{
                   headerShown: false,
                   orientation: 'portrait_up',
-                  
+
                 }}
               />
               <Stack.Screen
@@ -117,6 +118,14 @@ export default function App() {
               <Stack.Screen
                 name="Admin"
                 component={AdminScreen}
+                options={{
+                  headerShown: false,
+                  orientation: 'portrait_up',
+                }}
+              />
+              <Stack.Screen
+                name="Export"
+                component={ExportScreen}
                 options={{
                   headerShown: false,
                   orientation: 'portrait_up',

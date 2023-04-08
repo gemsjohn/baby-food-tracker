@@ -27,7 +27,8 @@ import {
     faArrowLeft,
     faPlus,
     faBars,
-    faGlasses
+    faGlasses,
+    faFileExport
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -69,6 +70,11 @@ const APIKeys = {
 const resetActionPremium = CommonActions.reset({
     index: 1,
     routes: [{ name: 'Premium', params: {} }]
+});
+
+const resetActionExport = CommonActions.reset({
+    index: 1,
+    routes: [{ name: 'Export', params: {} }]
 });
 
 let localContainerHeight;
@@ -437,6 +443,7 @@ export const DailyScheduleSimplified = (props) => {
                                         backgroundColor: `${bg_color[i]}`,
 
                                     }}
+                                    disabled={props.from === "export" ? true : false}
                                     key={index}
                                 >
                                     <View
@@ -846,75 +853,125 @@ export const DailyScheduleSimplified = (props) => {
                         </>
                         :
                         <>
-                            <TouchableOpacity
-                                // onPress={() => { setPremiumServiceModalVisible(true); setMainState({ userTouch: true }); }}
-                                onPress={() => {
-                                    setMainState({ userTouch: true });
-                                    props.nav.dispatch(resetActionPremium)
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
                                 }}
-                            // resetActionPremium
                             >
-                                <LinearGradient
-                                    colors={['#ec546d', '#d05bb6']}
-                                    start={{ x: 0, y: 0 }}
-                                    end={{ x: 1, y: 1 }}
-                                    // style={{
-                                    //     ...styles.renderItem_Search_Results,
-                                    //     ...styles.button_Drop_Shadow,
-                                    //     borderRadius: HeightRatio(50),
-                                    //     backgroundColor: '#feda9a',
-                                    //     width: WidthRatio(300),
-                                    //     padding: HeightRatio(15)
-
-                                    // }}
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setMainState({ userTouch: true });
+                                        props.nav.dispatch(resetActionPremium)
+                                    }}
                                     style={{
-                                        backgroundColor: '#1f1f27',
-                                        width: '90%',
-                                        height: HeightRatio(120),
-                                        alignSelf: 'center',
-                                        borderRadius: HeightRatio(10),
-                                        display: 'flex',
-                                        // alignItems: 'center',
-                                        // justifyContent: 'center',
-                                        padding: HeightRatio(20),
-                                        marginTop: HeightRatio(8),
-                                        flexDirection: 'row',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        // ...styles.button_Drop_Shadow,
+                                        margin: HeightRatio(5)
+                                    }}
+                                >
+                                    <LinearGradient
+                                        colors={['#ec546d', '#d05bb6']}
+                                        start={{ x: 0, y: 0 }}
+                                        end={{ x: 1, y: 1 }}
+                                        style={{
+                                            backgroundColor: '#1f1f27',
+                                            width: windowWidth*0.65,
+                                            height: HeightRatio(100),
+                                            alignSelf: 'center',
+                                            borderRadius: HeightRatio(10),
+                                            display: 'flex',
+                                            padding: HeightRatio(20),
+                                            marginTop: HeightRatio(8),
+                                            flexDirection: 'row',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            ...styles.button_Drop_Shadow,
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                height: HeightRatio(50),
+                                                width: HeightRatio(50),
+                                                borderRadius: HeightRatio(100),
+                                                borderWidth: 3,
+                                                borderColor: 'white',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faSolid, faGlasses}
+                                                style={{ color: THEME_FONT_COLOR_WHITE }}
+                                                size={25}
+                                            />
+                                        </View>
+                                        <Text
+                                            style={{
+                                                fontSize: HeightRatio(22),
+                                                color: THEME_FONT_COLOR_WHITE,
+                                                marginLeft: HeightRatio(20)
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Premium Service
+                                        </Text>
+                                    </LinearGradient>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setMainState({ userTouch: true });
+                                        props.nav.dispatch(resetActionExport)
+                                    }}
+                                    style={{
+                                        margin: HeightRatio(5)
                                     }}
                                 >
                                     <View
                                         style={{
-                                            height: HeightRatio(50),
-                                            width: HeightRatio(50),
-                                            borderRadius: HeightRatio(100),
-                                            borderWidth: 3,
-                                            borderColor: 'white',
+                                            backgroundColor: '#8bccde',
+                                            width: windowWidth*0.25,
+                                            height: HeightRatio(100),
+                                            alignSelf: 'center',
+                                            borderRadius: HeightRatio(10),
+                                            display: 'flex',
+                                            padding: HeightRatio(20),
+                                            marginTop: HeightRatio(8),
+                                            flexDirection: 'column',
                                             display: 'flex',
                                             alignItems: 'center',
-                                            justifyContent: 'center'
+                                            justifyContent: 'center',
+                                            ...styles.button_Drop_Shadow,
                                         }}
                                     >
-                                        <FontAwesomeIcon
-                                            icon={faSolid, faGlasses}
-                                            style={{ color: THEME_FONT_COLOR_WHITE }}
-                                            size={25}
-                                        />
+                                        <View
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                margin: HeightRatio(5)
+                                            }}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faSolid, faFileExport}
+                                                style={{ color: THEME_FONT_COLOR_BLACK }}
+                                                size={25}
+                                            />
+                                        </View>
+                                        <Text
+                                            style={{
+                                                fontSize: HeightRatio(16),
+                                                color: THEME_FONT_COLOR_BLACK,
+                                            }}
+                                            allowFontScaling={false}
+                                        >
+                                            Export
+                                        </Text>
                                     </View>
-                                    <Text
-                                        style={{
-                                            fontSize: HeightRatio(22),
-                                            color: THEME_FONT_COLOR_WHITE,
-                                            marginLeft: HeightRatio(20)
-                                        }}
-                                        allowFontScaling={false}
-                                    >
-                                        Premium Service
-                                    </Text>
-                                </LinearGradient>
-                            </TouchableOpacity>
+                                </TouchableOpacity>
+                            </View>
                         </>
 
                     }

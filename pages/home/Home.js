@@ -114,9 +114,7 @@ export const HomeScreen = ({ navigation }) => {
 
 
     useEffect(() => {
-        console.log("#CHECK 1")
         if (userByID?.user) {
-            console.log("#CHECK 2")
 
             setPremiumStatus(userByID?.user.premium.status)
             setPremiumExpiration(userByID?.user.premium.expiration)
@@ -1393,7 +1391,7 @@ const styles = StyleSheet.create({
         borderRadius: HeightRatio(10),
         position: 'absolute',
         alignSelf: 'center',
-        top: HeightRatio(60),
+        top: HeightRatio(57),
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -1403,7 +1401,7 @@ const styles = StyleSheet.create({
     },
     homePrimary_Date_Return_Button_Text: {
         color: THEME_FONT_COLOR_WHITE,
-        fontSize: HeightRatio(20),
+        fontSize: HeightRatio(18),
         fontFamily: 'SofiaSansSemiCondensed-Regular',
     },
     homePrimary_Pattern_1: {
