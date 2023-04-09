@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { View, Text, Button, Share, StyleSheet, TouchableOpacity, TextInput, SafeAreaView, ScrollView, Modal, Image } from 'react-native';
+import { View, Text, Button, Share, StyleSheet, TouchableOpacity, TextInput, SafeAreaView, ScrollView, Modal, Image, ActivityIndicator } from 'react-native';
 import { useMutation, useQuery } from '@apollo/client';
 import { SEND_PDFCONTENT } from '../../utils/mutations';
 import { GET_USER_BY_ID } from '../../utils/queries';
@@ -69,12 +69,16 @@ export const ExportScreen = ({ navigation }) => {
     const [selectedDateFromCalendarEmailFormat, setSelectedDateFromCalendarEmailFormat] = useState(null)
     const { calendarModalCalorieTotal, calendarModalDate, calendarModalFoods, calendarModalEmotion } = usePullDailyContent(`${convertDateFormat(selectedDateFromCalendar)}`);
     const [displayExportModal, setDisplayExportModal] = useState(true)
+    const [displayEmailSentModal, setDisplayEmailSentModal] = useState(false)
+    const [displayEmailFailedModal, setDisplayEmailFailedModal] = useState(false)
+    const [loading, setLoading] = useState(false)
     const formatString = 'DD/MM/YYYY';
     const formatString_AlternateFormat = 'DDMMMYYYY';
 
     const [sendPDFContent] = useMutation(SEND_PDFCONTENT)
 
     const setupHTMLContent = () => {
+        setLoading(true)
         let tableContent = '';
         if (userByID?.user && userByID?.user.subuser[mainState.current.subuserIndex]) {
             for (let i = 0; i < userByID?.user.subuser[mainState.current.subuserIndex].tracker.length; i++) {
@@ -150,9 +154,13 @@ export const ExportScreen = ({ navigation }) => {
                     }
                 })
             }
+            setLoading(false)
+            setDisplayEmailSentModal(true)
 
         } catch (error) {
             console.error(error);
+            setLoading(false)
+            setDisplayEmailFailedModal(true)
         }
     };
 
@@ -211,11 +219,6 @@ export const ExportScreen = ({ navigation }) => {
                             <View
                                 style={{ flexDirection: 'column' }}
                             >
-                                {/* <FontAwesomeIcon
-                                    icon={faSolid, faStar}
-                                    style={{ color: THEME_FONT_COLOR_BLACK, alignSelf: 'center' }}
-                                    size={25}
-                                /> */}
                                 <Text
                                     style={{
                                         ...styles.renderItem_Search_Result_Container_Text,
@@ -311,7 +314,7 @@ export const ExportScreen = ({ navigation }) => {
                         </View>
                     </TouchableOpacity>
                 </View>
-
+                {!loading ?
                 <SafeAreaView
                     style={{
                         ...styles.container,
@@ -385,22 +388,6 @@ export const ExportScreen = ({ navigation }) => {
                                     nav={navigation}
                                 />
                             </View>
-
-                            {/* <TouchableOpacity
-                                onPress={() => {
-                                    setCurrentDate(selectedDateFromCalendar);
-                                    setMainState({ userTouch: true })
-                                }}
-                            >
-                                <View style={{ ...styles.modalVisible_HalfButton, ...styles.button_Drop_Shadow, backgroundColor: THEME_COLOR_POSITIVE }}>
-                                    <Text
-                                        style={styles.modalVisible_Button_Text}
-                                        allowFontScaling={false}
-                                    >
-                                        Select Date
-                                    </Text>
-                                </View>
-                            </TouchableOpacity> */}
                         </View>
 
 
@@ -408,7 +395,6 @@ export const ExportScreen = ({ navigation }) => {
                         <View
                             style={{
                                 width: windowWidth,
-                                // marginTop: HeightRatio(10)
                             }}
                         >
                             <Text
@@ -641,16 +627,22 @@ export const ExportScreen = ({ navigation }) => {
                         <View style={{ height: HeightRatio(100) }} />
                     </ScrollView>
                 </SafeAreaView>
-                {/* <TouchableOpacity onPress={() => { handleShareContent(); setMainState({ userTouch: true }) }}>
-                <View style={{ ...styles.modalButton, backgroundColor: THEME_COLOR_POSITIVE }}>
-                    <Text
-                        style={{ ...styles.modalButton_Text, color: THEME_FONT_COLOR_BLACK }}
-                        allowFontScaling={false}
-                    >
-                        Send Email
-                    </Text>
+                :
+                <View 
+                    style={{
+                        // flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: HeightRatio(300),
+                        width: windowWidth,
+                        // backgroundColor: '#ecece6'
+                    }}
+                >
+                    <ActivityIndicator size={100} color={THEME_COLOR_NEGATIVE} />
                 </View>
-            </TouchableOpacity> */}
+                }
+                
             </View>
 
             <Modal
@@ -802,6 +794,234 @@ export const ExportScreen = ({ navigation }) => {
                             <TouchableOpacity
                                 onPress={() => {
                                     setDisplayExportModal(!displayExportModal);
+                                    setMainState({ userTouch: true })
+                                }}
+                                style={{
+                                    backgroundColor: THEME_COLOR_NEGATIVE,
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    padding: HeightRatio(10),
+                                    borderRadius: HeightRatio(10),
+                                    alignSelf: 'center',
+                                    width: (windowWidth - WidthRatio(100)) / 2,
+                                    margin: HeightRatio(10)
+                                }}>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        fontSize: HeightRatio(25),
+                                        alignSelf: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Close
+                                </Text>
+                            </TouchableOpacity>
+
+
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+            <Modal
+                animationType="none"
+                transparent={true}
+                visible={displayEmailSentModal}
+                onRequestClose={() => {
+                    setDisplayEmailSentModal(!displayEmailSentModal);
+
+                }}
+            >
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'rgba(0, 0, 0, 0.75)'
+                    }}
+                >
+                    <View
+                        style={{
+                            // flex: 1,
+                            backgroundColor: '#1f1f27',
+                            margin: 20,
+                            zIndex: 999,
+                            borderRadius: 10,
+                            display: 'flex',
+                            // alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
+                        }}
+                    >
+                        <View
+                            style={{
+                                margin: HeightRatio(20),
+                                // alignSelf: 'center'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    // justifyContent: 'center'
+                                }}
+                            >
+                                <Image
+                                    source={require('../../assets/favicon_0.png')}
+                                    style={{
+                                        height: HeightRatio(40),
+                                        width: HeightRatio(40),
+                                        // alignSelf: 'center'
+                                    }}
+                                />
+                                <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
+                                    Baby Food Tracker
+                                </Text>
+                            </View>
+                            <View style={{ height: HeightRatio(10) }}></View>
+                            <View
+                                style={{
+                                    padding: HeightRatio(10)
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        marginTop: HeightRatio(10)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Email sent! &#128640;
+                                </Text>
+                            </View>
+
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setDisplayEmailSentModal(!displayEmailSentModal);
+                                    setMainState({ userTouch: true })
+                                }}
+                                style={{
+                                    backgroundColor: THEME_COLOR_NEGATIVE,
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    padding: HeightRatio(10),
+                                    borderRadius: HeightRatio(10),
+                                    alignSelf: 'center',
+                                    width: (windowWidth - WidthRatio(100)) / 2,
+                                    margin: HeightRatio(10)
+                                }}>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        fontSize: HeightRatio(25),
+                                        alignSelf: 'center',
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular'
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Close
+                                </Text>
+                            </TouchableOpacity>
+
+
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+            <Modal
+                animationType="none"
+                transparent={true}
+                visible={displayEmailFailedModal}
+                onRequestClose={() => {
+                    setDisplayEmailFailedModal(!displayEmailFailedModal);
+
+                }}
+            >
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'rgba(0, 0, 0, 0.75)'
+                    }}
+                >
+                    <View
+                        style={{
+                            // flex: 1,
+                            backgroundColor: '#1f1f27',
+                            margin: 20,
+                            zIndex: 999,
+                            borderRadius: 10,
+                            display: 'flex',
+                            // alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'absolute', bottom: HeightRatio(30), left: 0, right: 0
+                        }}
+                    >
+                        <View
+                            style={{
+                                margin: HeightRatio(20),
+                                // alignSelf: 'center'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    // justifyContent: 'center'
+                                }}
+                            >
+                                <Image
+                                    source={require('../../assets/favicon_0.png')}
+                                    style={{
+                                        height: HeightRatio(40),
+                                        width: HeightRatio(40),
+                                        // alignSelf: 'center'
+                                    }}
+                                />
+                                <Text style={{ color: 'white', fontFamily: 'SofiaSansSemiCondensed-ExtraBold', fontSize: HeightRatio(14) }}>
+                                    Baby Food Tracker
+                                </Text>
+                            </View>
+                            <View style={{ height: HeightRatio(10) }}></View>
+                            <View
+                                style={{
+                                    padding: HeightRatio(10)
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-ExtraBold',
+                                        marginTop: HeightRatio(10)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Error: email was not sent! &#128533;
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: THEME_FONT_COLOR_WHITE,
+                                        textAlign: 'left',
+                                        fontSize: HeightRatio(20),
+                                        fontFamily: 'SofiaSansSemiCondensed-Regular',
+                                        marginTop: HeightRatio(10)
+                                    }}
+                                    allowFontScaling={false}
+                                >
+                                    Potential network error.
+                                </Text>
+                            </View>
+
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setDisplayEmailFailedModal(!displayEmailFailedModal);
                                     setMainState({ userTouch: true })
                                 }}
                                 style={{
