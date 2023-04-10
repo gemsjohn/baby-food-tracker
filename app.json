@@ -3,7 +3,7 @@
     "name": "Baby Food Tracker",
     "description" : "Optimize your baby's nutrition & track progress. With our app, you can easily track your baby's feeding history, see nutritional values for every meal, and quickly add or remove entries with just a few taps.",
     "slug": "babyFoodTracker",
-    "version": "1.2.2",
+    "version": "1.2.4",
     "orientation": "portrait",
     "icon": "./assets/favicon.png",
     "userInterfaceStyle": "light",
@@ -20,7 +20,7 @@
     },
     "android": {
       "package": "com.babyFoodTracker",
-      "versionCode": 23,
+      "versionCode": 25,
       "adaptiveIcon": {
         "foregroundImage": "./assets/favicon.png",
         "backgroundColor": "#f7ff6c"

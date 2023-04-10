@@ -65,7 +65,7 @@ export const Auth = ({ navigation }) => {
   const [navigateToProfile, setNavigateToProfile] = useState(false)
   const [signUpFailedModal, setSignUpFailedModal] = useState(false)
   const [signUpFailedError, setSignUpFailedError] = useState('')
-
+  const [disableForgotPasswordSubmitButton, setDisableForgotPasswordSubmitButton] = useState(false)
 
   // Sign Up: Email
   const [promptEmailInput, setPromptEmailInput] = useState("");
@@ -252,6 +252,7 @@ export const Auth = ({ navigation }) => {
   };
 
   const handleRequestReset = async () => {
+    setDisableForgotPasswordSubmitButton(true)
     try {
       await requestReset({
         variables: {
@@ -267,6 +268,7 @@ export const Auth = ({ navigation }) => {
   };
 
   const handleResetPassword = async () => {
+    setLoading(true);
     if (promptResetEmail != '' && promptResetPassword_0 != '' && promptResetPassword_1 != '' && promptResetToken != '' && promptResetPassword_0 == promptResetPassword_1) {
       try {
         await resetPassword({
@@ -286,11 +288,14 @@ export const Auth = ({ navigation }) => {
       } catch (e) {
         console.error(e)
       }
+      setLoading(false);
+
     }
   }
 
   useEffect(() => {
     setLoading(true)
+    setDisableForgotPasswordSubmitButton(false)
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       (event) => {
@@ -894,8 +899,10 @@ export const Auth = ({ navigation }) => {
                                       />
                                       {/* [[[SUBMIT BUTTON]]] */}
 
-                                      <TouchableOpacity onPress={() => handleRequestReset()}>
-                                        <View style={{
+                                      <TouchableOpacity 
+                                        onPress={() => handleRequestReset()}
+                                        disabled={disableForgotPasswordSubmitButton ? true : false}
+                                        style={{
                                           backgroundColor: THEME_COLOR_POSITIVE,
                                           ...styles.button_Drop_Shadow,
                                           display: 'flex',
@@ -905,7 +912,9 @@ export const Auth = ({ navigation }) => {
                                           alignSelf: 'center',
                                           width: windowWidth - WidthRatio(50),
                                           margin: HeightRatio(10)
-                                        }}>
+                                        }}
+                                      >
+                                        <View >
                                           <Text
                                             style={{
                                               color: THEME_FONT_COLOR_BLACK,
@@ -925,7 +934,7 @@ export const Auth = ({ navigation }) => {
                                       <View style={{ width: windowWidth, alignSelf: 'center' }}>
                                         <Text
                                           style={{
-                                            color: THEME_COLOR_ATTENTION,
+                                            color: THEME_FONT_COLOR_BLACK,
                                             alignSelf: 'center',
                                             fontSize: HeightRatio(30),
                                             // margin: HeightRatio(10),
@@ -936,8 +945,9 @@ export const Auth = ({ navigation }) => {
                                       </View>
                                     }
 
-                                    <TouchableOpacity onPress={() => setDisplayForgotPasswordForm(true)}>
-                                      <View style={{
+                                    <TouchableOpacity 
+                                      onPress={() => setDisplayForgotPasswordForm(true)}
+                                      style={{
                                         backgroundColor: 'white',
                                         ...styles.button_Drop_Shadow,
                                         display: 'flex',
@@ -947,7 +957,9 @@ export const Auth = ({ navigation }) => {
                                         alignSelf: 'center',
                                         width: windowWidth - WidthRatio(50),
                                         margin: HeightRatio(10)
-                                      }}>
+                                      }}
+                                    >
+                                      <View >
                                         <Text
                                           style={{
                                             color: THEME_FONT_COLOR_BLACK,
@@ -1007,7 +1019,7 @@ export const Auth = ({ navigation }) => {
                                           />
                                           {promptResetPassword_0 == promptResetPassword_1 && promptResetPassword_0 != '' && promptResetPassword_1 != '' &&
                                             <View style={{ width: windowWidth - HeightRatio(10) }}>
-                                              <Text style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(25), fontFamily: 'SofiaSansSemiCondensed-Regular', textAlign: 'center' }}
+                                              <Text style={{ color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(25), fontFamily: 'SofiaSansSemiCondensed-Regular', textAlign: 'center' }}
                                                 allowFontScaling={false}>
                                                 Passwords match!
                                               </Text>
@@ -1015,7 +1027,7 @@ export const Auth = ({ navigation }) => {
                                           }
                                           {promptResetPassword_0 != promptResetPassword_1 && promptResetPassword_0 != '' && promptResetPassword_1 != '' &&
                                             <View style={{ width: windowWidth - HeightRatio(10) }}>
-                                              <Text style={{ color: THEME_FONT_COLOR_WHITE, fontSize: HeightRatio(25), fontFamily: 'SofiaSansSemiCondensed-Regular', textAlign: 'center' }}
+                                              <Text style={{ color: THEME_FONT_COLOR_BLACK, fontSize: HeightRatio(25), fontFamily: 'SofiaSansSemiCondensed-Regular', textAlign: 'center' }}
                                                 allowFontScaling={false}>
                                                 Passwords do not match!
                                               </Text>
