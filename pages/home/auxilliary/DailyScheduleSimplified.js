@@ -790,19 +790,21 @@ export const DailyScheduleSimplified = (props) => {
                     {props.premium ?
                         <>
                             {props.subuser &&
-                                <>
+                                <View style={{flexDirection: 'row'}}>
                                     <View
                                         style={{
                                             backgroundColor: '#1f1f27',
-                                            width: '90%',
-                                            height: HeightRatio(120),
+                                            width: '70%',
+                                            height: HeightRatio(100),
                                             alignSelf: 'center',
                                             borderRadius: HeightRatio(10),
                                             display: 'flex',
                                             // alignItems: 'center',
                                             // justifyContent: 'center',
-                                            padding: HeightRatio(20),
-                                            marginTop: HeightRatio(8)
+                                            // padding: HeightRatio(20),
+                                            // marginTop: HeightRatio(8),
+                                            padding: HeightRatio(10),
+                                            margin: HeightRatio(5)
                                         }}
                                     >
                                         <View
@@ -838,7 +840,7 @@ export const DailyScheduleSimplified = (props) => {
                                         <Text
                                             style={{
                                                 color: THEME_FONT_COLOR_WHITE,
-                                                fontSize: HeightRatio(20),
+                                                fontSize: HeightRatio(18),
                                                 fontFamily: "SofiaSansSemiCondensed-Regular",
                                                 marginLeft: HeightRatio(10)
                                             }}
@@ -847,8 +849,59 @@ export const DailyScheduleSimplified = (props) => {
                                             Personalized insight's are under development and will populate here!
                                         </Text>
                                     </View>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setMainState({ userTouch: true });
+                                            props.nav.dispatch(resetActionExport)
+                                        }}
+                                        style={{
+                                            margin: HeightRatio(5)
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                backgroundColor: '#8bccde',
+                                                width: windowWidth*0.25,
+                                                height: HeightRatio(100),
+                                                alignSelf: 'center',
+                                                borderRadius: HeightRatio(10),
+                                                display: 'flex',
+                                                padding: HeightRatio(20),
+                                                // marginTop: HeightRatio(8),
+                                                flexDirection: 'column',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                ...styles.button_Drop_Shadow,
+                                            }}
+                                        >
+                                            <View
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    margin: HeightRatio(5)
+                                                }}
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faSolid, faFileExport}
+                                                    style={{ color: THEME_FONT_COLOR_BLACK }}
+                                                    size={25}
+                                                />
+                                            </View>
+                                            <Text
+                                                style={{
+                                                    fontSize: HeightRatio(16),
+                                                    color: THEME_FONT_COLOR_BLACK,
+                                                }}
+                                                allowFontScaling={false}
+                                            >
+                                                Export
+                                            </Text>
+                                        </View>
+                                    </TouchableOpacity>
 
-                                </>
+                                </View>
                             }
                         </>
                         :

@@ -39,6 +39,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { CommonActions } from '@react-navigation/native';
+import * as SecureStore from 'expo-secure-store';
 
 const APIKeys = {
     google: "goog_caDqiYZPHvJIwlqyFoZDgTqOywO",
@@ -87,7 +88,8 @@ export const PremiumScreen = ({ navigation }) => {
 
             }
         } catch (e) {
-            Alert.alert('Error getting offers', e.message);
+            // Alert.alert('Error getting offers', e.message);
+            console.log(e.message)
         }
         setLoading(false)
     };
@@ -97,88 +99,64 @@ export const PremiumScreen = ({ navigation }) => {
     }, [])
 
     const onSelection = async (input) => {
-        setIsPurchasing(true);
-        setIsPurchaseSuccessful(false);
-        // setMainState({
-        //     tokens_isPurchaseSuccessful: false
-        // })
-
-        const customerInfo = await Purchases.getCustomerInfo();
-        // transactionLength.current = customerInfo.nonSubscriptionTransactions.length;
-
+        console.log("# - SUBSCRIBE SELECTED")
+        await SecureStore.setItemAsync("DAY_HOUR", '');
         try {
-            setDisplayModal(false)
-            setMainState({
-                tokens_display: false
-            })
             await Purchases.purchasePackage(input);
         } catch (e) {
             if (!e.userCancelled) {
-                // Alert.alert('Error purchasing package', e.message);
+                console.log(e.message)
             }
         } finally {
-            checkCustomerInfo(input)
-            // setIsPurchasing(false);
+            handleRestorePurchases()
         }
-
     };
 
-    const handleUpdateToPremium = async (expiration) => {
-        console.log("# - HANDLE UPDATE TO PREMIUM")
-        handlerUpdateToPremiumCalled.current = true;
-        setMainState({
-            triggerRefresh: true
-        })
+    const handleRestorePurchases = async () => {
+        console.log("# - RESTORE PURCHASES")
 
-        await updatePremium({
-            variables: {
-                status: true,
-                expiration: `${expiration}`
-            }
-        });
-        clearInterval(intervalID.current);
-        setMainState({
-            triggerRefresh: false
-        })
+        Purchases.configure({ apiKey: APIKeys.google, appUserID: mainState.current.userID });
+        try {
+            await Purchases.restorePurchases();
+            handleUpdateToSubscription()
+
+        } catch (e) {
+            console.log(e)
+        }
+
     }
 
-    const checkCustomerInfo = async (input) => {
-
+    const handleUpdateToSubscription = async (expiration) => {
+        
         const customerInfo = await Purchases.getCustomerInfo();
-        // console.log("- - - - - - - - - ")
-        // console.log("- - - - - - - - - ")
-        // console.log(input)
-        // console.log("- - - - - - - - - ")
-        console.log(customerInfo)
-        // console.log(customerInfo.allExpirationDates.baby_food_tracker_premium_month)
+        if (customerInfo.activeSubscriptions.length > 0 && !userByID?.user.subscription || userByID?.user.subscription === null) {
+            console.log("# - HANDLE UPDATE SUBSCRIPTION")
 
-        setTimeout(() => {
-            clearInterval(intervalID.current)
-            console.log("# - STOP Checking User Subscription")
-            setCheckCustomerInfoInitiated(false)
-        }, 10000)
-
-        intervalID.current = setInterval(() => {
-            // setCheckCustomerInfoInitiated(true)
-            console.log("# - Checking User Subscription")
-            for (let i = 0; i < customerInfo.activeSubscriptions.length; i++) {
-                if (customerInfo.activeSubscriptions[i] === "baby_food_tracker_premium_month" && !handlerUpdateToPremiumCalled.current) {
-                    clearInterval(intervalID.current);
-                    handleUpdateToPremium(customerInfo.allExpirationDates.baby_food_tracker_premium_month)
-                    
+            await updatePremium({
+                variables: {
+                    status: true,
+                    expiration: `${expiration}`
                 }
-            }
+            });
+            await SecureStore.setItemAsync("PREMIUM", 'true');
+            navigation.navigate('Home')
 
-        }, 1000)
+        } else {
+            console.log("# - NO SUBSCRIPTION UPDATES")
+
+        }
+
     }
-
-
 
     const Item = ({ title, identifier, description, priceString, purchasePackage }) => (
         <>
             <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity
-                    onPress={() => { navigation.dispatch(resetActionHome); setMainState({ userTouch: true }); }}
+                    onPress={() => { 
+                        // navigation.dispatch(resetActionHome);
+                        navigation.navigate('Home') 
+                        setMainState({ userTouch: true }); 
+                    }}
                 >
 
                     <View>

@@ -386,7 +386,8 @@ export const ProfileScreen = ({ navigation }) => {
                                                                     authState: false
                                                                 })
                                                                 setMainState({ userTouch: true })
-                                                                navigation.dispatch(resetActionAuth)
+                                                                // navigation.dispatch(resetActionAuth)
+                                                                navigation.navigate('Auth')
                                                             }}
                                                             style={{
                                                                 ...Styling.modalWordButton,
@@ -435,7 +436,8 @@ export const ProfileScreen = ({ navigation }) => {
                                                             <TouchableOpacity
                                                                 onPress={() => {
                                                                     setMainState({ userTouch: true })
-                                                                    navigation.dispatch(resetActionAdmin)
+                                                                    // navigation.dispatch(resetActionAdmin)
+                                                                    navigation.navigate('Admin')
                                                                 }}
                                                                 style={{
                                                                     ...Styling.modalWordButton,

@@ -3,20 +3,12 @@ import {
     Text,
     TouchableOpacity,
     View,
-    Dimensions,
     Modal,
     SafeAreaView,
     ScrollView,
-    ImageBackground,
     Image,
-    RefreshControl,
-    Animated,
-    Button,
     StyleSheet,
     TextInput,
-    FlatList,
-    ActivityIndicator,
-    TouchableWithoutFeedback
 } from 'react-native';
 import {
     faSolid,
@@ -78,7 +70,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions } from '@react-navigation/native';
 import Purchases, { PurchasesOffering } from 'react-native-purchases';
 import { GLOBAL_GRAPHQL_API_URL } from '../../App';
-
+import {
+    ActivityIndicator_Timer,
+    CustomText,
+    APIKeys,
+    save,
+    timeHandler
+} from '../../components/Aux';
+import { useIsFocused } from '@react-navigation/native';
 
 const resetActionKey = CommonActions.reset({
     index: 1,
@@ -90,10 +89,6 @@ const resetActionMetrics = CommonActions.reset({
     routes: [{ name: 'Metrics', params: {} }]
 });
 
-const APIKeys = {
-    google: "goog_caDqiYZPHvJIwlqyFoZDgTqOywO",
-};
-
 export const HomeScreen = ({ navigation }) => {
     const { mainState, setMainState } = useContext(MainStateContext);
     const { data: userByID, refetch } = useQuery(GET_USER_BY_ID, {
@@ -104,13 +99,16 @@ export const HomeScreen = ({ navigation }) => {
     const [premiumStatus, setPremiumStatus] = useState(null);
     const [premiumExpiration, setPremiumExpiration] = useState(null);
     const [subuserLength, setSubuserLength] = useState(null);
-    // const [firstSubuser, setFirstSubuser] = useState(null)
     const [networkConnected, setNetworkConnected] = useState(true);
+    const [appIsReady, setAppIsReady] = useState(false);
+    const [displaySubscribeButton, setDisplaySubscribeButton] = useState(false)
+    const isFocused = useIsFocused();
 
     // # - DATE
     const formatString = 'DD/MM/YYYY';
     const [currentDate, setCurrentDate] = useState(moment().format(formatString));
     const [currentDateReadable, setCurrentDateReadable] = useState('')
+    const [displayPremiumOption, setDisplayPremiumOption] = useState(false);
 
 
     useEffect(() => {
@@ -119,9 +117,6 @@ export const HomeScreen = ({ navigation }) => {
             setPremiumStatus(userByID?.user.premium.status)
             setPremiumExpiration(userByID?.user.premium.expiration)
             setSubuserLength(userByID.user.subuser.length)
-            // if (userByID?.user.subuser.length > 0) {
-            //     setFirstSubuser(userByID?.user.subuser[0])
-            // }
         }
 
 
@@ -230,71 +225,131 @@ export const HomeScreen = ({ navigation }) => {
 
     }, [currentDate])
 
-    const lastTouchTimeRef = useRef(Date.now());
-    const touchTimerRef = useRef(null);
+    ////////////////////////////////////////////////////////////////////////////////
+    // AUTHORIZATION
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    async function getValueFor() {
+        // mainState.current.userID
+        // let local_userID = await SecureStore.getItemAsync("USERID");
+        let local_userID = await mainState.current.userID;
+        setMainState({ USERNAME: local_userID })
+        setLoading(true)
+        console.log("# - STEP 2")
+        if (local_userID) {
+            console.log("# - STEP 2 A")
+            let PREMIUM_STATUS = await SecureStore.getItemAsync("PREMIUM");
+            let DAY_STATUS = await SecureStore.getItemAsync("DAY_HOUR");
+            let SUBSCRIPTION_UPDATE = await SecureStore.getItemAsync("SUBSCRIPTION_UPDATE");
 
-    const handleTouch = () => {
-        console.log("handleTouch");
-        lastTouchTimeRef.current = Date.now();
+            console.log(DAY_STATUS)
+            console.log(timeHandler().hour)
 
-        clearTimeout(touchTimerRef.current);
-        handleTimeout.current = false;
+            if (PREMIUM_STATUS === 'true' && DAY_STATUS === timeHandler().hour) {
+                console.log("PREMIUM - QUICK LOAD")
+                setDisplayPremiumOption(true)
+                setLoading(false)
 
-        touchTimerRef.current = setTimeout(() => {
-            console.log("CHECK 1")
-            async function getValueFor(key) {
-                console.log("CHECK 2")
+            } else if (PREMIUM_STATUS === 'true' && DAY_STATUS != timeHandler().hour) {
+                console.log("PREMIUM - SLOW LOAD")
+                handleRestorePurchases();
+            } else if (PREMIUM_STATUS === 'false' && DAY_STATUS != timeHandler().hour) {
+                console.log("FREE - SLOW LOAD")
+                handleRestorePurchases();
+            } else if (PREMIUM_STATUS === 'false' && DAY_STATUS === timeHandler().hour) {
+                console.log("FREE - QUICK LOAD")
+                setLoading(false)
+            } else if (SUBSCRIPTION_UPDATE === 'true') {
+                handleRestorePurchases();
+            } else {
+                handleRestorePurchases();
+            }
+            return;
+        } else {
+            console.log("# - STEP 2 B")
+            setDisplaySetupModal(true)
+        }
+    }
 
-                let result = await SecureStore.getItemAsync(key);
-                console.log("CHECK 3")
+    const handleRestorePurchases = async () => {
+        console.log("# - RESTORE PURCHASES")
+        Purchases.configure({ apiKey: APIKeys.google, appUserID: mainState.current.userID });
+        await Purchases.getCustomerInfo();
+        try {
+            await Purchases.restorePurchases();
+            checkCustomerInfo();
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
-                if (!handleTimeout.current) {
-                    console.log("# - GET VALUE FOR COSMIC KEY  - FROM HOME")
+    const checkCustomerInfo = async () => {
+        console.log("# - STEP 3")
+        Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+        Purchases.configure({ apiKey: APIKeys.google, appUserID: mainState.current.userID });
+        const customerInfo = await Purchases.getCustomerInfo();
+        if (mainState.current.userID != '') {
+            if (customerInfo.activeSubscriptions.length > 0) {
+                console.log("# - ACTIVE SUBSCRIPTIONS")
+                console.log(customerInfo.activeSubscriptions)
+                setDisplayPremiumOption(true);
+                await SecureStore.setItemAsync("PREMIUM", 'true');
+                await SecureStore.setItemAsync("DAY_HOUR", timeHandler().hour);
 
-                    if (result && !handleTimeout.current) {
-                        handleTimeout.current = true;
-                        console.log("# - Result True")
-                        navigation.dispatch(resetActionKey);
-                    } else {
-                        console.log("# - Result False")
-                        null
-                    }
+                try {
+                    await updatePremium({
+                        variables: {
+                            status: true,
+                            expiration: `${customerInfo.allExpirationDates.baby_food_tracker_premium_month}`
+                        }
+                    });
+                } catch (error) {
+                    console.log(error.message)
+                    setDisableButtons(true);
+                    setDisplayNetworkRequestFailedModal(true)
+                    setLoading(false)
+
+                }
+
+            } else {
+                console.log("# - YOU HAVE NO ACTIVE SUBSCRIPTIONS")
+                setDisplayPremiumOption(false);
+
+                await SecureStore.setItemAsync("PREMIUM", 'false');
+                await SecureStore.setItemAsync("DAY_HOUR", timeHandler().hour);
+                try {
+                    await updatePremium({
+                        variables: {
+                            status: false,
+                            expiration: ''
+                        }
+                    });
+                } catch (error) {
+                    console.log(error.message)
+                    setDisableButtons(true);
+                    setDisplayNetworkRequestFailedModal(true)
+                    setLoading(false)
+
                 }
 
             }
-            getValueFor('cosmicKey')
-
-        }, 120000);
-    };
-
-    const checkCustomerInfo = async () => {
-        let localUserID = await SecureStore.getItemAsync('userID');
-        Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
-        Purchases.configure({ apiKey: APIKeys.google, appUserID: localUserID });
-
-        const customerInfo = await Purchases.getCustomerInfo();
-        console.log(customerInfo)
-
-        if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
-            // console.log(customerInfo.entitlements.active["Premium"])
-            console.log("# - Premium service access granted.")
-            await updatePremium({
-                variables: {
-                    status: true,
-                    expiration: `${customerInfo.allExpirationDates.baby_food_tracker_premium_month}`
-                }
-            });
-
-        } else {
-            console.log("# - Premium service access revoked.")
-            await updatePremium({
-                variables: {
-                    status: false,
-                    expiration: ''
-                }
-            });
         }
+        await SecureStore.setItemAsync("SUBSCRIPTION_UPDATE", '');
+        console.log("# - STEP 4")
+        setLoading(false)
+
     }
+
+    const handleRefreshStatus = async() => {
+        await SecureStore.setItemAsync("DAY_HOUR", '');
+        getValueFor();
+        setMainState({
+            triggerRefresh: true
+        })
+        // onRefresh();
+    }
+
+
 
     const getTotalCalorieCount = async () => {
         try {
@@ -311,6 +366,21 @@ export const HomeScreen = ({ navigation }) => {
         // setLoading(true)
         // checkCustomerInfo()
         getTotalCalorieCount()
+
+        async function prepare() {
+            try {
+                await getValueFor();
+                // Artificially delay for two seconds to simulate a slow loading experience
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            } catch (e) {
+                console.warn(e);
+            } finally {
+                // Tell the application to render
+                setAppIsReady(true);
+            }
+        }
+
+        prepare();
 
         const interval_0 = setInterval(() => {
             getTotalCalorieCount()
@@ -344,6 +414,10 @@ export const HomeScreen = ({ navigation }) => {
             // clearInterval(interval_1)
         }
     }, [])
+
+    useEffect(() => {
+        getValueFor();
+    }, [isFocused]);
 
     const handleAddSubuser = async () => {
         setMainState({ triggerRefresh: true })
@@ -380,12 +454,12 @@ export const HomeScreen = ({ navigation }) => {
     });
 
     const onLayoutRootView = useCallback(async () => {
-        if (fontsLoaded) {
+        if (fontsLoaded && appIsReady) {
             await SplashScreen.hideAsync();
         }
-    }, [fontsLoaded]);
+    }, [fontsLoaded, appIsReady]);
 
-    if (!fontsLoaded) {
+    if (!fontsLoaded && !appIsReady) {
         return null;
     }
 
@@ -575,9 +649,7 @@ export const HomeScreen = ({ navigation }) => {
                                             {/* refetch */}
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    checkCustomerInfo();
-                                                    onRefresh();
-                                                     
+                                                    handleRefreshStatus()
                                                 }}
                                                 style={{
                                                     height: HeightRatio(50),
@@ -1050,7 +1122,8 @@ export const HomeScreen = ({ navigation }) => {
                                         {premiumStatus &&
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    navigation.dispatch(resetActionMetrics)
+                                                    // navigation.dispatch(resetActionMetrics)
+                                                    navigation.navigate('Metrics')
                                                     setMainState({ userTouch: true })
                                                 }}
                                             >

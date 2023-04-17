@@ -1,6 +1,15 @@
 import React, { useEffect, useInsertionEffect, useState, useContext, useRef } from 'react';
-import { View, Text, Button, Dimensions, Image, TouchableOpacity, PixelRatio, TouchableHighlight, Linking, Modal } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { 
+    View, 
+    Text, 
+    Button, 
+    Dimensions, 
+    Image, 
+    TouchableOpacity, 
+    PixelRatio, 
+    TouchableHighlight, 
+    Linking, 
+    Modal } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import { useQuery } from '@apollo/client';
 import { GET_USER_BY_ID, GET_ME } from '../utils/queries';
@@ -28,22 +37,13 @@ import {
 
 export const Navbar = (props) => {
     const { mainState, setMainState } = useContext(MainStateContext);
-    // const version = Constants.manifest2.extra.expoClient.version;
-
     const [isTokenValid, setIsTokenValid] = useState(null);
-    const [minimizeNav, setMinimizeNav] = useState(false);
-    const [displayTokenModal, setDisplayTokenModal] = useState(mainState.current.displayTokenModal);
     const [fromHome, setFromHome] = useState(false);
-    const [fromGame, setFromGame] = useState(false);
     const [fromProfile, setFromProfile] = useState(false);
     const [networkConnected, setNetworkConnected] = useState(true);
     const [displaySignUpModal, setDisplaySignUpModal] = useState(false);
-    const [displayUpdateWarning, setDisplayUpdateWarning] = useState(false)
-
-
     const authState = useRef(false);
     const userID = useRef(null);
-
     let localKeyMoment = moment();
 
     const checkToken = async () => {
@@ -97,10 +97,6 @@ export const Navbar = (props) => {
         index: 1,
         routes: [{ name: 'Home', params: {} }]
     });
-    const resetActionChat = CommonActions.reset({
-        index: 1,
-        routes: [{ name: 'Chat', params: {} }]
-    });
     const resetActionProfile = CommonActions.reset({
         index: 1,
         routes: [{ name: 'Profile', params: {} }]
@@ -109,47 +105,15 @@ export const Navbar = (props) => {
         index: 1,
         routes: [{ name: 'Auth', params: {} }]
     });
-    const resetActionAdmin = CommonActions.reset({
-        index: 1,
-        routes: [{ name: 'Admin', params: {} }]
-    });
-
-    const getAppVersion = async () => {
-        const appJson = require('../app.json');
-        const appVersion = appJson.expo;
-        // console.log(appVersion.version)
-        // console.log(userByID?.user.currentVersion)
-
-        if (userByID?.user && userByID?.user.currentVersion != appVersion.version) {
-            console.log("UPDATE")
-            setDisplayUpdateWarning(true)
-        }
-
-    };
-    const routeUserToUpdate = () => {
-        Linking.openURL('https://play.google.com/store/apps/details?id=com.babyFoodTracker&hl=en-US&ah=s5VjDKb_zRK8O1XDIdWNZWKgKUo');
-    };
-
 
     useEffect(() => {
         refetch()
         if (props.from == 'home') {
-            // console.log("Home")
             setFromHome(true)
-            // setFromGame(false)
             setFromProfile(false)
-
         }
-        // if (props.from == 'chat') {
-        //     console.log("chat")
-        //     setFromHome(false)
-        //     setFromGame(true)
-        //     setFromProfile(false)
-        // }
         if (props.from == 'profile') {
-            // console.log("profile")
             setFromHome(false)
-            // setFromGame(false)
             setFromProfile(true)
         }
 
@@ -157,15 +121,11 @@ export const Navbar = (props) => {
         userID.current = mainState.current.userID;
 
         pingServer()
-        getAppVersion()
     }, [])
 
     if (localKeyMoment != mainState.current.initialKeyMoment && mainState.current.bearerToken != null) {
         checkToken();
     }
-
-
-
 
     return (
         <>
@@ -185,7 +145,7 @@ export const Navbar = (props) => {
                         flexDirection: 'row',
                     }}
                 >
-                    {!networkConnected ?
+                    {!networkConnected &&
                         <View style={{
                             position: 'absolute',
                             top: HeightRatio(-40),
@@ -210,51 +170,6 @@ export const Navbar = (props) => {
                                 Network Error
                             </Text>
                         </View>
-                        :
-                        <>
-                            {displayUpdateWarning ?
-                                <TouchableOpacity
-                                    style={{
-                                        position: 'absolute',
-                                        top: HeightRatio(-40),
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        backgroundColor: THEME_COLOR_ATTENTION,
-                                        padding: HeightRatio(10),
-                                        borderRadius: HeightRatio(10)
-
-                                    }}
-                                    onPress={() => routeUserToUpdate()}
-                                >
-                                    <Image
-                                        source={require('../assets/favicon_0.png')}
-                                        style={{
-                                            height: HeightRatio(20),
-                                            width: HeightRatio(20),
-                                            marginLeft: HeightRatio(10),
-                                            marginRight: HeightRatio(10)
-                                        }}
-                                    />
-                                    <Text
-                                        style={{
-                                            fontFamily: 'SofiaSansSemiCondensed-Regular',
-                                            color: THEME_FONT_COLOR_BLACK,
-                                            fontSize: HeightRatio(20),
-                                            alignSelf: 'center',
-                                        }}
-                                        allowFontScaling={false}
-                                        ellipsizeMode='tail'
-                                        numberOfLines={1}
-                                    >
-                                        New Update Available
-                                    </Text>
-                                </TouchableOpacity>
-                                :
-                                null
-                            }
-                        </>
                     }
 
                     {/* [[[HOME]]] */}

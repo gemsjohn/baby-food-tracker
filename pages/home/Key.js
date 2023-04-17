@@ -143,7 +143,8 @@ export const KeyScreen = ({ navigation }) => {
         if (count > 3 && areArraysEqual(key, keyArray)) {
             updateAuth();
             setTimeout(() => {
-                navigation.dispatch(resetActionHome);
+                // navigation.dispatch(resetActionHome);
+                navigation.navigate('Home')
             }, 500)
 
         } else if (count > 3 && !areArraysEqual(key, keyArray)) {
@@ -307,7 +308,8 @@ export const KeyScreen = ({ navigation }) => {
                             <TouchableOpacity
                                 onPress={() => {
                                     deleteKey('cosmicKey');
-                                    navigation.dispatch(resetActionAuth);
+                                    // navigation.dispatch(resetActionAuth);
+                                    navigation.navigate('Auth')
                                 }}
                                 style={Styling.modalWordButton}>
                                 <View style={{ ...styles.forgotKey_Button, ...styles.button_Drop_Shadow, width: WidthRatio(100) }}>

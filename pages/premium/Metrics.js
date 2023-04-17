@@ -184,7 +184,11 @@ export const MetricsScreen = ({ navigation }) => {
                         }}
                     >
                         <TouchableOpacity
-                            onPress={() => { navigation.dispatch(resetActionHome); setMainState({ userTouch: true }); }}
+                            onPress={() => { 
+                                // navigation.dispatch(resetActionHome); 
+                                navigation.navigate('Home')
+                                setMainState({ userTouch: true }); 
+                            }}
                         >
 
                             <View>

@@ -177,7 +177,7 @@ export const Add_Primary = (props) => {
             userID.current = mainState.current.userID;
         }, 500)
 
-        setInterval(() => {
+        const intervalID = setInterval(() => {
             // console.log("###############################")
             // console.log("-------------------------------")
             // console.log("###############################")
@@ -236,6 +236,10 @@ export const Add_Primary = (props) => {
             }
 
         }, 200)
+
+        return () => {
+            clearInterval(intervalID);
+          };
     }, [])
 
 

@@ -1,21 +1,12 @@
-import { useEffect, useState, useContext, useRef, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Text,
-    TouchableOpacity,
     View,
-    Dimensions,
-    Modal,
-    SafeAreaView,
-    ScrollView,
-    ImageBackground,
     Image,
-    RefreshControl,
-    Animated,
-    StyleSheet
+    StyleSheet,
+    ActivityIndicator
 } from 'react-native';
 import { Styling, HeightRatio, WidthRatio, windowHeight, windowWidth } from '../Styling';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
 import {
     THEME_COLOR_POSITIVE,
     THEME_COLOR_POSITIVE_LOW_OPACITY,
@@ -34,66 +25,20 @@ import {
     THEME_COLOR_BLACKOUT
 } from '../COLOR';
 import { LinearGradient } from 'expo-linear-gradient';
-import Purchases, { PurchasesOffering } from 'react-native-purchases';
-import { useMutation, useQuery } from '@apollo/client';
-import { UPDATE_PREMIUM } from '../utils/mutations';
-import * as SecureStore from 'expo-secure-store';
+import moment from 'moment';
 
-// const APIKeys = {
-//     google: "goog_caDqiYZPHvJIwlqyFoZDgTqOywO",
-// };
 
 export const Loading = () => {
-    // const [updatePremium] = useMutation(UPDATE_PREMIUM);
+    const [startTime, setStartTime] = useState(moment());
+    const [elapsedTime, setElapsedTime] = useState(moment.duration(0));
 
-    // const checkCustomerInfo = async () => {
-    //     let localUserID = await SecureStore.getItemAsync('userID');
-    //     Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
-    //     Purchases.configure({ apiKey: APIKeys.google, appUserID: localUserID });
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setElapsedTime(moment.duration(moment().diff(startTime)));
+        }, 100);
 
-    //     const customerInfo = await Purchases.getCustomerInfo();
-    //     // console.log(customerInfo)
-
-    //     if (typeof customerInfo.entitlements.active["Premium"] !== "undefined") {
-    //         // console.log(customerInfo.entitlements.active["Premium"])
-    //         console.log("# - Premium service access granted.")
-    //         await updatePremium({
-    //             variables: {
-    //                 status: true,
-    //                 expiration: `${customerInfo.allExpirationDates.baby_food_tracker_premium_month}`
-    //             }
-    //         });
-
-    //     } else {
-    //         console.log("# - Premium service access revoked.")
-    //         await updatePremium({
-    //             variables: {
-    //                 status: false,
-    //                 expiration: ''
-    //             }
-    //         });
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     checkCustomerInfo()
-    // }, [])
-
-    const [fontsLoaded] = useFonts({
-        'GochiHand_400Regular': require('../assets/fonts/GochiHand-Regular.ttf'),
-        'SofiaSansSemiCondensed-Regular': require('../assets/fonts/SofiaSansSemiCondensed-Regular.ttf'),
-        'SofiaSansSemiCondensed-ExtraBold': require('../assets/fonts/SofiaSansSemiCondensed-ExtraBold.ttf')
-    });
-
-    const onLayoutRootView = useCallback(async () => {
-        if (fontsLoaded) {
-            await SplashScreen.hideAsync();
-        }
-    }, [fontsLoaded]);
-
-    if (!fontsLoaded) {
-        return null;
-    }
+        return () => clearInterval(interval);
+    }, [startTime]);
 
     return (
         <View>
@@ -122,16 +67,27 @@ export const Loading = () => {
                     }}
                     allowFontScaling={false}
                 >Baby Food Tracker</Text>
-                <Text
+                <View
                     style={{
-                        fontFamily: 'SofiaSansSemiCondensed-Regular',
-                        color: THEME_COLOR_ATTENTION,
-                        fontSize: HeightRatio(30),
-                        top: HeightRatio(20),
-                        alignSelf: 'center'
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: HeightRatio(10),
+                        padding: HeightRatio(20)
                     }}
-                    allowFontScaling={false}
-                >Loading...</Text>
+                >
+                    <ActivityIndicator size={100} color={'#f7ff6c'} />
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontSize: HeightRatio(20),
+                            marginTop: 10,
+
+                        }}
+                    >
+                        {elapsedTime.asSeconds().toFixed(1)} s
+                    </Text>
+                </View>
             </LinearGradient>
         </View>
     )
